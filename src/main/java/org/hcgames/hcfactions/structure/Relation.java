@@ -6,7 +6,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.faction.Faction;
-import technology.brk.util.BukkitUtils;
+import org.hcgames.hcfactions.util.BukkitUtils;
+
 
 /**
  * Represents a relation between {@link Faction}s and {@link Player}s.

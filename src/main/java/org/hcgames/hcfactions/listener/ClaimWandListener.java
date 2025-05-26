@@ -157,7 +157,7 @@ public class ClaimWandListener implements Listener{
                     int xDiff = Math.abs(opposite.getBlockX() - blockX) + 1; // Add one as it gets a weird offset
                     int zDiff = Math.abs(opposite.getBlockZ() - blockZ) + 1; // Add one as it gets a weird offset
                     if (xDiff < ClaimHandler.MIN_CLAIM_RADIUS || zDiff < ClaimHandler.MIN_CLAIM_RADIUS) {
-                        player.sendMessage(plugin.getMessages().getString("factions.claiming.not_wide_enough")
+                        player.sendMessage(Lang.of("factions.claiming.not_wide_enough")
                                 .replace("{minClaimRadius}", String.valueOf(ClaimHandler.MIN_CLAIM_RADIUS))
                                 .replace("{maxClaimRadius}", String.valueOf(ClaimHandler.MIN_CLAIM_RADIUS)));
                         return;
@@ -174,7 +174,7 @@ public class ClaimWandListener implements Listener{
                 if (selectionId == 1) claimSelection.setPos1(blockLocation);
                 if (selectionId == 2) claimSelection.setPos2(blockLocation);
 
-                player.sendMessage(plugin.getMessages().getString("factions.claiming.wand.set")
+                player.sendMessage(Lang.of("factions.claiming.wand.set")
                         .replace("{selectionId}", String.valueOf(selectionId))
                         .replace("{blockX}", String.valueOf(blockX))
                         .replace("{blockZ}", String.valueOf(blockZ)));
@@ -182,7 +182,7 @@ public class ClaimWandListener implements Listener{
                 if (claimSelection.hasBothPositionsSet()) {
                     Claim claim = claimSelection.toClaim(playerFaction);
                     int selectionPrice = claimSelection.getPrice(playerFaction, false);
-                    player.sendMessage(plugin.getMessages().getString("factions.claiming.wand.selection_cost")
+                    player.sendMessage(Lang.of("factions.claiming.wand.selection_cost")
                             .replace("{canAffordColour}", (selectionPrice > playerFaction.getBalance() ? ChatColor.RED.toString() : ChatColor.GREEN.toString()))
                             .replace("{selectionPrice}", String.valueOf(selectionPrice))
                             .replace("{claimWidth}", String.valueOf(claim.getWidth()))

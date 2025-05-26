@@ -25,7 +25,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bson.Document;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import technology.brk.util.mongo.Mongoable;
+import org.hcgames.hcfactions.util.Mongoable;
+
 
 import java.util.LinkedHashMap;
 import java.util.Map;

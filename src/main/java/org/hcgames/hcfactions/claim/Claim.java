@@ -20,7 +20,6 @@
 
 package org.hcgames.hcfactions.claim;
 
-
 import org.bson.Document;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -30,9 +29,10 @@ import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.ClaimableFaction;
 import org.hcgames.hcfactions.faction.Faction;
-import technology.brk.util.cuboid.Cuboid;
-import technology.brk.util.cuboid.NamedCuboid;
-import technology.brk.util.mongo.Mongoable;
+import org.hcgames.hcfactions.util.Mongoable;
+import org.hcgames.hcfactions.util.cuboid.Cuboid;
+import org.hcgames.hcfactions.util.cuboid.NamedCuboid;
+
 
 import java.util.Map;
 import java.util.SplittableRandom;
@@ -93,7 +93,7 @@ public class Claim extends NamedCuboid implements Cloneable, ConfigurationSerial
 
     @Override
     public Document toDocument(){
-        Document document = super.toDocument();
+        Document document = new Document();
         document.put("name", name);
         document.put("claimUUID", claimUniqueID.toString());
         document.put("factionUUID", factionUUID.toString());

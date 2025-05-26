@@ -33,8 +33,7 @@ import org.hcgames.hcfactions.faction.system.RoadFaction;
 import org.hcgames.hcfactions.faction.system.SpawnFaction;
 import org.hcgames.hcfactions.faction.system.SystemFaction;
 import org.hcgames.hcfactions.faction.system.SystemTeam;
-
-import technology.brk.util.file.Config;
+import org.hcgames.hcfactions.util.configuration.Config;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

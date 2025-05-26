@@ -113,7 +113,13 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/libs/worldedit-bukkit-6.1.jar</systemPath>
         </dependency>
-
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.8.8-R0.1-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/wspigot.jar</systemPath>
+        </dependency>
         <dependency>
             <groupId>${foundation.path}</groupId>
             <artifactId>Foundation</artifactId>

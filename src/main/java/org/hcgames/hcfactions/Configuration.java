@@ -1,70 +1,71 @@
 package org.hcgames.hcfactions;
 
 
+import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.mineacademy.fo.settings.SimpleSettings;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-
+@Getter
 public final class Configuration extends SimpleSettings {
 
-    private static Integer factionNameMinCharacters;
-    private static Integer factionNameMaxCharacters;
-    private static Integer factionMaxMembers;
-    private static Integer factionMaxClaims;
-    private static Integer factionMaxAllies;
+    public static Integer factionNameMinCharacters;
+    public static Integer factionNameMaxCharacters;
+    public static Integer factionMaxMembers;
+    public static Integer factionMaxClaims;
+    public static Integer factionMaxAllies;
 
-    private static Integer factionDtrRegenFreezeBaseMinutes;
-    private static Long factionDtrRegenFreezeBaseMilliseconds;
-    private static Integer factionDtrRegenFreezeMinutesPerMember;
-    private static Long factionDtrRegenFreezeMillisecondsPerMember;
-    private static Integer factionMinimumDtr;
-    private static Float factionMaximumDtr;
-    private static Integer factionDtrUpdateMillis;
-    private static Float factionDtrUpdateIncrement;
+    public static Integer factionDtrRegenFreezeBaseMinutes;
+    public static Long factionDtrRegenFreezeBaseMilliseconds;
+    public static Integer factionDtrRegenFreezeMinutesPerMember;
+    public static Long factionDtrRegenFreezeMillisecondsPerMember;
+    public static Integer factionMinimumDtr;
+    public static Float factionMaximumDtr;
+    public static Integer factionDtrUpdateMillis;
+    public static Float factionDtrUpdateIncrement;
 
-    private static ChatColor relationColourWarzone;
-    private static ChatColor relationColourWilderness;
-    private static ChatColor relationColourTeammate;
-    private static ChatColor relationColourAlly;
-    private static ChatColor relationColourEnemy;
-    private static ChatColor relationColourRoad;
-    private static ChatColor relationColourSafezone;
+    public static ChatColor relationColourWarzone;
+    public static ChatColor relationColourWilderness;
+    public static ChatColor relationColourTeammate;
+    public static ChatColor relationColourAlly;
+    public static ChatColor relationColourEnemy;
+    public static ChatColor relationColourRoad;
+    public static ChatColor relationColourSafezone;
     
-    private static Integer antiRotationDelay;
-    private static Boolean antiRotationEnabled;
+    public static Integer antiRotationDelay;
+    public static Boolean antiRotationEnabled;
     
-    private static Boolean factionEndPortalEnabled;
-    private static Integer endPortalCenter;
+    public static Boolean factionEndPortalEnabled;
+    public static Integer endPortalCenter;
     
-    private static Integer spawnRadiusOverworld;
-    private static Integer spawnRadiusNether;
+    public static Integer spawnRadiusOverworld;
+    public static Integer spawnRadiusNether;
     
-    private static Integer roadWidthLeft;
-    private static Integer roadWidthRight;
-    private static Integer roadLength;
-    private static Integer endPortalRadius;
-    private static Boolean allowClaimsBesidesRoads;
+    public static Integer roadWidthLeft;
+    public static Integer roadWidthRight;
+    public static Integer roadLength;
+    public static Integer endPortalRadius;
+    public static Boolean allowClaimsBesidesRoads;
     
-    private static Integer warzoneRadiusOverworld;
-    private static Integer warzoneRadiusNether;
+    public static Integer warzoneRadiusOverworld;
+    public static Integer warzoneRadiusNether;
     
-    private static List<String> factionDisallowedNames;
+    public static List<String> factionDisallowedNames;
     
-    private static Integer factionHomeTeleportDelayNormal;
-    private static Integer factionHomeTeleportDelayNether;
-    private static Integer factionHomeTeleportDelayEnd;
-    private static Boolean allowTeleportingInEnemyTerritory;
-    private static Integer maxHeightFactionHome;
+    public static Integer factionHomeTeleportDelayNormal;
+    public static Integer factionHomeTeleportDelayNether;
+    public static Integer factionHomeTeleportDelayEnd;
+    public static Boolean allowTeleportingInEnemyTerritory;
+    public static Integer maxHeightFactionHome;
     
-    private static Boolean subclaimSignPrivate;
-    private static Boolean subclaimSignCaptain;
-    private static Boolean subclaimSignLeader;
-    private static Boolean subclaimHopperCheck;
+    public static Boolean subclaimSignPrivate;
+    public static Boolean subclaimSignCaptain;
+    public static Boolean subclaimSignLeader;
+    public static Boolean subclaimHopperCheck;
     
-    private static Boolean preventAllyAttackDamage;
-    private static Boolean messageDebug;
+    public static Boolean preventAllyAttackDamage;
+    public static Boolean messageDebug;
 
     private static void init() {
         factionNameMinCharacters = getInteger("factions.NameMinCharacters");

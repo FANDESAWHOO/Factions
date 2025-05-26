@@ -21,7 +21,8 @@
 package org.hcgames.hcfactions.manager;
 
 import com.google.common.collect.ImmutableList;
-import org.apache.commons.lang.time.DurationFormatUtils;
+
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;

@@ -3,7 +3,9 @@ package org.hcgames.hcfactions.structure;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
+import org.mineacademy.fo.settings.Lang;
 
 import java.util.Locale;
 
@@ -34,14 +36,14 @@ public enum ChatChannel {
         switch (this) {
             case FACTION:
             case OFFICER:
-                prefix = plugin.getConfiguration().getRelationColourTeammate().toString();
+                prefix = Configuration.relationColourTeammate.toString();
                 break;
             case ALLIANCE:
-                prefix = plugin.getConfiguration().getRelationColourAlly().toString();
+                prefix =  Configuration.relationColourAlly.toString();
                 break;
             case PUBLIC:
             default:
-                prefix = plugin.getConfiguration().getRelationColourEnemy().toString();
+                prefix =  Configuration.relationColourEnemy.toString();
                 break;
         }
 
@@ -99,7 +101,7 @@ public enum ChatChannel {
             case FACTION:
                 return OFFICER;
             case OFFICER:
-                return JavaPlugin.getPlugin(HCFactions.class).getConfiguration().getFactionMaxAllies() > 0 ? ALLIANCE : PUBLIC;
+                return Configuration.factionMaxAllies > 0 ? ALLIANCE : PUBLIC;
             case ALLIANCE:
                 return PUBLIC;
             case PUBLIC:
@@ -117,13 +119,13 @@ public enum ChatChannel {
             case FACTION:
             case OFFICER:
             case ALLIANCE:
-                relationColour = plugin.getConfiguration().getRelationColourTeammate();
+                relationColour = Configuration.relationColourTeammate;
                 break;
             default:
                 throw new IllegalArgumentException("Cannot get the relation colour for public chat channel (" + this.name + ")");
         }
 
-        return plugin.getMessages().getString("factions.chat")
+        return Lang.of("factions.chat")
                 .replace("{relationColour}", relationColour.toString())
                 .replace("{channelName}", getDisplayName())
                 .replace("{player}", player.getName())

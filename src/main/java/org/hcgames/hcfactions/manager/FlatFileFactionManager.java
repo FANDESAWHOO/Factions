@@ -1,22 +1,4 @@
-/*
- *   COPYRIGHT NOTICE
- *
- *   Copyright (C) 2016, SystemUpdate, <admin@systemupdate.io>.
- *
- *   All rights reserved.
- *
- *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF THIRD PARTY RIGHTS. IN
- *   NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- *   DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
- *   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
- *   OR OTHER DEALINGS IN THE SOFTWARE.
- *
- *   Except as contained in this notice, the name of a copyright holder shall not
- *   be used in advertising or otherwise to promote the sale, use or other dealings
- *   in this Software without prior written authorization of the copyright holder.
- */
+
 
 package org.hcgames.hcfactions.manager;
 
@@ -25,16 +7,19 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Table;
 
+import com.sk89q.worldguard.util.collect.LongHash;
+import github.scarsz.discordsrv.dependencies.commons.collections4.map.CaseInsensitiveMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.MemorySection;
-import org.bukkit.craftbukkit.v1_8_R3.util.LongHash;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.claim.Claim;
 import org.hcgames.hcfactions.event.claim.ClaimChangeEvent;
@@ -60,10 +45,9 @@ import org.hcgames.hcfactions.structure.ChatChannel;
 import org.hcgames.hcfactions.structure.FactionMember;
 import org.hcgames.hcfactions.structure.Relation;
 import org.hcgames.hcfactions.structure.Role;
-import org.spigotmc.CaseInsensitiveMap;
+import org.hcgames.hcfactions.util.configuration.Config;
+import org.hcgames.hcfactions.util.uuid.UUIDHandler;
 
-import technology.brk.util.file.Config;
-import technology.brk.util.uuid.UUIDHandler;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -169,8 +153,8 @@ public class FlatFileFactionManager implements FactionManager, Listener{
         }
 
         int warzoneRadius = environment == World.Environment.NETHER ?
-                plugin.getConfiguration().getWarzoneRadiusNether() :
-                plugin.getConfiguration().getWarzoneRadiusOverworld();
+                Configuration.warzoneRadiusNether :
+                Configuration.warzoneRadiusOverworld;
 
         return Math.abs(x) > warzoneRadius || Math.abs(z) > warzoneRadius ? this.wilderness : this.warzone;
     }
@@ -491,8 +475,8 @@ public class FlatFileFactionManager implements FactionManager, Listener{
                 this.factionPlayerUuidMap.put(factionMember.getUniqueId(), faction.getUniqueID());
             }
 
-            if(plugin.getConfiguration().getFactionMaxAllies() == 0){
-                List<UUID> toRemove = Maps.filterValues(playerFaction.getRequestedRelations(), Relation::isAlly).keySet().stream().collect(Collectors.toList());
+            if(Configuration.factionMaxAllies == 0){
+                List<UUID> toRemove = new ArrayList<>(Maps.filterValues(playerFaction.getRequestedRelations(), Relation::isAlly).keySet());
                 toRemove.forEach(playerFaction::removeRequestedRelation);
 
                 toRemove = playerFaction.getAllied();

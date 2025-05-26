@@ -20,15 +20,12 @@
 
 package org.hcgames.hcfactions.claim;
 
-import com.doctordark.hcf.HCF;
-import com.doctordark.hcf.visualise.VisualType;
 import lombok.Getter;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.ClaimableFaction;
@@ -38,9 +35,13 @@ import org.hcgames.hcfactions.faction.system.RoadFaction;
 import org.hcgames.hcfactions.faction.system.WildernessFaction;
 import org.hcgames.hcfactions.manager.FactionManager;
 import org.hcgames.hcfactions.structure.Role;
-import technology.brk.util.ItemBuilder;
-import technology.brk.util.cuboid.Cuboid;
-import technology.brk.util.cuboid.CuboidDirection;
+import org.hcgames.hcfactions.util.cuboid.Cuboid;
+import org.hcgames.hcfactions.util.cuboid.CuboidDirection;
+import org.hcgames.hcfactions.visualise.VisualType;
+import org.mineacademy.fo.menu.model.ItemCreator;
+import org.mineacademy.fo.remain.CompMaterial;
+import org.mineacademy.fo.settings.Lang;
+
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -72,8 +73,8 @@ public class ClaimHandler {
         this.plugin = plugin;
         this.claimSelectionMap = new HashMap<>();
 
-        claimWand = new ItemBuilder(Material.DIAMOND_HOE).displayName(plugin.getMessages().getString("factions.claiming.wand.item.name"))
-                .lore(plugin.getMessages().getStringList("factions.claiming.wand.item.lore")).build();
+        claimWand = ItemCreator.of(CompMaterial.DIAMOND_HOE).name(Lang.of("factions.claiming.wand.item.name"))
+                .lore(Lang.of("factions.claiming.wand.item.lore")).make();
     }
 
     //TODO: Better configurability
@@ -119,7 +120,7 @@ public class ClaimHandler {
     public boolean clearClaimSelection(Player player) {
         ClaimSelection claimSelection = plugin.getClaimHandler().claimSelectionMap.remove(player.getUniqueId());
         if (claimSelection != null) {
-            HCF.getPlugin().getVisualiseHandler().clearVisualBlocks(player, VisualType.CREATE_CLAIM_SELECTION, null);
+            //HCF.getPlugin().getVisualiseHandler().clearVisualBlocks(player, VisualType.CREATE_CLAIM_SELECTION, null);
             return true;
         }
 
@@ -137,14 +138,14 @@ public class ClaimHandler {
         World world = location.getWorld();
 
         if (world.getEnvironment() != World.Environment.NORMAL) {
-            player.sendMessage(plugin.getMessages().getString("factions.claiming.overworld_only"));
+            player.sendMessage(Lang.of("factions.claiming.overworld_only"));
             return false;
         }
 
         if (!(plugin.getFactionManager().getFactionAt(location) instanceof WildernessFaction)) {
-            player.sendMessage(plugin.getMessages().getString("factions.claiming.wilderness_only")
-                    .replace("{wildernessColour}", plugin.getConfiguration().getRelationColourWilderness().toString())
-                    .replace("{warzoneRadius}", String.valueOf(plugin.getConfiguration().getWarzoneRadiusOverworld())));
+            player.sendMessage(Lang.of("factions.claiming.wilderness_only")
+                    .replace("{wildernessColour}", Configuration.relationColourWilderness.toString())
+                    .replace("{warzoneRadius}", String.valueOf(Configuration.warzoneRadiusOverworld)));
             return false;
         }
 
@@ -152,18 +153,18 @@ public class ClaimHandler {
         try{
             playerFaction = plugin.getFactionManager().getPlayerFaction(player);
         }catch (NoFactionFoundException e){
-            player.sendMessage(plugin.getMessages().getString("factions.claiming.faction_required"));
+            player.sendMessage(Lang.of("factions.claiming.faction_required"));
             return false;
         }
 
         if (playerFaction.getMember(player.getUniqueId()).getRole() == Role.MEMBER) {
-            player.sendMessage(plugin.getMessages().getString("factions.claiming.officer_required"));
+            player.sendMessage(Lang.of("factions.claiming.officer_required"));
             return false;
         }
 
-        if (playerFaction.getClaims().size() >= plugin.getConfiguration().getFactionMaxClaims()) {
-            player.sendMessage(plugin.getMessages().getString("factions.claiming.max_claims_reached")
-                    .replace("{maxClaims}", String.valueOf(plugin.getConfiguration().getFactionMaxClaims())));
+        if (playerFaction.getClaims().size() >= Configuration.factionMaxClaims) {
+            player.sendMessage(Lang.of("factions.claiming.max_claims_reached")
+                    .replace("{maxClaims}", String.valueOf(Configuration.factionMaxClaims)));
             return false;
         }
 
@@ -171,7 +172,7 @@ public class ClaimHandler {
         int locZ = location.getBlockZ();
 
         final FactionManager factionManager = plugin.getFactionManager();
-        boolean flag = plugin.getConfiguration().isAllowClaimsBesidesRoads();
+        boolean flag = Configuration.allowClaimsBesidesRoads;
 
         for (int x = locX - CLAIM_BUFFER_RADIUS; x < locX + CLAIM_BUFFER_RADIUS; x++) {
             for (int z = locZ - CLAIM_BUFFER_RADIUS; z < locZ + CLAIM_BUFFER_RADIUS; z++) {
@@ -181,7 +182,7 @@ public class ClaimHandler {
                         continue;
                     }
 
-                    player.sendMessage(plugin.getMessages().getString("factions.claiming.enemy_claims_nearby")
+                    player.sendMessage(Lang.of("factions.claiming.enemy_claims_nearby")
                             .replace("{radius}", String.valueOf(CLAIM_BUFFER_RADIUS)));
                     return false;
                 }
@@ -203,7 +204,7 @@ public class ClaimHandler {
         World world = claim.getWorld();
 
         if (world.getEnvironment() != World.Environment.NORMAL) {
-            player.sendMessage(plugin.getMessages().getString("factions.claiming.overworld_only"));
+            player.sendMessage(Lang.of("factions.claiming.overworld_only"));
             return false;
         }
 
@@ -211,18 +212,18 @@ public class ClaimHandler {
         try{
             playerFaction = plugin.getFactionManager().getPlayerFaction(player);
         }catch (NoFactionFoundException e){
-            player.sendMessage(plugin.getMessages().getString("factions.claiming.faction_required"));
+            player.sendMessage(Lang.of("factions.claiming.faction_required"));
             return false;
         }
 
         if (playerFaction.getMember(player.getUniqueId()).getRole() == Role.MEMBER) {
-            player.sendMessage(plugin.getMessages().getString("factions.claiming.officer_required"));
+            player.sendMessage(Lang.of("factions.claiming.officer_required"));
             return false;
         }
 
-        if (playerFaction.getClaims().size() >= plugin.getConfiguration().getFactionMaxClaims()) {
-            player.sendMessage(plugin.getMessages().getString("factions.claiming.max_claims_reached")
-                    .replace("{maxClaims}", String.valueOf(plugin.getConfiguration().getFactionMaxClaims())));
+        if (playerFaction.getClaims().size() >= Configuration.factionMaxClaims) {
+            player.sendMessage(Lang.of("factions.claiming.max_claims_reached")
+                    .replace("{maxClaims}", String.valueOf(Configuration.factionMaxClaims)));
             return false;
         }
 
@@ -230,21 +231,21 @@ public class ClaimHandler {
         int claimPrice = calculatePrice(claim, playerFaction.getClaims().size(), false);
 
         if (claimPrice > factionBalance) {
-            player.sendMessage(plugin.getMessages().getString("factions.claiming.insufficient_funds")
+            player.sendMessage(Lang.of("factions.claiming.insufficient_funds")
                     .replace("{factionBalance}", String.valueOf(factionBalance))
                     .replace("{claimPrice}", String.valueOf(claimPrice)));
             return false;
         }
 
         if (claim.getChunks().size() > MAX_CHUNKS_PER_LIMIT && !player.hasPermission("hcf.bypass.max_claim_size")) {
-            player.sendMessage(plugin.getMessages().getString("factions.claiming.too_many_chunks")
+            player.sendMessage(Lang.of("factions.claiming.too_many_chunks")
                     .replace("{maxChunks}", String.valueOf(MAX_CHUNKS_PER_LIMIT)));
             return false;
         }
 
         // Is not enough blocks wide.
         if (claim.getWidth() < MIN_CLAIM_RADIUS || claim.getLength() < MIN_CLAIM_RADIUS) {
-            player.sendMessage(plugin.getMessages().getString("factions.claiming.not_wide_enough")
+            player.sendMessage(Lang.of("factions.claiming.not_wide_enough")
                     .replace("{minClaimRadius}", String.valueOf(MIN_CLAIM_RADIUS))
                     .replace("{maxClaimRadius}", String.valueOf(MIN_CLAIM_RADIUS)));
             return false;
@@ -260,13 +261,13 @@ public class ClaimHandler {
             for (int z = minimumZ; z < maximumZ; z++) {
                 Faction factionAt = factionManager.getFactionAt(world, x, z);
                 if (factionAt != null && !(factionAt instanceof WildernessFaction)) {
-                    player.sendMessage(plugin.getMessages().getString("factions.claiming.claim_part_in_wilderness"));
+                    player.sendMessage(Lang.of("factions.claiming.claim_part_in_wilderness"));
                     return false;
                 }
             }
         }
 
-        boolean flag = plugin.getConfiguration().isAllowClaimsBesidesRoads();
+        boolean flag = Configuration.allowClaimsBesidesRoads;
         for (int x = minimumX - CLAIM_BUFFER_RADIUS; x < maximumX + CLAIM_BUFFER_RADIUS; x++) {
             for (int z = minimumZ - CLAIM_BUFFER_RADIUS; z < maximumZ + CLAIM_BUFFER_RADIUS; z++) {
                 Faction factionAtNew = factionManager.getFactionAt(world, x, z);
@@ -275,7 +276,7 @@ public class ClaimHandler {
                         continue;
                     }
 
-                    player.sendMessage(plugin.getMessages().getString("factions.claiming.enemy_claims_nearby")
+                    player.sendMessage(Lang.of("factions.claiming.enemy_claims_nearby")
                             .replace("{radius}", String.valueOf(CLAIM_BUFFER_RADIUS)));
                     return false;
                 }
@@ -297,7 +298,7 @@ public class ClaimHandler {
             }
 
             if (!conjoined) {
-                player.sendMessage(plugin.getMessages().getString("factions.claiming.claims_must_be_conjoined"));
+                player.sendMessage(Lang.of("factions.claiming.claims_must_be_conjoined"));
                 return false;
             }
         }
@@ -308,10 +309,10 @@ public class ClaimHandler {
 
         if (playerFaction.addClaim(claim, player)){
             Location center = claim.getCenter();
-            player.sendMessage(plugin.getMessages().getString("factions.claiming.purchased")
+            player.sendMessage(Lang.of("factions.claiming.purchased")
                     .replace("{claimPrice}", String.valueOf(claimPrice)));
             playerFaction.setBalance(factionBalance - claimPrice);
-            playerFaction.broadcast(plugin.getMessages().getString("factions.claiming.purchased_broadcast")
+            playerFaction.broadcast(Lang.of("factions.claiming.purchased_broadcast")
                     .replace("{player}", player.getName())
                     .replace("{claimX}", String.valueOf(center.getBlockX()))
                     .replace("{claimZ}", String.valueOf(center.getBlockZ())),

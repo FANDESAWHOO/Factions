@@ -27,8 +27,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.faction.Faction;
-import technology.brk.base.GuavaCompat;
-import technology.brk.util.mongo.Mongoable;
+import org.hcgames.hcfactions.util.GuavaCompat;
+import org.hcgames.hcfactions.util.Mongoable;
+
 
 import java.util.LinkedHashMap;
 import java.util.Map;
