@@ -107,8 +107,8 @@ public class HCFactions extends SimplePlugin {
 
     private void registerCommands() {
     //    getCommand("factions").setExecutor(new FactionExecutor(this));
-        getCommand("location").setExecutor(new LocationCommand(this));
-        getCommand("regen").setExecutor(new RegenCommand(this));
+        registerCommand(new LocationCommand());
+        registerCommand(new RegenCommand());
     }
 
     private void registerManagers() {

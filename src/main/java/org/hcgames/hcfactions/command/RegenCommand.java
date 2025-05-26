@@ -20,38 +20,55 @@
 
 package org.hcgames.hcfactions.command;
 
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.RegenStatus;
+import org.hcgames.hcfactions.util.DurationFormatter;
+import org.mineacademy.fo.command.SimpleCommand;
+import org.mineacademy.fo.settings.Lang;
 
 import java.util.Collections;
 import java.util.List;
 
-@RequiredArgsConstructor
-public class RegenCommand implements CommandExecutor, TabCompleter{
+
+public class RegenCommand extends SimpleCommand {
 
     private final HCFactions plugin;
 
+    public RegenCommand(){
+        super("regen");
+        plugin = HCFactions.getInstance();
+    }
+
+
+    public long getRemainingRegenMillis(PlayerFaction faction) {
+        long millisPassedSinceLastUpdate = System.currentTimeMillis() - faction.getLastDtrUpdateTimestamp();
+        double dtrRequired = faction.getMaximumDeathsUntilRaidable() - faction.getDeathsUntilRaidable();
+        return (long) ((10 / 60) * dtrRequired) - millisPassedSinceLastUpdate;
+    }
+
+    /**
+     * Executed when the command is run. You can get the variables sender and args directly,
+     * and use convenience checks in the simple command class.
+     */
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    protected void onCommand() {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(plugin.getMessages().getString("Error-Messages.PlayerOnly"));
-            return true;
+            sender.sendMessage(Lang.of("Error-Messages.PlayerOnly"));
+            return ;
         }
 
         Player player = (Player) sender;
         PlayerFaction playerFaction;
 
         if(!plugin.getFactionManager().hasFaction(player)){
-            sender.sendMessage(plugin.getMessages().getString("Error-Messages.NotInFaction"));
-            return true;
+            sender.sendMessage(Lang.of("Error-Messages.NotInFaction"));
+            return;
         }
 
         playerFaction = plugin.getFactionManager().getPlayerFaction(player);
@@ -59,36 +76,23 @@ public class RegenCommand implements CommandExecutor, TabCompleter{
         RegenStatus regenStatus = playerFaction.getRegenStatus();
         switch (regenStatus) {
             case FULL:
-             //   sender.sendMessage(HCF.getPlugin().getMessages().getString("Commands.Regen.Full"));
-                return true;
+                sender.sendMessage(Lang.of("Commands.Regen.Full"));
+                return;
             case PAUSED:
-               // sender.sendMessage(HCF.getPlugin().getMessages().getString("Commands.Regen.Paused")
-                 //       .replace("{dtrFreezeTimeLeft}", DurationFormatUtils.formatDurationWords(playerFaction.getRemainingRegenerationTime(), true, true)));
-                return true;
+                sender.sendMessage(Lang.of("Commands.Regen.Paused")
+                        .replace("{dtrFreezeTimeLeft}", DurationFormatUtils.formatDurationWords(playerFaction.getRemainingRegenerationTime(), true, true)));
+                return;
             case REGENERATING:
-                /*sender.sendMessage(HCF.getPlugin().getMessages().getString("Commands.Regen.Regenerating")
+                sender.sendMessage(Lang.of("Commands.Regen.Regenerating")
                         .replace("{regenSymbol}", regenStatus.getSymbol())
                         .replace("{factionDeathsUntilRaidable}", String.valueOf(playerFaction.getDeathsUntilRaidable()))
-                        .replace("{factionDTRIncrement}", String.valueOf(plugin.getConfiguration().getFactionDtrUpdateIncrement()))
-                       .replace("{factionDTRIncrementWords}", String.valueOf(plugin.getConfiguration().getFactionDtrU))
-                        .replace("{factionDTRETA}", DurationFormatUtils.formatDurationWords(getRemainingRegenMillis(playerFaction), true, true)));*/
-                return true;
+                        .replace("{factionDTRIncrement}", String.valueOf(Configuration.factionDtrUpdateIncrement))
+                        .replace("{factionDTRIncrementWords}", String.valueOf(DurationFormatter.getRemaining(Configuration.factionDtrUpdateIncrement.longValue(),false))
+                                .replace("{factionDTRETA}", DurationFormatUtils.formatDurationWords(getRemainingRegenMillis(playerFaction), true, true))));
+                return;
         }
 
-   //     sender.sendMessage(HCF.getPlugin().getMessages().getString("Commands.Regen.Unknown"));
-        return true;
-    }
+        sender.sendMessage(Lang.of("Commands.Regen.Unknown"));
 
-    public long getRemainingRegenMillis(PlayerFaction faction) {
-        long millisPassedSinceLastUpdate = System.currentTimeMillis() - faction.getLastDtrUpdateTimestamp();
-        double dtrRequired = faction.getMaximumDeathsUntilRaidable() - faction.getDeathsUntilRaidable();
-     //   Configuration configuration = HCF.getPlugin().getConfiguration();
-        return (long) ((10 / 60) * dtrRequired) - millisPassedSinceLastUpdate;
     }
-
-    @Override
-    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
-        return Collections.emptyList();
-    }
-
 }

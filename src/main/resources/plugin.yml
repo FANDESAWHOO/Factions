@@ -8,9 +8,4 @@ commands:
   factions:
     description: Main factions command
     aliases: [f, fac, faction, facs]
-  location:
-    description: Check the faction location of a player
-    aliases: [loc, whereami]
-  regen:
-    description: Check ETA until a faction is able to regenerate DTR.
-  focus: {}
+

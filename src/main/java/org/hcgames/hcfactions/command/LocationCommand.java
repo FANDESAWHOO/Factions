@@ -21,60 +21,65 @@
 package org.hcgames.hcfactions.command;
 
 
-import lombok.RequiredArgsConstructor;
-import org.bukkit.Bukkit;
+
 import org.bukkit.Location;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.faction.Faction;
+import org.mineacademy.fo.command.SimpleCommand;
+import org.mineacademy.fo.settings.Lang;
 
 import java.util.Collections;
 import java.util.List;
 
-@RequiredArgsConstructor
-public class LocationCommand implements CommandExecutor, TabCompleter{
+
+public class LocationCommand extends SimpleCommand {
 
     private final HCFactions plugin;
 
+    public LocationCommand() {
+        super("location | loc | whereami");
+        plugin = HCFactions.getInstance();
+    }
+
+    /**
+     * Executed when the command is run. You can get the variables sender and args directly,
+     * and use convenience checks in the simple command class.
+     */
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    protected void onCommand() {
         Player target;
-        if (args.length >= 1 && sender.hasPermission(command.getPermission() + ".others")) {
+        if (args.length >= 1) {
             target = plugin.getServer().getPlayer(args[0]);
         } else if (sender instanceof Player) {
             target = (Player) sender;
         } else {
-       //     sender.sendMessage(HCF.getPlugin().getMessages().getString("Commands.Location.Usage")
-         //           .replace("{commandLabel}", label));
-            return true;
+                sender.sendMessage(Lang.of("Commands.Location.Usage")
+                      .replace("{commandLabel}", getLabel()));
+            return;
         }
 
         if (target == null || (sender instanceof Player && !((Player) sender).canSee(target))) {
-           // sender.sendMessage(HCF.getPlugin().getMessages().getString("Commands.Location.Output")
-             //       .replace("{player}", args[0]));
-            return true;
+             sender.sendMessage(Lang.of("Commands.Location.Output")
+                   .replace("{player}", args[0]));
+            return;
         }
 
         Location location = target.getLocation();
         Faction factionAt = plugin.getFactionManager().getFactionAt(location);
 
-        /*sender.sendMessage(HCF.getPlugin().getMessages().getString("Commands.Location.Output")
+        sender.sendMessage(Lang.of("Commands.Location.Output")
                 .replace("{player}", target.getName())
                 .replace("{factionName}", factionAt.getFormattedName(sender))
                 .replace("{isDeathBanLocation}", factionAt.isSafezone() ?
-                        HCF.getPlugin().getMessages().getString("Commands.Location.NonDeathban") :
-                        HCF.getPlugin().getMessages().getString("Commands.Location.Deathban")));*/
-
-        return true;
+                        Lang.of("Commands.Location.NonDeathban") :
+                        Lang.of("Commands.Location.Deathban")));
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        return args.length == 1 && sender.hasPermission(command.getPermission() + ".others") ? null : Collections.emptyList();
+    protected List<String> tabComplete() {
+        return  args.length == 1 && sender.hasPermission(getPermission()) ? null : Collections.emptyList();
     }
-
 }
