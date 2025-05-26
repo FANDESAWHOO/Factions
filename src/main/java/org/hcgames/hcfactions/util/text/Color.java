@@ -1,4 +1,4 @@
-package org.hcgames.hcfactions.util;
+package org.hcgames.hcfactions.util.text;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -42,19 +42,19 @@ public class HCFactions extends SimplePlugin {
 
     @Override
     public void onPluginLoad() {
-        ConfigurationSerialization.registerClass((Class<? extends ConfigurationSerializable>) Claim.class);
-        ConfigurationSerialization.registerClass((Class<? extends ConfigurationSerializable>) ClaimableFaction.class);
-        ConfigurationSerialization.registerClass((Class<? extends ConfigurationSerializable>) EndPortalFaction.class);
-        ConfigurationSerialization.registerClass((Class<? extends ConfigurationSerializable>) Faction.class);
-        ConfigurationSerialization.registerClass((Class<? extends ConfigurationSerializable>) FactionMember.class);
-        ConfigurationSerialization.registerClass((Class<? extends ConfigurationSerializable>) PlayerFaction.class);
-        ConfigurationSerialization.registerClass((Class<? extends ConfigurationSerializable>) RoadFaction.class);
-        ConfigurationSerialization.registerClass((Class<? extends ConfigurationSerializable>) SpawnFaction.class);
-        ConfigurationSerialization.registerClass((Class<? extends ConfigurationSerializable>) RoadFaction.NorthRoadFaction.class);
-        ConfigurationSerialization.registerClass((Class<? extends ConfigurationSerializable>) RoadFaction.EastRoadFaction.class);
-        ConfigurationSerialization.registerClass((Class<? extends ConfigurationSerializable>) RoadFaction.SouthRoadFaction.class);
-        ConfigurationSerialization.registerClass((Class<? extends ConfigurationSerializable>) RoadFaction.WestRoadFaction.class);
-        ConfigurationSerialization.registerClass((Class<? extends ConfigurationSerializable>) SystemTeam.class);
+        ConfigurationSerialization.registerClass(Claim.class);
+        ConfigurationSerialization.registerClass(ClaimableFaction.class);
+        ConfigurationSerialization.registerClass(EndPortalFaction.class);
+        ConfigurationSerialization.registerClass(Faction.class);
+        ConfigurationSerialization.registerClass(FactionMember.class);
+        ConfigurationSerialization.registerClass(PlayerFaction.class);
+        ConfigurationSerialization.registerClass(RoadFaction.class);
+        ConfigurationSerialization.registerClass(SpawnFaction.class);
+        ConfigurationSerialization.registerClass(RoadFaction.NorthRoadFaction.class);
+        ConfigurationSerialization.registerClass(RoadFaction.EastRoadFaction.class);
+        ConfigurationSerialization.registerClass(RoadFaction.SouthRoadFaction.class);
+        ConfigurationSerialization.registerClass(RoadFaction.WestRoadFaction.class);
+        ConfigurationSerialization.registerClass(SystemTeam.class);
 
         FactionManager.registerSystemFaction(EndPortalFaction.class);
         FactionManager.registerSystemFaction(RoadFaction.EastRoadFaction.class);

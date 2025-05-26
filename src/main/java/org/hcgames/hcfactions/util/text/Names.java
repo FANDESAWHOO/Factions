@@ -18,7 +18,7 @@
  *   in this Software without prior written authorization of the copyright holder.
  */
 
-package org.hcgames.hcfactions.util;
+package org.hcgames.hcfactions.util.text;
 
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang.StringUtils;

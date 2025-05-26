@@ -37,7 +37,7 @@ import org.hcgames.hcfactions.event.claim.ClaimChangeEvent;
 import org.hcgames.hcfactions.event.claim.FactionClaimChangeEvent;
 import org.hcgames.hcfactions.event.claim.FactionClaimChangedEvent;
 import org.hcgames.hcfactions.structure.FactionMember;
-import org.hcgames.hcfactions.util.Names;
+import org.hcgames.hcfactions.util.text.Names;
 import technology.brk.util.BukkitUtils;
 import technology.brk.util.GenericUtils;
 

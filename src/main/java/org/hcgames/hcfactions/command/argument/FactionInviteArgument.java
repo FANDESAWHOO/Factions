@@ -11,7 +11,7 @@ import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.Relation;
 import org.hcgames.hcfactions.structure.Role;
-import org.hcgames.hcfactions.util.FancyMessage;
+import org.hcgames.hcfactions.util.text.FancyMessage;
 
 import technology.brk.util.command.CommandArgument;
 

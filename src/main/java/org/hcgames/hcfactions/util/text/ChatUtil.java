@@ -1,4 +1,4 @@
-package org.hcgames.hcfactions.util;
+package org.hcgames.hcfactions.util.text;
 
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;

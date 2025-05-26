@@ -20,10 +20,7 @@
 
 package org.hcgames.hcfactions.listener;
 
-import com.doctordark.hcf.HCF;
-import com.doctordark.hcf.visualise.VisualType;
 
-import technology.brk.util.cuboid.Cuboid;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -53,6 +50,7 @@ import org.hcgames.hcfactions.claim.ClaimHandler;
 import org.hcgames.hcfactions.claim.ClaimSelection;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
+import org.mineacademy.fo.settings.Lang;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +80,7 @@ public class ClaimWandListener implements Listener{
         if (action == Action.RIGHT_CLICK_AIR) {
             plugin.getClaimHandler().clearClaimSelection(player);
             player.setItemInHand(new ItemStack(Material.AIR, 1));
-            player.sendMessage(plugin.getMessages().getString("factions.claiming.wand.cleared"));
+         player.sendMessage(Lang.of("factions.claiming.wand.cleared"));
             return;
         }
 
@@ -99,7 +97,7 @@ public class ClaimWandListener implements Listener{
         if ((action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK) && player.isSneaking()) {
             ClaimSelection claimSelection = plugin.getClaimHandler().claimSelectionMap.get(uuid);
             if (claimSelection == null || !claimSelection.hasBothPositionsSet()) {
-                player.sendMessage(plugin.getMessages().getString("factions.claiming.wand.need_both_position"));
+            player.sendMessage(Lang.of("factions.claiming.wand.need_both_position"));
                 return;
             }
 

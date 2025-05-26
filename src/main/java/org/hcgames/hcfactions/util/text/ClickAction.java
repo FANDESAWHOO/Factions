@@ -1,4 +1,4 @@
-package org.hcgames.hcfactions.util;
+package org.hcgames.hcfactions.util.text;
 
 import net.minecraft.server.v1_8_R3.ChatClickable.EnumClickAction;
 

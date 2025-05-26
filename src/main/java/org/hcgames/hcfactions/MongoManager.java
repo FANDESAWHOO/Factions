@@ -39,27 +39,24 @@ public class MongoManager {
 
     public void connect() {
         try {
-            // Obtener datos de la configuración
             String host = HCFactions.getInstance().getConfig().getString("mongo.host");
             String databaseName = HCFactions.getInstance().getConfig().getString("mongo.database");
             String username = HCFactions.getInstance().getConfig().getString("mongo.username");
             String password = HCFactions.getInstance().getConfig().getString("mongo.password");
             String replicaSet = HCFactions.getInstance().getConfig().getString("mongo.replicaSet");
 
-            // Verificar que los valores no sean nulos
             if (host == null || databaseName == null || username == null || password == null || replicaSet == null) {
                 Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "MongoDB configuration is missing or incomplete in config.yml!");
                 return;
             }
 
-            // Construir la URI de conexión
             String uri = String.format("mongodb://%s:%s@%s/%s?replicaSet=%s", username, password, host, databaseName, replicaSet);
 
-            // Crear cliente de MongoDB
+
             mongoClient = MongoClients.create(uri);
             mongoDatabase = mongoClient.getDatabase(databaseName);
 
-            // Inicializar colecciones
+
             serverCollection = mongoDatabase.getCollection("server");
             factionMongoCollection = mongoDatabase.getCollection("factions");
 

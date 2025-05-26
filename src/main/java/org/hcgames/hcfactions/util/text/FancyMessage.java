@@ -1,4 +1,4 @@
-package org.hcgames.hcfactions.util;
+package org.hcgames.hcfactions.util.text;
 
 import org.bukkit.entity.Player;
 import java.io.Writer;
@@ -12,6 +12,8 @@ import org.bukkit.Material;
 import org.bukkit.Statistic;
 import org.bukkit.Achievement;
 import org.bukkit.ChatColor;
+import org.hcgames.hcfactions.util.Reflection;
+
 import java.util.ArrayList;
 import java.util.List;
 

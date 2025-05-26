@@ -1,9 +1,8 @@
 package org.hcgames.hcfactions;
 
-import lombok.Getter;
+
 import org.bukkit.ChatColor;
 import org.mineacademy.fo.settings.SimpleSettings;
-
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 

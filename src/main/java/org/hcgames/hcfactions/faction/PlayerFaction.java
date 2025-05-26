@@ -54,7 +54,7 @@ import org.hcgames.hcfactions.structure.Raidable;
 import org.hcgames.hcfactions.structure.RegenStatus;
 import org.hcgames.hcfactions.structure.Relation;
 import org.hcgames.hcfactions.structure.Role;
-import org.hcgames.hcfactions.util.CC;
+import org.hcgames.hcfactions.util.text.CC;
 
 import technology.brk.util.BukkitUtils;
 import technology.brk.util.DateTimeFormats;
