@@ -21,27 +21,35 @@ import org.hcgames.hcfactions.manager.FactionManager;
 import org.hcgames.hcfactions.manager.FlatFileFactionManager;
 import org.hcgames.hcfactions.manager.MongoFactionManager;
 import org.hcgames.hcfactions.structure.FactionMember;
+import org.hcgames.hcfactions.util.PersistableLocation;
+import org.hcgames.hcfactions.util.cuboid.Cuboid;
+import org.hcgames.hcfactions.util.cuboid.NamedCuboid;
+import org.hcgames.hcfactions.util.itemdb.ItemDb;
+import org.hcgames.hcfactions.util.itemdb.SimpleItemDb;
+import org.hcgames.hcfactions.visualise.VisualiseHandler;
 import org.hcgames.stats.Stats;
 import org.mineacademy.fo.plugin.SimplePlugin;
 
 @Getter
 public class HCFactions extends SimplePlugin {
 
+    private ItemDb itemDb;
     public static final Joiner SPACE_JOINER = Joiner.on(' ');
     public static final Joiner COMMA_JOINER = Joiner.on(", ");
-
     private static HCFactions instance;
     private MongoManager mongoManager;
     private WorldEditPlugin worldEdit;
-    private boolean configLoaded;
 
     private FactionManager factionManager;
     private ClaimHandler claimHandler;
     private Stats stats;
-    private Configuration configuration;
+    private VisualiseHandler visualiseHandler;
 
     @Override
     public void onPluginLoad() {
+        ConfigurationSerialization.registerClass(PersistableLocation.class);
+        ConfigurationSerialization.registerClass(Cuboid.class);
+        ConfigurationSerialization.registerClass(NamedCuboid.class);
         ConfigurationSerialization.registerClass(Claim.class);
         ConfigurationSerialization.registerClass(ClaimableFaction.class);
         ConfigurationSerialization.registerClass(EndPortalFaction.class);
@@ -78,7 +86,7 @@ public class HCFactions extends SimplePlugin {
     }
     @Override
     public void onPluginStop() {
-        if (!configLoaded) return;
+
         saveData();
         if (mongoManager != null) mongoManager.disconnect();;
         saveConfig();
@@ -104,6 +112,8 @@ public class HCFactions extends SimplePlugin {
     }
 
     private void registerManagers() {
+        this.itemDb = new SimpleItemDb(this);
+        visualiseHandler = new VisualiseHandler();
         if (getConfig().getBoolean("mongo.use", false)) {
             mongoManager = new MongoManager();
             mongoManager.connect();

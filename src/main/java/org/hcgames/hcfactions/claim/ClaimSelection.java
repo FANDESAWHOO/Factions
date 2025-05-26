@@ -26,7 +26,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.faction.PlayerFaction;
-import technology.brk.util.cuboid.Cuboid;
+import org.hcgames.hcfactions.util.cuboid.Cuboid;
+
 
 import java.util.UUID;
 

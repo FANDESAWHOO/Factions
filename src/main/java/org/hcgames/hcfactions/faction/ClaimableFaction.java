@@ -37,9 +37,11 @@ import org.hcgames.hcfactions.event.claim.ClaimChangeEvent;
 import org.hcgames.hcfactions.event.claim.FactionClaimChangeEvent;
 import org.hcgames.hcfactions.event.claim.FactionClaimChangedEvent;
 import org.hcgames.hcfactions.structure.FactionMember;
+import org.hcgames.hcfactions.util.BukkitUtils;
+import org.hcgames.hcfactions.util.GenericUtils;
 import org.hcgames.hcfactions.util.text.Names;
-import technology.brk.util.BukkitUtils;
-import technology.brk.util.GenericUtils;
+import org.mineacademy.fo.settings.Lang;
+
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -98,10 +100,10 @@ public class ClaimableFaction extends Faction{
         HCFactions plugin = JavaPlugin.getPlugin(HCFactions.class);
 
         sender.sendMessage(ChatColor.GOLD + BukkitUtils.STRAIGHT_LINE_DEFAULT);
-        sender.sendMessage(plugin.getMessages().getString("factions.show.claimable.top").replace("{factionName}", getFormattedName(sender)));
+        sender.sendMessage(Lang.of("factions.show.claimable.top").replace("{factionName}", getFormattedName(sender)));
         for (Claim claim : claims) {
             Location location = claim.getCenter();
-            sender.sendMessage(plugin.getMessages().getString("factions.show.claimable.claim_format")
+            sender.sendMessage(Lang.of("factions.show.claimable.claim_format")
                     .replace("{environment}", Names.getEnvironmentName(location.getWorld().getEnvironment()))
                     .replace("{locX}", String.valueOf(location.getBlockX()))
                     .replace("{locY}", String.valueOf(location.getBlockZ())));
@@ -188,13 +190,13 @@ public class ClaimableFaction extends Faction{
 
                 if (home != null && (home.isPresent() && claim.contains(home.get()))){
                     playerFaction.setHome(null);
-                    playerFaction.broadcast(plugin.getMessages().getString("factions.claiming.home_unset"));
+                    playerFaction.broadcast(Lang.of("factions.claiming.home_unset"));
                     break;
                 }
             }
 
       //      HCF.getPlugin().getEconomyManager().addBalance(leaderUUID, refund);
-            playerFaction.broadcast(plugin.getMessages().getString("factions.claiming.refund_broadcast")
+            playerFaction.broadcast(Lang.of("factions.claiming.refund_broadcast")
                     .replace("{amount}", String.valueOf(refund)));
         }
 

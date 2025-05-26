@@ -20,10 +20,8 @@
 
 package org.hcgames.hcfactions.faction;
 
-import com.doctordark.hcf.HCF;
-import com.doctordark.hcf.deathban.Deathban;
-import com.doctordark.hcf.economy.EconomyManager;
-import com.doctordark.hcf.user.FactionUser;
+
+import com.bekvon.bukkit.residence.commands.message;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
@@ -39,6 +37,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.event.playerfaction.FactionDtrChangeEvent;
 import org.hcgames.hcfactions.event.playerfaction.PlayerFactionHomeSetEvent;
@@ -54,15 +53,14 @@ import org.hcgames.hcfactions.structure.Raidable;
 import org.hcgames.hcfactions.structure.RegenStatus;
 import org.hcgames.hcfactions.structure.Relation;
 import org.hcgames.hcfactions.structure.Role;
+import org.hcgames.hcfactions.util.DurationFormatter;
+import org.hcgames.hcfactions.util.GenericUtils;
+import org.hcgames.hcfactions.util.JavaUtils;
+import org.hcgames.hcfactions.util.PersistableLocation;
+import org.hcgames.hcfactions.util.collect.ConcurrentSet;
 import org.hcgames.hcfactions.util.text.CC;
+import org.mineacademy.fo.settings.Lang;
 
-import technology.brk.util.BukkitUtils;
-import technology.brk.util.DateTimeFormats;
-import technology.brk.util.DurationFormatter;
-import technology.brk.util.GenericUtils;
-import technology.brk.util.JavaUtils;
-import technology.brk.util.PersistableLocation;
-import technology.brk.util.collect.ConcurrentSet;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -287,10 +285,10 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
         }
 
         HCFactions factions = JavaPlugin.getPlugin(HCFactions.class);
-        if(previousMembers.containsKey(playerUUID) && !force && factions.getConfiguration().isAntiRotationEnabled()){
-            Long lastRemovedWithDelay = previousMembers.get(playerUUID) + factions.getConfiguration().getAntiRotationDelay();
+        if(previousMembers.containsKey(playerUUID) && !force && Configuration.antiRotationEnabled){
+            Long lastRemovedWithDelay = previousMembers.get(playerUUID) + Configuration.antiRotationDelay;
             if(lastRemovedWithDelay > System.currentTimeMillis()){
-                sender.sendMessage(factions.getMessages().getString("factions.antirotation").replace("{time}",
+                sender.sendMessage(Lang.of("factions.antirotation").replace("{time}",
                         DurationFormatter.getRemaining(lastRemovedWithDelay - System.currentTimeMillis(), true)));
                 return false;
             }
@@ -634,7 +632,7 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
         if(membersSize == 2) return 2.2;
         if(membersSize == 1) return 1.1;
 
-        return Math.min(JavaPlugin.getPlugin(HCFactions.class).getConfiguration().getFactionMaximumDtr(), membersSize * 0.9);
+        return Math.min(Configuration.factionMaximumDtr, membersSize * 0.9);
     }
 
     public double getDeathsUntilRaidable(boolean updateLastCheck) {
@@ -664,7 +662,7 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
         if (this.getRegenStatus() == RegenStatus.REGENERATING) {
             long now = System.currentTimeMillis();
             long millisPassed = now - this.lastDtrUpdateTimestamp;
-            long millisBetweenUpdates = JavaPlugin.getPlugin(HCFactions.class).getConfiguration().getFactionDtrUpdateMillis();
+            long millisBetweenUpdates = Configuration.factionDtrUpdateMillis;
 
             if (millisPassed >= millisBetweenUpdates) {
                 long remainder = millisPassed % millisBetweenUpdates;  // the remaining time until the next update
@@ -720,7 +718,7 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
         this.regenCooldownTimestamp = systemMillis + millis;
 
         // needs to be multiplied by 2 because as soon as they lose regeneration delay, the timestamp will update
-        this.lastDtrUpdateTimestamp = systemMillis + (JavaPlugin.getPlugin(HCFactions.class).getConfiguration().getFactionDtrUpdateMillis() * 2);
+        this.lastDtrUpdateTimestamp = systemMillis + (Configuration.factionDtrUpdateMillis * 2);
     }
 
     @Override
@@ -761,7 +759,7 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
             FactionMember factionMember = entry.getValue();
             Optional<Player> target = factionMember.toOnlinePlayer();
 
-            FactionUser user = HCF.getPlugin().getUserManager().getUser(entry.getKey());
+         FactionUser user = HCF.getPlugin().getUserManager().getUser(entry.getKey());
             int kills = user.getKills();
             combinedKills += kills;
 

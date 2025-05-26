@@ -20,9 +20,7 @@
 
 package org.hcgames.hcfactions.faction;
 
-import com.doctordark.hcf.HCF;
-import com.doctordark.hcf.visualise.VisualBlockData;
-import com.doctordark.hcf.visualise.VisualType;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -36,13 +34,11 @@ import org.hcgames.hcfactions.claim.ClaimHandler;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.manager.FactionManager;
 
-import com.doctordark.hcf.HCF;
-import com.doctordark.hcf.visualise.VisualBlockData;
-import com.doctordark.hcf.visualise.VisualType;
 
-import technology.brk.base.BasePlugin;
-import technology.brk.util.BukkitUtils;
-import technology.brk.util.cuboid.Cuboid;
+import org.hcgames.hcfactions.util.BukkitUtils;
+import org.hcgames.hcfactions.visualise.VisualBlockData;
+import org.hcgames.hcfactions.visualise.VisualType;
+
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -95,7 +91,7 @@ public class LandMap {
                     shown.add(world.getBlockAt(corner.getBlockX(), y, corner.getBlockZ()).getLocation());
                 }
             }
-            final Map<Location, VisualBlockData> dataMap = HCF.getPlugin().getVisualiseHandler().generate(player, shown, visualType, true);
+            final Map<Location, VisualBlockData> dataMap = HCFactions.getInstance().getVisualiseHandler().generate(player, shown, visualType, true);
             if(dataMap.isEmpty()) {
                 continue LOOP_MAIN;
             }
@@ -105,7 +101,7 @@ public class LandMap {
                 if(visualBlockData.getItemType() == Material.STAINED_GLASS){
                     continue LOOP_1;
                 }else{
-                    materialName = BasePlugin.getPlugin().getItemDb().getName(new ItemStack(visualBlockData.getItemType()));
+                    materialName = HCFactions.getInstance().getItemDb().getName(new ItemStack(visualBlockData.getItemType()));
                     break LOOP_1;
                 }
             }

@@ -33,7 +33,8 @@ import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.event.faction.FactionRenameEvent;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.structure.Relation;
-import technology.brk.util.mongo.Mongoable;
+import org.hcgames.hcfactions.util.Mongoable;
+
 
 import java.util.LinkedHashMap;
 import java.util.Map;
