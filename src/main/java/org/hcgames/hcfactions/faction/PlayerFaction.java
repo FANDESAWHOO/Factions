@@ -798,7 +798,7 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
         } else {
         	sender.sendMessage(CC.translate("&6Allies: &cNone"));
         }
-            sender.sendMessage(CC.translate("&6Balance: &f" + EconomyManager.ECONOMY_SYMBOL + balance));
+            sender.sendMessage(CC.translate("&6Balance: &f$"  + balance));
             sender.sendMessage(CC.translate("&6Members: &e"+ getOnlinePlayers(sender).size() + " / "+members.size()));
             if(!getOnlinePlayers().isEmpty()) {
             	List<String> players = getOnlineNames();
