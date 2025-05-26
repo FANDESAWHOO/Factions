@@ -4,12 +4,11 @@ package org.hcgames.hcfactions;
 import com.google.common.base.Joiner;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import lombok.Getter;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
 import org.hcgames.hcfactions.claim.Claim;
 import org.hcgames.hcfactions.claim.ClaimHandler;
+import org.hcgames.hcfactions.command.FactionCommands;
 import org.hcgames.hcfactions.command.LocationCommand;
 import org.hcgames.hcfactions.command.RegenCommand;
 import org.hcgames.hcfactions.faction.ClaimableFaction;
@@ -28,6 +27,8 @@ import org.hcgames.hcfactions.util.itemdb.ItemDb;
 import org.hcgames.hcfactions.util.itemdb.SimpleItemDb;
 import org.hcgames.hcfactions.visualise.VisualiseHandler;
 import org.hcgames.stats.Stats;
+import org.jetbrains.annotations.Nullable;
+import org.mineacademy.fo.command.SimpleCommandGroup;
 import org.mineacademy.fo.plugin.SimplePlugin;
 
 @Getter
@@ -46,32 +47,39 @@ public class HCFactions extends SimplePlugin {
     private VisualiseHandler visualiseHandler;
 
     @Override
-    public void onPluginLoad() {
-        ConfigurationSerialization.registerClass(PersistableLocation.class);
-        ConfigurationSerialization.registerClass(Cuboid.class);
-        ConfigurationSerialization.registerClass(NamedCuboid.class);
-        ConfigurationSerialization.registerClass(Claim.class);
-        ConfigurationSerialization.registerClass(ClaimableFaction.class);
-        ConfigurationSerialization.registerClass(EndPortalFaction.class);
-        ConfigurationSerialization.registerClass(Faction.class);
-        ConfigurationSerialization.registerClass(FactionMember.class);
-        ConfigurationSerialization.registerClass(PlayerFaction.class);
-        ConfigurationSerialization.registerClass(RoadFaction.class);
-        ConfigurationSerialization.registerClass(SpawnFaction.class);
-        ConfigurationSerialization.registerClass(RoadFaction.NorthRoadFaction.class);
-        ConfigurationSerialization.registerClass(RoadFaction.EastRoadFaction.class);
-        ConfigurationSerialization.registerClass(RoadFaction.SouthRoadFaction.class);
-        ConfigurationSerialization.registerClass(RoadFaction.WestRoadFaction.class);
-        ConfigurationSerialization.registerClass(SystemTeam.class);
+    public @Nullable SimpleCommandGroup getMainCommand() {
+        return FactionCommands.getInstance();
+    }
+   public void register(){
+       ConfigurationSerialization.registerClass(PersistableLocation.class);
+       ConfigurationSerialization.registerClass(Cuboid.class);
+       ConfigurationSerialization.registerClass(NamedCuboid.class);
+       ConfigurationSerialization.registerClass(Claim.class);
+       ConfigurationSerialization.registerClass(ClaimableFaction.class);
+       ConfigurationSerialization.registerClass(EndPortalFaction.class);
+       ConfigurationSerialization.registerClass(Faction.class);
+       ConfigurationSerialization.registerClass(FactionMember.class);
+       ConfigurationSerialization.registerClass(PlayerFaction.class);
+       ConfigurationSerialization.registerClass(RoadFaction.class);
+       ConfigurationSerialization.registerClass(SpawnFaction.class);
+       ConfigurationSerialization.registerClass(RoadFaction.NorthRoadFaction.class);
+       ConfigurationSerialization.registerClass(RoadFaction.EastRoadFaction.class);
+       ConfigurationSerialization.registerClass(RoadFaction.SouthRoadFaction.class);
+       ConfigurationSerialization.registerClass(RoadFaction.WestRoadFaction.class);
+       ConfigurationSerialization.registerClass(SystemTeam.class);
 
-        FactionManager.registerSystemFaction(EndPortalFaction.class);
-        FactionManager.registerSystemFaction(RoadFaction.EastRoadFaction.class);
-        FactionManager.registerSystemFaction(RoadFaction.NorthRoadFaction.class);
-        FactionManager.registerSystemFaction(RoadFaction.SouthRoadFaction.class);
-        FactionManager.registerSystemFaction(RoadFaction.WestRoadFaction.class);
-        FactionManager.registerSystemFaction(SpawnFaction.class);
-        FactionManager.registerSystemFaction(WarzoneFaction.class);
-        FactionManager.registerSystemFaction(WildernessFaction.class);
+       FactionManager.registerSystemFaction(EndPortalFaction.class);
+       FactionManager.registerSystemFaction(RoadFaction.EastRoadFaction.class);
+       FactionManager.registerSystemFaction(RoadFaction.NorthRoadFaction.class);
+       FactionManager.registerSystemFaction(RoadFaction.SouthRoadFaction.class);
+       FactionManager.registerSystemFaction(RoadFaction.WestRoadFaction.class);
+       FactionManager.registerSystemFaction(SpawnFaction.class);
+       FactionManager.registerSystemFaction(WarzoneFaction.class);
+       FactionManager.registerSystemFaction(WildernessFaction.class);
+   }
+    @Override
+    public void onPluginLoad() {
+    register();
     }
    
     @Override
@@ -97,16 +105,14 @@ public class HCFactions extends SimplePlugin {
     }
 
     private void registerListeners() {
-        PluginManager manager = getServer().getPluginManager();
-        manager.registerEvents(new ClaimWandListener(this), this);
-        manager.registerEvents(new NameCacheListener(this), this);
-        manager.registerEvents(new SignSubclaimListener(this), this);
-        manager.registerEvents(new ProtectionListener(this), this);
-        manager.registerEvents(new FactionChatListener(this), this);
+        registerEvents(new ClaimWandListener(this));
+        registerEvents(new NameCacheListener(this));
+        registerEvents(new SignSubclaimListener(this));
+        registerEvents(new ProtectionListener(this));
+        registerEvents(new FactionChatListener(this));
     }
 
     private void registerCommands() {
-    //    getCommand("factions").setExecutor(new FactionExecutor(this));
         registerCommand(new LocationCommand());
         registerCommand(new RegenCommand());
     }
@@ -122,13 +128,9 @@ public class HCFactions extends SimplePlugin {
             factionManager = new FlatFileFactionManager(this);
         }
 
-        if (factionManager == null) {
-            getLogger().severe("FactionManager failed to initialize!");
-        } else {
-            getLogger().info("FactionManager initialized successfully.");
-        }
+		getLogger().info("FactionManager initialized successfully.");
 
-        claimHandler = new ClaimHandler(this);
+		claimHandler = new ClaimHandler(this);
         worldEdit = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
         Plugin statsPlugin = getServer().getPluginManager().getPlugin("Stats");
         if (statsPlugin instanceof Stats) {
