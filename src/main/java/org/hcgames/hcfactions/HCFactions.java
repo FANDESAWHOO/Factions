@@ -37,10 +37,8 @@ public class HCFactions extends SimplePlugin {
     private ItemDb itemDb;
     public static final Joiner SPACE_JOINER = Joiner.on(' ');
     public static final Joiner COMMA_JOINER = Joiner.on(", ");
-    private static HCFactions instance;
     private MongoManager mongoManager;
     private WorldEditPlugin worldEdit;
-
     private FactionManager factionManager;
     private ClaimHandler claimHandler;
     private Stats stats;
@@ -50,6 +48,7 @@ public class HCFactions extends SimplePlugin {
     public @Nullable SimpleCommandGroup getMainCommand() {
         return FactionCommands.getInstance();
     }
+
    public void register(){
        ConfigurationSerialization.registerClass(PersistableLocation.class);
        ConfigurationSerialization.registerClass(Cuboid.class);
@@ -96,8 +95,8 @@ public class HCFactions extends SimplePlugin {
     public void onPluginStop() {
 
         saveData();
-        if (mongoManager != null) mongoManager.disconnect();;
-        saveConfig();
+        if (mongoManager != null) mongoManager.disconnect();
+		saveConfig();
     }
 
     private void saveData() {
@@ -118,24 +117,20 @@ public class HCFactions extends SimplePlugin {
     }
 
     private void registerManagers() {
-        this.itemDb = new SimpleItemDb(this);
+        itemDb = new SimpleItemDb(this);
         visualiseHandler = new VisualiseHandler();
         if (getConfig().getBoolean("mongo.use", false)) {
             mongoManager = new MongoManager();
             mongoManager.connect();
             factionManager = new MongoFactionManager(this);
-        } else {
-            factionManager = new FlatFileFactionManager(this);
-        }
+        } else factionManager = new FlatFileFactionManager(this);
 
 		getLogger().info("FactionManager initialized successfully.");
 
 		claimHandler = new ClaimHandler(this);
         worldEdit = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
         Plugin statsPlugin = getServer().getPluginManager().getPlugin("Stats");
-        if (statsPlugin instanceof Stats) {
-            stats = (Stats) statsPlugin;
-        }
+        if (statsPlugin instanceof Stats) stats = (Stats) statsPlugin;
     }
 
     public static HCFactions getInstance() {

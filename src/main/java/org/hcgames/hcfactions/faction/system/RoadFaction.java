@@ -4,11 +4,10 @@ import org.bson.Document;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.faction.ClaimableFaction;
-import technology.brk.util.BukkitUtils;
-import technology.brk.util.mongo.Mongoable;
+import org.hcgames.hcfactions.util.BukkitUtils;
+import org.hcgames.hcfactions.util.Mongoable;
 
 import java.util.Map;
 import java.util.UUID;
@@ -221,7 +220,7 @@ public abstract class RoadFaction extends ClaimableFaction implements Configurat
 
     @Override
     public String getFormattedName(CommandSender sender) {
-        return JavaPlugin.getPlugin(HCFactions.class).getConfiguration().getRelationColourRoad() + getDisplayName();
+        return Configuration.relationColourRoad + getDisplayName();
     }
 
     @Override

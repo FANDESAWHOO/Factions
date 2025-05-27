@@ -22,8 +22,7 @@ package org.hcgames.hcfactions.faction.system;
 
 import org.bson.Document;
 import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.faction.Faction;
 
 import java.util.Map;
@@ -47,7 +46,7 @@ public class WarzoneFaction extends Faction implements SystemFaction {
 
     @Override
     public String getFormattedName(CommandSender sender) {
-        return JavaPlugin.getPlugin(HCFactions.class).getConfiguration().getRelationColourWarzone() + getName();
+        return Configuration.relationColourWarzone + getName();
     }
 
     public static UUID getUUID() {

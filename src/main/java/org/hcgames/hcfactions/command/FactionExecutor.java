@@ -4,61 +4,8 @@ package org.hcgames.hcfactions.command;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.hcgames.hcfactions.HCFactions;
-import org.hcgames.hcfactions.command.argument.FactionAcceptArgument;
-import org.hcgames.hcfactions.command.argument.FactionAllyArgument;
-import org.hcgames.hcfactions.command.argument.FactionAnnouncementArgument;
-import org.hcgames.hcfactions.command.argument.FactionChatArgument;
-import org.hcgames.hcfactions.command.argument.FactionClaimArgument;
-import org.hcgames.hcfactions.command.argument.FactionClaimChunkArgument;
-import org.hcgames.hcfactions.command.argument.FactionClaimsArgument;
-import org.hcgames.hcfactions.command.argument.FactionCreateArgument;
-import org.hcgames.hcfactions.command.argument.FactionDemoteArgument;
-import org.hcgames.hcfactions.command.argument.FactionDepositArgument;
-import org.hcgames.hcfactions.command.argument.FactionDisbandArgument;
-import org.hcgames.hcfactions.command.argument.FactionFocusArgument;
-import org.hcgames.hcfactions.command.argument.FactionFriendlyFireArgument;
-import org.hcgames.hcfactions.command.argument.FactionHelpArgument;
-import org.hcgames.hcfactions.command.argument.FactionHomeArgument;
-import org.hcgames.hcfactions.command.argument.FactionInviteArgument;
-import org.hcgames.hcfactions.command.argument.FactionInvitesArgument;
-import org.hcgames.hcfactions.command.argument.FactionKickArgument;
-import org.hcgames.hcfactions.command.argument.FactionLeaderArgument;
-import org.hcgames.hcfactions.command.argument.FactionLeaveArgument;
-import org.hcgames.hcfactions.command.argument.FactionListArgument;
-import org.hcgames.hcfactions.command.argument.FactionLivesArgument;
-import org.hcgames.hcfactions.command.argument.FactionMapArgument;
-import org.hcgames.hcfactions.command.argument.FactionMessageArgument;
-import org.hcgames.hcfactions.command.argument.FactionOpenArgument;
-import org.hcgames.hcfactions.command.argument.FactionPastFactionsArgument;
-import org.hcgames.hcfactions.command.argument.FactionPromoteArgument;
-import org.hcgames.hcfactions.command.argument.FactionRemoveCooldownArgument;
-import org.hcgames.hcfactions.command.argument.FactionRenameArgument;
-import org.hcgames.hcfactions.command.argument.FactionReviveArgument;
-import org.hcgames.hcfactions.command.argument.FactionSetHomeArgument;
-import org.hcgames.hcfactions.command.argument.FactionShowArgument;
-import org.hcgames.hcfactions.command.argument.FactionSnowArgument;
-import org.hcgames.hcfactions.command.argument.FactionStuckArgument;
-import org.hcgames.hcfactions.command.argument.FactionUnallyArgument;
-import org.hcgames.hcfactions.command.argument.FactionUnclaimArgument;
-import org.hcgames.hcfactions.command.argument.FactionUninviteArgument;
-import org.hcgames.hcfactions.command.argument.FactionWithdrawArgument;
-import org.hcgames.hcfactions.command.argument.staff.FactionBanArgument;
-import org.hcgames.hcfactions.command.argument.staff.FactionClaimForArgument;
-import org.hcgames.hcfactions.command.argument.staff.FactionClearClaimsArgument;
-import org.hcgames.hcfactions.command.argument.staff.FactionCreateSystemArgument;
-import org.hcgames.hcfactions.command.argument.staff.FactionForceDemoteArgument;
-import org.hcgames.hcfactions.command.argument.staff.FactionForceJoinArgument;
-import org.hcgames.hcfactions.command.argument.staff.FactionForceKickArgument;
-import org.hcgames.hcfactions.command.argument.staff.FactionForceLeaderArgument;
-import org.hcgames.hcfactions.command.argument.staff.FactionForcePromoteArgument;
-import org.hcgames.hcfactions.command.argument.staff.FactionForceRenameArgument;
-import org.hcgames.hcfactions.command.argument.staff.FactionForceUnclaimHereArgument;
-import org.hcgames.hcfactions.command.argument.staff.FactionMuteArgument;
-import org.hcgames.hcfactions.command.argument.staff.FactionReloadArgument;
-import org.hcgames.hcfactions.command.argument.staff.FactionRemoveArgument;
-import org.hcgames.hcfactions.command.argument.staff.FactionSetDeathbanMultiplierArgument;
-import org.hcgames.hcfactions.command.argument.staff.FactionSetDtrArgument;
-import org.hcgames.hcfactions.command.argument.staff.FactionSetDtrRegenArgument;
+import org.hcgames.hcfactions.command.argument.*;
+import org.hcgames.hcfactions.command.argument.staff.*;
 import technology.brk.util.command.ArgumentExecutor;
 import technology.brk.util.command.CommandArgument;
 
@@ -138,18 +85,16 @@ public class FactionExecutor extends ArgumentExecutor {
         }
 
         CommandArgument argument = getArgument(args[0]);
-        if (argument != null) {
+		//   sender.sendMessage(HCF.getPlugin().getMessagesOld().getString("Commands-Unknown-Subcommand")
+		//         .replace("{subCommand}", args[0])
+		//       .replace("{commandLabel}", command.getName()));
+		if (argument != null) {
             String permission = argument.getPermission();
             if (permission == null || sender.hasPermission(permission)) {
                 argument.onCommand(sender, command, label, args);
                 return true;
             }
-        }else{
-         //   sender.sendMessage(HCF.getPlugin().getMessagesOld().getString("Commands-Unknown-Subcommand")
-           //         .replace("{subCommand}", args[0])
-             //       .replace("{commandLabel}", command.getName()));
-            return true;
-        }
+        }else return true;
 
         helpArgument.onCommand(sender, command, label, args);
         return true;

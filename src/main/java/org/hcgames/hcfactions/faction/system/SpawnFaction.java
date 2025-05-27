@@ -23,8 +23,7 @@ package org.hcgames.hcfactions.faction.system;
 import org.bson.Document;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.faction.ClaimableFaction;
 
 import java.util.Map;
@@ -36,7 +35,7 @@ public class SpawnFaction extends ClaimableFaction implements ConfigurationSeria
 
     public SpawnFaction() {
         super("Spawn", FACTION_UUID);
-        this.safezone = true;
+        safezone = true;
 
         /*int radius;
 
@@ -83,6 +82,6 @@ public class SpawnFaction extends ClaimableFaction implements ConfigurationSeria
 
     @Override
     public String getFormattedName(CommandSender sender) {
-        return JavaPlugin.getPlugin(HCFactions.class).getConfiguration().getRelationColourSafezone() + getName();
+        return Configuration.relationColourSafezone + getName();
     }
 }

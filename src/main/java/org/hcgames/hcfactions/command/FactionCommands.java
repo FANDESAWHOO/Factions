@@ -1,12 +1,12 @@
 package org.hcgames.hcfactions.command;
 
+
 import lombok.Getter;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.command.subcommand.FactionClaimChunkCommand;
+import org.hcgames.hcfactions.command.subcommand.FactionClaimCommand;
 import org.hcgames.hcfactions.command.subcommand.FactionCreateCommand;
-import org.hcgames.hcfactions.faction.Faction;
-import org.mineacademy.fo.Common;
+import org.hcgames.hcfactions.command.subcommand.FactionDisbandCommand;
+import org.mineacademy.fo.annotation.AutoRegister;
 import org.mineacademy.fo.command.SimpleCommandGroup;
 import org.mineacademy.fo.command.SimpleSubCommand;
 
@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@AutoRegister
 public class FactionCommands extends SimpleCommandGroup {
 
 	/**
@@ -21,6 +22,9 @@ public class FactionCommands extends SimpleCommandGroup {
 	 */
 	@Getter
 	private final static SimpleCommandGroup instance = new FactionCommands();
+    @Getter
+	private static final List<SimpleSubCommand> arguments = new ArrayList<>();
+
 
 	/**
 	 * Extending method to register subcommands, call
@@ -30,8 +34,11 @@ public class FactionCommands extends SimpleCommandGroup {
 	@Override
 	protected void registerSubcommands() {
     	registerSubcommand(FactionCreateCommand.class);
+		registerSubcommand(FactionClaimCommand.class);
+		registerSubcommand(FactionClaimChunkCommand.class);
+		registerSubcommand(FactionDisbandCommand.class);
 	}
-	public FactionCommands(){
+	private FactionCommands(){
 		super("faction", Arrays.asList("f","fac"));
 	}
 

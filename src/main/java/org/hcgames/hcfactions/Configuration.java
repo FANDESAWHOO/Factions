@@ -4,6 +4,7 @@ package org.hcgames.hcfactions;
 import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.mineacademy.fo.settings.SimpleSettings;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -63,7 +64,7 @@ public final class Configuration extends SimpleSettings {
     public static Boolean subclaimSignCaptain;
     public static Boolean subclaimSignLeader;
     public static Boolean subclaimHopperCheck;
-    
+    public static Boolean kitMap;
     public static Boolean preventAllyAttackDamage;
     public static Boolean messageDebug;
 
@@ -120,7 +121,9 @@ public final class Configuration extends SimpleSettings {
         subclaimSignCaptain = getBoolean("subclaimsigns.Captain");
         subclaimSignLeader = getBoolean("subclaimsigns.leader");
         subclaimHopperCheck = getBoolean("subclaimsigns.hoppercheck");
-        
+
+        kitMap = getBoolean("kit-map");
+
         preventAllyAttackDamage = getBoolean("preventAllyAttackDamage");
         messageDebug = getBoolean("messageDebug");
     }

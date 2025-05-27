@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.command.FactionCommands;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.util.JavaUtils;
@@ -20,6 +21,8 @@ public class FactionCreateCommand extends SimpleSubCommand {
 		super("create | make | define");
 		setDescription("Create a faction.");
 		plugin = HCFactions.getInstance();
+		if(!FactionCommands.getArguments().contains(this))
+			FactionCommands.getArguments().add(this);
 
 	}
 

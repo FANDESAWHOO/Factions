@@ -26,10 +26,11 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.claim.Claim;
 import org.hcgames.hcfactions.faction.ClaimableFaction;
-import technology.brk.util.mongo.Mongoable;
+import org.hcgames.hcfactions.util.Mongoable;
 
 import java.util.Map;
 import java.util.UUID;
@@ -47,8 +48,8 @@ public class EndPortalFaction extends ClaimableFaction implements ConfigurationS
         World overworld = Bukkit.getServer().getWorlds().get(0);
         int maxHeight = overworld.getMaxHeight();
 
-        int min = plugin.getConfiguration().getEndPortalCenter() - plugin.getConfiguration().getEndPortalRadius();
-        int max = plugin.getConfiguration().getEndPortalCenter() + plugin.getConfiguration().getEndPortalRadius();
+        int min = Configuration.endPortalCenter - Configuration.endPortalRadius;
+        int max = Configuration.endPortalCenter + Configuration.endPortalRadius;
 
         // North East (++)
         addClaim(new Claim(this, new Location(overworld, min, 0, min), new Location(overworld, max, maxHeight, max)));
