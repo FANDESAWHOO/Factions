@@ -3,6 +3,7 @@ package org.hcgames.hcfactions.api;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.structure.Relation;
 
@@ -23,6 +24,14 @@ public final class FactionsAPI {
 		 return HCFactions.getInstance().getFactionManager().getFaction(name);
 	 }
 
+	 public static Faction getPlayerFaction(Player player){
+		 try{
+			 return HCFactions.getInstance().getFactionManager().getFaction(player.getUniqueId());
+		 }catch (NoFactionFoundException e){
+			 return null;
+		 }
+	 }
+
 	 public static boolean isDeathban(Faction faction){
 		 return faction.isDeathban();
 	 }
@@ -31,4 +40,11 @@ public final class FactionsAPI {
 		return faction.getRelation(player);
 	 }
 
+     public static boolean hasFaction(Player player){
+		 try{
+			 return HCFactions.getInstance().getFactionManager().getFaction(player.getUniqueId()) != null;
+		 }catch (NoFactionFoundException e){
+			 return false;
+		 }
+	 }
 }
