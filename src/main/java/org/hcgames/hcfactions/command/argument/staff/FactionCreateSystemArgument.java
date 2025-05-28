@@ -1,71 +1,70 @@
 package org.hcgames.hcfactions.command.argument.staff;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+
+import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
-import org.hcgames.hcfactions.faction.Faction;
-import org.hcgames.hcfactions.faction.PlayerFaction;
+
 import org.hcgames.hcfactions.faction.system.SystemTeam;
+import org.hcgames.hcfactions.util.JavaUtils;
+import org.mineacademy.fo.command.SimpleSubCommand;
+import org.mineacademy.fo.settings.Lang;
 
-import com.doctordark.hcf.HCF;
 
-import net.md_5.bungee.api.ChatColor;
-import technology.brk.util.JavaUtils;
-import technology.brk.util.command.CommandArgument;
 
-public class FactionCreateSystemArgument extends CommandArgument {
+public class FactionCreateSystemArgument extends SimpleSubCommand {
 	
 	private HCFactions plugin;
 	
 	public FactionCreateSystemArgument(HCFactions plugin) {
-	    super("createsystem", "Create a system faction.");
+	    super("createsystem");
+	    setDescription("Create a system faction.");
 		this.plugin = plugin;
-        this.permission = "hcf.command.faction.argument." + getName();
+      //  this.permission = "hcf.command.faction.argument." + getName();
 	}
 
-	@Override
+
 	public String getUsage(String arg0) {
 		return "f createsystem name";
 	}
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+	public void onCommand() {
 		if (args.length < 2) {
-            sender.sendMessage(plugin.getMessages().getString("command.error.usage", getUsage(label)));
-            return true;
+            sender.sendMessage(Lang.of("command.error.usage", getUsage(getLabel())));
+            return;
         }
 	    String name = args[1];
-	    int value = plugin.getConfiguration().getFactionNameMinCharacters();
+	    int value = Configuration.factionNameMinCharacters;
 	   
 	    if (name.length() < value) {
-            sender.sendMessage(HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Create-MinimumChars")
+            sender.sendMessage(Lang.of("Commands-Factions-Create-MinimumChars")
                     .replace("{minChars}", String.valueOf(value)));
-            return true;
+            return;
         }
 
-        value = plugin.getConfiguration().getFactionNameMaxCharacters();
+        value = Configuration.factionNameMaxCharacters;
 
         if (name.length() > value) {
-            sender.sendMessage(HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Create-MaximumChars")
+            sender.sendMessage(Lang.of("Commands-Factions-Create-MaximumChars")
                     .replace("{maxChars}", String.valueOf(value)));
-            return true;
+            return;
         }
 
         if (!JavaUtils.isAlphanumeric(name)) {
-            sender.sendMessage(HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Create-MustBeAlphanumeric"));
-            return true;
+            sender.sendMessage(Lang.of("Commands-Factions-Create-MustBeAlphanumeric"));
+            return;
         }
 
         try {
             if(plugin.getFactionManager().getFaction(name) != null){
-                sender.sendMessage(HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Create-NameAlreadyExists")
+                sender.sendMessage(Lang.of("Commands-Factions-Create-NameAlreadyExists")
                         .replace("{factionName}", name));
-                return true;
+                return;
             }
         } catch (NoFactionFoundException e) {}
         plugin.getFactionManager().createFaction(new SystemTeam(name), sender);
-		return true;
+		return;
 	}
 
 }

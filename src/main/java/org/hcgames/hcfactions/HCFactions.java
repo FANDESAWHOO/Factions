@@ -31,7 +31,11 @@ import org.hcgames.stats.Stats;
 import org.jetbrains.annotations.Nullable;
 import org.mineacademy.fo.command.SimpleCommandGroup;
 import org.mineacademy.fo.plugin.SimplePlugin;
-
+/**
+ * FORKED FROM HCGames (System Update) FACTIONS
+ * DON'T SELL THIS PLUGIN
+ * PLEASE DON'T TALK SHIT
+ */
 @Getter
 public class HCFactions extends SimplePlugin {
 

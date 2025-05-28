@@ -6,13 +6,15 @@ import org.bukkit.configuration.serialization.*;
 import com.google.common.base.*;
 
 import org.bukkit.util.Vector;
+import org.hcgames.hcfactions.util.Mongoable;
 import org.bukkit.entity.*;
 
 import java.util.*;
 
+import org.bson.Document;
 import org.bukkit.*;
 
-public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializable {
+public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializable, Mongoable {
     protected String worldName;
     protected int x1;
     protected int y1;
@@ -67,17 +69,6 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         this(other.getWorld().getName(), other.x1, other.y1, other.z1, other.x2, other.y2, other.z2);
     }
 
-    public Map<String, Object> serialize() {
-        Map<String, Object> map = new LinkedHashMap<String, Object>();
-        map.put("worldName", this.worldName);
-        map.put("x1", this.x1);
-        map.put("y1", this.y1);
-        map.put("z1", this.z1);
-        map.put("x2", this.x2);
-        map.put("y2", this.y2);
-        map.put("z2", this.z2);
-        return map;
-    }
 
     public boolean hasBothPositionsSet() {
         return this.getMinimumPoint() != null && this.getMaximumPoint() != null;
@@ -267,7 +258,31 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
             }
         }
     }
-
+    public Map<String, Object> serialize() {
+        LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+        map.put("worldName", this.worldName);
+        map.put("x1", this.x1);
+        map.put("y1", this.y1);
+        map.put("z1", this.z1);
+        map.put("x2", this.x2);
+        map.put("y2", this.y2);
+        map.put("z2", this.z2);
+        return map;
+    }
+    
+    @Override
+    public Document toDocument(){
+        Document document = new Document();
+        document.put("worldName", this.worldName);
+        document.put("x1", this.x1);
+        document.put("y1", this.y1);
+        document.put("z1", this.z1);
+        document.put("x2", this.x2);
+        document.put("y2", this.y2);
+        document.put("z2", this.z2);
+        return document;
+    }
+    
     public boolean contains(Cuboid cuboid) {
         return this.contains(cuboid.getMinimumPoint()) || this.contains(cuboid.getMaximumPoint());
     }

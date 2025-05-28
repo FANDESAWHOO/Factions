@@ -1,38 +1,38 @@
 package org.hcgames.hcfactions.command.argument.staff;
 
-import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.manager.SearchCallback;
 import org.hcgames.hcfactions.structure.FactionMember;
 import org.hcgames.hcfactions.structure.Role;
-import technology.brk.util.command.CommandArgument;
+import org.mineacademy.fo.command.SimpleSubCommand;
+import org.mineacademy.fo.settings.Lang;
 
 import java.util.Collections;
 import java.util.List;
 
-public class FactionForceDemoteArgument extends CommandArgument {
+public class FactionForceDemoteArgument extends SimpleSubCommand {
 
     private final HCFactions plugin;
 
     public FactionForceDemoteArgument(HCFactions plugin) {
-        super("forcedemote", "Forces the demotion status of a player.");
+        super("forcedemote");
+        setDescription( "Forces the demotion status of a player.");
         this.plugin = plugin;
-        this.permission = "hcf.command.faction.argument." + getName();
+     //   this.permission = "hcf.command.faction.argument." + getName();
     }
 
-    @Override
+
     public String getUsage(String label){
-        return plugin.getMessages().getString("commands.staff.forcedemote.usage", label, getName());
+        return Lang.of("commands.staff.forcedemote.usage", label, getName());
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public void onCommand() {
         if (args.length < 2) {
-            plugin.getMessages().getString("commands.error.usage", getUsage(label));
-            return true;
+            Lang.of("commands.error.usage", getUsage(getLabel()));
+            return;
         }
 
         plugin.getFactionManager().advancedSearch(args[1], PlayerFaction.class, new SearchCallback<PlayerFaction>() {
@@ -48,17 +48,17 @@ public class FactionForceDemoteArgument extends CommandArgument {
                 }
 
                 if (member == null) {
-                    sender.sendMessage(plugin.getMessages().getString("commands.error.member_not_found", args[1]));
+                    sender.sendMessage(Lang.of("commands.error.member_not_found", args[1]));
                     return;
                 }
 
                 if (member.getRole() == Role.LEADER) {
-                    sender.sendMessage(plugin.getMessages().getString("command.staff.forcedemote.leader_demote", member.getCachedName()));
+                    sender.sendMessage(Lang.of("command.staff.forcedemote.leader_demote", member.getCachedName()));
                     return;
                 }
 
                 if(member.getRole() == Role.LEADER){
-                    sender.sendMessage(plugin.getMessages().getString("command.staff.forcedemote.user_demote", member.getCachedName()));
+                    sender.sendMessage(Lang.of("command.staff.forcedemote.user_demote", member.getCachedName()));
                     return;
                 }
 
@@ -74,19 +74,19 @@ public class FactionForceDemoteArgument extends CommandArgument {
                 }
 
                 member.setRole(newRole);
-                faction.broadcast(plugin.getMessages().getString("commands.staff.forcedemote.demote_broadcast", member.getCachedName(), newRole.getName()));
+                faction.broadcast(Lang.of("commands.staff.forcedemote.demote_broadcast", member.getCachedName(), newRole.getName()));
             }
 
             @Override
             public void onFail(FailReason reason) {
-                sender.sendMessage(plugin.getMessages().getString("commands.error.faction_not_found", args[1]));
+                sender.sendMessage(Lang.of("commands.error.faction_not_found", args[1]));
             }
         });
-        return true;
+        return;
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+    public List<String> tabComplete() {
         return args.length == 2 ? null : Collections.emptyList();
     }
 }

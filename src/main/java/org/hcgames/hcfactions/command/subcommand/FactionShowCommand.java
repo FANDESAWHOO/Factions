@@ -1,6 +1,6 @@
-package org.hcgames.hcfactions.command.argument;
+package org.hcgames.hcfactions.command.subcommand;
 
-import com.doctordark.hcf.HCF;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -10,47 +10,49 @@ import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.manager.SearchCallback;
-import technology.brk.util.command.CommandArgument;
+import org.mineacademy.fo.command.SimpleSubCommand;
+import org.mineacademy.fo.settings.Lang;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class FactionShowArgument extends CommandArgument {
+public class FactionShowCommand extends SimpleSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionShowArgument(HCFactions plugin) {
-        super("show", "Get details about a faction.", new String[]{"i", "info", "who"});
+    public FactionShowCommand(HCFactions plugin) {
+        super("show | i | info | who");
+        setDescription("Get details about a faction.");
         this.plugin = plugin;
     }
 
-    @Override
+ 
     public String getUsage(String label) {
         return '/' + label + ' ' + getName() + " [playerName|factionName]";
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public void onCommand() {
         Faction playerFaction = null;
         Faction namedFaction = null;
 
         if (args.length < 2) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(HCF.getPlugin().getMessagesOld().getString("Commands-Usage").replace("{usage}", getUsage(label)));
-                return true;
+                sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage(getLabel())));
+                return;
             }
 
             try {
                 namedFaction = plugin.getFactionManager().getPlayerFaction((Player) sender);
             } catch (NoFactionFoundException e) {
-                sender.sendMessage(HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Global-NotInFaction"));
-                return true;
+                sender.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
+                return;
             }
 
             if (namedFaction == null) {
-                sender.sendMessage(HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Global-NotInFaction"));
-                return true;
+                sender.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
+                return;
             }
 
             namedFaction.sendInformation(sender);
@@ -73,18 +75,18 @@ public class FactionShowArgument extends CommandArgument {
                 @Override
                 public void onFail(FailReason reason) {
                     if(finalNamedFaction == null){
-                        sender.sendMessage(plugin.getMessages().getString("commands.error.faction_not_found", args[1]));
+                        sender.sendMessage(Lang.of("commands.error.faction_not_found", args[1]));
                     }
                 }
             }, true);
 
         }
 
-        return true;
+        return;
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+    public List<String> tabComplete() {
         if (args.length != 2 || !(sender instanceof Player)) {
             return Collections.emptyList();
         }

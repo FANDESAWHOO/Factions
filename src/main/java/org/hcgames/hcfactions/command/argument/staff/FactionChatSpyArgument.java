@@ -1,6 +1,6 @@
 package org.hcgames.hcfactions.command.argument.staff;
 
-public class FactionChatSpyArgument{ //Command temp disabled
+public class FactionChatSpyArgument{ //Command temp disabled || WHY SYSTEM UPDATE? WHY YOU DON'T LET COMMENTS!!!!!
 //public class FactionChatSpyArgument extends CommandArgument implements Listener {
 
     /*private static final UUID ALL_UUID = UUID.fromString("5a3ed6d1-0239-4e24-b4a9-8cd5b3e5fc72");

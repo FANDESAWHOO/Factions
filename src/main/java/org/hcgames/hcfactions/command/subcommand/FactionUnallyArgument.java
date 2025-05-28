@@ -1,10 +1,11 @@
-package org.hcgames.hcfactions.command.argument;
+package org.hcgames.hcfactions.command.subcommand;
 
-import com.doctordark.hcf.HCF;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.event.playerfaction.FactionRelationRemoveEvent;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
@@ -12,43 +13,44 @@ import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.manager.SearchCallback;
 import org.hcgames.hcfactions.structure.Relation;
 import org.hcgames.hcfactions.structure.Role;
-import technology.brk.util.command.CommandArgument;
+import org.mineacademy.fo.command.SimpleSubCommand;
+import org.mineacademy.fo.settings.Lang;
 
 import java.util.Collection;
 import java.util.Collections;
 
-public class FactionUnallyArgument extends CommandArgument {
+public class FactionUnallyArgument extends SimpleSubCommand {
 
     private Relation relation = Relation.ALLY;
     private final HCFactions plugin;
 
     public FactionUnallyArgument(HCFactions plugin) {
-        super("unally", "Remove an ally pact with other factions.");
+        super("unally | unalliance | neutral");
+        setDescription("Remove an ally pact with other factions.");
         this.plugin = plugin;
-        this.aliases = new String[]{"unalliance", "neutral"};
     }
 
-    @Override
+    
     public String getUsage(String label) {
         return '/' + label + ' ' + getName() + " <all|factionName>";
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public void onCommand() {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(HCF.getPlugin().getMessagesOld().getString("Commands-ConsoleOnly"));
-            return true;
+            sender.sendMessage(Lang.of("Commands-ConsoleOnly"));
+            return;
         }
 
-        if (plugin.getConfiguration().getFactionMaxAllies() <= 0) {
-            sender.sendMessage(HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Unally-DisabledOnMap"));
+        if (Configuration.factionMaxAllies <= 0) {
+            sender.sendMessage(Lang.of("Commands-Factions-Unally-DisabledOnMap"));
             //sender.sendMessage(ChatColor.RED + "Allies are disabled this map.");
-            return true;
+            return;
         }
 
         if (args.length < 2) {
-            sender.sendMessage(HCF.getPlugin().getMessagesOld().getString("Commands-Usage").replace("{usage}", getUsage(label)));
-            return true;
+            sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage(getLabel())));
+            return;
         }
 
         Player player = (Player) sender;
@@ -57,22 +59,22 @@ public class FactionUnallyArgument extends CommandArgument {
         try {
             playerFaction = plugin.getFactionManager().getPlayerFaction(player);
         } catch (NoFactionFoundException e) {
-            sender.sendMessage(HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Global-NotInFaction"));
-            return true;
+            sender.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
+            return;
         }
 
         if (playerFaction.getMember(player.getUniqueId()).getRole() == Role.MEMBER) {
-            sender.sendMessage(HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Unally-OfficerRequired"));
+            sender.sendMessage(Lang.of("Commands-Factions-Unally-OfficerRequired"));
             //sender.sendMessage(ChatColor.RED + "You must be a faction officer to edit relations.");
-            return true;
+            return;
         }
 
         if (args[1].equalsIgnoreCase("all")) {
             Collection<PlayerFaction> allies = playerFaction.getAlliedFactions();
             if (allies.isEmpty()) {
-                sender.sendMessage(HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Unally-NoAllies"));
+                sender.sendMessage(Lang.of("Commands-Factions-Unally-NoAllies"));
                 //sender.sendMessage(ChatColor.RED + "Your faction has no allies.");
-                return true;
+                return;
             }
 
             handle(sender, playerFaction, allies);
@@ -85,18 +87,18 @@ public class FactionUnallyArgument extends CommandArgument {
 
                 @Override
                 public void onFail(FailReason reason) {
-                    sender.sendMessage(HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Global-UnknownFaction").replace("{factionName}", args[1]));
+                    sender.sendMessage(Lang.of("Commands-Factions-Global-UnknownFaction").replace("{factionName}", args[1]));
                 }
             });
         }
 
-        return true;
+        return;
     }
 
     private void handle(CommandSender sender, PlayerFaction faction, Collection<PlayerFaction> targets){
         for (PlayerFaction targetFaction : targets) {
             if (faction.getRelations().remove(targetFaction.getUniqueID()) == null || targetFaction.getRelations().remove(faction.getUniqueID()) == null) {
-                sender.sendMessage(HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Unally-NotAllied")
+                sender.sendMessage(Lang.of("Commands-Factions-Unally-NotAllied")
                         .replace("{allyDisplayName}", relation.getDisplayName())
                         .replace("{otherFactionName}", targetFaction.getFormattedName(faction)));
                 //sender.sendMessage(ChatColor.RED + "Your faction is not " + relation.getDisplayName() + ChatColor.RED + " with " + targetFaction.getDisplayName(playerFaction) + ChatColor.RED + '.');
@@ -107,7 +109,7 @@ public class FactionUnallyArgument extends CommandArgument {
             Bukkit.getPluginManager().callEvent(event);
 
             if (event.isCancelled()) {
-                sender.sendMessage(HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Unally-CouldNotDrop")
+                sender.sendMessage(Lang.of("Commands-Factions-Unally-CouldNotDrop")
                         .replace("{allyDisplayName}", relation.getDisplayName())
                         .replace("{otherFactionName}", targetFaction.getFormattedName(faction)));
                 //sender.sendMessage(ChatColor.RED + "Could not drop " + relation.getDisplayName() + " with " + targetFaction.getDisplayName(playerFaction) + ChatColor.RED + ".");
@@ -115,13 +117,13 @@ public class FactionUnallyArgument extends CommandArgument {
             }
 
             // Inform the affected factions.
-            faction.broadcast(HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Unally-PlayerFactionBroadcast")
+            faction.broadcast(Lang.of("Commands-Factions-Unally-PlayerFactionBroadcast")
                     .replace("{allyDisplayName}", relation.getDisplayName())
                     .replace("{otherFactionName}", targetFaction.getFormattedName(faction)));
             //playerFaction.broadcast(ChatColor.YELLOW + "Your faction has dropped its " + relation.getDisplayName() + ChatColor.YELLOW + " with " +
             //        targetFaction.getDisplayName(playerFaction) + ChatColor.YELLOW + '.');
 
-            targetFaction.broadcast(HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Unally-OtherFactionBroadcast")
+            targetFaction.broadcast(Lang.of("Commands-Factions-Unally-OtherFactionBroadcast")
                     .replace("{allyDisplayName}", relation.getDisplayName())
                     .replace("{factionName}", faction.getFormattedName(targetFaction)));
             //targetFaction.broadcast(ChatColor.YELLOW + playerFaction.getDisplayName(targetFaction) + ChatColor.YELLOW + " has dropped their " + relation.getDisplayName() +

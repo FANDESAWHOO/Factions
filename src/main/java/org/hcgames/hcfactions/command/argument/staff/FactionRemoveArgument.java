@@ -14,7 +14,8 @@ import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.manager.SearchCallback;
-import technology.brk.util.command.CommandArgument;
+import org.mineacademy.fo.command.SimpleSubCommand;
+import org.mineacademy.fo.settings.Lang;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,16 +24,17 @@ import java.util.List;
 /**
  * Faction argument used to forcefully remove {@link Faction}s.
  */
-public class FactionRemoveArgument extends CommandArgument {
+public class FactionRemoveArgument extends SimpleSubCommand {
 
     private final ConversationFactory factory;
     private final HCFactions plugin;
 
     public FactionRemoveArgument(final HCFactions plugin) {
-        super("remove", "Remove a faction.");
+        super("remove | delete | forcedisband | forceremove");
+        setDescription( "Remove a faction.");
         this.plugin = plugin;
-        this.aliases = new String[]{"delete", "forcedisband", "forceremove"};
-        this.permission = "hcf.command.faction.argument." + getName();
+       // this.aliases = new String[]{"delete", "forcedisband", "forceremove"};
+       // this.permission = "hcf.command.faction.argument." + getName();
         this.factory = new ConversationFactory(plugin).
                 withFirstPrompt(new RemoveAllPrompt(plugin)).
                 withEscapeSequence("/no").
@@ -41,27 +43,27 @@ public class FactionRemoveArgument extends CommandArgument {
                 withLocalEcho(true);
     }
 
-    @Override
+    
     public String getUsage(String label) {
         return '/' + label + ' ' + getName() + " <all|factionName>";
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public void onCommand() {
         if (args.length < 2) {
-            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
-            return true;
+            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(getLabel()));
+            return;
         }
 
         if (args[1].equalsIgnoreCase("all")) {
             if (!(sender instanceof ConsoleCommandSender)) {
                 sender.sendMessage(ChatColor.RED + "This command can be only executed from console.");
-                return true;
+                return;
             }
 
             Conversable conversable = (Conversable) sender;
             conversable.beginConversation(factory.buildConversation(conversable));
-            return true;
+            return;
         }
 
         plugin.getFactionManager().advancedSearch(args[1], Faction.class, new SearchCallback<Faction>() {
@@ -74,15 +76,15 @@ public class FactionRemoveArgument extends CommandArgument {
 
             @Override
             public void onFail(FailReason reason) {
-                sender.sendMessage(plugin.getMessages().getString("commands.error.faction_not_found", args[1]));
+                sender.sendMessage(Lang.of("commands.error.faction_not_found", args[1]));
             }
         });
 
-        return true;
+        return;
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+    public List<String> tabComplete() {
         if (args.length != 2 || !(sender instanceof Player)) {
             return Collections.emptyList();
         } else if (args[1].isEmpty()) {

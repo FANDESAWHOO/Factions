@@ -2,15 +2,13 @@ package org.hcgames.hcfactions.command.argument.staff;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.Selection;
-import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.claim.Claim;
 import org.hcgames.hcfactions.faction.ClaimableFaction;
 import org.hcgames.hcfactions.manager.SearchCallback;
-import technology.brk.util.command.CommandArgument;
+import org.mineacademy.fo.command.SimpleSubCommand;
+import org.mineacademy.fo.settings.Lang;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,31 +17,32 @@ import java.util.List;
 /**
  * Used to claim land for other {@link ClaimableFaction}s.
  */
-public class FactionClaimForArgument extends CommandArgument {
+public class FactionClaimForArgument extends SimpleSubCommand {
 
     private final HCFactions plugin;
 
     public FactionClaimForArgument(HCFactions plugin) {
-        super("claimfor", "Claims land for another faction.");
+        super("claimfor");
+        setDescription("Claims land for another faction.");
         this.plugin = plugin;
-        this.permission = "hcf.command.faction.argument." + getName();
+     //   this.permission = "hcf.command.faction.argument." + getName();
     }
 
-    @Override
+  
     public String getUsage(String label) {
-        return plugin.getMessages().getString("commands.staff.claimfor.usage", label, getName());
+        return Lang.of("commands.staff.claimfor.usage", label, getName());
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public void onCommand() {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(plugin.getMessages().getString("commands.error.player_only"));
-            return true;
+            sender.sendMessage(Lang.of("commands.error.player_only"));
+            return;
         }
 
         if (args.length < 2) {
-            sender.sendMessage(plugin.getMessages().getString("commands.error.usage", getUsage(label)));
-            return true;
+            sender.sendMessage(Lang.of("commands.error.usage", getUsage(getLabel())));
+            return;
         }
 
         plugin.getFactionManager().advancedSearch(args[1], ClaimableFaction.class, new SearchCallback<ClaimableFaction>() {
@@ -54,33 +53,33 @@ public class FactionClaimForArgument extends CommandArgument {
                 WorldEditPlugin worldEditPlugin = plugin.getWorldEdit();
 
                 if (worldEditPlugin == null) {
-                    sender.sendMessage(plugin.getMessages().getString("commands.claimfor.worldedit_required"));
+                    sender.sendMessage(Lang.of("commands.claimfor.worldedit_required"));
                     return;
                 }
 
                 Selection selection = worldEditPlugin.getSelection(player);
 
                 if (selection == null) {
-                    sender.sendMessage(plugin.getMessages().getString("commands.claimfor.worldedit_selection_required"));
+                    sender.sendMessage(Lang.of("commands.claimfor.worldedit_selection_required"));
                     return;
                 }
 
                 if (faction.addClaim(new Claim(faction, selection.getMinimumPoint(), selection.getMaximumPoint()), sender)) {
-                    sender.sendMessage(plugin.getMessages().getString("commands.claimfor.claimed", faction.getName()));
+                    sender.sendMessage(Lang.of("commands.claimfor.claimed", faction.getName()));
                 }
             }
 
             @Override
             public void onFail(FailReason reason){
-                sender.sendMessage(plugin.getMessages().getString("commands.error.faction_not_found", args[1]));
+                sender.sendMessage(Lang.of("commands.error.faction_not_found", args[1]));
             }
         });
 
-        return true;
+        return;
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+    public List<String> tabComplete() {
         if (args.length != 2 || !(sender instanceof Player)) {
             return Collections.emptyList();
         }

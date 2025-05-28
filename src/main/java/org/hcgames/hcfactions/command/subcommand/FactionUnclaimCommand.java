@@ -1,6 +1,6 @@
-package org.hcgames.hcfactions.command.argument;
+package org.hcgames.hcfactions.command.subcommand;
 
-import com.doctordark.hcf.HCF;
+
 import com.google.common.collect.ImmutableList;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -13,32 +13,34 @@ import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.FactionMember;
 import org.hcgames.hcfactions.structure.Role;
-import technology.brk.util.command.CommandArgument;
+import org.mineacademy.fo.command.SimpleSubCommand;
+import org.mineacademy.fo.settings.Lang;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class FactionUnclaimArgument extends CommandArgument {
+public class FactionUnclaimCommand extends SimpleSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionUnclaimArgument(HCFactions plugin) {
-        super("unclaim", "Unclaims land from your faction.");
+    public FactionUnclaimCommand(HCFactions plugin) {
+        super("unclaim");
+        setDescription("Unclaims land from your faction.");
         this.plugin = plugin;
     }
 
-    @Override
+    
     public String getUsage(String label) {
         return '/' + label + ' ' + getName() + " [all]";
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public void onCommand() {
         if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "Only players can un-claim land from a faction.");
-            return true;
+            return;
         }
 
         Player player = (Player) sender;
@@ -46,23 +48,23 @@ public class FactionUnclaimArgument extends CommandArgument {
         try {
             playerFaction = plugin.getFactionManager().getPlayerFaction(player);
         } catch (NoFactionFoundException e) {
-            sender.sendMessage(HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Global-NotInFaction"));
-            return true;
+            sender.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
+            return;
         }
 
         FactionMember factionMember = playerFaction.getMember(player);
 
         if(factionMember.getRole() == Role.MEMBER || factionMember.getRole() == Role.CAPTAIN){
-            sender.sendMessage(HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Unclaim-CoLeaderRequired"));
-            return true;
+            sender.sendMessage(Lang.of("Commands-Factions-Unclaim-CoLeaderRequired"));
+            return;
         }
 
         Collection<Claim> factionClaims = playerFaction.getClaims();
 
         if (factionClaims.isEmpty()) {
-            sender.sendMessage(HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Unclaim-NoClaims"));
+            sender.sendMessage(Lang.of("Commands-Factions-Unclaim-NoClaims"));
             //sender.sendMessage(ChatColor.RED + "Your faction does not own any claims.");
-            return true;
+            return;
         }
 
         // Find out what claims the player wants removed.
@@ -73,32 +75,32 @@ public class FactionUnclaimArgument extends CommandArgument {
             Location location = player.getLocation();
             Claim claimAt = plugin.getFactionManager().getClaimAt(location);
             if (claimAt == null || !factionClaims.contains(claimAt)) {
-                sender.sendMessage(HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Unclaim-NoClaimHere"));
+                sender.sendMessage(Lang.of("Commands-Factions-Unclaim-NoClaimHere"));
                 //sender.sendMessage(ChatColor.RED + "Your faction does not own a claim here.");
-                return true;
+                return;
             }
 
             removingClaims = Collections.singleton(claimAt);
         }
 
         if (!playerFaction.removeClaims(removingClaims, player)) {
-            sender.sendMessage(HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Unclaim-ErrorRemoving"));
+            sender.sendMessage(Lang.of("Commands-Factions-Unclaim-ErrorRemoving"));
             //sender.sendMessage(ChatColor.RED + "Error when removing claims, please contact an Administrator.");
-            return true;
+            return;
         }
 
         int removingAmount = removingClaims.size();
-        playerFaction.broadcast(HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Unclaim-RemovedClaims")
+        playerFaction.broadcast(Lang.of("Commands-Factions-Unclaim-RemovedClaims")
                 .replace("{player}", factionMember.getRole().getAstrix() + sender.getName())
                 .replace("{amountOfClaims}", String.valueOf(removingAmount))
                 .replace("{s}", (removingAmount > 1 ? "s" : "")));
         //playerFaction.broadcast(ChatColor.RED + ChatColor.BOLD.toString() + factionMember.getRole().getAstrix() +
         //        sender.getName() + " has removed " + removingAmount + " claim" + (removingAmount > 1 ? "s" : "") + '.');
-        return true;
+        return;
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+    public List<String> tabComplete() {
         return args.length == 2 ? COMPLETIONS : Collections.<String>emptyList();
     }
 

@@ -1,17 +1,27 @@
-package org.hcgames.hcfactions.command;
+//package org.hcgames.hcfactions.command;
 
 
-import org.bukkit.command.Command;
+/**import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.command.argument.*;
 import org.hcgames.hcfactions.command.argument.staff.*;
+import org.hcgames.hcfactions.command.subcommand.FactionReviveArgument;
+import org.hcgames.hcfactions.command.subcommand.FactionSetHomeArgument;
+import org.hcgames.hcfactions.command.subcommand.FactionShowArgument;
+import org.hcgames.hcfactions.command.subcommand.FactionSnowArgument;
+import org.hcgames.hcfactions.command.subcommand.FactionStuckArgument;
+import org.hcgames.hcfactions.command.subcommand.FactionUnallyArgument;
+import org.hcgames.hcfactions.command.subcommand.FactionUnclaimArgument;
+import org.hcgames.hcfactions.command.subcommand.FactionUninviteArgument;
+import org.hcgames.hcfactions.command.subcommand.FactionWithdrawArgument;
+
 import technology.brk.util.command.ArgumentExecutor;
 import technology.brk.util.command.CommandArgument;
 
-/**
- * Class to handle the command and tab completion for the faction command.
- */
+
+ Class to handle the command and tab completion for the faction command.
+ 
 public class FactionExecutor extends ArgumentExecutor {
 
     private final CommandArgument helpArgument;
@@ -99,4 +109,4 @@ public class FactionExecutor extends ArgumentExecutor {
         helpArgument.onCommand(sender, command, label, args);
         return true;
     }
-}
+}*/

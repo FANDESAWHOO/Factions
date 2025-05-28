@@ -8,31 +8,33 @@ import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.manager.SearchCallback;
 import org.hcgames.hcfactions.structure.FactionMember;
 import org.hcgames.hcfactions.structure.Role;
-import technology.brk.util.command.CommandArgument;
+import org.mineacademy.fo.command.SimpleSubCommand;
+import org.mineacademy.fo.settings.Lang;
 
 import java.util.Collections;
 import java.util.List;
 
-public class FactionForcePromoteArgument extends CommandArgument {
+public class FactionForcePromoteArgument extends SimpleSubCommand {
 
     private final HCFactions plugin;
 
     public FactionForcePromoteArgument(HCFactions plugin) {
-        super("forcepromote", "Forces the promotion status of a player.");
+        super("forcepromote");
+        setDescription("Forces the promotion status of a player.");
         this.plugin = plugin;
-        this.permission = "hcf.command.faction.argument." + getName();
+       // this.permission = "hcf.command.faction.argument." + getName();
     }
 
-    @Override
+  
     public String getUsage(String label) {
         return '/' + label + ' ' + getName() + " <playerName>";
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public void onCommand() {
         if (args.length < 2) {
-            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
-            return true;
+            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(getLabel()));
+            return;
         }
 
         plugin.getFactionManager().advancedSearch(args[1], PlayerFaction.class, new SearchCallback<PlayerFaction>() {
@@ -63,14 +65,14 @@ public class FactionForcePromoteArgument extends CommandArgument {
 
             @Override
             public void onFail(FailReason reason) {
-                sender.sendMessage(plugin.getMessages().getString("commands.error.faction_not_found", args[1]));
+                sender.sendMessage(Lang.of("commands.error.faction_not_found", args[1]));
             }
         });
-        return true;
+        return;
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+    public List<String> tabComplete() {
         return args.length == 2 ? null : Collections.emptyList();
     }
 }

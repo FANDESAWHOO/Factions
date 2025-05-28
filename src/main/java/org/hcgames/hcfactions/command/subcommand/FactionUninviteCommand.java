@@ -1,6 +1,6 @@
-package org.hcgames.hcfactions.command.argument;
+package org.hcgames.hcfactions.command.subcommand;
 
-import com.doctordark.hcf.HCF;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -10,34 +10,36 @@ import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.FactionMember;
 import org.hcgames.hcfactions.structure.Role;
-import technology.brk.util.command.CommandArgument;
+import org.mineacademy.fo.command.SimpleSubCommand;
+import org.mineacademy.fo.settings.Lang;
 
 import java.util.Set;
 
-public class FactionUninviteArgument extends CommandArgument {
+public class FactionUninviteCommand extends SimpleSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionUninviteArgument(HCFactions plugin) {
-        super("uninvite", "Revoke an invitation to a player.", new String[]{"deinvite", "deinv", "uninv", "revoke"});
+    public FactionUninviteCommand(HCFactions plugin) {
+        super("uninvite | deinvite | deinv | uninv | revoke");
+        setDescription("Revoke an invitation to a player.");
         this.plugin = plugin;
     }
 
-    @Override
+   
     public String getUsage(String label) {
         return '/' + label + ' ' + getName() + " <all|playerName>";
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public void onCommand() {
         if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "Only players can un-invite from a faction.");
-            return true;
+            return;
         }
 
         if (args.length < 2) {
-            sender.sendMessage(HCF.getPlugin().getMessagesOld().getString("Commands-Usage").replace("{usage}", getUsage(label)));
-            return true;
+            sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage(getLabel())));
+            return;
         }
 
         Player player = (Player) sender;
@@ -45,43 +47,43 @@ public class FactionUninviteArgument extends CommandArgument {
         try {
             playerFaction = plugin.getFactionManager().getPlayerFaction(player);
         } catch (NoFactionFoundException e) {
-            sender.sendMessage(HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Global-NotInFaction"));
-            return true;
+            sender.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
+            return;
         }
         FactionMember factionMember = playerFaction.getMember(player);
 
         if (factionMember.getRole() == Role.MEMBER) {
-            sender.sendMessage(HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Uninvite-OfficerRequired"));
+            sender.sendMessage(Lang.of("Commands-Factions-Uninvite-OfficerRequired"));
             //sender.sendMessage(ChatColor.RED + "You must be a faction officer to un-invite players.");
-            return true;
+            return;
         }
 
         Set<String> invitedPlayerNames = playerFaction.getInvitedPlayerNames();
 
         if (args[1].equalsIgnoreCase("all")) {
             invitedPlayerNames.clear();
-            sender.sendMessage(HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Uninvite-ClearedAll"));
+            sender.sendMessage(Lang.of("Commands-Factions-Uninvite-ClearedAll"));
             //sender.sendMessage(ChatColor.YELLOW + "You have cleared all pending invitations.");
-            return true;
+            return;
         }
 
         if (!invitedPlayerNames.remove(args[1])) {
-            sender.sendMessage(HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Uninvite-NoPendingInvites")
+            sender.sendMessage(Lang.of("Commands-Factions-Uninvite-NoPendingInvites")
                     .replace("{name}", args[1]));
             //sender.sendMessage(ChatColor.RED + "There is not a pending invitation for " + args[1] + '.');
-            return true;
+            return;
         }
 
-        playerFaction.broadcast(HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Uninvite-Broadcast")
+        playerFaction.broadcast(Lang.of("Commands-Factions-Uninvite-Broadcast")
                 .replace("{player}", factionMember.getRole().getAstrix() + sender.getName())
                 .replace("{name}", args[1]));
         //playerFaction.broadcast(ChatColor.YELLOW + factionMember.getRole().getAstrix() + sender.getName() + " has uninvited " +
         //        plugin.getConfiguration().getRelationColourEnemy() + args[1] + ChatColor.YELLOW + " from the faction.");
 
-        return true;
+        return;
     }
 
-    /*@Override
+    /*@Override SYSTEM UPDATE WHY YOU REMOVE THIS CODE????????
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         if (args.length != 2 || !(sender instanceof Player)) {
             return Collections.emptyList();

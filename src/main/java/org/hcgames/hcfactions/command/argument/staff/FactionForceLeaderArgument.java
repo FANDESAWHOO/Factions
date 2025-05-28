@@ -1,39 +1,40 @@
 package org.hcgames.hcfactions.command.argument.staff;
 
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.manager.SearchCallback;
 import org.hcgames.hcfactions.structure.FactionMember;
 import org.hcgames.hcfactions.structure.Role;
-import technology.brk.util.command.CommandArgument;
+import org.mineacademy.fo.command.SimpleSubCommand;
+import org.mineacademy.fo.settings.Lang;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class FactionForceLeaderArgument extends CommandArgument {
+public class FactionForceLeaderArgument extends SimpleSubCommand {
 
     private final HCFactions plugin;
 
     public FactionForceLeaderArgument(HCFactions plugin) {
-        super("forceleader", "Forces the leader of a faction.");
+        super("forceleader");
+        setDescription("Forces the leader of a faction.");
         this.plugin = plugin;
-        this.permission = "hcf.command.faction.argument." + getName();
+     //   this.permission = "hcf.command.faction.argument." + getName();
     }
 
-    @Override
+    
     public String getUsage(String label) {
         return '/' + label + ' ' + getName() + " <playerName>";
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public void onCommand() {
         if (args.length < 2) {
-            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
-            return true;
+            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(getLabel()));
+            return;
         }
 
         plugin.getFactionManager().advancedSearch(args[1], PlayerFaction.class, new SearchCallback<PlayerFaction>() {
@@ -76,15 +77,15 @@ public class FactionForceLeaderArgument extends CommandArgument {
 
             @Override
             public void onFail(FailReason reason) {
-                sender.sendMessage(plugin.getMessages().getString("commands.error.faction_not_found", args[1]));
+                sender.sendMessage(Lang.of("commands.error.faction_not_found", args[1]));
             }
         });
 
-        return true;
+        return;
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+    public List<String> tabComplete() {
         return args.length == 2 ? null : Collections.emptyList();
     }
 }

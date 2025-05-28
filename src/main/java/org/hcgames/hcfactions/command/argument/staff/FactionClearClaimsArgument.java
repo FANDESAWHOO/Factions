@@ -2,7 +2,6 @@ package org.hcgames.hcfactions.command.argument.staff;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.conversations.Conversable;
@@ -16,7 +15,8 @@ import org.hcgames.hcfactions.faction.ClaimableFaction;
 import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.manager.SearchCallback;
-import technology.brk.util.command.CommandArgument;
+import org.mineacademy.fo.command.SimpleSubCommand;
+import org.mineacademy.fo.settings.Lang;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,15 +25,16 @@ import java.util.List;
 /**
  * Faction argument used to set the DTR Regeneration cooldown of {@link Faction}s.
  */
-public class FactionClearClaimsArgument extends CommandArgument {
+public class FactionClearClaimsArgument extends SimpleSubCommand {
 
     private final ConversationFactory factory;
     private final HCFactions plugin;
 
     public FactionClearClaimsArgument(final HCFactions plugin) {
-        super("clearclaims", "Clears the claims of a faction.");
+        super("clearclaims");
+        setDescription("Clears the claims of a faction.");
         this.plugin = plugin;
-        this.permission = "hcf.command.faction.argument." + getName();
+      //  this.permission = "hcf.command.faction.argument." + getName();
 
         this.factory = new ConversationFactory(plugin).
                 withFirstPrompt(new ClaimClearAllPrompt(plugin)).
@@ -43,27 +44,27 @@ public class FactionClearClaimsArgument extends CommandArgument {
                 withLocalEcho(true);
     }
 
-    @Override
+    
     public String getUsage(String label) {
-        return plugin.getMessages().getString("commands.staff.clearclaims.usage", label, getName());
+        return Lang.of("commands.staff.clearclaims.usage", label, getName());
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public void onCommand() {
         if (args.length < 2) {
-            sender.sendMessage(plugin.getMessages().getString("command.error.usage", getUsage(label)));
-            return true;
+            sender.sendMessage(Lang.of("command.error.usage", getUsage(getLabel())));
+            return;
         }
 
         if (args[1].equalsIgnoreCase("all")) {
             if (!(sender instanceof ConsoleCommandSender)) {
-                sender.sendMessage(plugin.getMessages().getString("commands.error.console_only"));
-                return true;
+                sender.sendMessage(Lang.of("commands.error.console_only"));
+                return;
             }
 
             Conversable conversable = (Conversable) sender;
             conversable.beginConversation(factory.buildConversation(conversable));
-            return true;
+            return;
         }
 
         plugin.getFactionManager().advancedSearch(args[1], ClaimableFaction.class, new SearchCallback<ClaimableFaction>() {
@@ -71,21 +72,21 @@ public class FactionClearClaimsArgument extends CommandArgument {
             public void onSuccess(ClaimableFaction claimableFaction) {
                 claimableFaction.removeClaims(claimableFaction.getClaims(), sender);
                 if (claimableFaction instanceof PlayerFaction) {
-                    ((PlayerFaction) claimableFaction).broadcast(plugin.getMessages().getString("commands.staff.clearclaims.cleared_faction_broadcast", sender.getName()));
+                    ((PlayerFaction) claimableFaction).broadcast(Lang.of("commands.staff.clearclaims.cleared_faction_broadcast", sender.getName()));
                 }
-                sender.sendMessage(plugin.getMessages().getString("commands.staff.clearclaims.cleared", claimableFaction.getName()));
+                sender.sendMessage(Lang.of("commands.staff.clearclaims.cleared", claimableFaction.getName()));
             }
 
             @Override
             public void onFail(FailReason reason) {
-                sender.sendMessage(plugin.getMessages().getString("commands.error.faction_not_found", args[1]));
+                sender.sendMessage(Lang.of("commands.error.faction_not_found", args[1]));
             }
         });
-        return true;
+        return;
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+    public List<String> tabComplete() {
         if (args.length != 2 || !(sender instanceof Player)) {
             return Collections.emptyList();
         } else if (args[1].isEmpty()) {
@@ -113,7 +114,7 @@ public class FactionClearClaimsArgument extends CommandArgument {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return plugin.getMessages().getString("commands.staff.clearclaims.console_prompt.prompt");
+            return Lang.of("commands.staff.clearclaims.console_prompt.prompt");
         }
 
         @Override
@@ -128,17 +129,17 @@ public class FactionClearClaimsArgument extends CommandArgument {
                     }
 
                     Conversable conversable = context.getForWhom();
-                    plugin.getServer().broadcastMessage(plugin.getMessages().getString("commands.staff.clearclaims.console_prompt.cleared",
+                    plugin.getServer().broadcastMessage(Lang.of("commands.staff.clearclaims.console_prompt.cleared",
                             (conversable instanceof CommandSender ? " by " + ((CommandSender) conversable).getName() : "")));
 
                     return Prompt.END_OF_CONVERSATION;
                 }
                 case "no": {
-                    context.getForWhom().sendRawMessage(plugin.getMessages().getString("commands.staff.clearclaims.console_prompt.cancelled"));
+                    context.getForWhom().sendRawMessage(Lang.of("commands.staff.clearclaims.console_prompt.cancelled"));
                     return Prompt.END_OF_CONVERSATION;
                 }
                 default: {
-                    context.getForWhom().sendRawMessage(plugin.getMessages().getString("commands.staff.clearclaims.console_prompt.cancelled_unknown"));
+                    context.getForWhom().sendRawMessage(Lang.of("commands.staff.clearclaims.console_prompt.cancelled_unknown"));
                     return Prompt.END_OF_CONVERSATION;
                 }
             }

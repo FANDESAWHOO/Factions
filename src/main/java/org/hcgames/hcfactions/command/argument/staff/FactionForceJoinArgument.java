@@ -2,8 +2,7 @@ package org.hcgames.hcfactions.command.argument.staff;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
@@ -13,7 +12,8 @@ import org.hcgames.hcfactions.manager.SearchCallback;
 import org.hcgames.hcfactions.structure.ChatChannel;
 import org.hcgames.hcfactions.structure.FactionMember;
 import org.hcgames.hcfactions.structure.Role;
-import technology.brk.util.command.CommandArgument;
+import org.mineacademy.fo.command.SimpleSubCommand;
+import org.mineacademy.fo.settings.Lang;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,31 +22,32 @@ import java.util.List;
 /**
  * Faction argument used to forcefully join {@link Faction}s.
  */
-public class FactionForceJoinArgument extends CommandArgument {
+public class FactionForceJoinArgument extends SimpleSubCommand {
 
     private final HCFactions plugin;
 
     public FactionForceJoinArgument(HCFactions plugin) {
-        super("forcejoin", "Forcefully join a faction.");
+        super("forcejoin");
+        setDescription("Forcefully join a faction.");
         this.plugin = plugin;
-        this.permission = "hcf.command.faction.argument." + getName();
+       // this.permission = "hcf.command.faction.argument." + getName();
     }
 
-    @Override
+   
     public String getUsage(String label) {
         return '/' + label + ' ' + getName() + " <factionName>";
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public void onCommand() {
         if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "Only players can join factions.");
-            return true;
+            return;
         }
 
         if (args.length < 2) {
-            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
-            return true;
+            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(getLabel()));
+            return;
         }
 
         Player player = (Player) sender;
@@ -65,15 +66,15 @@ public class FactionForceJoinArgument extends CommandArgument {
 
                 @Override
                 public void onFail(FailReason reason) {
-                    sender.sendMessage(plugin.getMessages().getString("commands.error.faction_not_found", args[1]));
+                    sender.sendMessage(Lang.of("commands.error.faction_not_found", args[1]));
                 }
             });
         }
-        return true;
+        return;
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+    public List<String> tabComplete() {
         if (args.length != 2 || !(sender instanceof Player)) {
             return Collections.emptyList();
         } else if (args[1].isEmpty()) {
