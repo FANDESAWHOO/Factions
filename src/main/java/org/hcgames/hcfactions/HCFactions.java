@@ -99,6 +99,12 @@ public class HCFactions extends SimplePlugin {
 		saveConfig();
     }
 
+    @Override
+    protected void onReloadablesStart() {
+        super.onReloadablesStart();
+        // FOR TASKS.
+    }
+
     private void saveData() {
         factionManager.saveFactionData();
     }
