@@ -21,7 +21,7 @@
 package org.hcgames.hcfactions.util.itemdb;
 
 import org.bukkit.plugin.java.JavaPlugin;
-import technology.brk.base.BasePlugin;
+import org.hcgames.hcfactions.HCFactions;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -188,7 +188,7 @@ public class ManagedFile {
             }
         }
         catch (IOException ex) {
-            BasePlugin.getPlugin().getLogger().log(Level.SEVERE, ex.getMessage(), ex);
+            HCFactions.getInstance().getLogger().log(Level.SEVERE, ex.getMessage(), ex);
             return Collections.emptyList();
         }
     }

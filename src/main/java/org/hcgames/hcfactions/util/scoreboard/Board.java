@@ -30,7 +30,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
-import technology.brk.util.collect.Reversed;
+import org.hcgames.hcfactions.util.collect.Reversed;
 
 import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;

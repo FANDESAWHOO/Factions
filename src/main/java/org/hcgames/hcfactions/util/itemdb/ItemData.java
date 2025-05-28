@@ -24,7 +24,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
-import technology.brk.base.BasePlugin;
+import org.hcgames.hcfactions.HCFactions;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -78,11 +78,11 @@ implements ConfigurationSerializable {
     }
 
     public String getItemName() {
-        return BasePlugin.getPlugin().getItemDb().getName(new ItemStack(this.material, 1, this.itemData));
+        return HCFactions.getInstance().getItemDb().getName(new ItemStack(this.material, 1, this.itemData));
     }
 
     public static ItemData fromItemName(String string) {
-        ItemStack stack = BasePlugin.getPlugin().getItemDb().getItem(string);
+        ItemStack stack = HCFactions.getInstance().getItemDb().getItem(string);
         return new ItemData(stack.getType(), stack.getData().getData());
     }
 

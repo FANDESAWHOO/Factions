@@ -15,7 +15,10 @@ import org.hcgames.hcfactions.util.uuid.UUIDHandler;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-
+/**
+ * Soon check if we need
+ * To edit the task.
+ */
 public class TimerCheckArgument extends TimerSubCommand {
 
 
@@ -29,9 +32,16 @@ public class TimerCheckArgument extends TimerSubCommand {
         return '/' + label + ' ' + getName() + " <timerName> <playerName>";
     }
 
-    @Override
-    public void onCommand(CommandSender sender, String label, String[] args){
-        if(args.length < 3){
+   
+
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+		  return args.length == 2 ? null : Collections.emptyList();
+	}
+
+	@Override
+	public void onCommand(CommandSender sender, String label, String[] args) {
+		if(args.length < 3){
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
             return;
         }
@@ -45,7 +55,7 @@ public class TimerCheckArgument extends TimerSubCommand {
 
         if(temporaryTimer == null){
             sender.sendMessage(ChatColor.RED + "Timer '" + args[1] + "' not found.");
-            return true;
+            return;
         }
 
         PlayerTimer playerTimer = temporaryTimer;
@@ -64,11 +74,7 @@ public class TimerCheckArgument extends TimerSubCommand {
                 sender.sendMessage(ChatColor.YELLOW + args[2] + " has timer " + playerTimer.getName() + " for another " + DurationFormatUtils.formatDurationWords(remaining, true, true));
             }
         }.runTaskAsynchronously(instance);
-        return true;
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args){
-        return args.length == 2 ? null : Collections.emptyList();
-    }
+        return;
+		
+	}
 }

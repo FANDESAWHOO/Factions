@@ -1,8 +1,6 @@
 package org.hcgames.hcfactions.timer.type;
 
-import com.doctordark.hcf.HCF;
-import com.doctordark.hcf.timer.PlayerTimer;
-import com.doctordark.hcf.timer.TimerCooldown;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -16,11 +14,15 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.hcgames.hcfactions.api.FactionsAPI;
 import org.hcgames.hcfactions.claim.Claim;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.structure.Relation;
-import technology.brk.util.BukkitUtils;
-import technology.brk.util.DurationFormatter;
+import org.hcgames.hcfactions.timer.PlayerTimer;
+import org.hcgames.hcfactions.timer.TimerCooldown;
+import org.hcgames.hcfactions.util.BukkitUtils;
+import org.hcgames.hcfactions.util.DurationFormatter;
+import org.mineacademy.fo.settings.Lang;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -42,7 +44,7 @@ public class StuckTimer extends PlayerTimer implements Listener{
     public StuckTimer(){
         super("Stuck", TimeUnit.MINUTES.toMillis(2L) + TimeUnit.SECONDS.toMillis(45L), false);
 
-        scoreboardPrefix = HCF.getPlugin().getMessagesOld().getString("Timer-" + name.replace(" ", "") + "-SBPrefix");
+        scoreboardPrefix = Lang.of("Timer-" + name.replace(" ", "") + "-SBPrefix");
 
         if(scoreboardPrefix == null || scoreboardPrefix.isEmpty() || scoreboardPrefix.equals("Error! Please contact an administrator"))
 			scoreboardPrefix = null;
@@ -86,7 +88,7 @@ public class StuckTimer extends PlayerTimer implements Listener{
             int zDiff = Math.abs(from.getBlockZ() - to.getBlockZ());
             if(xDiff > MAX_MOVE_DISTANCE || yDiff > MAX_MOVE_DISTANCE || zDiff > MAX_MOVE_DISTANCE){
                 clearCooldown(player, uuid);
-                player.sendMessage(HCF.getPlugin().getMessagesOld().getString("Timer-Stuck-MovedTooFar")
+                player.sendMessage(Lang.of("Timer-Stuck-MovedTooFar")
                         .replace("{timerName}", getDisplayName())
                         .replace("{maxMoveDistance}", String.valueOf(MAX_MOVE_DISTANCE)));
             }
@@ -131,7 +133,7 @@ public class StuckTimer extends PlayerTimer implements Listener{
         if(entity instanceof Player){
             Player player = (Player) entity;
             if(getRemaining(player) > 0L){
-                player.sendMessage(HCF.getPlugin().getMessagesOld().getString("Timer-Stuck-TookDamage")
+                player.sendMessage(Lang.of("Timer-Stuck-TookDamage")
                         .replace("{timerName}", getDisplayName()));
                 clearCooldown(player);
             }
@@ -146,7 +148,7 @@ public class StuckTimer extends PlayerTimer implements Listener{
             if(player == null) return;
         }
 
-        Claim claimAt = HCF.getPlugin().getFactions().getFactionManager().getClaimAt(player.getLocation());
+        Claim claimAt = FactionsAPI.getClaimAt(player.getLocation());
 
         try{
             if(!claimAt.getFaction().getRelation(player).equals(Relation.ENEMY)){
@@ -160,23 +162,23 @@ public class StuckTimer extends PlayerTimer implements Listener{
 
         Location nearest = getTeleportLocation(player);
         if(nearest == null){
-            HCF.getPlugin().getCombatLogListener().safelyDisconnect(player, ChatColor.RED + HCF.getPlugin().getMessagesOld().getString("Timer-Stuck-NoSafeLocation"));
+         //   HCF.getPlugin().getCombatLogListener().safelyDisconnect(player, ChatColor.RED + Lang.of("Timer-Stuck-NoSafeLocation"));
             return;
         }
 
         if(player.teleport(nearest, PlayerTeleportEvent.TeleportCause.PLUGIN))
-			player.sendMessage(HCF.getPlugin().getMessagesOld().getString("Timer-Stuck-Teleported").replace("{timerName}", getDisplayName()));
+			player.sendMessage(Lang.of("Timer-Stuck-Teleported").replace("{timerName}", getDisplayName()));
     }
 
     public void run(Player player){
         long remainingMillis = getRemaining(player);
-        if(remainingMillis > 0L) player.sendMessage(HCF.getPlugin().getMessagesOld().getString("Timer-Stuck-Teleported")
+        if(remainingMillis > 0L) player.sendMessage(Lang.of("Timer-Stuck-Teleported")
 				.replace("{timeLeft}", DurationFormatter.getRemaining(remainingMillis, true, false))
 				.replace("{timerName}", getDisplayName()));
     }
 
     private Location getTeleportLocation(Player player){
-        Claim claimAt = HCF.getPlugin().getFactions().getFactionManager().getClaimAt(player.getLocation());
+        Claim claimAt = FactionsAPI.getClaimAt(player.getLocation());
         Location closest = null;
 
         for(Location claim : claimAt.getCornerLocations())

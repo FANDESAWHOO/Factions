@@ -1,34 +1,44 @@
 package org.hcgames.hcfactions.timer.argument;
 
-import com.doctordark.hcf.HCF;
-import com.doctordark.hcf.timer.PlayerTimer;
-import com.doctordark.hcf.timer.Timer;
+
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import compat.com.google.common.collect.FluentIterableCompat;
+import com.google.common.collect.FluentIterable;
+
 import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import technology.brk.util.JavaUtils;
-import technology.brk.util.command.CommandArgument;
+import org.bukkit.scheduler.BukkitTask;
+import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.timer.PlayerTimer;
+import org.hcgames.hcfactions.timer.Timer;
+import org.hcgames.hcfactions.timer.TimerSubCommand;
+import org.hcgames.hcfactions.util.JavaUtils;
+import org.mineacademy.fo.Common;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
-
-public class TimerSetArgument extends CommandArgument{
+/**
+ * Soon we need to create
+ * The findOfflinePlayer Method.
+ */
+public class TimerSetArgument extends TimerSubCommand {
 
     private static final Pattern WHITESPACE_TRIMMER = Pattern.compile("\\s");
 
-    private final HCF plugin;
+    private final HCFactions plugin;
 
-    public TimerSetArgument(HCF plugin){
+    public TimerSetArgument(HCFactions plugin){
         super("set", "Set remaining timer time");
         this.plugin = plugin;
     }
@@ -39,17 +49,17 @@ public class TimerSetArgument extends CommandArgument{
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args){
+    public void onCommand(CommandSender sender, String label, String[] args){
         if(args.length < 4){
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
-            return true;
+            return;
         }
 
         long duration = JavaUtils.parse(args[3]);
 
         if(duration == -1L){
             sender.sendMessage(ChatColor.RED + "Invalid duration, use the correct format: 10m 1s");
-            return true;
+            return;
         }
 
         PlayerTimer playerTimer = null;
@@ -62,7 +72,7 @@ public class TimerSetArgument extends CommandArgument{
 
         if(playerTimer == null){
             sender.sendMessage(ChatColor.RED + "Timer '" + args[1] + "' not found.");
-            return true;
+            return;
         }
 
         if(args[2].equalsIgnoreCase("all")){
@@ -77,20 +87,20 @@ public class TimerSetArgument extends CommandArgument{
 
             if(target == null || (sender instanceof Player && ((targetPlayer = target.getPlayer()) != null) && !((Player) sender).canSee(targetPlayer))){
                 sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[1] + ChatColor.GOLD + "' not found.");
-                return true;
+                return;
             }
 
             playerTimer.setCooldown(targetPlayer, target.getUniqueId(), duration, true, null);
             sender.sendMessage(ChatColor.BLUE + "Set timer " + playerTimer.getName() + " duration to " + DurationFormatUtils.formatDurationWords(duration, true, true) + " for " + target.getName() + '.');
         }
 
-        return true;
+        return;
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args){
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if(args.length == 2){
-            return FluentIterableCompat.from(plugin.getTimerManager().getTimers()).filter(new Predicate<Timer>(){
+            return FluentIterable.from(plugin.getTimerManager().getTimers()).filter(new Predicate<Timer>(){
                 @Override
                 public boolean apply(Timer timer){
                     return timer instanceof PlayerTimer;

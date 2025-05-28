@@ -20,14 +20,15 @@
 
 package org.hcgames.hcfactions.util.uuid;
 
-import net.jodah.expiringmap.ExpirationPolicy;
-import net.jodah.expiringmap.ExpiringMap;
+
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.mineacademy.fo.collection.expiringmap.ExpirationPolicy;
+import org.mineacademy.fo.collection.expiringmap.ExpiringMap;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;

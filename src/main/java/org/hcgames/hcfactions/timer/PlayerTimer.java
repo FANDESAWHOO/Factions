@@ -1,14 +1,15 @@
 package org.hcgames.hcfactions.timer;
 
-import com.doctordark.hcf.timer.event.TimerClearEvent;
-import com.doctordark.hcf.timer.event.TimerExtendEvent;
-import com.doctordark.hcf.timer.event.TimerPauseEvent;
-import com.doctordark.hcf.timer.event.TimerStartEvent;
+
 import com.google.common.collect.ImmutableSet;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
-import technology.brk.util.file.Config;
+import org.hcgames.hcfactions.timer.event.TimerClearEvent;
+import org.hcgames.hcfactions.timer.event.TimerExtendEvent;
+import org.hcgames.hcfactions.timer.event.TimerPauseEvent;
+import org.hcgames.hcfactions.timer.event.TimerStartEvent;
+import org.hcgames.hcfactions.util.configuration.Config;
 
 import javax.annotation.Nullable;
 import java.util.*;

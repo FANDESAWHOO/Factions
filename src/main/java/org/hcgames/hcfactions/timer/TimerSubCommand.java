@@ -1,12 +1,13 @@
 package org.hcgames.hcfactions.timer;
 
-import lombok.Getter;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.hcgames.hcfactions.HCFactions;
-import org.mineacademy.fo.command.SimpleSubCommand;
+
+import lombok.Getter;
 
 @Getter
-public abstract class TimerSubCommand extends SimpleSubCommand {
+public abstract class TimerSubCommand implements TabCompleter {
 	private final String name;
 	protected boolean isPlayerOnly = false;
 	protected String description;
@@ -15,7 +16,6 @@ public abstract class TimerSubCommand extends SimpleSubCommand {
 	protected HCFactions instance;
 
     public TimerSubCommand(String name, String description){
-		super(name);
 		this.name = name;
 		this.description = description;
 		instance = HCFactions.getInstance();
@@ -23,8 +23,6 @@ public abstract class TimerSubCommand extends SimpleSubCommand {
 	public abstract void onCommand(CommandSender sender, String label, String[] args);
 
 	public abstract String getUsage(String label);
-
-
 
 
 }

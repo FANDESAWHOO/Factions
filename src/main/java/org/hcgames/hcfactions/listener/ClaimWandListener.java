@@ -50,6 +50,8 @@ import org.hcgames.hcfactions.claim.ClaimHandler;
 import org.hcgames.hcfactions.claim.ClaimSelection;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
+import org.hcgames.hcfactions.util.cuboid.Cuboid;
+import org.hcgames.hcfactions.visualise.VisualType;
 import org.mineacademy.fo.settings.Lang;
 
 import java.util.ArrayList;
@@ -165,7 +167,7 @@ public class ClaimWandListener implements Listener{
                 }
 
                 if (oldPosition != null) {
-                    HCF.getPlugin().getVisualiseHandler().clearVisualBlocks(player, VisualType.CREATE_CLAIM_SELECTION, visualBlock -> {
+                    HCFactions.getInstance().getVisualiseHandler().clearVisualBlocks(player, VisualType.CREATE_CLAIM_SELECTION, visualBlock -> {
                         Location location = visualBlock.getLocation();
                         return location.getBlockX() == oldPosition.getBlockX() && location.getBlockZ() == oldPosition.getBlockZ();
                     });
@@ -206,7 +208,7 @@ public class ClaimWandListener implements Listener{
                     public void run() {
                  //   	.generate(player, locations, VisualType.CREATE_CLAIM_SELECTION, true);
                     	locations.forEach(loc -> {
-                    		HCF.getPlugin().getVisualiseHandler().generate(player, new Cuboid(loc), VisualType.CREATE_CLAIM_SELECTION, true);
+                    		HCFactions.getInstance().getVisualiseHandler().generate(player, new Cuboid(loc), VisualType.CREATE_CLAIM_SELECTION, true);
                     	});
                         
                     }

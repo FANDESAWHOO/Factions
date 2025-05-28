@@ -3,6 +3,7 @@ package org.hcgames.hcfactions.api;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.claim.Claim;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.structure.Relation;
@@ -22,6 +23,10 @@ public final class FactionsAPI {
 
 	 public static Faction getFaction(String name) {
 		 return HCFactions.getInstance().getFactionManager().getFaction(name);
+	 }
+	 
+	 public static Claim getClaimAt(Location location) {
+		 return HCFactions.getInstance().getFactionManager().getClaimAt(location);
 	 }
 
 	 public static Faction getPlayerFaction(Player player){

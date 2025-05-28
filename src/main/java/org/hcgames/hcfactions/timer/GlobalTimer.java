@@ -1,9 +1,10 @@
 package org.hcgames.hcfactions.timer;
 
-import com.doctordark.hcf.timer.event.TimerExtendEvent;
-import com.doctordark.hcf.timer.event.TimerPauseEvent;
-import com.doctordark.hcf.timer.event.TimerStartEvent;
+
 import org.bukkit.Bukkit;
+import org.hcgames.hcfactions.timer.event.TimerExtendEvent;
+import org.hcgames.hcfactions.timer.event.TimerPauseEvent;
+import org.hcgames.hcfactions.timer.event.TimerStartEvent;
 
 /**
  * Represents a global {@link Timer}.

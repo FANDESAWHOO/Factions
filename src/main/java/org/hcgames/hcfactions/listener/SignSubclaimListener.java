@@ -20,7 +20,7 @@
 
 package org.hcgames.hcfactions.listener;
 
-import com.doctordark.hcf.HCF;
+
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -50,12 +50,14 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.material.MaterialData;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.FactionMember;
 import org.hcgames.hcfactions.structure.Role;
+import org.mineacademy.fo.settings.Lang;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -143,7 +145,7 @@ public class SignSubclaimListener implements Listener{
                 if (playerFaction == factionAt) {
                     SubclaimType subclaimType = getSubclaimType(attachedBlock, false);
                     if (subclaimType != null) {
-                        player.sendMessage(plugin.getMessages().getString("factions.subclaims.already_exists")
+                        player.sendMessage(Lang.of("factions.subclaims.already_exists")
                                 .replace("{subclaimName}", subclaimType.displayName)
                                 .replace("{block}", attachedBlock.getType().name()));
                         return;
@@ -166,12 +168,12 @@ public class SignSubclaimListener implements Listener{
                         }
 
                         if (memberList.isEmpty()) {
-                            player.sendMessage(plugin.getMessages().getString("factions.subclaims.members_required"));
+                            player.sendMessage(Lang.of("factions.subclaims.members_required"));
                             return;
                         }
                     } else if (subclaimType == SubclaimType.CAPTAIN) {
                         if (playerFaction.getMember(player).getRole() == Role.MEMBER) {
-                            player.sendMessage(plugin.getMessages().getString("factions.subclaims.officer_required"));
+                            player.sendMessage(Lang.of("factions.subclaims.officer_required"));
                             return;
                         }
 
@@ -181,7 +183,7 @@ public class SignSubclaimListener implements Listener{
                         event.setLine(3, null);
                     } else if (subclaimType == SubclaimType.LEADER) {
                         if (playerFaction.getMember(player).getRole() != Role.LEADER) {
-                            player.sendMessage(plugin.getMessages().getString("factions.subclaims.leader_required"));
+                            player.sendMessage(Lang.of("factions.subclaims.leader_required"));
                             return;
                         }
 
@@ -192,8 +194,8 @@ public class SignSubclaimListener implements Listener{
                     }
                     // Finalise the subclaim.
                     event.setLine(0, subclaimType.outputText);
-                    StringBuilder builder = new StringBuilder(plugin.getMessages().getString("factions.subclaims.created_broadcast")
-                            .replace("{teammateRelationColour}", String.valueOf(plugin.getConfiguration().getRelationColourTeammate()))
+                    StringBuilder builder = new StringBuilder(Lang.of("factions.subclaims.created_broadcast")
+                            .replace("{teammateRelationColour}", String.valueOf(Configuration.relationColourTeammate))
                             .replace("{player}", player.getName())
                             .replace("{block}", attachedBlock.getType().name())
                             .replace("{blockX}", String.valueOf(attachedBlock.getX()))
@@ -226,9 +228,9 @@ public class SignSubclaimListener implements Listener{
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
-        if (HCF.getPlugin().getEotwHandler().isEndOfTheWorld()) {//TODO: Use "CoreHook"
+       /* if (HCF.getPlugin().getEotwHandler().isEndOfTheWorld()) {//TODO: Use "CoreHook"
             return;
-        }
+        }*/
 
         Player player = event.getPlayer();
         if (player.getGameMode() == GameMode.CREATIVE && player.hasPermission(ProtectionListener.PROTECTION_BYPASS_PERMISSION)) {//TODO: Use org.hcgames.listener.protectionlistener
@@ -252,13 +254,13 @@ public class SignSubclaimListener implements Listener{
 
         if (subclaimObjectBlock != null && !checkSubclaimIntegrity(player, subclaimObjectBlock)) {
             event.setCancelled(true);
-            player.sendMessage(plugin.getMessages().getString("factions.subclaims.cannot_break").replace("{block}", subclaimObjectBlock.getType().name()));
+            player.sendMessage(Lang.of("factions.subclaims.cannot_break").replace("{block}", subclaimObjectBlock.getType().name()));
         }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onInventoryMoveItem(InventoryMoveItemEvent event) {
-        if (HCF.getPlugin().getEotwHandler().isEndOfTheWorld() || !plugin.getConfiguration().isSubclaimHopperCheck()) {//TODO: "CoreHook"
+        if (Configuration.subclaimHopperCheck) {//TODO: "CoreHook"
             return;
         }
 
@@ -299,14 +301,14 @@ public class SignSubclaimListener implements Listener{
                 return;
             }
 
-            if (HCF.getPlugin().getEotwHandler().isEndOfTheWorld() || HCF.getPlugin().getConfiguration().isKitMap()) {//TODO: Core hook
+            if (Configuration.kitMap) {//TODO: Core hook
                 return;
             }
 
             Block block = event.getClickedBlock();
             if (!checkSubclaimIntegrity(player, block)) {
                 event.setUseInteractedBlock(Event.Result.DENY);
-                player.sendMessage(plugin.getMessages().getString("factions.subclaims.no_access").replace("{block}", block.getType().name()));
+                player.sendMessage(Lang.of("factions.subclaims.no_access").replace("{block}", block.getType().name()));
             }
         }
     }
@@ -456,11 +458,11 @@ public class SignSubclaimListener implements Listener{
         public boolean isEnabled() {
             switch (this) {
                 case LEADER:
-                    return JavaPlugin.getPlugin(HCFactions.class).getConfiguration().isSubclaimSignLeader();
+                    return Configuration.subclaimSignLeader;
                 case CAPTAIN:
-                    return JavaPlugin.getPlugin(HCFactions.class).getConfiguration().isSubclaimSignCaptain();
+                    return Configuration.subclaimSignCaptain;
                 case MEMBER:
-                    return JavaPlugin.getPlugin(HCFactions.class).getConfiguration().isSubclaimSignPrivate();
+                    return Configuration.subclaimSignPrivate;
                 default:
                     return false;
             }

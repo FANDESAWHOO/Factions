@@ -1,8 +1,6 @@
 package org.hcgames.hcfactions.timer.type;
 
-import com.doctordark.hcf.HCF;
-import com.doctordark.hcf.timer.PlayerTimer;
-import com.doctordark.hcf.timer.TimerCooldown;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -13,8 +11,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.manager.FactionManager;
+import org.hcgames.hcfactions.timer.PlayerTimer;
+import org.hcgames.hcfactions.timer.TimerCooldown;
+import org.mineacademy.fo.settings.Lang;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -29,15 +31,15 @@ import java.util.concurrent.TimeUnit;
 public class TeleportTimer extends PlayerTimer implements Listener{
 
     private final Map<UUID, Location> destinationMap = new HashMap<>();
-    private final HCF plugin;
+    private final HCFactions plugin;
 
     private String scoreboardPrefix = null;
 
-    public TeleportTimer(HCF plugin){
+    public TeleportTimer(HCFactions plugin){
         super("Teleport", TimeUnit.SECONDS.toMillis(10L), false);
         this.plugin = plugin;
 
-        scoreboardPrefix = HCF.getPlugin().getMessagesOld().getString("Timer-" + name.replace(" ", "") + "-SBPrefix");
+        scoreboardPrefix = Lang.of("Timer-" + name.replace(" ", "") + "-SBPrefix");
 
         if(scoreboardPrefix == null || scoreboardPrefix.isEmpty() || scoreboardPrefix.equals("Error! Please contact an administrator"))
 			scoreboardPrefix = null;
@@ -90,7 +92,7 @@ public class TeleportTimer extends PlayerTimer implements Listener{
      * @return the amount of players within enemy distance
      */
     public int getNearbyEnemies(Player player, int distance){
-        FactionManager factionManager = plugin.getFactions().getFactionManager();
+        FactionManager factionManager = plugin.getFactionManager();
         Faction playerFaction = factionManager.hasFaction(player) ? factionManager.getPlayerFaction(player) : null;
         int count = 0;
 
@@ -159,13 +161,13 @@ public class TeleportTimer extends PlayerTimer implements Listener{
         if(from.getBlockX() == to.getBlockX() && from.getBlockY() == to.getBlockY() && from.getBlockZ() == to.getBlockZ())
 			return;
 
-        cancelTeleport(event.getPlayer(), HCF.getPlugin().getMessagesOld().getString("Timer-Teleport-MovedABlock"));
+        cancelTeleport(event.getPlayer(), Lang.of("Timer-Teleport-MovedABlock"));
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerDamage(EntityDamageEvent event){
         Entity entity = event.getEntity();
         if(entity instanceof Player)
-			cancelTeleport((Player) entity, HCF.getPlugin().getMessagesOld().getString("Timer-Teleport-TookDamage"));
+			cancelTeleport((Player) entity, Lang.of("Timer-Teleport-TookDamage"));
     }
 }

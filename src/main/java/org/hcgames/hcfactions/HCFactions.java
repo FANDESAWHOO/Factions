@@ -20,6 +20,7 @@ import org.hcgames.hcfactions.manager.FactionManager;
 import org.hcgames.hcfactions.manager.FlatFileFactionManager;
 import org.hcgames.hcfactions.manager.MongoFactionManager;
 import org.hcgames.hcfactions.structure.FactionMember;
+import org.hcgames.hcfactions.timer.TimerManager;
 import org.hcgames.hcfactions.util.PersistableLocation;
 import org.hcgames.hcfactions.util.cuboid.Cuboid;
 import org.hcgames.hcfactions.util.cuboid.NamedCuboid;
@@ -43,6 +44,7 @@ public class HCFactions extends SimplePlugin {
     private ClaimHandler claimHandler;
     private Stats stats;
     private VisualiseHandler visualiseHandler;
+    private TimerManager timerManager;
 
     @Override
     public @Nullable SimpleCommandGroup getMainCommand() {
@@ -123,6 +125,7 @@ public class HCFactions extends SimplePlugin {
     }
 
     private void registerManagers() {
+
         itemDb = new SimpleItemDb(this);
         visualiseHandler = new VisualiseHandler();
         if (getConfig().getBoolean("mongo.use", false)) {
@@ -132,7 +135,7 @@ public class HCFactions extends SimplePlugin {
         } else factionManager = new FlatFileFactionManager(this);
 
 		getLogger().info("FactionManager initialized successfully.");
-
+    	timerManager = new TimerManager(this);
 		claimHandler = new ClaimHandler(this);
         worldEdit = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
         Plugin statsPlugin = getServer().getPluginManager().getPlugin("Stats");
