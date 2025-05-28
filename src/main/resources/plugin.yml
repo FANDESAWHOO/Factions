@@ -2,10 +2,7 @@ name: HCFactions
 version: 1.0
 authors: [SystemUpdate, DoctorDark]
 main: org.hcgames.hcfactions.HCFactions
-depend: [Base, Stats, WorldEdit]
-softdepend: [Staff]
+depend: [WorldEdit]
 commands:
-  factions:
-    description: Main factions command
-    aliases: [f, fac, faction, facs]
+
 

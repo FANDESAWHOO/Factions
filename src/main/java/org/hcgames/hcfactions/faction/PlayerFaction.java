@@ -21,7 +21,6 @@
 package org.hcgames.hcfactions.faction;
 
 
-import com.bekvon.bukkit.residence.commands.message;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
@@ -759,7 +758,7 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
             FactionMember factionMember = entry.getValue();
             Optional<Player> target = factionMember.toOnlinePlayer();
 
-         FactionUser user = HCF.getPlugin().getUserManager().getUser(entry.getKey());
+    /*   FactionUser user = HCF.getPlugin().getUserManager().getUser(entry.getKey());
             int kills = user.getKills();
             combinedKills += kills;
 
@@ -771,9 +770,9 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
                 color = ChatColor.GRAY;
             } else {
                 color = ChatColor.GREEN;
-            }
-
-            String memberName = color + factionMember.getCachedName() + ChatColor.GRAY + " [" + ChatColor.RED + kills + ChatColor.GRAY + "]";
+            }*/
+            String memberName = factionMember.getCachedName() + ChatColor.GRAY + " [" + ChatColor.RED  /*kills*/ + ChatColor.GRAY + "]";
+           //  String memberName = color + factionMember.getCachedName() + ChatColor.GRAY + " [" + ChatColor.RED + kills + ChatColor.GRAY + "]";
             switch (factionMember.getRole()) {
                 case LEADER:
                     leaderName = memberName;

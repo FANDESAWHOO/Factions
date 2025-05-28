@@ -1,7 +1,6 @@
 package org.hcgames.hcfactions.command.subcommand;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;

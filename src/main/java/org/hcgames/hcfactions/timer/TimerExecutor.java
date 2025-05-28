@@ -4,6 +4,7 @@ package org.hcgames.hcfactions.timer;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.timer.argument.TimerCheckArgument;
 import org.hcgames.hcfactions.timer.argument.TimerSetArgument;
+import org.mineacademy.fo.annotation.AutoRegister;
 import org.mineacademy.fo.command.SimpleCommand;
 import org.mineacademy.fo.settings.Lang;
 
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 /**
  * Handles the execution and tab completion of the timer command.
  */
+@AutoRegister
 public class TimerExecutor extends SimpleCommand {
 
     private final ArrayList<TimerSubCommand> arguments;

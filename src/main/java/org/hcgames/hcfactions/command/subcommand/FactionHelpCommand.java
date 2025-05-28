@@ -22,7 +22,7 @@ public class FactionHelpCommand extends SimpleSubCommand {
 	private ImmutableMultimap<Integer, String> pages;
 
 
-	private FactionHelpCommand() {
+	public FactionHelpCommand() {
 		super("help");
 		setDescription("View help on how to use factions.");
 		plugin = HCFactions.getInstance();
