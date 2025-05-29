@@ -67,8 +67,21 @@ public final class Configuration extends SimpleSettings {
     public static Boolean kitMap;
     public static Boolean preventAllyAttackDamage;
     public static Boolean messageDebug;
+    // Host
+    public static String host;
+    public static String database;
+    public static String username;
+    public static String password;
 
+
+    public static Boolean mongo;
     private static void init() {
+        mongo = getBoolean("mongo.use");
+        host = getString("mongo.host");
+        database = getString("mongo.database");
+        username = getString("mongo.username");
+        password = getString("mongo.password");
+
         factionNameMinCharacters = getInteger("factions.NameMinCharacters");
         factionNameMaxCharacters = getInteger("factions.NameMaxCharacters");
         factionMaxMembers = getInteger("factions.maxMembers");

@@ -2,10 +2,9 @@ package org.hcgames.hcfactions.command.subcommand;
 
 
 import org.bukkit.World;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.command.FactionCommands;
 import org.hcgames.hcfactions.timer.type.StuckTimer;
 import org.hcgames.hcfactions.util.DurationFormatter;
 import org.mineacademy.fo.command.SimpleSubCommand;
@@ -22,6 +21,8 @@ public class FactionStuckCommand extends SimpleSubCommand {
         super("stuck | trap | trapped");
         setDescription("Teleport to a safe position.");
         this.plugin = plugin;
+        if(!FactionCommands.getArguments().contains(this))
+            FactionCommands.getArguments().add(this);
     }
 
    

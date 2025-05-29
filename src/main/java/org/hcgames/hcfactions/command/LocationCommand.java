@@ -21,25 +21,30 @@
 package org.hcgames.hcfactions.command;
 
 
-
+import lombok.Getter;
 import org.bukkit.Location;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.faction.Faction;
+import org.mineacademy.fo.annotation.AutoRegister;
 import org.mineacademy.fo.command.SimpleCommand;
 import org.mineacademy.fo.settings.Lang;
 
 import java.util.Collections;
 import java.util.List;
 
-
-public class LocationCommand extends SimpleCommand {
+@AutoRegister
+public final class LocationCommand extends SimpleCommand {
 
     private final HCFactions plugin;
 
-    public LocationCommand() {
+    /**
+     * The singleton of this class
+     */
+    @Getter
+    private final static SimpleCommand instance = new LocationCommand();
+
+    private LocationCommand() {
         super("location | loc | whereami");
         plugin = HCFactions.getInstance();
     }
@@ -51,11 +56,9 @@ public class LocationCommand extends SimpleCommand {
     @Override
     protected void onCommand() {
         Player target;
-        if (args.length >= 1) {
-            target = plugin.getServer().getPlayer(args[0]);
-        } else if (sender instanceof Player) {
-            target = (Player) sender;
-        } else {
+        if (args.length >= 1) target = plugin.getServer().getPlayer(args[0]);
+		else if (sender instanceof Player) target = (Player) sender;
+		else {
                 sender.sendMessage(Lang.of("Commands.Location.Usage")
                       .replace("{commandLabel}", getLabel()));
             return;

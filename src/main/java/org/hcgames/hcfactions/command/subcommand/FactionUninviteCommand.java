@@ -2,10 +2,9 @@ package org.hcgames.hcfactions.command.subcommand;
 
 
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.command.FactionCommands;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.FactionMember;
@@ -23,6 +22,8 @@ public class FactionUninviteCommand extends SimpleSubCommand {
         super("uninvite | deinvite | deinv | uninv | revoke");
         setDescription("Revoke an invitation to a player.");
         this.plugin = plugin;
+        if(!FactionCommands.getArguments().contains(this))
+            FactionCommands.getArguments().add(this);
     }
 
    

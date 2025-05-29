@@ -2,7 +2,6 @@ package org.hcgames.hcfactions.command;
 
 
 import lombok.Getter;
-
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.command.subcommand.*;
 import org.mineacademy.fo.annotation.AutoRegister;
@@ -14,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @AutoRegister
-public class FactionCommands extends SimpleCommandGroup {
+public final class FactionCommands extends SimpleCommandGroup {
 
 	/**
 	 * The singleton of this class
@@ -25,7 +24,7 @@ public class FactionCommands extends SimpleCommandGroup {
 	private static final List<SimpleSubCommand> arguments = new ArrayList<>();
     private final HCFactions plugin = HCFactions.getInstance();
 
-    public final void addArgument(final SimpleSubCommand command) {
+    public final void addArgument(SimpleSubCommand command) {
     	registerSubcommand(command.getClass());
     }
 

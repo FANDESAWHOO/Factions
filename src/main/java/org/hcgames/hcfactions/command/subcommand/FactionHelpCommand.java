@@ -5,27 +5,21 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.command.FactionCommands;
 import org.hcgames.hcfactions.util.JavaUtils;
-import org.mineacademy.fo.annotation.AutoRegister;
 import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.settings.Lang;
 
-@AutoRegister
+
 public class FactionHelpCommand extends SimpleSubCommand {
 
 	private static final int HELP_PER_PAGE = 10;
 
-	private final HCFactions plugin;
-
 	private ImmutableMultimap<Integer, String> pages;
-
 
 	public FactionHelpCommand() {
 		super("help");
 		setDescription("View help on how to use factions.");
-		plugin = HCFactions.getInstance();
 		if(!FactionCommands.getArguments().contains(this))
 			FactionCommands.getArguments().add(this);
 	}

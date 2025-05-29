@@ -3,6 +3,7 @@ package org.hcgames.hcfactions.command.subcommand;
 
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.command.FactionCommands;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.FactionMember;
@@ -18,6 +19,8 @@ public class FactionOpenCommand extends SimpleSubCommand {
 	        super("open");
 	        setDescription("Opens the faction to the public.");
 	        this.plugin = plugin;
+			if(!FactionCommands.getArguments().contains(this))
+				FactionCommands.getArguments().add(this);
 	    }
 
 

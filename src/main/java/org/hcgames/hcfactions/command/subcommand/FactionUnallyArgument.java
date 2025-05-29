@@ -2,11 +2,11 @@ package org.hcgames.hcfactions.command.subcommand;
 
 
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.command.FactionCommands;
 import org.hcgames.hcfactions.event.playerfaction.FactionRelationRemoveEvent;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
@@ -21,13 +21,15 @@ import java.util.Collections;
 
 public class FactionUnallyArgument extends SimpleSubCommand {
 
-    private Relation relation = Relation.ALLY;
+    private final Relation relation = Relation.ALLY;
     private final HCFactions plugin;
 
     public FactionUnallyArgument(HCFactions plugin) {
         super("unally | unalliance | neutral");
         setDescription("Remove an ally pact with other factions.");
         this.plugin = plugin;
+        if(!FactionCommands.getArguments().contains(this))
+            FactionCommands.getArguments().add(this);
     }
 
     
@@ -78,19 +80,18 @@ public class FactionUnallyArgument extends SimpleSubCommand {
             }
 
             handle(sender, playerFaction, allies);
-        } else {
-            plugin.getFactionManager().advancedSearch(args[1], PlayerFaction.class, new SearchCallback<PlayerFaction>() {
-                @Override
-                public void onSuccess(PlayerFaction faction) {
-                    handle(sender, playerFaction, Collections.singleton(faction));
-                }
+        } else
+			plugin.getFactionManager().advancedSearch(args[1], PlayerFaction.class, new SearchCallback<PlayerFaction>() {
+				@Override
+				public void onSuccess(PlayerFaction faction) {
+					handle(sender, playerFaction, Collections.singleton(faction));
+				}
 
-                @Override
-                public void onFail(FailReason reason) {
-                    sender.sendMessage(Lang.of("Commands-Factions-Global-UnknownFaction").replace("{factionName}", args[1]));
-                }
-            });
-        }
+				@Override
+				public void onFail(FailReason reason) {
+					sender.sendMessage(Lang.of("Commands-Factions-Global-UnknownFaction").replace("{factionName}", args[1]));
+				}
+			});
 
         return;
     }

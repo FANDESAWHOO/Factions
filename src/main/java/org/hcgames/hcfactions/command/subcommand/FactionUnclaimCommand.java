@@ -4,11 +4,10 @@ package org.hcgames.hcfactions.command.subcommand;
 import com.google.common.collect.ImmutableList;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.claim.Claim;
+import org.hcgames.hcfactions.command.FactionCommands;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.FactionMember;
@@ -29,6 +28,8 @@ public class FactionUnclaimCommand extends SimpleSubCommand {
         super("unclaim");
         setDescription("Unclaims land from your faction.");
         this.plugin = plugin;
+        if(!FactionCommands.getArguments().contains(this))
+            FactionCommands.getArguments().add(this);
     }
 
     
@@ -69,9 +70,8 @@ public class FactionUnclaimCommand extends SimpleSubCommand {
 
         // Find out what claims the player wants removed.
         Collection<Claim> removingClaims;
-        if (args.length > 1 && args[1].equalsIgnoreCase("all")) {
-            removingClaims = new ArrayList<>(factionClaims);
-        } else {
+        if (args.length > 1 && args[1].equalsIgnoreCase("all")) removingClaims = new ArrayList<>(factionClaims);
+		else {
             Location location = player.getLocation();
             Claim claimAt = plugin.getFactionManager().getClaimAt(location);
             if (claimAt == null || !factionClaims.contains(claimAt)) {

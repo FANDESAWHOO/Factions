@@ -1,13 +1,20 @@
 package org.hcgames.hcfactions.command;
 
+import lombok.Getter;
 import org.hcgames.hcfactions.HCFactions;
 import org.mineacademy.fo.annotation.AutoRegister;
 import org.mineacademy.fo.command.SimpleCommand;
 
 @AutoRegister
-public class FocusCommand extends SimpleCommand {
+public final class FocusCommand extends SimpleCommand {
 
-	public FocusCommand(){
+	/**
+	 * The singleton of this class
+	 */
+	@Getter
+	private final static SimpleCommand instance = new FocusCommand();
+
+	private FocusCommand(){
 		super("focus");
 	}
 

@@ -152,4 +152,4 @@ mongo:
   database: "bz5tv19wwqmhwvd"
   username: "uyiynvbaeurstqdxiuv3"
   password: "rmpqalpSJnlVDhf0LfLW"
-  replicaSet: "rs0"     	
+kit-map: false

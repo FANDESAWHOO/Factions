@@ -2,6 +2,7 @@ package org.hcgames.hcfactions.command.subcommand;
 
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.command.FactionCommands;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.Role;
@@ -17,6 +18,8 @@ public class FactionReviveCommand extends SimpleSubCommand {
         super("revive");
         setDescription("Revive a player with faction lives");
         this.plugin = plugin;
+        if(!FactionCommands.getArguments().contains(this))
+            FactionCommands.getArguments().add(this);
     }
 
     

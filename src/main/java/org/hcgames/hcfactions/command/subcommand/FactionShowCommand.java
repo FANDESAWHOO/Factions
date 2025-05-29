@@ -2,10 +2,9 @@ package org.hcgames.hcfactions.command.subcommand;
 
 
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.command.FactionCommands;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.faction.PlayerFaction;
@@ -25,6 +24,8 @@ public class FactionShowCommand extends SimpleSubCommand {
         super("show | i | info | who");
         setDescription("Get details about a faction.");
         this.plugin = plugin;
+        if(!FactionCommands.getArguments().contains(this))
+            FactionCommands.getArguments().add(this);
     }
 
  
@@ -66,17 +67,14 @@ public class FactionShowCommand extends SimpleSubCommand {
             plugin.getFactionManager().advancedSearch(args[1], PlayerFaction.class, new SearchCallback<PlayerFaction>() {
                 @Override
                 public void onSuccess(PlayerFaction faction) {
-                    if(finalNamedFaction != null && finalNamedFaction.equals(faction)){
-                        return;
-                    }
+                    if(finalNamedFaction != null && finalNamedFaction.equals(faction)) return;
                     faction.sendInformation(sender);
                 }
 
                 @Override
                 public void onFail(FailReason reason) {
-                    if(finalNamedFaction == null){
-                        sender.sendMessage(Lang.of("commands.error.faction_not_found", args[1]));
-                    }
+                    if(finalNamedFaction == null)
+						sender.sendMessage(Lang.of("commands.error.faction_not_found", args[1]));
                 }
             }, true);
 
@@ -87,21 +85,14 @@ public class FactionShowCommand extends SimpleSubCommand {
 
     @Override
     public List<String> tabComplete() {
-        if (args.length != 2 || !(sender instanceof Player)) {
-            return Collections.emptyList();
-        }
+        if (args.length != 2 || !(sender instanceof Player)) return Collections.emptyList();
 
-        if (args[1].isEmpty()) {
-            return null;
-        }
+        if (args[1].isEmpty()) return null;
 
         Player player = (Player) sender;
         List<String> results = new ArrayList<>(plugin.getFactionManager().getFactionNameMap().keySet());
-        for (Player target : Bukkit.getOnlinePlayers()) {
-            if (player.canSee(target) && !results.contains(target.getName())) {
-                results.add(target.getName());
-            }
-        }
+        for (Player target : Bukkit.getOnlinePlayers())
+			if (player.canSee(target) && !results.contains(target.getName())) results.add(target.getName());
 
         return results;
     }

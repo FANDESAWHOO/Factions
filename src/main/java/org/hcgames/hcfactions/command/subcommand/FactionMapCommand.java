@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.command.FactionCommands;
 import org.hcgames.hcfactions.faction.LandMap;
 import org.hcgames.hcfactions.util.GuavaCompat;
 import org.hcgames.hcfactions.visualise.VisualType;
@@ -22,6 +23,8 @@ public class FactionMapCommand extends SimpleSubCommand {
 		super("map");
 		setDescription("View all claims around your chunk.");
 		this.plugin = HCFactions.getInstance();
+		if(!FactionCommands.getArguments().contains(this))
+			FactionCommands.getArguments().add(this);
 	}
 
 	public String getUsage(String label) {

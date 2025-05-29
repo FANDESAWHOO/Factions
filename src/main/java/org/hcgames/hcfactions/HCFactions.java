@@ -9,8 +9,6 @@ import org.bukkit.plugin.Plugin;
 import org.hcgames.hcfactions.claim.Claim;
 import org.hcgames.hcfactions.claim.ClaimHandler;
 import org.hcgames.hcfactions.command.FactionCommands;
-import org.hcgames.hcfactions.command.LocationCommand;
-import org.hcgames.hcfactions.command.RegenCommand;
 import org.hcgames.hcfactions.faction.ClaimableFaction;
 import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.faction.PlayerFaction;
@@ -41,7 +39,7 @@ public class HCFactions extends SimplePlugin {
 
     private ItemDb itemDb;
     public static final Joiner SPACE_JOINER = Joiner.on(' ');
-    public static final Joiner COMMA_JOINER = Joiner.on(", ");
+  //  public static final Joiner COMMA_JOINER = Joiner.on(", ");
     private MongoManager mongoManager;
     private WorldEditPlugin worldEdit;
     private FactionManager factionManager;
@@ -91,7 +89,6 @@ public class HCFactions extends SimplePlugin {
     public void onPluginStart() {
         registerManagers();
         registerListeners();
-        registerCommands();
 
         getLogger().info("HCFactions has been enabled successfully!");
 
@@ -123,16 +120,13 @@ public class HCFactions extends SimplePlugin {
         registerEvents(new FactionChatListener(this));
     }
 
-    private void registerCommands() {
-        registerCommand(new LocationCommand());
-        registerCommand(new RegenCommand());
-    }
+
 
     private void registerManagers() {
 
         itemDb = new SimpleItemDb(this);
         visualiseHandler = new VisualiseHandler();
-        if (getConfig().getBoolean("mongo.use", false)) {
+        if (Configuration.mongo) {
             mongoManager = new MongoManager();
             mongoManager.connect();
             factionManager = new MongoFactionManager(this);

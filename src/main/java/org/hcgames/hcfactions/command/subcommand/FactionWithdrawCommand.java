@@ -3,11 +3,10 @@ package org.hcgames.hcfactions.command.subcommand;
 
 import com.google.common.collect.ImmutableList;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.api.EconomyAPI;
+import org.hcgames.hcfactions.command.FactionCommands;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.FactionMember;
@@ -28,6 +27,8 @@ public class FactionWithdrawCommand extends SimpleSubCommand {
         super("withdraw | w");
         setDescription("Withdraws money from the faction balance.");
         this.plugin = plugin;
+        if(!FactionCommands.getArguments().contains(this))
+            FactionCommands.getArguments().add(this);
     }
 
     public String getUsage(String label) {
@@ -67,15 +68,12 @@ public class FactionWithdrawCommand extends SimpleSubCommand {
         int factionBalance = playerFaction.getBalance();
         Integer amount;
 
-        if (args[1].equalsIgnoreCase("all")) {
-            amount = factionBalance;
-        } else {
-            if ((amount = (JavaUtils.tryParseInt(args[1]))) == null) {
-                sender.sendMessage(Lang.of("Commands-Factions-Deposit-InvalidNumber")
-                        .replace("{amount}", args[1]));
-                return;
-            }
-        }
+        if (args[1].equalsIgnoreCase("all")) amount = factionBalance;
+		else if ((amount = (JavaUtils.tryParseInt(args[1]))) == null) {
+			sender.sendMessage(Lang.of("Commands-Factions-Deposit-InvalidNumber")
+					.replace("{amount}", args[1]));
+			return;
+		}
 
         if (amount <= 0) {
             sender.sendMessage(Lang.of("Commands-Factions-Withdraw-MustBePositive"));

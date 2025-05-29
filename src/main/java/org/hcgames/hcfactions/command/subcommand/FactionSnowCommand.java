@@ -24,6 +24,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.command.FactionCommands;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.ClaimableFaction;
 import org.hcgames.hcfactions.faction.Faction;
@@ -41,6 +42,8 @@ public class FactionSnowCommand extends SimpleSubCommand {
         setDescription("Toggle snow fall in your faction");
       //  this.permission = "hcf.command.faction.argument." + getName();
         this.plugin = plugin;
+        if(!FactionCommands.getArguments().contains(this))
+            FactionCommands.getArguments().add(this);
     }
 
     public String getUsage(String s){

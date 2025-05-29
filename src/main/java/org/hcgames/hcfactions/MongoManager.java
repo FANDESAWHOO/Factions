@@ -19,13 +19,13 @@
  */
 
 package org.hcgames.hcfactions;
+
+import com.mongodb.MongoException;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.MongoException;
 import lombok.Getter;
-
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -39,13 +39,13 @@ public class MongoManager {
 
     public void connect() {
         try {
-            String host = HCFactions.getInstance().getConfig().getString("mongo.host");
-            String databaseName = HCFactions.getInstance().getConfig().getString("mongo.database");
-            String username = HCFactions.getInstance().getConfig().getString("mongo.username");
-            String password = HCFactions.getInstance().getConfig().getString("mongo.password");
-            String replicaSet = HCFactions.getInstance().getConfig().getString("mongo.replicaSet");
+            String host = Configuration.host;
+            String databaseName = Configuration.database;
+            String username = Configuration.username;
+            String password = Configuration.password;
+            String replicaSet = "rs0";
 
-            if (host == null || databaseName == null || username == null || password == null || replicaSet == null) {
+            if (host == null || databaseName == null || username == null || password == null) {
                 Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "MongoDB configuration is missing or incomplete in config.yml!");
                 return;
             }

@@ -313,5 +313,3 @@ commands:
   pastfactions:
    own: "Your past factions: {0}"
    other: "Past Factions of {0}: {1}"
-   own: "Your past factions: {0}"
-   other: "Past factions of {0}: {1}"	

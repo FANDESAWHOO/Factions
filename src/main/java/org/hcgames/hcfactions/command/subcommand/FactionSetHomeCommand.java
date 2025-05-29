@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.claim.Claim;
+import org.hcgames.hcfactions.command.FactionCommands;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.FactionMember;
@@ -22,6 +23,8 @@ public class FactionSetHomeCommand extends SimpleSubCommand {
         super("sethome");
         setDescription( "Sets the faction home location.");
         this.plugin = plugin;
+        if(!FactionCommands.getArguments().contains(this))
+            FactionCommands.getArguments().add(this);
     }
 
    
@@ -64,12 +67,11 @@ public class FactionSetHomeCommand extends SimpleSubCommand {
         Location location = player.getLocation();
 
         boolean insideTerritory = false;
-        for (Claim claim : playerFaction.getClaims()) {
-            if (claim.contains(location)) {
-                insideTerritory = true;
-                break;
-            }
-        }
+        for (Claim claim : playerFaction.getClaims())
+			if (claim.contains(location)) {
+				insideTerritory = true;
+				break;
+			}
 
         if (!insideTerritory) {
             player.sendMessage(Lang.of("Commands-Factions-SetHome-NotInsideHomeTerritory"));
