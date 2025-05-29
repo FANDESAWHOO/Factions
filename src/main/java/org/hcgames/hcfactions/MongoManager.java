@@ -57,8 +57,8 @@ public class MongoManager {
             mongoDatabase = mongoClient.getDatabase(databaseName);
 
 
-            serverCollection = mongoDatabase.getCollection("server");
-            factionMongoCollection = mongoDatabase.getCollection("factions");
+            serverCollection = mongoDatabase.getCollection("server1");
+            factionMongoCollection = mongoDatabase.getCollection("factions1");
 
             Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Connected to MongoDB successfully.");
         } catch (MongoException e) {

@@ -3,7 +3,6 @@ package org.hcgames.hcfactions.command;
 import lombok.Getter;
 import org.hcgames.hcfactions.command.argument.staff.*;
 import org.hcgames.hcfactions.command.subcommand.*;
-import org.hcgames.hcfactions.util.text.CC;
 import org.mineacademy.fo.annotation.AutoRegister;
 import org.mineacademy.fo.command.SimpleCommand;
 import org.mineacademy.fo.settings.Lang;
@@ -88,11 +87,9 @@ public final class FactionCommand extends SimpleCommand {
 	}
 
 	public FactionSubCommand getSubCommand(String key) {
-		for (FactionSubCommand sub : commands) {
-			if (sub.getName().equalsIgnoreCase(key)) return sub;
-			for (String pepe : sub.getAliases())
-				if (key.toLowerCase().equalsIgnoreCase(pepe)) return sub;
-		}
+		for(FactionSubCommand subCommand : commands)
+			if(subCommand.getName().equalsIgnoreCase(key)) return subCommand;
+
 
 		return null;
 	}
@@ -104,21 +101,13 @@ public final class FactionCommand extends SimpleCommand {
 	 */
 	@Override
 	protected void onCommand() {
-		if (args.length >= 1) try {
-			FactionSubCommand tc = getSubCommand(args[0]);
-
-			if (tc == null) {
-				String string = Lang.of("Commands.Invalid_Sub_Argument");
-				string = string.replace("{label}", getLabel()).replace("{0}", args[0]).replace("'", "\"");
-				sender.sendMessage(CC.translate(string));
-
-				return;
-			}
-			tc.execute(sender, getLabel() ,args);
-		} catch (Exception ex) {
-			tell("&cAn unexpected error occurred: " + ex.getLocalizedMessage() + "\nContact an admin");
-		}
-
-		else help.execute(sender, getLabel(), args);
+		checkPerm(getPermission());
+		if(args.length >= 1){
+			FactionSubCommand argument = getSubCommand(args[0]);
+			if(argument == null) tell(Lang.of("Commands-Unknown-Subcommand")
+					.replace("{subCommand}", args[0])
+					.replace("{commandLabel}", getName()));
+			else argument.execute(sender, getLabel(), args);
+		} else help.execute(sender, getLabel(), args);
 	}
 }

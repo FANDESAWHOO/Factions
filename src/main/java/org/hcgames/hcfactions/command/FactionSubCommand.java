@@ -24,7 +24,7 @@ public abstract class FactionSubCommand implements TabCompleter {
 	 * INFO FOR THE COMMAND
 	 */
 	private final String name;
-	protected boolean isPlayerOnly = false;
+	@Setter protected boolean isPlayerOnly = false;
 	@Setter protected String description;
 	@Setter protected String permission;
 	@Setter protected String[] aliases;
@@ -70,10 +70,18 @@ public abstract class FactionSubCommand implements TabCompleter {
 				.skip(1)
 				.map(String::trim)
 				.toArray(String[]::new);
-
-		description = description;
 		permission = "faction.command." + name;
+		description = "No description set";
 	//	addArgument();
+	}
+
+	public boolean matches(String input) {
+		if (name.equalsIgnoreCase(input))
+			return true;
+		for (String alias : aliases)
+			if (alias.equalsIgnoreCase(input))
+				return true;
+		return false;
 	}
 
 	public FactionSubCommand(String rawName, String description) {
@@ -105,6 +113,14 @@ public abstract class FactionSubCommand implements TabCompleter {
 		this.sender = sender;
 		this.label = label;
 		this.args = args;
+		if (isPlayerOnly && !(sender instanceof Player)) {
+			sender.sendMessage(Lang.of("Commands.No_Console"));
+			return;
+		}
+		if (!sender.hasPermission(permission)) {
+			sender.sendMessage(Lang.of("No_Permission"));
+			return;
+		}
 
 		onCommand();
 	}
