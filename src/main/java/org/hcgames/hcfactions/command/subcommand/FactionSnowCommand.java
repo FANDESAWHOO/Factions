@@ -24,16 +24,15 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
-import org.hcgames.hcfactions.command.FactionCommands;
+import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.ClaimableFaction;
 import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.Role;
-import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.settings.Lang;
 
-public class FactionSnowCommand extends SimpleSubCommand {
+public class FactionSnowCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 
@@ -42,12 +41,12 @@ public class FactionSnowCommand extends SimpleSubCommand {
         setDescription("Toggle snow fall in your faction");
       //  this.permission = "hcf.command.faction.argument." + getName();
         this.plugin = plugin;
-        if(!FactionCommands.getArguments().contains(this))
-            FactionCommands.getArguments().add(this);
+
     }
 
-    public String getUsage(String s){
-        return "/f " + s + " snow";
+    @Override
+	public String getUsage(){
+        return "/f " + label + " snow";
     }
 
     @Override
@@ -62,7 +61,7 @@ public class FactionSnowCommand extends SimpleSubCommand {
 
         if(args.length < 2){
             if(!(sender instanceof Player)){
-                sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(getLabel()) + " [factionName]");
+                sender.sendMessage(ChatColor.RED + "Usage: " + getUsage() + " [factionName]");
                 return;
             }
 

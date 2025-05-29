@@ -1,20 +1,18 @@
 package org.hcgames.hcfactions.command.argument.staff;
 
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.manager.SearchCallback;
 import org.hcgames.hcfactions.structure.FactionMember;
 import org.hcgames.hcfactions.structure.Role;
-import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.settings.Lang;
 
 import java.util.Collections;
 import java.util.List;
 
-public class FactionForcePromoteArgument extends SimpleSubCommand {
+public class FactionForcePromoteArgument extends FactionSubCommand {
 
     private final HCFactions plugin;
 
@@ -26,14 +24,15 @@ public class FactionForcePromoteArgument extends SimpleSubCommand {
     }
 
   
-    public String getUsage(String label) {
+    @Override
+	public String getUsage() {
         return '/' + label + ' ' + getName() + " <playerName>";
     }
 
     @Override
     public void onCommand() {
         if (args.length < 2) {
-            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(getLabel()));
+            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
             return;
         }
 
@@ -42,12 +41,11 @@ public class FactionForcePromoteArgument extends SimpleSubCommand {
             public void onSuccess(PlayerFaction faction) {
                 FactionMember member = null;
 
-                for(FactionMember search : faction.getMembers().values()){
-                    if(search.getCachedName().equalsIgnoreCase(args[1])){
-                        member = search;
-                        break;
-                    }
-                }
+                for(FactionMember search : faction.getMembers().values())
+					if (search.getCachedName().equalsIgnoreCase(args[1])) {
+						member = search;
+						break;
+					}
 
                 if (member == null) {
                     sender.sendMessage(ChatColor.RED + "Faction containing member with IGN or UUID " + args[1] + " not found.");

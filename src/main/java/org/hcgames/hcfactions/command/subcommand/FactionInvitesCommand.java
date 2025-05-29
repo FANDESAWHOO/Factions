@@ -4,18 +4,17 @@ import com.google.common.base.Joiner;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
-import org.hcgames.hcfactions.command.FactionCommands;
+import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.faction.PlayerFaction;
-import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.settings.Lang;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class FactionInvitesCommand extends SimpleSubCommand {
+public class FactionInvitesCommand extends FactionSubCommand {
 	private static final Joiner JOINER = Joiner.on(ChatColor.WHITE + ", " + ChatColor.GRAY);
 
 	private final HCFactions plugin;
@@ -24,11 +23,9 @@ public class FactionInvitesCommand extends SimpleSubCommand {
 		super("invites");
 		setDescription("View faction invitations.");
 		plugin = HCFactions.getInstance();
-		if(!FactionCommands.getArguments().contains(this))
-			FactionCommands.getArguments().add(this);
 	}
-
-	public String getUsage(String label) {
+    @Override
+	public String getUsage() {
 		return '/' + label + ' ' + getName();
 	}
 

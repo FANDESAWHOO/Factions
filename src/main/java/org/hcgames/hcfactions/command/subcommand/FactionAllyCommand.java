@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
-import org.hcgames.hcfactions.command.FactionCommands;
+import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.event.playerfaction.FactionRelationCreateEvent;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.Faction;
@@ -13,12 +13,11 @@ import org.hcgames.hcfactions.manager.SearchCallback;
 import org.hcgames.hcfactions.structure.FactionRelation;
 import org.hcgames.hcfactions.structure.Relation;
 import org.hcgames.hcfactions.structure.Role;
-import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.settings.Lang;
 
 import java.util.*;
 
-public class FactionAllyCommand extends SimpleSubCommand {
+public class FactionAllyCommand extends FactionSubCommand {
 
 	private static final Relation RELATION = Relation.ALLY;
 
@@ -28,12 +27,11 @@ public class FactionAllyCommand extends SimpleSubCommand {
 		super("ally | alliance");
 		setDescription("Make an ally pact with other factions.");
 		plugin = HCFactions.getInstance();
-		if(!FactionCommands.getArguments().contains(this))
-			FactionCommands.getArguments().add(this);
+
 	}
 
-
-	public String getUsage(String label) {
+    @Override
+ 	public String getUsage() {
 		return '/' + label + ' ' + getName() + " <factionName>";
 	}
 
@@ -50,7 +48,7 @@ public class FactionAllyCommand extends SimpleSubCommand {
 		}
 
 		if (args.length < 2) {
-			sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage(getLabel())));
+			sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
 			return;
 		}
 

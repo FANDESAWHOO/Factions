@@ -8,7 +8,6 @@ import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.Plugin;
 import org.hcgames.hcfactions.claim.Claim;
 import org.hcgames.hcfactions.claim.ClaimHandler;
-import org.hcgames.hcfactions.command.FactionCommands;
 import org.hcgames.hcfactions.faction.ClaimableFaction;
 import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.faction.PlayerFaction;
@@ -26,8 +25,6 @@ import org.hcgames.hcfactions.util.itemdb.ItemDb;
 import org.hcgames.hcfactions.util.itemdb.SimpleItemDb;
 import org.hcgames.hcfactions.visualise.VisualiseHandler;
 import org.hcgames.stats.Stats;
-import org.jetbrains.annotations.Nullable;
-import org.mineacademy.fo.command.SimpleCommandGroup;
 import org.mineacademy.fo.plugin.SimplePlugin;
 /**
  * FORKED FROM HCGames (System Update) FACTIONS
@@ -48,10 +45,6 @@ public class HCFactions extends SimplePlugin {
     private VisualiseHandler visualiseHandler;
     private TimerManager timerManager;
 
-    @Override
-    public @Nullable SimpleCommandGroup getMainCommand() {
-        return FactionCommands.getInstance();
-    }
 
    public void register(){
        ConfigurationSerialization.registerClass(PersistableLocation.class);

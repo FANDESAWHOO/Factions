@@ -5,16 +5,15 @@ import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.api.TimerAPI;
-import org.hcgames.hcfactions.command.FactionCommands;
+import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
-import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.settings.Lang;
 
 import java.util.Optional;
 import java.util.UUID;
 
-public class FactionHomeCommand extends SimpleSubCommand {
+public class FactionHomeCommand extends FactionSubCommand {
 
 	private final HCFactions plugin;
 
@@ -22,12 +21,11 @@ public class FactionHomeCommand extends SimpleSubCommand {
 		super("home");
 		setDescription("Teleport to the faction home.");
 		plugin = HCFactions.getInstance();
-		if(!FactionCommands.getArguments().contains(this))
-			FactionCommands.getArguments().add(this);
+
 	}
 
-
-	public String getUsage(String label) {
+    @Override
+	public String getUsage() {
 		return '/' + label + ' ' + getName();
 	}
 

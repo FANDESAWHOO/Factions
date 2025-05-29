@@ -4,30 +4,29 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.hcgames.hcfactions.HCFactions;
-import org.hcgames.hcfactions.command.FactionCommands;
+import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.faction.LandMap;
 import org.hcgames.hcfactions.util.GuavaCompat;
 import org.hcgames.hcfactions.visualise.VisualType;
-import org.mineacademy.fo.command.SimpleSubCommand;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-public class FactionMapCommand extends SimpleSubCommand {
+public class FactionMapCommand extends FactionSubCommand {
 
 	private final HCFactions plugin;
 
 	public FactionMapCommand() {
 		super("map");
 		setDescription("View all claims around your chunk.");
-		this.plugin = HCFactions.getInstance();
-		if(!FactionCommands.getArguments().contains(this))
-			FactionCommands.getArguments().add(this);
+		plugin = HCFactions.getInstance();
+
 	}
 
-	public String getUsage(String label) {
+	@Override
+	public String getUsage() {
 		return '/' + label + ' ' + getName() + " [factionName]";
 	}
 
@@ -38,10 +37,9 @@ public class FactionMapCommand extends SimpleSubCommand {
 		UUID uuid = player.getUniqueId();
 
 //		final FactionUser factionUser = HCF.getPlugin().getUserManager().getUser(uuid);
-		final VisualType visualType;
-		if (args.length < 2) {
-			visualType = VisualType.CLAIM_MAP;
-		} else if ((visualType = GuavaCompat.getIfPresent(VisualType.class, args[1]).orElse(VisualType.NONE)) == VisualType.NONE) {
+		VisualType visualType;
+		if (args.length < 2) visualType = VisualType.CLAIM_MAP;
+		else if ((visualType = GuavaCompat.getIfPresent(VisualType.class, args[1]).orElse(VisualType.NONE)) == VisualType.NONE) {
 			player.sendMessage(ChatColor.RED + "Visual type " + args[1] + " not found.");
 			// player.sendMessage(HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Map-VisualTypeNotFound")
 			//       .replace("{visualType}", args[1]));
@@ -50,9 +48,7 @@ public class FactionMapCommand extends SimpleSubCommand {
 
 		boolean newShowingMap = !(player.hasMetadata("claimMap") && player.getMetadata("claimMap").get(0).asBoolean());
 		if (newShowingMap) {
-			if (!LandMap.updateMap(player, plugin, visualType, true)) {
-				return;
-			}
+			if (!LandMap.updateMap(player, plugin, visualType, true)) return;
 		} else {
 			HCFactions.getInstance().getVisualiseHandler().clearVisualBlocks(player, visualType, null);
 			//     sender.sendMessage(HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Map-DisabledClaimPillars"));
@@ -63,13 +59,11 @@ public class FactionMapCommand extends SimpleSubCommand {
 
 	}
 
-	private static List<String> visualTypes;
+	private static final List<String> visualTypes;
 
 	@Override
 	protected List<String> tabComplete() {
-		if (args.length != 2 || !(sender instanceof Player)) {
-			return Collections.emptyList();
-		}
+		if (args.length != 2 || !(sender instanceof Player)) return Collections.emptyList();
 
 		return visualTypes;
 	}
@@ -77,9 +71,7 @@ public class FactionMapCommand extends SimpleSubCommand {
 	static {
 		VisualType[] values = VisualType.values();
 		visualTypes = new ArrayList<>(values.length);
-		for (VisualType visualType : values) {
-			visualTypes.add(visualType.name());
-		}
+		for (VisualType visualType : values) visualTypes.add(visualType.name());
 	}
 
 }

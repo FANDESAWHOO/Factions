@@ -5,17 +5,16 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.hcgames.hcfactions.HCFactions;
-import org.hcgames.hcfactions.command.FactionCommands;
+import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.util.JavaUtils;
 import org.hcgames.hcfactions.util.MapSorting;
-import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.settings.Lang;
 
 import java.util.*;
 
-public class FactionListCommand extends SimpleSubCommand {
+public class FactionListCommand extends FactionSubCommand {
 
 
 	private static final int MAX_FACTIONS_PER_PAGE = 10;
@@ -26,12 +25,11 @@ public class FactionListCommand extends SimpleSubCommand {
 		super("list | l");
 		setDescription("See a list of all factions.");
 		plugin = HCFactions.getInstance();
-		if(!FactionCommands.getArguments().contains(this))
-			FactionCommands.getArguments().add(this);
 	}
 
 
-	public String getUsage(String label) {
+	@Override
+	public String getUsage() {
 		return '/' + label + ' ' + getName();
 	}
 

@@ -3,41 +3,34 @@ package org.hcgames.hcfactions.command.subcommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
-import org.hcgames.hcfactions.command.FactionCommands;
+import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.focus.FocusTarget;
-import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.settings.Lang;
 
-public class FactionFocusCommand extends SimpleSubCommand {
+public class FactionFocusCommand extends FactionSubCommand {
 	private final HCFactions plugin;
 
 	public FactionFocusCommand(){
 		super("focus | unfocus");
 		setDescription("Focus on a player or argument");
 		plugin = HCFactions.getInstance();
-		if(!FactionCommands.getArguments().contains(this))
-			FactionCommands.getArguments().add(this);
 	}
-
-	public String getUsage(String s) {
+    @Override
+	public String getUsage() {
 		return Lang.of("Commands.Factions.Focus.Usage");
 	}
 
 	@Override
 	public void onCommand(){
-		if(!(sender instanceof Player)){
-			sender.sendMessage(Lang.of("Error-Messages.PlayerOnly"));
-			//player only
-			return;
-		}
+		checkConsole();
 
 		Player player = (Player) sender;
 
 		if(args.length < 2){
-			sender.sendMessage(getUsage(getLabel()));
+			sender.sendMessage(getUsage());
 			return;
 		}
 

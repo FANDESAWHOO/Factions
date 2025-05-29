@@ -28,11 +28,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.faction.Faction;
-import org.hcgames.hcfactions.faction.system.EndPortalFaction;
-import org.hcgames.hcfactions.faction.system.RoadFaction;
-import org.hcgames.hcfactions.faction.system.SpawnFaction;
-import org.hcgames.hcfactions.faction.system.SystemFaction;
-import org.hcgames.hcfactions.faction.system.SystemTeam;
+import org.hcgames.hcfactions.faction.system.*;
 import org.hcgames.hcfactions.util.configuration.Config;
 
 import java.lang.reflect.Constructor;
@@ -69,8 +65,8 @@ public class MongoFactionManager extends FlatFileFactionManager implements Facti
 
     @Override
     public void reloadFactionData() {
-        this.factionNameMap.clear();
-        final int[] factions = {0};
+        factionNameMap.clear();
+        int[] factions = {0};
 
         collection.find().forEach((com.mongodb.Block<? super Document>) document -> {
             try{
@@ -83,24 +79,24 @@ public class MongoFactionManager extends FlatFileFactionManager implements Facti
             }
         });
 
-        for(Class<? extends SystemFaction> systemFaction : FactionManager.systemFactions.getSystemFactions()){
-            try{
-                Method method = systemFaction.getDeclaredMethod("getUUID");
-                UUID result = (UUID) method.invoke(null);
+        for(Class<? extends SystemFaction> systemFaction : FactionManager.systemFactions.getSystemFactions())
+			try {
+				Method method = systemFaction.getDeclaredMethod("getUUID");
+				UUID result = (UUID) method.invoke(null);
 
-                if(!factionUUIDMap.containsKey(result)){
-                    Constructor<?> constructor = systemFaction.getConstructor();
+				if (!factionUUIDMap.containsKey(result)) {
+					Constructor<?> constructor = systemFaction.getConstructor();
 
-                    Faction faction = (Faction) constructor.newInstance();
-                    cacheFaction(faction);
+					Faction faction = (Faction) constructor.newInstance();
+					cacheFaction(faction);
 
-                    factions[0]++;
-                    plugin.getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "Faction " + faction.getName() + " not found, created.");
-                }
-            }catch(NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e){
-                e.printStackTrace();
-            }
-        }
+					factions[0]++;
+					plugin.getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "Faction " + faction.getName() + " not found, created.");
+				}
+			} catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException |
+					 InstantiationException e) {
+				e.printStackTrace();
+			}
         plugin.getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "Loaded " + factions[0] + " factions.");
         Set<Faction> adding = new HashSet<>();
 		if (!factionNameMap.containsKey("NorthRoad")) { // TODO: more reliable
@@ -110,17 +106,15 @@ public class MongoFactionManager extends FlatFileFactionManager implements Facti
 			adding.add(new RoadFaction.WestRoadFaction());
 		}
 
-		if (!factionNameMap.containsKey("Spawn")) { // TODO: more reliable
-			adding.add(new SpawnFaction());
-		}
+		// TODO: more reliable
+		if (!factionNameMap.containsKey("Spawn")) adding.add(new SpawnFaction());
 
 
-		if (!this.factionNameMap.containsKey("EndPortal")) { // TODO: more reliable
-			adding.add(new EndPortalFaction());
-		}
+		// TODO: more reliable
+		if (!factionNameMap.containsKey("EndPortal")) adding.add(new EndPortalFaction());
 		// Now load the Spawn, etc factions.
 				for (Faction added : adding) {
-					this.cacheFaction(added);
+					cacheFaction(added);
 					Bukkit.getConsoleSender().sendMessage(ChatColor.BLUE + "Faction " + added.getName() + " not found, created.");
 				}
     }

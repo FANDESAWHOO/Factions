@@ -3,11 +3,10 @@ package org.hcgames.hcfactions.command.subcommand;
 import com.google.common.collect.ImmutableList;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
-import org.hcgames.hcfactions.command.FactionCommands;
+import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.Role;
-import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.settings.Lang;
 
 import java.util.Arrays;
@@ -15,19 +14,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class FactionAnnouncementCommand extends SimpleSubCommand {
+public class FactionAnnouncementCommand extends FactionSubCommand {
 	private final HCFactions plugin;
 
 	public FactionAnnouncementCommand() {
 		super("announcement | motd | announce");
 		setDescription("Set your faction announcement.");
 		plugin = HCFactions.getInstance();
-		if(!FactionCommands.getArguments().contains(this))
-			FactionCommands.getArguments().add(this);
+
 	}
 
-
-	public String getUsage(String label) {
+    @Override
+	public String getUsage() {
 		return '/' + label + ' ' + getName() + " <newAnnouncement>";
 	}
 
@@ -36,7 +34,7 @@ public class FactionAnnouncementCommand extends SimpleSubCommand {
 		checkConsole();
 
 		if (args.length < 2) {
-			sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage(getLabel())));
+			sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
 			return;
 		}
 

@@ -5,9 +5,9 @@ import com.sk89q.worldedit.bukkit.selections.Selection;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.claim.Claim;
+import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.faction.ClaimableFaction;
 import org.hcgames.hcfactions.manager.SearchCallback;
-import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.settings.Lang;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Used to claim land for other {@link ClaimableFaction}s.
  */
-public class FactionClaimForArgument extends SimpleSubCommand {
+public class FactionClaimForArgument extends FactionSubCommand {
 
     private final HCFactions plugin;
 
@@ -29,7 +29,8 @@ public class FactionClaimForArgument extends SimpleSubCommand {
     }
 
   
-    public String getUsage(String label) {
+    @Override
+	public String getUsage() {
         return Lang.of("commands.staff.claimfor.usage", label, getName());
     }
 
@@ -41,7 +42,7 @@ public class FactionClaimForArgument extends SimpleSubCommand {
         }
 
         if (args.length < 2) {
-            sender.sendMessage(Lang.of("commands.error.usage", getUsage(getLabel())));
+            sender.sendMessage(Lang.of("commands.error.usage", getUsage()));
             return;
         }
 
@@ -64,9 +65,8 @@ public class FactionClaimForArgument extends SimpleSubCommand {
                     return;
                 }
 
-                if (faction.addClaim(new Claim(faction, selection.getMinimumPoint(), selection.getMaximumPoint()), sender)) {
-                    sender.sendMessage(Lang.of("commands.claimfor.claimed", faction.getName()));
-                }
+                if (faction.addClaim(new Claim(faction, selection.getMinimumPoint(), selection.getMaximumPoint()), sender))
+					sender.sendMessage(Lang.of("commands.claimfor.claimed", faction.getName()));
             }
 
             @Override
@@ -80,21 +80,14 @@ public class FactionClaimForArgument extends SimpleSubCommand {
 
     @Override
     public List<String> tabComplete() {
-        if (args.length != 2 || !(sender instanceof Player)) {
-            return Collections.emptyList();
-        }
+        if (args.length != 2 || !(sender instanceof Player)) return Collections.emptyList();
 
-        if (args[1].isEmpty()) {
-            return null;
-        }
+        if (args[1].isEmpty()) return null;
 
         Player player = (Player) sender;
         List<String> results = new ArrayList<>(plugin.getFactionManager().getFactionNameMap().keySet());
-        for (Player target : plugin.getServer().getOnlinePlayers()) {
-            if (player.canSee(target) && !results.contains(target.getName())) {
-                results.add(target.getName());
-            }
-        }
+        for (Player target : plugin.getServer().getOnlinePlayers())
+			if (player.canSee(target) && !results.contains(target.getName())) results.add(target.getName());
 
         return results;
     }

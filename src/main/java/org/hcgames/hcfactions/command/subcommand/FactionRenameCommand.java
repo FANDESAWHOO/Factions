@@ -5,17 +5,16 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
-import org.hcgames.hcfactions.command.FactionCommands;
+import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.Role;
 import org.hcgames.hcfactions.util.JavaUtils;
-import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.settings.Lang;
 
 import java.util.concurrent.TimeUnit;
 
-public class FactionRenameCommand extends SimpleSubCommand {
+public class FactionRenameCommand extends FactionSubCommand {
 	    private static final long FACTION_RENAME_DELAY_MILLIS = TimeUnit.SECONDS.toMillis(15L);
 	    private static final String FACTION_RENAME_DELAY_WORDS = DurationFormatUtils.formatDurationWords(FACTION_RENAME_DELAY_MILLIS, true, true);
 
@@ -25,11 +24,10 @@ public class FactionRenameCommand extends SimpleSubCommand {
 	        super("rename | changename | setname");
 	        setDescription("Change the name of your faction.");
 	        this.plugin = plugin;
-			if(!FactionCommands.getArguments().contains(this))
-				FactionCommands.getArguments().add(this);
 	    }
 
-	    public String getUsage(String label) {
+	    @Override
+		public String getUsage() {
 	        return '/' + label + ' ' + getName() + " <newFactionName>";
 	    }
 
@@ -41,7 +39,7 @@ public class FactionRenameCommand extends SimpleSubCommand {
 	        }
 
 	        if (args.length < 2) {
-	            sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage(getLabel())));
+	            sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
 	            return;
 	        }
 

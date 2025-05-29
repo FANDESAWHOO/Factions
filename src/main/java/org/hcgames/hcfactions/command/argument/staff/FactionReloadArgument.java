@@ -1,8 +1,7 @@
 package org.hcgames.hcfactions.command.argument.staff;
 
 import org.bukkit.ChatColor;
-
-import org.mineacademy.fo.command.SimpleSubCommand;
+import org.hcgames.hcfactions.command.FactionSubCommand;
 
 import java.util.Collections;
 import java.util.List;
@@ -10,7 +9,7 @@ import java.util.List;
  * Why SystemUpdate removed this?
  * Other thing i don't gonna know.
  */
-public class FactionReloadArgument extends SimpleSubCommand {
+public class FactionReloadArgument extends FactionSubCommand {
 
    
     public FactionReloadArgument() {
@@ -20,7 +19,8 @@ public class FactionReloadArgument extends SimpleSubCommand {
     }
 
    
-    public String getUsage(String label) {
+    @Override
+	public String getUsage() {
         return '/' + label + ' ' + getName();
     }
 

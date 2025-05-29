@@ -3,17 +3,16 @@ package org.hcgames.hcfactions.command.subcommand;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
-import org.hcgames.hcfactions.command.FactionCommands;
+import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.FactionMember;
 import org.hcgames.hcfactions.structure.Role;
-import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.settings.Lang;
 
 import java.util.Optional;
 
-public class FactionKickCommand extends SimpleSubCommand {
+public class FactionKickCommand extends FactionSubCommand {
 
 	private final HCFactions plugin;
 
@@ -21,12 +20,10 @@ public class FactionKickCommand extends SimpleSubCommand {
 		super("kick | kickmember | kickplayer");
 		setDescription("Kick a player from the faction.");
 		plugin = HCFactions.getInstance();
-		if(!FactionCommands.getArguments().contains(this))
-			FactionCommands.getArguments().add(this);
 	}
 
-
-	public String getUsage(String label) {
+    @Override
+	public String getUsage() {
 		return '/' + label + ' ' + getName() + " <playerName>";
 	}
 
@@ -39,7 +36,7 @@ public class FactionKickCommand extends SimpleSubCommand {
 		}
 
 		if (args.length < 2) {
-			sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage(getLabel())));
+			sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
 			return;
 		}
 

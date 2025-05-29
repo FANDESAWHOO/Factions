@@ -2,12 +2,11 @@ package org.hcgames.hcfactions.command.argument.staff;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-
 import org.bukkit.command.ConsoleCommandSender;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.manager.SearchCallback;
-import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.settings.Lang;
 
 import java.util.Arrays;
@@ -15,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-public class FactionMuteArgument extends SimpleSubCommand {
+public class FactionMuteArgument extends FactionSubCommand {
 
     private final HCFactions plugin;
 
@@ -27,14 +26,15 @@ public class FactionMuteArgument extends SimpleSubCommand {
     }
 
     
-    public String getUsage(String label) {
+    @Override
+	public String getUsage() {
         return '/' + label + ' ' + getName() + " <factionName> <time:(e.g. 1h2s)> <reason>";
     }
 
     @Override
     public void onCommand() {
         if (args.length < 3) {
-            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(getLabel()));
+            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
             return;
         }
 

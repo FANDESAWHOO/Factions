@@ -3,18 +3,17 @@ package org.hcgames.hcfactions.command.argument.staff;
 
 import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
-
 import org.hcgames.hcfactions.faction.system.SystemTeam;
 import org.hcgames.hcfactions.util.JavaUtils;
-import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.settings.Lang;
 
 
 
-public class FactionCreateSystemArgument extends SimpleSubCommand {
+public class FactionCreateSystemArgument extends FactionSubCommand {
 	
-	private HCFactions plugin;
+	private final HCFactions plugin;
 	
 	public FactionCreateSystemArgument(HCFactions plugin) {
 	    super("createsystem");
@@ -24,14 +23,15 @@ public class FactionCreateSystemArgument extends SimpleSubCommand {
 	}
 
 
-	public String getUsage(String arg0) {
+	@Override
+	public String getUsage() {
 		return "f createsystem name";
 	}
 
 	@Override
 	public void onCommand() {
 		if (args.length < 2) {
-            sender.sendMessage(Lang.of("command.error.usage", getUsage(getLabel())));
+            sender.sendMessage(Lang.of("command.error.usage", getUsage()));
             return;
         }
 	    String name = args[1];

@@ -4,16 +4,15 @@ import com.google.common.collect.ImmutableMap;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
-import org.hcgames.hcfactions.command.FactionCommands;
+import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.util.JavaUtils;
-import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.settings.Lang;
 
 import java.util.UUID;
 
-public class FactionCreateCommand extends SimpleSubCommand {
+public class FactionCreateCommand extends FactionSubCommand {
 	private final HCFactions plugin;
 	private final static ImmutableMap<String, UUID> RESTRICTED_NAMES = ImmutableMap.<String, UUID>builder().put("test", UUID.fromString("42e61ded-4f50-46c7-82a8-723bdcda4991")).put("yaml", UUID.fromString("ea50290c-8225-4222-8664-32f2f5070974")).build();
 
@@ -21,12 +20,9 @@ public class FactionCreateCommand extends SimpleSubCommand {
 		super("create | make | define");
 		setDescription("Create a faction.");
 		plugin = HCFactions.getInstance();
-		if(!FactionCommands.getArguments().contains(this))
-			FactionCommands.getArguments().add(this);
-
 	}
-
-	public String getUsage(String label) {
+    @Override
+	public String getUsage() {
 		return '/' + label + ' ' + getName() + " <factionName>";
 	}
 
@@ -35,14 +31,14 @@ public class FactionCreateCommand extends SimpleSubCommand {
 	 * and use convenience checks in the simple command class.
 	 */
 	@Override
-	protected void onCommand() {
+	public void onCommand() {
 		if (!(sender instanceof Player)) {
 			sender.sendMessage(Lang.of("Commands-ConsoleOnly"));
 			return;
 		}
 
 		if (args.length < 2) {
-			sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage(getLabel())));
+			sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
 			return;
 		}
 

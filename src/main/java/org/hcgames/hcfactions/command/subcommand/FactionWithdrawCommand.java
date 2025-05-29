@@ -6,20 +6,19 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.api.EconomyAPI;
-import org.hcgames.hcfactions.command.FactionCommands;
+import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.FactionMember;
 import org.hcgames.hcfactions.structure.Role;
 import org.hcgames.hcfactions.util.JavaUtils;
-import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.settings.Lang;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-public class FactionWithdrawCommand extends SimpleSubCommand {
+public class FactionWithdrawCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 
@@ -27,11 +26,10 @@ public class FactionWithdrawCommand extends SimpleSubCommand {
         super("withdraw | w");
         setDescription("Withdraws money from the faction balance.");
         this.plugin = plugin;
-        if(!FactionCommands.getArguments().contains(this))
-            FactionCommands.getArguments().add(this);
     }
 
-    public String getUsage(String label) {
+    @Override
+	public String getUsage() {
         return '/' + label + ' ' + getName() + " <all|amount>";
     }
 
@@ -43,7 +41,7 @@ public class FactionWithdrawCommand extends SimpleSubCommand {
         }
 
         if (args.length < 2) {
-            sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage(getLabel())));
+            sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
             return;
         }
 

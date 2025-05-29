@@ -1,10 +1,9 @@
 package org.hcgames.hcfactions.timer;
 
+import lombok.Getter;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.hcgames.hcfactions.HCFactions;
-
-import lombok.Getter;
 
 @Getter
 public abstract class TimerSubCommand implements TabCompleter {
@@ -23,6 +22,5 @@ public abstract class TimerSubCommand implements TabCompleter {
 	public abstract void onCommand(CommandSender sender, String label, String[] args);
 
 	public abstract String getUsage(String label);
-
 
 }

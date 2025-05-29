@@ -4,19 +4,18 @@ package org.hcgames.hcfactions.command.subcommand;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
-import org.hcgames.hcfactions.command.FactionCommands;
+import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.manager.SearchCallback;
-import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.settings.Lang;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class FactionShowCommand extends SimpleSubCommand {
+public class FactionShowCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 
@@ -24,12 +23,12 @@ public class FactionShowCommand extends SimpleSubCommand {
         super("show | i | info | who");
         setDescription("Get details about a faction.");
         this.plugin = plugin;
-        if(!FactionCommands.getArguments().contains(this))
-            FactionCommands.getArguments().add(this);
+
     }
 
  
-    public String getUsage(String label) {
+    @Override
+	public String getUsage() {
         return '/' + label + ' ' + getName() + " [playerName|factionName]";
     }
 
@@ -40,7 +39,7 @@ public class FactionShowCommand extends SimpleSubCommand {
 
         if (args.length < 2) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage(getLabel())));
+                sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
                 return;
             }
 

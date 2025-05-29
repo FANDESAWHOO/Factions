@@ -1,20 +1,19 @@
 package org.hcgames.hcfactions.command.argument.staff;
 
 import org.bukkit.ChatColor;
-
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.manager.SearchCallback;
 import org.hcgames.hcfactions.structure.FactionMember;
 import org.hcgames.hcfactions.structure.Role;
-import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.settings.Lang;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class FactionForceLeaderArgument extends SimpleSubCommand {
+public class FactionForceLeaderArgument extends FactionSubCommand {
 
     private final HCFactions plugin;
 
@@ -26,14 +25,15 @@ public class FactionForceLeaderArgument extends SimpleSubCommand {
     }
 
     
-    public String getUsage(String label) {
+    @Override
+	public String getUsage() {
         return '/' + label + ' ' + getName() + " <playerName>";
     }
 
     @Override
     public void onCommand() {
         if (args.length < 2) {
-            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(getLabel()));
+            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
             return;
         }
 
@@ -43,12 +43,11 @@ public class FactionForceLeaderArgument extends SimpleSubCommand {
             public void onSuccess(PlayerFaction faction) {
                 FactionMember member = null;
 
-                for(FactionMember search : faction.getMembers().values()){
-                    if(search.getCachedName().equalsIgnoreCase(args[1])){
-                        member = search;
-                        break;
-                    }
-                }
+                for(FactionMember search : faction.getMembers().values())
+					if (search.getCachedName().equalsIgnoreCase(args[1])) {
+						member = search;
+						break;
+					}
 
                 if (member == null) {
                     sender.sendMessage(ChatColor.RED + "Faction containing member with IGN or UUID " + args[1] + " not found.");
@@ -65,9 +64,7 @@ public class FactionForceLeaderArgument extends SimpleSubCommand {
                 String newLeaderName = member.getCachedName();
 
                 // Demote the previous leader, promoting the new.
-                if (leader.isPresent()) {
-                    leader.get().setRole(Role.CAPTAIN);
-                }
+                if (leader.isPresent()) leader.get().setRole(Role.CAPTAIN);
 
                 member.setRole(Role.LEADER);
                 faction.broadcast(ChatColor.YELLOW + sender.getName() + " has forcefully set the leader to " + newLeaderName + '.');

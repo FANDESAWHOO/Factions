@@ -7,12 +7,11 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.claim.Claim;
-import org.hcgames.hcfactions.command.FactionCommands;
+import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.FactionMember;
 import org.hcgames.hcfactions.structure.Role;
-import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.settings.Lang;
 
 import java.util.ArrayList;
@@ -20,7 +19,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class FactionUnclaimCommand extends SimpleSubCommand {
+public class FactionUnclaimCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 
@@ -28,12 +27,11 @@ public class FactionUnclaimCommand extends SimpleSubCommand {
         super("unclaim");
         setDescription("Unclaims land from your faction.");
         this.plugin = plugin;
-        if(!FactionCommands.getArguments().contains(this))
-            FactionCommands.getArguments().add(this);
     }
 
     
-    public String getUsage(String label) {
+    @Override
+	public String getUsage() {
         return '/' + label + ' ' + getName() + " [all]";
     }
 

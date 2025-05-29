@@ -4,16 +4,15 @@ package org.hcgames.hcfactions.command.subcommand;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
-import org.hcgames.hcfactions.command.FactionCommands;
+import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.timer.type.StuckTimer;
 import org.hcgames.hcfactions.util.DurationFormatter;
-import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.settings.Lang;
 
 /**
  * Faction argument used to teleport to a nearby {@link org.bukkit.Location} safely if stuck.
  */
-public class FactionStuckCommand extends SimpleSubCommand {
+public class FactionStuckCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 
@@ -21,12 +20,12 @@ public class FactionStuckCommand extends SimpleSubCommand {
         super("stuck | trap | trapped");
         setDescription("Teleport to a safe position.");
         this.plugin = plugin;
-        if(!FactionCommands.getArguments().contains(this))
-            FactionCommands.getArguments().add(this);
+
     }
 
    
-    public String getUsage(String label) {
+    @Override
+	public String getUsage() {
         return '/' + label + ' ' + getName();
     }
 

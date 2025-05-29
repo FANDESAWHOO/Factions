@@ -1,15 +1,14 @@
 package org.hcgames.hcfactions.command.argument.staff;
 
-import org.hcgames.hcfactions.HCFactions;
-import org.mineacademy.fo.command.SimpleSubCommand;
-
 import net.md_5.bungee.api.ChatColor;
+import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.command.FactionSubCommand;
 /**
  * This works and Reload no
  * Why? 18:20 28/5/2025
  */
 
-public class FactionSaveArgument extends SimpleSubCommand {
+public class FactionSaveArgument extends FactionSubCommand {
 	
 	private final HCFactions plugin;
 	
@@ -28,7 +27,8 @@ public class FactionSaveArgument extends SimpleSubCommand {
 	  }
 
 	
-	public String getUsage(String label) {
+	@Override
+	public String getUsage() {
 		return "/f save";
 	}
 

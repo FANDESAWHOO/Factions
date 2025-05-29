@@ -2,15 +2,14 @@ package org.hcgames.hcfactions.command.subcommand;
 
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
-import org.hcgames.hcfactions.command.FactionCommands;
+import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.Role;
-import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.settings.Lang;
 
 
-public class FactionReviveCommand extends SimpleSubCommand {
+public class FactionReviveCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 
@@ -18,12 +17,12 @@ public class FactionReviveCommand extends SimpleSubCommand {
         super("revive");
         setDescription("Revive a player with faction lives");
         this.plugin = plugin;
-        if(!FactionCommands.getArguments().contains(this))
-            FactionCommands.getArguments().add(this);
+
     }
 
     
-    public String getUsage(String commandLabel){
+    @Override
+	public String getUsage(){
         return Lang.of("Commands.Factions.Revive.Usage");
     }
 
@@ -37,7 +36,7 @@ public class FactionReviveCommand extends SimpleSubCommand {
         Player player = (Player) sender;
 
         if(args.length < 2){
-            sender.sendMessage(getUsage(getLabel()));
+            sender.sendMessage(getUsage());
             return;
         }
 
@@ -62,7 +61,14 @@ public class FactionReviveCommand extends SimpleSubCommand {
             return;
         }
 
-       findOfflinePlayer(args[1], deadPlayer -> {
+        /**
+         * REMOVED TEMPORALLY BECAUSE
+         * FACTION SUB COMMAND RIGHT NOW
+         * REALLY DOESN'T HAVE ANYTHING METHOD
+         * LIKE THAT AND I DONT WANNA LOSE TIME RIGHT NOW
+         * XD
+         *
+        findOfflinePlayer(args[1], deadPlayer -> {
     	   if(deadPlayer == null){
                sender.sendMessage(Lang.of("Error-Messages.InvalidPlayer").replace("{player}", args[1]));
                //player not found
@@ -74,14 +80,14 @@ public class FactionReviveCommand extends SimpleSubCommand {
                sender.sendMessage(Lang.of("Commands.Factions.Revive.Not-Deathbanned"));
                //not deathbanned
                return;
-           }*/
+           }
 
            faction.setLives(faction.getLives() - 1);
          //  user.removeDeathban();
            faction.broadcast(Lang.of("Commands.Factions.Revive.Broadcast").replace("{player}",
                    player.getName()).replace("{victim}", deadPlayer.getName()));
            //broadcast
-       });
+       });*/
        
         return;
     }

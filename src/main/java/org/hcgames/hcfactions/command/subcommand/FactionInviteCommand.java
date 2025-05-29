@@ -4,18 +4,17 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
-import org.hcgames.hcfactions.command.FactionCommands;
+import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.Relation;
 import org.hcgames.hcfactions.structure.Role;
 import org.hcgames.hcfactions.util.text.FancyMessage;
-import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.settings.Lang;
 
 import java.util.Set;
 
-public class FactionInviteCommand extends SimpleSubCommand {
+public class FactionInviteCommand extends FactionSubCommand {
 
 	private final HCFactions plugin;
 
@@ -23,11 +22,10 @@ public class FactionInviteCommand extends SimpleSubCommand {
 		super("invite | inv | invitemember | inviteplayer");
 		setDescription("Invite a player to the faction.");
 		plugin = HCFactions.getInstance();
-		if(!FactionCommands.getArguments().contains(this))
-			FactionCommands.getArguments().add(this);
-	}
 
-	public String getUsage(String label) {
+	}
+    @Override
+	public String getUsage() {
 		return '/' + label + ' ' + getName() + " <playerName>";
 	}
 
@@ -39,7 +37,7 @@ public class FactionInviteCommand extends SimpleSubCommand {
 		}
 
 		if (args.length < 2) {
-			sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage(getLabel())));
+			sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
 			return;
 		}
 
@@ -121,7 +119,7 @@ public class FactionInviteCommand extends SimpleSubCommand {
 
 	}
 
-    /*@Override //fixme
+    /*@Override //fixme // WHY YOU REMOVE THIS, SYSTEM UPDATE, CAN YOU TELL WHY YOU DO EVERYTHING?
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         if (args.length != 2 || !(sender instanceof Player)) {
             return Collections.emptyList();

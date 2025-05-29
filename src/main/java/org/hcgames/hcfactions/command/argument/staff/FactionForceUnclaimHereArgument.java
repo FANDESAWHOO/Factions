@@ -4,13 +4,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.claim.Claim;
+import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
-import org.mineacademy.fo.command.SimpleSubCommand;
 
 import java.util.Collections;
 import java.util.List;
 
-public class FactionForceUnclaimHereArgument extends SimpleSubCommand {
+public class FactionForceUnclaimHereArgument extends FactionSubCommand {
 
     private final HCFactions plugin;
 
@@ -22,14 +22,15 @@ public class FactionForceUnclaimHereArgument extends SimpleSubCommand {
     }
 
    
-    public String getUsage(String label) {
+    @Override
+	public String getUsage() {
         return '/' + label + ' ' + getName();
     }
 
     @Override
     public void onCommand() {
         if (args.length < 2) {
-            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(getLabel()));
+            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
             return;
         }
 

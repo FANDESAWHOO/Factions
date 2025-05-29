@@ -24,19 +24,19 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.manager.SearchCallback;
 import org.hcgames.hcfactions.util.JavaUtils;
-import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.settings.Lang;
 
 
-public class FactionForceRenameArgument extends SimpleSubCommand {
+public class FactionForceRenameArgument extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionForceRenameArgument(final HCFactions plugin) {
+    public FactionForceRenameArgument(HCFactions plugin) {
         super("forcename");
         setDescription( "Forces a rename of a faction.");
         this.plugin = plugin;
@@ -44,14 +44,15 @@ public class FactionForceRenameArgument extends SimpleSubCommand {
     }
 
     
-    public String getUsage(String label) {
+    @Override
+	public String getUsage() {
         return '/' + label + ' ' + getName() + " <oldName> <newName>";
     }
 
     @Override
     public void onCommand() {
         if (args.length < 2) {
-            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(getLabel()));
+            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
             return;
         }
 
@@ -102,9 +103,8 @@ public class FactionForceRenameArgument extends SimpleSubCommand {
             @Override
             public void onSuccess(Faction faction){
                 String oldName = faction.getName();
-                if(faction.setName(newName, sender)){
-                    BukkitCommand.broadcastCommandMessage(sender, ChatColor.YELLOW + "Renamed " + oldName + " to " + faction.getName(), true);
-                }
+                if(faction.setName(newName, sender))
+					BukkitCommand.broadcastCommandMessage(sender, ChatColor.YELLOW + "Renamed " + oldName + " to " + faction.getName(), true);
             }
 
             @Override

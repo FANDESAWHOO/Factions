@@ -3,9 +3,9 @@ package org.hcgames.hcfactions.command.argument.staff;
 
 import org.bukkit.command.ConsoleCommandSender;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.manager.SearchCallback;
-import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.settings.Lang;
 
 import java.util.Arrays;
@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-public class FactionBanArgument extends SimpleSubCommand {
+public class FactionBanArgument extends FactionSubCommand {
 
     private final HCFactions plugin;
 
@@ -25,14 +25,15 @@ public class FactionBanArgument extends SimpleSubCommand {
     }
 
     
-    public String getUsage(String label) {
+    @Override
+	public String getUsage() {
         return Lang.of("commands.staff.ban.usage", label, getName());
     }
 
     @Override
     public void onCommand() {
         if (args.length < 3) {
-            sender.sendMessage(Lang.of("commands.error.usage", getUsage(getLabel())));
+            sender.sendMessage(Lang.of("commands.error.usage", getUsage()));
             return;
         }
 

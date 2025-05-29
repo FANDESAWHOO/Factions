@@ -2,17 +2,17 @@ package org.hcgames.hcfactions.command.argument.staff;
 
 
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.manager.SearchCallback;
 import org.hcgames.hcfactions.structure.FactionMember;
 import org.hcgames.hcfactions.structure.Role;
-import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.settings.Lang;
 
 import java.util.Collections;
 import java.util.List;
 
-public class FactionForceDemoteArgument extends SimpleSubCommand {
+public class FactionForceDemoteArgument extends FactionSubCommand {
 
     private final HCFactions plugin;
 
@@ -24,14 +24,15 @@ public class FactionForceDemoteArgument extends SimpleSubCommand {
     }
 
 
-    public String getUsage(String label){
+    @Override
+	public String getUsage(){
         return Lang.of("commands.staff.forcedemote.usage", label, getName());
     }
 
     @Override
     public void onCommand() {
         if (args.length < 2) {
-            Lang.of("commands.error.usage", getUsage(getLabel()));
+            Lang.of("commands.error.usage", getUsage());
             return;
         }
 
@@ -40,12 +41,11 @@ public class FactionForceDemoteArgument extends SimpleSubCommand {
             public void onSuccess(PlayerFaction faction) {
                 FactionMember member = null;
 
-                for(FactionMember search : faction.getMembers().values()){
-                    if(search.getCachedName().equalsIgnoreCase(args[1])){
-                        member = search;
-                        break;
-                    }
-                }
+                for(FactionMember search : faction.getMembers().values())
+					if (search.getCachedName().equalsIgnoreCase(args[1])) {
+						member = search;
+						break;
+					}
 
                 if (member == null) {
                     sender.sendMessage(Lang.of("commands.error.member_not_found", args[1]));
@@ -64,14 +64,10 @@ public class FactionForceDemoteArgument extends SimpleSubCommand {
 
                 Role newRole;
 
-                if(member.getRole() == Role.COLEADER){
-                    newRole = Role.CAPTAIN;
-                }else if(member.getRole() == Role.CAPTAIN){
-                    newRole = Role.MEMBER;
-                }else{
-                    //Should never happen
-                    newRole = Role.MEMBER;
-                }
+                if(member.getRole() == Role.COLEADER) newRole = Role.CAPTAIN;
+				else //Should never happen
+					if(member.getRole() == Role.CAPTAIN) newRole = Role.MEMBER;
+				else newRole = Role.MEMBER;
 
                 member.setRole(newRole);
                 faction.broadcast(Lang.of("commands.staff.forcedemote.demote_broadcast", member.getCachedName(), newRole.getName()));

@@ -5,12 +5,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.claim.Claim;
-import org.hcgames.hcfactions.command.FactionCommands;
+import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.ClaimableFaction;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.manager.SearchCallback;
-import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.settings.Lang;
 
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class FactionClaimsCommand extends SimpleSubCommand {
+public class FactionClaimsCommand extends FactionSubCommand {
 
 	private final HCFactions plugin;
 
@@ -26,12 +25,10 @@ public class FactionClaimsCommand extends SimpleSubCommand {
 		super("claims");
 		setDescription("View all claims for a faction.");
 		plugin = HCFactions.getInstance();
-		if(!FactionCommands.getArguments().contains(this))
-			FactionCommands.getArguments().add(this);
 	}
 
-
-	public String getUsage(String label) {
+    @Override
+	public String getUsage() {
 		return '/' + label + ' ' + getName() + " [factionName]";
 	}
 
@@ -45,7 +42,7 @@ public class FactionClaimsCommand extends SimpleSubCommand {
 
 		if (args.length < 2) {
 			if (!(sender instanceof Player)) {
-				sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage(getLabel())));
+				sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
 				return;
 			}
 

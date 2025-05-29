@@ -4,17 +4,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
-import org.hcgames.hcfactions.command.FactionCommands;
+import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.FactionMember;
 import org.hcgames.hcfactions.structure.Role;
-import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.settings.Lang;
 
 import java.util.*;
 
-public class FactionDemoteCommand extends SimpleSubCommand {
+public class FactionDemoteCommand extends FactionSubCommand {
 
 
 	private final HCFactions plugin;
@@ -23,12 +22,10 @@ public class FactionDemoteCommand extends SimpleSubCommand {
 		super("demote | uncaptain | delcaptain | delofficer");
 		setDescription("Demotes a player to a member.");
 		plugin = HCFactions.getInstance();
-		if(!FactionCommands.getArguments().contains(this))
-			FactionCommands.getArguments().add(this);
 	}
 
-
-	public String getUsage(String label) {
+    @Override
+	public String getUsage() {
 		return '/' + label + ' ' + getName() + " <playerName>";
 	}
 
@@ -37,7 +34,7 @@ public class FactionDemoteCommand extends SimpleSubCommand {
 		checkConsole();
 
 		if (args.length < 2) {
-			sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage(getLabel())));
+			sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
 			return;
 		}
 

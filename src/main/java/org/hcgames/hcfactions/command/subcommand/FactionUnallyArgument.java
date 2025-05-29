@@ -6,20 +6,19 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
-import org.hcgames.hcfactions.command.FactionCommands;
+import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.event.playerfaction.FactionRelationRemoveEvent;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.manager.SearchCallback;
 import org.hcgames.hcfactions.structure.Relation;
 import org.hcgames.hcfactions.structure.Role;
-import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.settings.Lang;
 
 import java.util.Collection;
 import java.util.Collections;
 
-public class FactionUnallyArgument extends SimpleSubCommand {
+public class FactionUnallyArgument extends FactionSubCommand {
 
     private final Relation relation = Relation.ALLY;
     private final HCFactions plugin;
@@ -28,12 +27,12 @@ public class FactionUnallyArgument extends SimpleSubCommand {
         super("unally | unalliance | neutral");
         setDescription("Remove an ally pact with other factions.");
         this.plugin = plugin;
-        if(!FactionCommands.getArguments().contains(this))
-            FactionCommands.getArguments().add(this);
+
     }
 
     
-    public String getUsage(String label) {
+    @Override
+	public String getUsage() {
         return '/' + label + ' ' + getName() + " <all|factionName>";
     }
 
@@ -51,7 +50,7 @@ public class FactionUnallyArgument extends SimpleSubCommand {
         }
 
         if (args.length < 2) {
-            sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage(getLabel())));
+            sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
             return;
         }
 

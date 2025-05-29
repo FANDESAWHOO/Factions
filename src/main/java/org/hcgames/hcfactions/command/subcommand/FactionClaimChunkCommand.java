@@ -5,14 +5,13 @@ import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.claim.Claim;
 import org.hcgames.hcfactions.claim.ClaimHandler;
-import org.hcgames.hcfactions.command.FactionCommands;
+import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.Role;
-import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.settings.Lang;
 
-public class FactionClaimChunkCommand extends SimpleSubCommand {
+public class FactionClaimChunkCommand extends FactionSubCommand {
 
 	private static final int CHUNK_RADIUS = 7;
 	private final HCFactions plugin;
@@ -21,12 +20,11 @@ public class FactionClaimChunkCommand extends SimpleSubCommand {
 		super("claimchunk | chunkclaim");
 		setDescription("Claim a chunk of land in the Wilderness.");
 		plugin = HCFactions.getInstance();
-		if(!FactionCommands.getArguments().contains(this))
-			FactionCommands.getArguments().add(this);
+
 	}
 
-
-	public String getUsage(String label) {
+    @Override
+	public String getUsage() {
 		return '/' + label + ' ' + getName();
 	}
 
