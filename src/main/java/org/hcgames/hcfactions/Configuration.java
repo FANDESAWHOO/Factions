@@ -75,7 +75,14 @@ public final class Configuration extends SimpleSettings {
 
 
     public static Boolean mongo;
+
+    @Override
+    protected boolean saveComments() {
+        return false;
+    }
+
     private static void init() {
+
         mongo = getBoolean("mongo.use");
         host = getString("mongo.host");
         database = getString("mongo.database");

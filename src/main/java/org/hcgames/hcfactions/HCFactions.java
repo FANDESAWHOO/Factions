@@ -8,7 +8,6 @@ import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.Plugin;
 import org.hcgames.hcfactions.claim.Claim;
 import org.hcgames.hcfactions.claim.ClaimHandler;
-import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.faction.ClaimableFaction;
 import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.faction.PlayerFaction;
@@ -26,12 +25,7 @@ import org.hcgames.hcfactions.util.itemdb.ItemDb;
 import org.hcgames.hcfactions.util.itemdb.SimpleItemDb;
 import org.hcgames.hcfactions.visualise.VisualiseHandler;
 import org.hcgames.stats.Stats;
-import org.mineacademy.fo.Common;
-import org.mineacademy.fo.ReflectionUtil;
-import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.plugin.SimplePlugin;
-
-import java.lang.reflect.Modifier;
 
 /**
  * FORKED FROM HCGames (System Update) FACTIONS
@@ -93,7 +87,7 @@ public class HCFactions extends SimplePlugin {
         getLogger().info("HCFactions has been enabled successfully!");
 
         getServer().getScheduler().runTaskTimerAsynchronously(this, this::saveData, (60 * 20) * 5, (60 * 20) * 5);
-        registerFactionSubcommands(FactionSubCommand.class);
+
     }
     @Override
     public void onPluginStop() {
@@ -144,19 +138,5 @@ public class HCFactions extends SimplePlugin {
     public static HCFactions getInstance() {
         return (HCFactions) SimplePlugin.getInstance();
     }
-    protected final void registerFactionSubcommands(Class<? extends FactionSubCommand> parentClass) {
-        for (Class<? extends FactionSubCommand> clazz : ReflectionUtil.getClasses(HCFactions.getInstance(), parentClass)) {
-            if (Modifier.isAbstract(clazz.getModifiers()))
-                continue;
 
-            Valid.checkBoolean(Modifier.isFinal(clazz.getModifiers()), "Make child of " + parentClass.getSimpleName() + " class " + clazz.getSimpleName() + " final to auto register it!");
-
-            try {
-                FactionSubCommand subCommand = ReflectionUtil.instantiate(clazz);
-                subCommand.addArgument(); // <- LLÁMALO AQUÍ, una vez FactionCommand ya está instanciado
-            } catch (Throwable t) {
-                Common.error(t, "Failed to register subcommand: " + clazz.getSimpleName());
-            }
-        }
-    }
 }

@@ -51,7 +51,7 @@ public final class FactionHelpCommand extends FactionSubCommand {
 			int val = 1;
 			int count = 0;
 			Multimap<Integer, String> pages = ArrayListMultimap.create();
-			for (FactionSubCommand argument : FactionCommand.getInstance().getSubCommands()) {
+			for (FactionSubCommand argument : FactionCommand.getInstance().getCommands()) {
 				if (argument == this) continue;
 
 				// Check the permission and if the player can access.

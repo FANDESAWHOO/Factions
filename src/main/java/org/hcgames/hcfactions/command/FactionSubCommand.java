@@ -38,11 +38,11 @@ public abstract class FactionSubCommand implements TabCompleter {
 	/**
 	 * For have a method to return
 	 * All SubCommands for /f help
-	 */
+	 *
 	public void addArgument(){
-	 if(!FactionCommand.getInstance().getSubCommands().contains(this))
-        FactionCommand.getInstance().getSubCommands().add(this);
-	}
+	 if(!FactionCommand.getInstance().getCommands().contains(this))
+        FactionCommand.getInstance().getCommands().add(this);
+	}*/
 
 	/**
 	 * Simple methods to
