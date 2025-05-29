@@ -8,7 +8,7 @@ import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.Role;
 import org.mineacademy.fo.settings.Lang;
 
-public class FactionFriendlyFireCommand extends FactionSubCommand {
+public final class FactionFriendlyFireCommand extends FactionSubCommand {
 
 	private final HCFactions plugin;
 

@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-public class FactionMapCommand extends FactionSubCommand {
+public final class FactionMapCommand extends FactionSubCommand {
 
 	private final HCFactions plugin;
 

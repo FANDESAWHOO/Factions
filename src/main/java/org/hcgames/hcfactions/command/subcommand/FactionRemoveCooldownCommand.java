@@ -9,7 +9,7 @@ import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.mineacademy.fo.settings.Lang;
 
-public class FactionRemoveCooldownCommand extends FactionSubCommand {
+public final class FactionRemoveCooldownCommand extends FactionSubCommand {
 	
 	 private final HCFactions plugin;
 

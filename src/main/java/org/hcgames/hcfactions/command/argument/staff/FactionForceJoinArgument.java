@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Faction argument used to forcefully join {@link Faction}s.
  */
-public class FactionForceJoinArgument extends FactionSubCommand {
+public final class FactionForceJoinArgument extends FactionSubCommand {
 
     private final HCFactions plugin;
 

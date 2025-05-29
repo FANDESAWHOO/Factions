@@ -9,7 +9,7 @@ import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.Role;
 import org.mineacademy.fo.settings.Lang;
 
-public class FactionDisbandCommand extends FactionSubCommand {
+public final class FactionDisbandCommand extends FactionSubCommand {
     private final HCFactions plugin;
 
 	public FactionDisbandCommand(){

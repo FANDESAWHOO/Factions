@@ -13,7 +13,7 @@ import org.mineacademy.fo.settings.Lang;
 
 import java.util.Set;
 
-public class FactionUninviteCommand extends FactionSubCommand {
+public final class FactionUninviteCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 

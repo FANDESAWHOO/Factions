@@ -11,7 +11,7 @@ import org.mineacademy.fo.settings.Lang;
 
 
 
-public class FactionCreateSystemArgument extends FactionSubCommand {
+public final class FactionCreateSystemArgument extends FactionSubCommand {
 	
 	private final HCFactions plugin;
 	

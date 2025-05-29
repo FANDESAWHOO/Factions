@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-public class FactionBanArgument extends FactionSubCommand {
+public final class FactionBanArgument extends FactionSubCommand {
 
     private final HCFactions plugin;
 

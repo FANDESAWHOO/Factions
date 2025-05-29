@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Used to claim land for other {@link ClaimableFaction}s.
  */
-public class FactionClaimForArgument extends FactionSubCommand {
+public final class FactionClaimForArgument extends FactionSubCommand {
 
     private final HCFactions plugin;
 

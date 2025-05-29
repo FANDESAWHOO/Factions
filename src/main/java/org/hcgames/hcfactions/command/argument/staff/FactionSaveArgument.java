@@ -8,7 +8,7 @@ import org.hcgames.hcfactions.command.FactionSubCommand;
  * Why? 18:20 28/5/2025
  */
 
-public class FactionSaveArgument extends FactionSubCommand {
+public final class FactionSaveArgument extends FactionSubCommand {
 	
 	private final HCFactions plugin;
 	

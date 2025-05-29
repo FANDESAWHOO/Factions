@@ -9,7 +9,7 @@ import java.util.List;
  * Why SystemUpdate removed this?
  * Other thing i don't gonna know.
  */
-public class FactionReloadArgument extends FactionSubCommand {
+public final class FactionReloadArgument extends FactionSubCommand {
 
    
     public FactionReloadArgument() {

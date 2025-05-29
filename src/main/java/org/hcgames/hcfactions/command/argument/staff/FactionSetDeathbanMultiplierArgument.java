@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class FactionSetDeathbanMultiplierArgument extends FactionSubCommand {
+public final class FactionSetDeathbanMultiplierArgument extends FactionSubCommand {
 
     private static final double MIN_MULTIPLIER = 0.0;
     private static final double MAX_MULTIPLIER = 5.0;

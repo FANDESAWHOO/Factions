@@ -13,7 +13,7 @@ import org.mineacademy.fo.settings.Lang;
 
 import java.util.*;
 
-public class FactionDemoteCommand extends FactionSubCommand {
+public final class FactionDemoteCommand extends FactionSubCommand {
 
 
 	private final HCFactions plugin;

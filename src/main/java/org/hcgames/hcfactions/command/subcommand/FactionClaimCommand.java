@@ -10,7 +10,7 @@ import org.mineacademy.fo.settings.Lang;
 
 import java.util.UUID;
 
-public class FactionClaimCommand extends FactionSubCommand {
+public final class FactionClaimCommand extends FactionSubCommand {
 	private final HCFactions plugin;
 
 	public FactionClaimCommand(HCFactions plugin) {

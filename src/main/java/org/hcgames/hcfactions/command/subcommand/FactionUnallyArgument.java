@@ -18,7 +18,7 @@ import org.mineacademy.fo.settings.Lang;
 import java.util.Collection;
 import java.util.Collections;
 
-public class FactionUnallyArgument extends FactionSubCommand {
+public final class FactionUnallyArgument extends FactionSubCommand {
 
     private final Relation relation = Relation.ALLY;
     private final HCFactions plugin;

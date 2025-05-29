@@ -14,7 +14,7 @@ import org.hcgames.hcfactions.structure.Role;
 import org.mineacademy.fo.settings.Lang;
 
 
-public class FactionSetHomeCommand extends FactionSubCommand {
+public final class FactionSetHomeCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 

@@ -14,7 +14,7 @@ import org.mineacademy.fo.settings.Lang;
 
 import java.util.*;
 
-public class FactionListCommand extends FactionSubCommand {
+public final class FactionListCommand extends FactionSubCommand {
 
 
 	private static final int MAX_FACTIONS_PER_PAGE = 10;

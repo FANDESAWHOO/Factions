@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-public class FactionWithdrawCommand extends FactionSubCommand {
+public final class FactionWithdrawCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 

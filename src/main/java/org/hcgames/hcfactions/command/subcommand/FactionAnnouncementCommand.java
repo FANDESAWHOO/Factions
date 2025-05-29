@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class FactionAnnouncementCommand extends FactionSubCommand {
+public final class FactionAnnouncementCommand extends FactionSubCommand {
 	private final HCFactions plugin;
 
 	public FactionAnnouncementCommand() {

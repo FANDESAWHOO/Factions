@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class FactionForceLeaderArgument extends FactionSubCommand {
+public final class FactionForceLeaderArgument extends FactionSubCommand {
 
     private final HCFactions plugin;
 

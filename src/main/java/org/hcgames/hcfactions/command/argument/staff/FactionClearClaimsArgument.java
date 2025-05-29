@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Faction argument used to set the DTR Regeneration cooldown of {@link Faction}s.
  */
-public class FactionClearClaimsArgument extends FactionSubCommand {
+public final class FactionClearClaimsArgument extends FactionSubCommand {
 
     private final ConversationFactory factory;
     private final HCFactions plugin;

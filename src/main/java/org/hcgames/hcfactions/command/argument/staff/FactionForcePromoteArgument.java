@@ -12,7 +12,7 @@ import org.mineacademy.fo.settings.Lang;
 import java.util.Collections;
 import java.util.List;
 
-public class FactionForcePromoteArgument extends FactionSubCommand {
+public final class FactionForcePromoteArgument extends FactionSubCommand {
 
     private final HCFactions plugin;
 

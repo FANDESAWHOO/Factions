@@ -13,7 +13,7 @@ import org.mineacademy.fo.settings.Lang;
 import java.util.Optional;
 import java.util.UUID;
 
-public class FactionHomeCommand extends FactionSubCommand {
+public final class FactionHomeCommand extends FactionSubCommand {
 
 	private final HCFactions plugin;
 

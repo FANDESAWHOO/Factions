@@ -17,7 +17,7 @@ import org.mineacademy.fo.settings.Lang;
 
 import java.util.*;
 
-public class FactionAllyCommand extends FactionSubCommand {
+public final class FactionAllyCommand extends FactionSubCommand {
 
 	private static final Relation RELATION = Relation.ALLY;
 

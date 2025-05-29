@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class FactionShowCommand extends FactionSubCommand {
+public final class FactionShowCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 

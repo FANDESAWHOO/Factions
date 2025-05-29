@@ -32,7 +32,7 @@ import org.hcgames.hcfactions.util.JavaUtils;
 import org.mineacademy.fo.settings.Lang;
 
 
-public class FactionForceRenameArgument extends FactionSubCommand {
+public final class FactionForceRenameArgument extends FactionSubCommand {
 
     private final HCFactions plugin;
 

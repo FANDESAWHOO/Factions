@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Faction argument used to forcefully remove {@link Faction}s.
  */
-public class FactionRemoveArgument extends FactionSubCommand {
+public final class FactionRemoveArgument extends FactionSubCommand {
 
     private final ConversationFactory factory;
     private final HCFactions plugin;

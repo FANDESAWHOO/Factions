@@ -1,9 +1,13 @@
 package org.hcgames.hcfactions.command;
 
 import lombok.Getter;
+import org.hcgames.hcfactions.HCFactions;
+import org.mineacademy.fo.ReflectionUtil;
+import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.annotation.AutoRegister;
 import org.mineacademy.fo.command.SimpleCommand;
 
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +16,7 @@ import java.util.List;
  */
 
 @AutoRegister
-public class FactionCommand extends SimpleCommand {
+public final class FactionCommand extends SimpleCommand {
 
 	/**
 	 * The singleton of this class
@@ -22,8 +26,9 @@ public class FactionCommand extends SimpleCommand {
 	@Getter
 	private final List<FactionSubCommand> subCommands = new ArrayList<>();
 
-	protected FactionCommand() {
+	public FactionCommand() {
 		super("faction | fac | f");
+		registerFactionSubcommands(FactionSubCommand.class);
 	}
 
 	protected FactionSubCommand getById(String args){
@@ -31,6 +36,22 @@ public class FactionCommand extends SimpleCommand {
 			if(subCommand.getName().equalsIgnoreCase(args))
 				return subCommand;
 		return null;
+	}
+	protected final void registerFactionSubcommands(Class<? extends FactionSubCommand> parentClass) {
+		for (Class<? extends FactionSubCommand> clazz : ReflectionUtil.getClasses(HCFactions.getInstance(), parentClass)) {
+			if (Modifier.isAbstract(clazz.getModifiers()))
+				continue;
+
+			Valid.checkBoolean(Modifier.isFinal(clazz.getModifiers()), "Make child of " + parentClass.getSimpleName() + " class " + clazz.getSimpleName() + " final to auto register it!");
+
+			try {
+				// Instancia la clase con el constructor HCFactions si lo tiene
+				FactionSubCommand subCommand = ReflectionUtil.instantiate(clazz, HCFactions.getInstance());
+				// El constructor ya debería llamar a addArgument()
+			} catch (Throwable t) {
+				t.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -45,9 +66,7 @@ public class FactionCommand extends SimpleCommand {
 				if (permission == null || sender.hasPermission(permission)) {
 					subCommand.execute(sender, getLabel(), args);
 					return;
-				} else {
-					getById("help").execute(sender,"help",args);
-				}
+				} else getById("help").execute(sender, "help", args);
 			}
 	}
 }

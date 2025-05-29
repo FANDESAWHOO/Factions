@@ -12,7 +12,7 @@ import org.mineacademy.fo.settings.Lang;
 /**
  * Faction argument used to teleport to a nearby {@link org.bukkit.Location} safely if stuck.
  */
-public class FactionStuckCommand extends FactionSubCommand {
+public final class FactionStuckCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 

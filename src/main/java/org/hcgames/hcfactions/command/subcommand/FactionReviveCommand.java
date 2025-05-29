@@ -9,7 +9,7 @@ import org.hcgames.hcfactions.structure.Role;
 import org.mineacademy.fo.settings.Lang;
 
 
-public class FactionReviveCommand extends FactionSubCommand {
+public final class FactionReviveCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 

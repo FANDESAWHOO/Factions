@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-public class FactionDepositCommand extends FactionSubCommand {
+public final class FactionDepositCommand extends FactionSubCommand {
 	private final HCFactions plugin;
 
 	public FactionDepositCommand() {

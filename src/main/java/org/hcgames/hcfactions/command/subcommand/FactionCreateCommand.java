@@ -12,7 +12,7 @@ import org.mineacademy.fo.settings.Lang;
 
 import java.util.UUID;
 
-public class FactionCreateCommand extends FactionSubCommand {
+public final class FactionCreateCommand extends FactionSubCommand {
 	private final HCFactions plugin;
 	private final static ImmutableMap<String, UUID> RESTRICTED_NAMES = ImmutableMap.<String, UUID>builder().put("test", UUID.fromString("42e61ded-4f50-46c7-82a8-723bdcda4991")).put("yaml", UUID.fromString("ea50290c-8225-4222-8664-32f2f5070974")).build();
 

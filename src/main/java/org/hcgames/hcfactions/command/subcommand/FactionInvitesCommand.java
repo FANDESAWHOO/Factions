@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class FactionInvitesCommand extends FactionSubCommand {
+public final class FactionInvitesCommand extends FactionSubCommand {
 	private static final Joiner JOINER = Joiner.on(ChatColor.WHITE + ", " + ChatColor.GRAY);
 
 	private final HCFactions plugin;

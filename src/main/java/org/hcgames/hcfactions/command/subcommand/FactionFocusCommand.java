@@ -10,7 +10,7 @@ import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.focus.FocusTarget;
 import org.mineacademy.fo.settings.Lang;
 
-public class FactionFocusCommand extends FactionSubCommand {
+public final class FactionFocusCommand extends FactionSubCommand {
 	private final HCFactions plugin;
 
 	public FactionFocusCommand(){

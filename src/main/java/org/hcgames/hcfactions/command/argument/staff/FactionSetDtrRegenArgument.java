@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class FactionSetDtrRegenArgument extends FactionSubCommand {
+public final class FactionSetDtrRegenArgument extends FactionSubCommand {
 
     private final HCFactions plugin;
 

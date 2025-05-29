@@ -11,7 +11,7 @@ import org.hcgames.hcfactions.util.JavaUtils;
 import org.mineacademy.fo.settings.Lang;
 
 
-public class FactionHelpCommand extends FactionSubCommand {
+public final class FactionHelpCommand extends FactionSubCommand {
 
 	private static final int HELP_PER_PAGE = 10;
 

@@ -11,7 +11,7 @@ import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.Role;
 import org.mineacademy.fo.settings.Lang;
 
-public class FactionClaimChunkCommand extends FactionSubCommand {
+public final class FactionClaimChunkCommand extends FactionSubCommand {
 
 	private static final int CHUNK_RADIUS = 7;
 	private final HCFactions plugin;

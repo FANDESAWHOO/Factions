@@ -11,7 +11,7 @@ import org.mineacademy.fo.settings.Lang;
 
 import java.util.UUID;
 
-public class FactionLeaderCommand extends FactionSubCommand {
+public final class FactionLeaderCommand extends FactionSubCommand {
 
 	private final HCFactions plugin;
 

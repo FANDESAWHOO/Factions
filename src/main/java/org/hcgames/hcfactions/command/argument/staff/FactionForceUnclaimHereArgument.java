@@ -10,7 +10,7 @@ import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import java.util.Collections;
 import java.util.List;
 
-public class FactionForceUnclaimHereArgument extends FactionSubCommand {
+public final class FactionForceUnclaimHereArgument extends FactionSubCommand {
 
     private final HCFactions plugin;
 

@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Faction argument used to set the DTR of {@link Faction}s.
  */
-public class FactionSetDtrArgument extends FactionSubCommand {
+public final class FactionSetDtrArgument extends FactionSubCommand {
 
     private final HCFactions plugin;
 

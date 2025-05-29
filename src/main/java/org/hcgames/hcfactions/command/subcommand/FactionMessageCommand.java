@@ -11,7 +11,7 @@ import org.mineacademy.fo.settings.Lang;
 
 import java.util.Arrays;
 
-public class FactionMessageCommand extends FactionSubCommand {
+public final class FactionMessageCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 

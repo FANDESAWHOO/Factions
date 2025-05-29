@@ -17,7 +17,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class FactionClaimsCommand extends FactionSubCommand {
+public final class FactionClaimsCommand extends FactionSubCommand {
 
 	private final HCFactions plugin;
 

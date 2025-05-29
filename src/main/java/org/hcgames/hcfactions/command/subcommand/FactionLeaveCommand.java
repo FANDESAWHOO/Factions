@@ -11,7 +11,7 @@ import org.mineacademy.fo.settings.Lang;
 
 import java.util.UUID;
 
-public class FactionLeaveCommand extends FactionSubCommand {
+public final class FactionLeaveCommand extends FactionSubCommand {
 	private final HCFactions plugin;
 
 	public FactionLeaveCommand() {

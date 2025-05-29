@@ -14,7 +14,7 @@ import org.mineacademy.fo.settings.Lang;
 
 import java.util.concurrent.TimeUnit;
 
-public class FactionRenameCommand extends FactionSubCommand {
+public final class FactionRenameCommand extends FactionSubCommand {
 	    private static final long FACTION_RENAME_DELAY_MILLIS = TimeUnit.SECONDS.toMillis(15L);
 	    private static final String FACTION_RENAME_DELAY_WORDS = DurationFormatUtils.formatDurationWords(FACTION_RENAME_DELAY_MILLIS, true, true);
 

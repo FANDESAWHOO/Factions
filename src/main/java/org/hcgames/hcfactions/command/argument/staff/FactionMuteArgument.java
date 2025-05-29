@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-public class FactionMuteArgument extends FactionSubCommand {
+public final class FactionMuteArgument extends FactionSubCommand {
 
     private final HCFactions plugin;
 

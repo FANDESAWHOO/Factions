@@ -32,7 +32,7 @@ import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.Role;
 import org.mineacademy.fo.settings.Lang;
 
-public class FactionSnowCommand extends FactionSubCommand {
+public final class FactionSnowCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 
