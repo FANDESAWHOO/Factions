@@ -1,6 +1,7 @@
 package org.hcgames.hcfactions.command;
 
 import lombok.Getter;
+import org.mineacademy.fo.annotation.AutoRegister;
 import org.mineacademy.fo.command.SimpleCommand;
 
 import java.util.ArrayList;
@@ -9,6 +10,8 @@ import java.util.List;
 /**
  *  Class to handle the command and tab completion for the faction command.
  */
+
+@AutoRegister
 public class FactionCommand extends SimpleCommand {
 
 	/**
@@ -21,6 +24,13 @@ public class FactionCommand extends SimpleCommand {
 
 	protected FactionCommand() {
 		super("faction | fac | f");
+	}
+
+	protected FactionSubCommand getById(String args){
+		for(FactionSubCommand subCommand : subCommands)
+			if(subCommand.getName().equalsIgnoreCase(args))
+				return subCommand;
+		return null;
 	}
 
 	/**
@@ -36,7 +46,7 @@ public class FactionCommand extends SimpleCommand {
 					subCommand.execute(sender, getLabel(), args);
 					return;
 				} else {
-					// LOGIC HELP HERE, PLEASE CONTINUE LATER.
+					getById("help").execute(sender,"help",args);
 				}
 			}
 	}
