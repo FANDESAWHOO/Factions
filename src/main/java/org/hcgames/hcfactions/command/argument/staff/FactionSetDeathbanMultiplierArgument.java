@@ -22,10 +22,10 @@ public final class FactionSetDeathbanMultiplierArgument extends FactionSubComman
 
     private final HCFactions plugin;
 
-    public FactionSetDeathbanMultiplierArgument(HCFactions plugin) {
+    public FactionSetDeathbanMultiplierArgument() {
         super("setdeathbanmultiplier");
         setDescription("Sets the deathban multiplier of a faction.");
-        this.plugin = plugin;
+        plugin = HCFactions.getInstance();
     //    this.permission = "hcf.command.faction.argument." + getName();
     }
 

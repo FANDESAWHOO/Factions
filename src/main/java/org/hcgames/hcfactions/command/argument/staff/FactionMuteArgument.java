@@ -18,10 +18,10 @@ public final class FactionMuteArgument extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionMuteArgument(HCFactions plugin) {
+    public FactionMuteArgument() {
         super("mute");
         setDescription( "Mutes every member in this faction.");
-        this.plugin = plugin;
+        plugin = HCFactions.getInstance();
     //    this.permission = "hcf.command.faction.argument." + getName();
     }
 

@@ -25,10 +25,10 @@ public final class FactionClearClaimsArgument extends FactionSubCommand {
     private final ConversationFactory factory;
     private final HCFactions plugin;
 
-    public FactionClearClaimsArgument(HCFactions plugin) {
+    public FactionClearClaimsArgument() {
         super("clearclaims");
         setDescription("Clears the claims of a faction.");
-        this.plugin = plugin;
+        plugin = HCFactions.getInstance();
       //  this.permission = "hcf.command.faction.argument." + getName();
 
         factory = new ConversationFactory(plugin).

@@ -36,10 +36,10 @@ public final class FactionForceRenameArgument extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionForceRenameArgument(HCFactions plugin) {
+    public FactionForceRenameArgument() {
         super("forcename");
         setDescription( "Forces a rename of a faction.");
-        this.plugin = plugin;
+        plugin = HCFactions.getInstance();
     //    this.permission = "hcf.command.faction.argument." + getName();
     }
 

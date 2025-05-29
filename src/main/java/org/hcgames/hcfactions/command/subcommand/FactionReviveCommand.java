@@ -13,10 +13,10 @@ public final class FactionReviveCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionReviveCommand(HCFactions plugin){
+    public FactionReviveCommand(){
         super("revive");
         setDescription("Revive a player with faction lives");
-        this.plugin = plugin;
+        plugin = HCFactions.getInstance();
 
     }
 

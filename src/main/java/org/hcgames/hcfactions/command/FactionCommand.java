@@ -2,6 +2,7 @@ package org.hcgames.hcfactions.command;
 
 import lombok.Getter;
 import org.hcgames.hcfactions.HCFactions;
+import org.mineacademy.fo.Common;
 import org.mineacademy.fo.ReflectionUtil;
 import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.annotation.AutoRegister;
@@ -37,6 +38,7 @@ public final class FactionCommand extends SimpleCommand {
 				return subCommand;
 		return null;
 	}
+
 	protected final void registerFactionSubcommands(Class<? extends FactionSubCommand> parentClass) {
 		for (Class<? extends FactionSubCommand> clazz : ReflectionUtil.getClasses(HCFactions.getInstance(), parentClass)) {
 			if (Modifier.isAbstract(clazz.getModifiers()))
@@ -45,11 +47,10 @@ public final class FactionCommand extends SimpleCommand {
 			Valid.checkBoolean(Modifier.isFinal(clazz.getModifiers()), "Make child of " + parentClass.getSimpleName() + " class " + clazz.getSimpleName() + " final to auto register it!");
 
 			try {
-				// Instancia la clase con el constructor HCFactions si lo tiene
-				FactionSubCommand subCommand = ReflectionUtil.instantiate(clazz, HCFactions.getInstance());
-				// El constructor ya debería llamar a addArgument()
+				FactionSubCommand subCommand = ReflectionUtil.instantiate(clazz);
+				subCommand.addArgument(); // <- LLÁMALO AQUÍ, una vez FactionCommand ya está instanciado
 			} catch (Throwable t) {
-				t.printStackTrace();
+				Common.error(t, "Failed to register subcommand: " + clazz.getSimpleName());
 			}
 		}
 	}

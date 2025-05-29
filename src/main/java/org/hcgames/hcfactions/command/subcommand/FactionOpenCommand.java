@@ -14,10 +14,10 @@ import org.mineacademy.fo.settings.Lang;
 public final class FactionOpenCommand extends FactionSubCommand {
 	   private final HCFactions plugin;
 
-	    public FactionOpenCommand(HCFactions plugin) {
+	    public FactionOpenCommand() {
 	        super("open");
 	        setDescription("Opens the faction to the public.");
-	        this.plugin = plugin;
+	        plugin = HCFactions.getInstance();
 	    }
 
 

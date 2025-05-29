@@ -76,7 +76,7 @@ public abstract class FactionSubCommand implements TabCompleter {
 		description = description;
 		permission = "faction.command." + name;
 		instance = HCFactions.getInstance();
-		addArgument();
+	//	addArgument();
 	}
 
 	public FactionSubCommand(String rawName, String description) {
@@ -90,7 +90,7 @@ public abstract class FactionSubCommand implements TabCompleter {
 		this.description = description;
 		permission = "faction.command." + name;
 		instance = HCFactions.getInstance();
-		addArgument();
+	//	addArgument();
 	}
 
 	public FactionSubCommand(String rawName, String description, String permission) {
@@ -104,7 +104,7 @@ public abstract class FactionSubCommand implements TabCompleter {
 		this.description = description;
 		this.permission = permission;
 		instance = HCFactions.getInstance();
-		addArgument();
+	//	addArgument();
 	}
 	public void execute(CommandSender sender, String label, String[] args) {
 		this.sender = sender;

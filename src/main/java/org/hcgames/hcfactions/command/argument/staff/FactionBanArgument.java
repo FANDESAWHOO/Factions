@@ -17,10 +17,10 @@ public final class FactionBanArgument extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionBanArgument(HCFactions plugin) {
+    public FactionBanArgument() {
         super("ban");
         setDescription("Bans every member in this faction.");
-        this.plugin = plugin;
+        plugin = HCFactions.getInstance();
     //    this.permission = "hcf.command.faction.argument." + getName();
     }
 

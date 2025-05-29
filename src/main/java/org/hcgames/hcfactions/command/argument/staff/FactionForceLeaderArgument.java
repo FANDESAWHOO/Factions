@@ -17,10 +17,10 @@ public final class FactionForceLeaderArgument extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionForceLeaderArgument(HCFactions plugin) {
+    public FactionForceLeaderArgument() {
         super("forceleader");
         setDescription("Forces the leader of a faction.");
-        this.plugin = plugin;
+        plugin = HCFactions.getInstance();
      //   this.permission = "hcf.command.faction.argument." + getName();
     }
 

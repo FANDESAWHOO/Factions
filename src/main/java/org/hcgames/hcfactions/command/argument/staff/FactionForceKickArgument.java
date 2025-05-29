@@ -16,10 +16,10 @@ public final class FactionForceKickArgument extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionForceKickArgument(HCFactions plugin) {
+    public FactionForceKickArgument() {
         super("forcekick");
         setDescription("Forcefully kick a player from their faction.");
-        this.plugin = plugin;
+        plugin = HCFactions.getInstance();
         //this.permission = "hcf.command.faction.argument." + getName();
     }
 

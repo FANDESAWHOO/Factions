@@ -21,10 +21,10 @@ public final class FactionClaimForArgument extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionClaimForArgument(HCFactions plugin) {
+    public FactionClaimForArgument() {
         super("claimfor");
         setDescription("Claims land for another faction.");
-        this.plugin = plugin;
+        plugin = HCFactions.getInstance();
      //   this.permission = "hcf.command.faction.argument." + getName();
     }
 

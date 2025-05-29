@@ -20,10 +20,10 @@ public final class FactionAcceptCommand extends FactionSubCommand {
 
 	private final HCFactions plugin;
 
-	public FactionAcceptCommand(HCFactions plugin) {
+	public FactionAcceptCommand() {
 		super("accept | join | a");
 		setDescription("Accept a join request from an existing faction.");
-		this.plugin = plugin;
+		plugin = HCFactions.getInstance();
 
 	}
     @Override

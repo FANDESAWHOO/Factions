@@ -15,10 +15,10 @@ public final class FactionCreateSystemArgument extends FactionSubCommand {
 	
 	private final HCFactions plugin;
 	
-	public FactionCreateSystemArgument(HCFactions plugin) {
+	public FactionCreateSystemArgument() {
 	    super("createsystem");
 	    setDescription("Create a system faction.");
-		this.plugin = plugin;
+		plugin = HCFactions.getInstance();
       //  this.permission = "hcf.command.faction.argument." + getName();
 	}
 

@@ -22,10 +22,10 @@ public final class FactionWithdrawCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionWithdrawCommand(HCFactions plugin) {
+    public FactionWithdrawCommand() {
         super("withdraw | w");
         setDescription("Withdraws money from the faction balance.");
-        this.plugin = plugin;
+        plugin = HCFactions.getInstance();
     }
 
     @Override

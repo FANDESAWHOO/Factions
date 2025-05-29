@@ -18,10 +18,10 @@ public final class FactionSetHomeCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionSetHomeCommand(HCFactions plugin) {
+    public FactionSetHomeCommand() {
         super("sethome");
         setDescription( "Sets the faction home location.");
-        this.plugin = plugin;
+        plugin = HCFactions.getInstance();
 
     }
 

@@ -16,10 +16,10 @@ public final class FactionForcePromoteArgument extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionForcePromoteArgument(HCFactions plugin) {
+    public FactionForcePromoteArgument() {
         super("forcepromote");
         setDescription("Forces the promotion status of a player.");
-        this.plugin = plugin;
+        plugin = HCFactions.getInstance();
        // this.permission = "hcf.command.faction.argument." + getName();
     }
 

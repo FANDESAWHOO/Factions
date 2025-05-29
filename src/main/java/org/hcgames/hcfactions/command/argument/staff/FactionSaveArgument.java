@@ -12,10 +12,10 @@ public final class FactionSaveArgument extends FactionSubCommand {
 	
 	private final HCFactions plugin;
 	
-	public FactionSaveArgument(HCFactions plugin) {
+	public FactionSaveArgument() {
 		super("save");
 		setDescription( "Save to database the factions :)");
-		this.plugin = plugin;
+		plugin = HCFactions.getInstance();
 		// this.permission = "hcf.command.faction.argument." + getName();
 	}
 	

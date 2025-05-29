@@ -16,10 +16,10 @@ public final class FactionForceDemoteArgument extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionForceDemoteArgument(HCFactions plugin) {
+    public FactionForceDemoteArgument() {
         super("forcedemote");
         setDescription( "Forces the demotion status of a player.");
-        this.plugin = plugin;
+        plugin = HCFactions.getInstance();
      //   this.permission = "hcf.command.faction.argument." + getName();
     }
 

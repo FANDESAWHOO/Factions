@@ -21,10 +21,10 @@ public final class FactionSetDtrRegenArgument extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionSetDtrRegenArgument(HCFactions plugin) {
+    public FactionSetDtrRegenArgument() {
         super("setdtrregen | setdtrregeneration");
         setDescription("Sets the DTR cooldown of a faction.");
-        this.plugin = plugin;
+        plugin = HCFactions.getInstance();
        // this.permission = "hcf.command.faction.argument." + getName();
     }
 

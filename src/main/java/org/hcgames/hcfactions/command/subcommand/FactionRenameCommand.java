@@ -20,10 +20,10 @@ public final class FactionRenameCommand extends FactionSubCommand {
 
 	    private final HCFactions plugin;
 
-	    public FactionRenameCommand(HCFactions plugin) {
+	    public FactionRenameCommand() {
 	        super("rename | changename | setname");
 	        setDescription("Change the name of your faction.");
-	        this.plugin = plugin;
+	        plugin = HCFactions.getInstance();
 	    }
 
 	    @Override

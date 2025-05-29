@@ -23,10 +23,10 @@ public final class FactionUnclaimCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionUnclaimCommand(HCFactions plugin) {
+    public FactionUnclaimCommand() {
         super("unclaim");
         setDescription("Unclaims land from your faction.");
-        this.plugin = plugin;
+        plugin = HCFactions.getInstance();
     }
 
     

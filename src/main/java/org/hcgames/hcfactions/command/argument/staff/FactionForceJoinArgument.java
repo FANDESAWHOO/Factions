@@ -25,10 +25,10 @@ public final class FactionForceJoinArgument extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionForceJoinArgument(HCFactions plugin) {
+    public FactionForceJoinArgument() {
         super("forcejoin");
         setDescription("Forcefully join a faction.");
-        this.plugin = plugin;
+        plugin = HCFactions.getInstance();
        // this.permission = "hcf.command.faction.argument." + getName();
     }
 

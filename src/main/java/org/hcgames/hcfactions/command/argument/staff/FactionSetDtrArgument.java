@@ -23,10 +23,10 @@ public final class FactionSetDtrArgument extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionSetDtrArgument(HCFactions plugin) {
+    public FactionSetDtrArgument() {
         super("setdtr | dtr");
         setDescription("Sets the DTR of a faction.");
-        this.plugin = plugin;
+        plugin = HCFactions.getInstance();
     //    this.permission = "hcf.command.faction.argument." + getName();
     }
 

@@ -12,10 +12,10 @@ public final class FactionFriendlyFireCommand extends FactionSubCommand {
 
 	private final HCFactions plugin;
 
-	public FactionFriendlyFireCommand(HCFactions plugin) {
+	public FactionFriendlyFireCommand() {
 		super("friendlyfire | damage | ff");
 		setDescription("Toggle friendly fire.");
-		this.plugin = plugin;
+		plugin = HCFactions.getInstance();
 
 	}
 

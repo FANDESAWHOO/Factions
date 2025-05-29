@@ -17,10 +17,10 @@ public final class FactionUninviteCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionUninviteCommand(HCFactions plugin) {
+    public FactionUninviteCommand() {
         super("uninvite | deinvite | deinv | uninv | revoke");
         setDescription("Revoke an invitation to a player.");
-        this.plugin = plugin;
+        plugin = HCFactions.getInstance();
     }
 
    

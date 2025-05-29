@@ -23,10 +23,10 @@ public final class FactionUnallyArgument extends FactionSubCommand {
     private final Relation relation = Relation.ALLY;
     private final HCFactions plugin;
 
-    public FactionUnallyArgument(HCFactions plugin) {
+    public FactionUnallyArgument() {
         super("unally | unalliance | neutral");
         setDescription("Remove an ally pact with other factions.");
-        this.plugin = plugin;
+        plugin = HCFactions.getInstance();
 
     }
 

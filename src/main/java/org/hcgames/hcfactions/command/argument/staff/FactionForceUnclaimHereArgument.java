@@ -14,10 +14,10 @@ public final class FactionForceUnclaimHereArgument extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionForceUnclaimHereArgument(HCFactions plugin) {
+    public FactionForceUnclaimHereArgument() {
         super("forceunclaimhere");
         setDescription( "Forces land unclaim where you are standing.");
-        this.plugin = plugin;
+        plugin = HCFactions.getInstance();
     //    this.permission = "hcf.command.faction.argument." + getName();
     }
 

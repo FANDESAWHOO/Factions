@@ -15,10 +15,10 @@ public final class FactionMessageCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionMessageCommand(HCFactions plugin) {
+    public FactionMessageCommand() {
         super("message | msg");
         setDescription("Sends a message to your faction.");
-        this.plugin = plugin;
+        plugin = HCFactions.getInstance();
     }
 
  

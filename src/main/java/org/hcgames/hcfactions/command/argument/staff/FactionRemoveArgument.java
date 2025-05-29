@@ -25,10 +25,10 @@ public final class FactionRemoveArgument extends FactionSubCommand {
     private final ConversationFactory factory;
     private final HCFactions plugin;
 
-    public FactionRemoveArgument(HCFactions plugin) {
+    public FactionRemoveArgument() {
         super("remove | delete | forcedisband | forceremove");
         setDescription( "Remove a faction.");
-        this.plugin = plugin;
+        plugin = HCFactions.getInstance();
        // this.aliases = new String[]{"delete", "forcedisband", "forceremove"};
        // this.permission = "hcf.command.faction.argument." + getName();
         factory = new ConversationFactory(plugin).

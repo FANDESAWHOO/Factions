@@ -16,10 +16,10 @@ public final class FactionStuckCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionStuckCommand(HCFactions plugin) {
+    public FactionStuckCommand() {
         super("stuck | trap | trapped");
         setDescription("Teleport to a safe position.");
-        this.plugin = plugin;
+        plugin = HCFactions.getInstance();
 
     }
 

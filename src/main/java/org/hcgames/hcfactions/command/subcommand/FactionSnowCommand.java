@@ -36,11 +36,11 @@ public final class FactionSnowCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionSnowCommand(HCFactions plugin){
+    public FactionSnowCommand(){
         super("snow");
         setDescription("Toggle snow fall in your faction");
       //  this.permission = "hcf.command.faction.argument." + getName();
-        this.plugin = plugin;
+        plugin = HCFactions.getInstance();
 
     }
 

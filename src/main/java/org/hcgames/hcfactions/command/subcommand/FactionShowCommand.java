@@ -19,10 +19,10 @@ public final class FactionShowCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionShowCommand(HCFactions plugin) {
+    public FactionShowCommand() {
         super("show | i | info | who");
         setDescription("Get details about a faction.");
-        this.plugin = plugin;
+        plugin = HCFactions.getInstance();
 
     }
 

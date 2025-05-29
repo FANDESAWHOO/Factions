@@ -17,10 +17,10 @@ public final class FactionPromoteCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionPromoteCommand(HCFactions plugin) {
+    public FactionPromoteCommand() {
         super("promote | captain | officer | mod | moderator");
         setDescription( "Promotes a player to a captain.");
-        this.plugin = plugin;
+        plugin = HCFactions.getInstance();
 
     }
 

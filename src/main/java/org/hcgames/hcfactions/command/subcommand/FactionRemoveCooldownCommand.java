@@ -13,10 +13,10 @@ public final class FactionRemoveCooldownCommand extends FactionSubCommand {
 	
 	 private final HCFactions plugin;
 
-	    public FactionRemoveCooldownCommand(HCFactions plugin){
+	    public FactionRemoveCooldownCommand(){
 	        super("removecooldown");
 	        setDescription("Removes a faction cool down for a player.");
-	        this.plugin = plugin;
+	        plugin = HCFactions.getInstance();
 
 	    }
 

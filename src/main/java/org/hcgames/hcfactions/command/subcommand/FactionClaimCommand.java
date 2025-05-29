@@ -13,10 +13,10 @@ import java.util.UUID;
 public final class FactionClaimCommand extends FactionSubCommand {
 	private final HCFactions plugin;
 
-	public FactionClaimCommand(HCFactions plugin) {
+	public FactionClaimCommand() {
 		super("claim | claimland");
 		setDescription("Claim land in the Wilderness.");
-		this.plugin = plugin;
+		plugin = HCFactions.getInstance();
 
 	}
 
