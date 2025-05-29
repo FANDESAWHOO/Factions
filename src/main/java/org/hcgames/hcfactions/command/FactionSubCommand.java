@@ -6,7 +6,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.hcgames.hcfactions.HCFactions;
 import org.mineacademy.fo.settings.Lang;
 
 import java.util.Arrays;
@@ -29,7 +28,6 @@ public abstract class FactionSubCommand implements TabCompleter {
 	@Setter protected String description;
 	@Setter protected String permission;
 	@Setter protected String[] aliases;
-	protected HCFactions instance;
 	/**
 	 * COMMAND FUNCTIONS!
 	 */
@@ -75,7 +73,6 @@ public abstract class FactionSubCommand implements TabCompleter {
 
 		description = description;
 		permission = "faction.command." + name;
-		instance = HCFactions.getInstance();
 	//	addArgument();
 	}
 
@@ -89,7 +86,6 @@ public abstract class FactionSubCommand implements TabCompleter {
 
 		this.description = description;
 		permission = "faction.command." + name;
-		instance = HCFactions.getInstance();
 	//	addArgument();
 	}
 
@@ -103,7 +99,6 @@ public abstract class FactionSubCommand implements TabCompleter {
 
 		this.description = description;
 		this.permission = permission;
-		instance = HCFactions.getInstance();
 	//	addArgument();
 	}
 	public void execute(CommandSender sender, String label, String[] args) {
