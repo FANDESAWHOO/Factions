@@ -293,8 +293,8 @@ Commands-Factions-Disband-LeaderRequired: '&cNo permission. You must be the lead
 Commands-Factions-Help-PageLessThanOne: '&cPage not found.'
 Commands-Factions-Help-NoMorePages: '&cPage not found.'
 Commands-Factions-Help-Header: "&6&m---*--------------------------------------------*---/n&6Faction Help &7(Page {currentPageNumber} out of {totalPageCount} pages)"
-Commands-Factions-Help-Footer: "&eYou are currently on page &f{currentPageNumber} &eout of a total &f{totalPageCount} pages&e./n&6&m---*--------------------------------------------*---"
-Commands-Factions-Help-MenuEntry: '&6/f {commandArgument} »&7 {commandDescription}'
+Commands-Factions-Help-Footer: "&eYou are currently on page &f{currentPageNumber} &eout of a total &f{totalPageCount} pages&e.&6&m---*--------------------------------------------*---"
+Commands-Factions-Help-MenuEntry: '&6/f {commandArgument} &7 {commandDescription}'
 Commands-Factions-List-PageLessThanOne: '&cPage not found. Specify a page with a positive number.'
 Commands-Factions-List-NoMorePages: '&cPage not found. There are no more pages to be viewed.'
 Commands-Factions-List-Header: "&6&m---*------------------------------------------*---/n&eFaction Top &7(Page {currentPageNumber} out of {totalPageCount} pages)"

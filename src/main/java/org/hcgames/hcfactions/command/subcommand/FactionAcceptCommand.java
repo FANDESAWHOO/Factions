@@ -22,7 +22,6 @@ public final class FactionAcceptCommand extends FactionSubCommand {
 
 	public FactionAcceptCommand() {
 		super("accept|join|a");
-		setAliases(new String[]{"make", "define"});
 		setDescription("Accept a join request from an existing faction.");
 		plugin = HCFactions.getInstance();
 

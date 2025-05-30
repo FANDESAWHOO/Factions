@@ -45,7 +45,7 @@ public final class LocationCommand extends SimpleCommand {
     private final static SimpleCommand instance = new LocationCommand();
 
     private LocationCommand() {
-        super("location | loc | whereami");
+        super("location|loc|whereami");
         plugin = HCFactions.getInstance();
     }
 
@@ -59,13 +59,13 @@ public final class LocationCommand extends SimpleCommand {
         if (args.length >= 1) target = plugin.getServer().getPlayer(args[0]);
 		else if (sender instanceof Player) target = (Player) sender;
 		else {
-                sender.sendMessage(Lang.of("Commands.Location.Usage")
+                tell(Lang.of("Commands.Location.Usage")
                       .replace("{commandLabel}", getLabel()));
             return;
         }
 
         if (target == null || (sender instanceof Player && !((Player) sender).canSee(target))) {
-             sender.sendMessage(Lang.of("Commands.Location.Output")
+            tell(Lang.of("Commands.Location.Output")
                    .replace("{player}", args[0]));
             return;
         }
@@ -73,7 +73,7 @@ public final class LocationCommand extends SimpleCommand {
         Location location = target.getLocation();
         Faction factionAt = plugin.getFactionManager().getFactionAt(location);
 
-        sender.sendMessage(Lang.of("Commands.Location.Output")
+        tell(Lang.of("Commands.Location.Output")
                 .replace("{player}", target.getName())
                 .replace("{factionName}", factionAt.getFormattedName(sender))
                 .replace("{isDeathBanLocation}", factionAt.isSafezone() ?

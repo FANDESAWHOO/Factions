@@ -34,6 +34,7 @@ public final class FactionCommand extends SimpleCommand {
 	}
 	public FactionCommand() {
 		super("faction|fac|f");
+		setAutoHandleHelp(false);
 		setMinArguments(0);
 		addArgument(new FactionAcceptCommand());
 		addArgument(new FactionAllyCommand());
@@ -87,8 +88,10 @@ public final class FactionCommand extends SimpleCommand {
 	}
 
 	public FactionSubCommand getSubCommand(String key) {
-		for(FactionSubCommand subCommand : commands)
-			if(subCommand.getName().equalsIgnoreCase(key)) return subCommand;
+		for(FactionSubCommand subCommand : commands) {
+			if (subCommand.getName().equalsIgnoreCase(key)) return subCommand;
+			if (subCommand.matches(key)) return subCommand;
+		}
 
 
 		return null;
