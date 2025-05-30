@@ -6,6 +6,7 @@ import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.claim.Claim;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.Faction;
+import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.Relation;
 
 /**
@@ -29,9 +30,9 @@ public final class FactionsAPI {
 		 return HCFactions.getInstance().getFactionManager().getClaimAt(location);
 	 }
 
-	 public static Faction getPlayerFaction(Player player){
+	 public static PlayerFaction getPlayerFaction(Player player){
 		 try{
-			 return HCFactions.getInstance().getFactionManager().getFaction(player.getUniqueId());
+			 return HCFactions.getInstance().getFactionManager().getPlayerFaction(player.getUniqueId());
 		 }catch (NoFactionFoundException e){
 			 return null;
 		 }

@@ -31,18 +31,18 @@ public final class FactionClaimForArgument extends FactionSubCommand {
   
     @Override
 	public String getUsage() {
-        return Lang.of("commands.staff.claimfor.usage", label, getName());
+        return Lang.of("Commands.staff.claimfor.usage", label, getName());
     }
 
     @Override
     public void onCommand() {
         if (!(sender instanceof Player)) {
-            tell(Lang.of("commands.error.player_only"));
+            tell(Lang.of("Commands.error.player_only"));
             return;
         }
 
         if (args.length < 2) {
-            tell(Lang.of("commands.error.usage", getUsage()));
+            tell(Lang.of("Commands.error.usage", getUsage()));
             return;
         }
 
@@ -54,24 +54,24 @@ public final class FactionClaimForArgument extends FactionSubCommand {
                 WorldEditPlugin worldEditPlugin = plugin.getWorldEdit();
 
                 if (worldEditPlugin == null) {
-                    tell(Lang.of("commands.claimfor.worldedit_required"));
+                    tell(Lang.of("Commands.claimfor.worldedit_required"));
                     return;
                 }
 
                 Selection selection = worldEditPlugin.getSelection(player);
 
                 if (selection == null) {
-                    tell(Lang.of("commands.claimfor.worldedit_selection_required"));
+                    tell(Lang.of("Commands.claimfor.worldedit_selection_required"));
                     return;
                 }
 
                 if (faction.addClaim(new Claim(faction, selection.getMinimumPoint(), selection.getMaximumPoint()), sender))
-					tell(Lang.of("commands.claimfor.claimed", faction.getName()));
+					tell(Lang.of("Commands.claimfor.claimed", faction.getName()));
             }
 
             @Override
             public void onFail(FailReason reason){
-                tell(Lang.of("commands.error.faction_not_found", args[1]));
+                tell(Lang.of("Commands.error.faction_not_found", args[1]));
             }
         });
 

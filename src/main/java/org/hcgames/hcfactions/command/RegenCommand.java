@@ -40,16 +40,13 @@ public final class RegenCommand extends SimpleCommand {
      */
     @Override
     protected void onCommand() {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage(Lang.of("Error-Messages.PlayerOnly"));
-            return ;
-        }
+       checkConsole();
 
         Player player = (Player) sender;
         PlayerFaction playerFaction;
 
         if(!plugin.getFactionManager().hasFaction(player)){
-            sender.sendMessage(Lang.of("Error-Messages.NotInFaction"));
+            tell(Lang.of("Error-Messages.NotInFaction"));
             return;
         }
 
@@ -58,14 +55,14 @@ public final class RegenCommand extends SimpleCommand {
         RegenStatus regenStatus = playerFaction.getRegenStatus();
         switch (regenStatus) {
             case FULL:
-                sender.sendMessage(Lang.of("Commands.Regen.Full"));
+                tell(Lang.of("Commands.Regen.Full"));
                 return;
             case PAUSED:
-                sender.sendMessage(Lang.of("Commands.Regen.Paused")
+                tell(Lang.of("Commands.Regen.Paused")
                         .replace("{dtrFreezeTimeLeft}", DurationFormatUtils.formatDurationWords(playerFaction.getRemainingRegenerationTime(), true, true)));
                 return;
             case REGENERATING:
-                sender.sendMessage(Lang.of("Commands.Regen.Regenerating")
+                tell(Lang.of("Commands.Regen.Regenerating")
                         .replace("{regenSymbol}", regenStatus.getSymbol())
                         .replace("{factionDeathsUntilRaidable}", String.valueOf(playerFaction.getDeathsUntilRaidable()))
                         .replace("{factionDTRIncrement}", String.valueOf(Configuration.factionDtrUpdateIncrement))
@@ -74,7 +71,7 @@ public final class RegenCommand extends SimpleCommand {
                 return;
         }
 
-        sender.sendMessage(Lang.of("Commands.Regen.Unknown"));
+        tell(Lang.of("Commands.Regen.Unknown"));
 
     }
 }

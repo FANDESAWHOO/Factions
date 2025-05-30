@@ -22,6 +22,7 @@ import org.hcgames.hcfactions.timer.PlayerTimer;
 import org.hcgames.hcfactions.timer.TimerCooldown;
 import org.hcgames.hcfactions.util.BukkitUtils;
 import org.hcgames.hcfactions.util.DurationFormatter;
+import org.hcgames.hcfactions.util.text.CC;
 import org.mineacademy.fo.settings.Lang;
 
 import javax.annotation.Nullable;
@@ -88,9 +89,9 @@ public class StuckTimer extends PlayerTimer implements Listener{
             int zDiff = Math.abs(from.getBlockZ() - to.getBlockZ());
             if(xDiff > MAX_MOVE_DISTANCE || yDiff > MAX_MOVE_DISTANCE || zDiff > MAX_MOVE_DISTANCE){
                 clearCooldown(player, uuid);
-                player.sendMessage(Lang.of("Timer-Stuck-MovedTooFar")
+                player.sendMessage(CC.translate(Lang.of("Timer-Stuck-MovedTooFar")
                         .replace("{timerName}", getDisplayName())
-                        .replace("{maxMoveDistance}", String.valueOf(MAX_MOVE_DISTANCE)));
+                        .replace("{maxMoveDistance}", String.valueOf(MAX_MOVE_DISTANCE))));
             }
         }
     }
@@ -133,8 +134,8 @@ public class StuckTimer extends PlayerTimer implements Listener{
         if(entity instanceof Player){
             Player player = (Player) entity;
             if(getRemaining(player) > 0L){
-                player.sendMessage(Lang.of("Timer-Stuck-TookDamage")
-                        .replace("{timerName}", getDisplayName()));
+                player.sendMessage(CC.translate(Lang.of("Timer-Stuck-TookDamage")
+                        .replace("{timerName}", getDisplayName())));
                 clearCooldown(player);
             }
         }
@@ -161,20 +162,18 @@ public class StuckTimer extends PlayerTimer implements Listener{
         }
 
         Location nearest = getTeleportLocation(player);
-        if(nearest == null){
-         //   HCF.getPlugin().getCombatLogListener().safelyDisconnect(player, ChatColor.RED + Lang.of("Timer-Stuck-NoSafeLocation"));
-            return;
-        }
+		//   HCF.getPlugin().getCombatLogListener().safelyDisconnect(player, ChatColor.RED + Lang.of("Timer-Stuck-NoSafeLocation"));
+		if(nearest == null) return;
 
         if(player.teleport(nearest, PlayerTeleportEvent.TeleportCause.PLUGIN))
-			player.sendMessage(Lang.of("Timer-Stuck-Teleported").replace("{timerName}", getDisplayName()));
+			player.sendMessage(CC.translate(Lang.of("Timer-Stuck-Teleported").replace("{timerName}", getDisplayName())));
     }
 
     public void run(Player player){
         long remainingMillis = getRemaining(player);
-        if(remainingMillis > 0L) player.sendMessage(Lang.of("Timer-Stuck-Teleported")
-				.replace("{timeLeft}", DurationFormatter.getRemaining(remainingMillis, true, false))
-				.replace("{timerName}", getDisplayName()));
+        if(remainingMillis > 0L) player.sendMessage(CC.translate(Lang.of("Timer-Stuck-Teleported")
+                .replace("{timeLeft}", DurationFormatter.getRemaining(remainingMillis, true, false))
+                .replace("{timerName}", getDisplayName())));
     }
 
     private Location getTeleportLocation(Player player){

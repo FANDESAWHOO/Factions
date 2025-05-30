@@ -55,7 +55,7 @@ public final class FactionMuteArgument extends FactionSubCommand {
 
             @Override
             public void onFail(FailReason reason){
-                tell(Lang.of("commands.error.faction_not_found", args[1]));
+                tell(Lang.of("Commands.error.faction_not_found", args[1]));
             }
         });
 

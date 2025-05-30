@@ -113,10 +113,10 @@ public class MongoFactionManager extends FlatFileFactionManager implements Facti
 		// TODO: more reliable
 		if (!factionNameMap.containsKey("EndPortal")) adding.add(new EndPortalFaction());
 		// Now load the Spawn, etc factions.
-				for (Faction added : adding) {
-					cacheFaction(added);
-					Bukkit.getConsoleSender().sendMessage(ChatColor.BLUE + "Faction " + added.getName() + " not found, created.");
-				}
+        for (Faction added : adding) {
+			cacheFaction(added);
+			Bukkit.getConsoleSender().sendMessage(ChatColor.BLUE + "Faction " + added.getName() + " not found, created.");
+		}
     }
     
 

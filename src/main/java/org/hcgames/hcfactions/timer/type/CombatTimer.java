@@ -20,6 +20,7 @@ import org.hcgames.hcfactions.timer.TimerCooldown;
 import org.hcgames.hcfactions.timer.event.TimerStartEvent;
 import org.hcgames.hcfactions.util.BukkitUtils;
 import org.hcgames.hcfactions.util.DurationFormatter;
+import org.hcgames.hcfactions.util.text.CC;
 import org.hcgames.hcfactions.visualise.VisualType;
 import org.mineacademy.fo.settings.Lang;
 
@@ -78,9 +79,9 @@ public class CombatTimer extends PlayerTimer implements Listener{
             long remaining = getRemaining(player);
             if(remaining > 0L){
                 event.setCancelled(true);
-                player.sendMessage(Lang.of("Timer-Combat-CannotJoinFactions")
+                player.sendMessage(CC.translate(Lang.of("Timer-Combat-CannotJoinFactions")
                         .replace("{timerName}", getDisplayName())
-                        .replace("{timeLeft}", DurationFormatter.getRemaining(getRemaining(player), true, false)));
+                        .replace("{timeLeft}", DurationFormatter.getRemaining(getRemaining(player), true, false))));
             }
         }
     }
@@ -97,16 +98,16 @@ public class CombatTimer extends PlayerTimer implements Listener{
                 event.setCancelled(true);
 
                 CommandSender sender = event.getSender();
-                if(sender == player) sender.sendMessage(Lang.of("Timer-Combat-CannotKick")
-						.replace("{player}", player.getName())
-						.replace("{timerName}", getDisplayName())
-						.replace("{timeLeft}", DurationFormatter.getRemaining(remaining, true, false)));
+                if(sender == player) sender.sendMessage(CC.translate(Lang.of("Timer-Combat-CannotKick")
+                        .replace("{player}", player.getName())
+                        .replace("{timerName}", getDisplayName())
+                        .replace("{timeLeft}", DurationFormatter.getRemaining(remaining, true, false))));
 				else{
-                    sender.sendMessage(Lang.of("Timer-Combat-CannotLeave")
+                    sender.sendMessage(CC.translate(Lang.of("Timer-Combat-CannotLeave")
                             .replace("{timerName}", getDisplayName())
-                            .replace("{timeLeft}", DurationFormatter.getRemaining(remaining, true, false)));
-                    sender.sendMessage(ChatColor.RED + "You cannot leave factions whilst your " + getDisplayName() + ChatColor.RED + " timer is active [" +
-                            ChatColor.BOLD + DurationFormatter.getRemaining(remaining, true, false) + ChatColor.RED + " remaining]");
+                            .replace("{timeLeft}", DurationFormatter.getRemaining(remaining, true, false))));
+                    sender.sendMessage(CC.translate("You cannot leave factions whilst your " + getDisplayName() + ChatColor.RED + " timer is active [" +
+                            ChatColor.BOLD + DurationFormatter.getRemaining(remaining, true, false) + ChatColor.RED + " remaining]"));
                 }
             }
         }
@@ -120,10 +121,10 @@ public class CombatTimer extends PlayerTimer implements Listener{
         Player player = event.getPlayer();
         if(!event.getFromFaction().isSafezone() && event.getToFaction().isSafezone() && getRemaining(player) > 0L){
             event.setCancelled(true);
-            player.sendMessage(Lang.of("Timer-Combat-CannotEnter")
+            player.sendMessage(CC.translate(Lang.of("Timer-Combat-CannotEnter")
                     .replace("{areaName}", event.getToFaction().getFormattedName(player))
                     .replace("{timerName}", getDisplayName())
-                    .replace("{timeLeft}", DurationFormatter.getRemaining(getRemaining(player), true, false)));
+                    .replace("{timeLeft}", DurationFormatter.getRemaining(getRemaining(player), true, false))));
         }
     }
 

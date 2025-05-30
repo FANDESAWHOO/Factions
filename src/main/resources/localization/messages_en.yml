@@ -28,6 +28,12 @@
 # Messages related to commands
 # -------------------------------------------------------------------------------------------------
 Commands:
+  error:
+    player_only: "This command can only be executed via a player."
+    console_only: "This command can only be executed from the console."
+    faction_not_found: "Faction {0} not found."
+    member_not_found: "Faction member with name {0} not found."
+    usage: "Usage: {0}"
   Factions:
   Join:
    Rotation-Pending: "&cYou cannot join the faction as you are on a 24 hour cooldown period. Please wait {time} to join."
@@ -133,7 +139,41 @@ Commands:
   Perms_No: "&cno"
   Region_Set_Primary: "Set the primary region point."
   Region_Set_Secondary: "Set the secondary region point."
-
+  Regen:
+    Full: "&cYour faction currently has full DTR."
+    Paused: "&9Your faction is currently on DTR freeze for another &r{dtrFreezeTimeLeft}&9."
+    Regenerating: "&9Your faction currently has &e{regenSymbol}{factionDeathsUntilRaidable} &9DTR and is regenerating at a rate &6{factionDTRIncrement} every &6{factionDTRIncrementWords}&9. Your ETA for maximum DTR is &d{factionDTRETA}&9."
+    Unknown: "&cUnrecognised regen status, please inform an Administrator."
+  staff:
+    ban:
+      usage: "/{0} {1} <factionName> <time:(e.g. 1h2s)> <reason>"
+      executing: "Executing {0}"
+      executed: "Executed ban action on faction {0}"
+  claimfor:
+      usage: "/{0} {1} <factionName>"
+      worldedit_required: "WorldEdit must be installed to set claim areas."
+      worldedit_selection_required: "You must make a WorldEdit selection to do this."
+      claimed: "Successfully claimed land for {0}."
+  clearclaims:
+      usage: "/{0} {1} <playerName|factionName|all>"
+      cleared_faction_broadcast: "Your claims have been forcefully wiped by {0}."
+      cleared: "Claims belonging to {0} have been wiped."
+  console_prompt:
+      prompt: "Are you sure you want to do this? All claims will be cleared.\nType yes to confirm or no to deny."
+      cleared: "All claims have been cleared{0}."
+      cancelled: "Cancelled the process of clearing all faction claims."
+      cancelled_unknown: "Unrecognized response. Process of clearing all faction claims cancelled."
+  forcedemote:
+      usage: "/{0} {1} <playerName>"
+      leader_demote: "{0} is a leader and cannot be demoted."
+      user_demote: "{0} is already a member and cannot be demoted any more."
+      demote_broadcast: "{0} has been demoted to {1}"
+  snow:
+      own: "You have {0} snowing in your faction."
+      other: "You have {0} snowing for {1}"
+  pastfactions:
+      own: "Your past factions: {0}"
+      other: "Past Factions of {0}: {1}"
 # -------------------------------------------------------------------------------------------------
 # Messages related to paginator splitting command help into multiple pages
 # -------------------------------------------------------------------------------------------------
@@ -386,43 +426,6 @@ factions:
     cannot_build_end: "You cannot build in the end."
     cannot_build_system_faction: "You cannot build in the {faction}."
     cannot_enter_vehicle: "You cannot enter vehicles in the territory of %1$s"
-commands:
-  error:
-    player_only: "This command can only be executed via a player."
-    console_only: "This command can only be executed from the console."
-    faction_not_found: "Faction {0} not found."
-    member_not_found: "Faction member with name {0} not found."
-    usage: "Usage: {0}"
-  staff:
-    ban:
-      usage: "/{0} {1} <factionName> <time:(e.g. 1h2s)> <reason>"
-      executing: "Executing {0}"
-      executed: "Executed ban action on faction {0}"
-  claimfor:
-      usage: "/{0} {1} <factionName>"
-      worldedit_required: "WorldEdit must be installed to set claim areas."
-      worldedit_selection_required: "You must make a WorldEdit selection to do this."
-      claimed: "Successfully claimed land for {0}."
-  clearclaims:
-      usage: "/{0} {1} <playerName|factionName|all>"
-      cleared_faction_broadcast: "Your claims have been forcefully wiped by {0}."
-      cleared: "Claims belonging to {0} have been wiped."
-  console_prompt:
-        prompt: "Are you sure you want to do this? All claims will be cleared.\nType yes to confirm or no to deny."
-        cleared: "All claims have been cleared{0}."
-        cancelled: "Cancelled the process of clearing all faction claims."
-        cancelled_unknown: "Unrecognized response. Process of clearing all faction claims cancelled."
-  forcedemote:
-      usage: "/{0} {1} <playerName>"
-      leader_demote: "{0} is a leader and cannot be demoted."
-      user_demote: "{0} is already a member and cannot be demoted any more."
-      demote_broadcast: "{0} has been demoted to {1}"
-  snow:
-    own: "You have {0} snowing in your faction."
-    other: "You have {0} snowing for {1}"
-  pastfactions:
-   own: "Your past factions: {0}"
-   other: "Past Factions of {0}: {1}"
 Commands-Factions-Unclaim-CoLeaderRequired: You must be a faction leader or co-leader to unclaim land.
 Commands-Factions-Rename-CoLeaderRequired: You must be a faction leader or co-leader to edit the name.
 Commands-Factions-Demote-LeaderRequired: You need to be a leader to demote co leaders.

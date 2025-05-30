@@ -21,59 +21,21 @@
 package org.hcgames.hcfactions.listener;
 
 
-
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import lombok.RequiredArgsConstructor;
-
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.TravelAgent;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.entity.AnimalTamer;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Hanging;
-import org.bukkit.entity.Horse;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Monster;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.ThrownPotion;
-import org.bukkit.entity.Vehicle;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockBurnEvent;
-import org.bukkit.event.block.BlockFadeEvent;
-import org.bukkit.event.block.BlockFormEvent;
-import org.bukkit.event.block.BlockFromToEvent;
-import org.bukkit.event.block.BlockIgniteEvent;
-import org.bukkit.event.block.BlockPistonExtendEvent;
-import org.bukkit.event.block.BlockPistonRetractEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntityChangeBlockEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityTargetEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.entity.PotionSplashEvent;
+import org.bukkit.event.block.*;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
-import org.bukkit.event.player.PlayerBucketEmptyEvent;
-import org.bukkit.event.player.PlayerBucketFillEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerPortalEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.material.Cauldron;
@@ -92,7 +54,6 @@ import org.hcgames.hcfactions.faction.system.WarzoneFaction;
 import org.hcgames.hcfactions.structure.Raidable;
 import org.hcgames.hcfactions.structure.Role;
 import org.hcgames.hcfactions.util.BukkitUtils;
-
 import org.mineacademy.fo.settings.Lang;
 
 import javax.annotation.Nullable;
@@ -148,9 +109,8 @@ public class ProtectionListener implements Listener {
     private void handleMove(PlayerMoveEvent event, PlayerClaimEnterEvent.EnterCause enterCause) {
         Location from = event.getFrom();
         Location to = event.getTo();
-        if (from.getBlockX() == to.getBlockX() && from.getBlockY() == to.getBlockY() && from.getBlockZ() == to.getBlockZ()) {
-            return;
-        }
+        if (from.getBlockX() == to.getBlockX() && from.getBlockY() == to.getBlockY() && from.getBlockZ() == to.getBlockZ())
+			return;
 
         Player player = event.getPlayer();
         boolean cancelled = false;
@@ -158,8 +118,8 @@ public class ProtectionListener implements Listener {
         Faction fromFaction = plugin.getFactionManager().getFactionAt(from);
         Faction toFaction = plugin.getFactionManager().getFactionAt(to);
 
-      /*  if (fromFaction != toFaction) {
-            if(enterCause.equals(PlayerClaimEnterEvent.EnterCause.TELEPORT) && fromFaction instanceof CapturableFaction){
+       if (fromFaction != toFaction) {
+           /* if(enterCause.equals(PlayerClaimEnterEvent.EnterCause.TELEPORT) && fromFaction instanceof CapturableFaction){
                 CapturableFaction capturableFaction = (CapturableFaction) fromFaction;
                 for (CaptureZone captureZone : capturableFaction.getCaptureZones()) {
                     Cuboid cuboid = captureZone.getCuboid();
@@ -176,12 +136,12 @@ public class ProtectionListener implements Listener {
                         }
                     }
                 }
-            }
+            }*/
 
             PlayerClaimEnterEvent calledEvent = new PlayerClaimEnterEvent(player, from, to, fromFaction, toFaction, enterCause);
             Bukkit.getPluginManager().callEvent(calledEvent);
             cancelled = calledEvent.isCancelled();
-        } else if (toFaction instanceof CapturableFaction) {
+        } /*else if (toFaction instanceof CapturableFaction) {
             CapturableFaction capturableFaction = (CapturableFaction) toFaction;
             for (CaptureZone captureZone : capturableFaction.getCaptureZones()) {
                 Cuboid cuboid = captureZone.getCuboid();
@@ -207,25 +167,22 @@ public class ProtectionListener implements Listener {
             }
         }*/
 
-        if (cancelled) {
-            if (enterCause == PlayerClaimEnterEvent.EnterCause.TELEPORT) {
-                event.setCancelled(true);
-            } else {
-                from.setX(from.getBlockX() + 0.5);
-                from.setZ(from.getBlockZ() + 0.5);
-                event.setTo(from);
-            }
-        }
+        if (cancelled) if (enterCause == PlayerClaimEnterEvent.EnterCause.TELEPORT) event.setCancelled(true);
+		else {
+			from.setX(from.getBlockX() + 0.5);
+			from.setZ(from.getBlockZ() + 0.5);
+			event.setTo(from);
+		}
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onPlayerMove(PlayerMoveEvent event) {
-        this.handleMove(event, PlayerClaimEnterEvent.EnterCause.MOVEMENT);
+        handleMove(event, PlayerClaimEnterEvent.EnterCause.MOVEMENT);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onPlayerMove(PlayerTeleportEvent event) {
-        this.handleMove(event, PlayerClaimEnterEvent.EnterCause.TELEPORT);
+        handleMove(event, PlayerClaimEnterEvent.EnterCause.TELEPORT);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
@@ -237,9 +194,7 @@ public class ProtectionListener implements Listener {
         }
 
         Faction factionAt = plugin.getFactionManager().getFactionAt(event.getBlock().getLocation());
-        if (factionAt instanceof ClaimableFaction && !(factionAt instanceof PlayerFaction)) {
-            event.setCancelled(true);
-        }
+        if (factionAt instanceof ClaimableFaction && !(factionAt instanceof PlayerFaction)) event.setCancelled(true);
     }
 
     // Original source by mFactions: https://github.com/MassiveCraft/Factions/blob/dab81ede383aeb76606daf5a3c859775e1b3778/src/com/massivecraft/factions/engine/EngineExploit.java
@@ -251,9 +206,8 @@ public class ProtectionListener implements Listener {
         Block targetBlock = block.getRelative(event.getDirection(), event.getLength() + 1);
         if (targetBlock.isEmpty() || targetBlock.isLiquid()) { // If potentially pushing into AIR/WATER/LAVA in another territory, check it out.
             Faction targetFaction = plugin.getFactionManager().getFactionAt(targetBlock.getLocation());
-            if (targetFaction instanceof Raidable && !((Raidable) targetFaction).isRaidable() && targetFaction != plugin.getFactionManager().getFactionAt(block)) {
-                event.setCancelled(true);
-            }
+            if (targetFaction instanceof Raidable && !((Raidable) targetFaction).isRaidable() && targetFaction != plugin.getFactionManager().getFactionAt(block))
+				event.setCancelled(true);
         }
     }
 
@@ -267,9 +221,8 @@ public class ProtectionListener implements Listener {
         if (!retractBlock.isEmpty() && !retractBlock.isLiquid()) {
             Block block = event.getBlock();
             Faction targetFaction = plugin.getFactionManager().getFactionAt(retractLocation);
-            if (targetFaction instanceof Raidable && !((Raidable) targetFaction).isRaidable() && targetFaction != plugin.getFactionManager().getFactionAt(block)) {
-                event.setCancelled(true);
-            }
+            if (targetFaction instanceof Raidable && !((Raidable) targetFaction).isRaidable() && targetFaction != plugin.getFactionManager().getFactionAt(block))
+				event.setCancelled(true);
         }
     }
 
@@ -277,11 +230,8 @@ public class ProtectionListener implements Listener {
     public void onBlockFromTo(BlockFromToEvent event) {
         Block fromBlock = event.getBlock();
         Material fromType = fromBlock.getType();
-        if (fromType == Material.WATER || fromType == Material.STATIONARY_WATER || fromType == Material.LAVA || fromType == Material.STATIONARY_LAVA) {
-            if (!canBuildAt(fromBlock.getLocation(), event.getToBlock().getLocation())) {
-                event.setCancelled(true);
-            }
-        }
+        if (fromType == Material.WATER || fromType == Material.STATIONARY_WATER || fromType == Material.LAVA || fromType == Material.STATIONARY_LAVA)
+			if (!canBuildAt(fromBlock.getLocation(), event.getToBlock().getLocation())) event.setCancelled(true);
     }
 
    /* This need to be in other plugin!
@@ -326,9 +276,7 @@ public class ProtectionListener implements Listener {
 
                     try{
                         Faction playerFaction = plugin.getFactionManager().getPlayerFaction(player);
-                        if (playerFaction != factionAt) {
-                            shouldCancel = true;
-                        }
+                        if (playerFaction != factionAt) shouldCancel = true;
                     } catch (NoFactionFoundException e){
                         shouldCancel = true;
                     }
@@ -347,29 +295,26 @@ public class ProtectionListener implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         CreatureSpawnEvent.SpawnReason reason = event.getSpawnReason();
-        if (reason == CreatureSpawnEvent.SpawnReason.SLIME_SPLIT) { // allow slimes to always split
-            return;
-        }
+		// allow slimes to always split
+		if (reason == CreatureSpawnEvent.SpawnReason.SLIME_SPLIT) return;
 
         Location location = event.getLocation();
         Faction factionAt = plugin.getFactionManager().getFactionAt(location);
-        if (factionAt.isSafezone() && reason == CreatureSpawnEvent.SpawnReason.SPAWNER) { // allow creatures to spawn in safe-zones by Spawner
-            return;
-        }
+		// allow creatures to spawn in safe-zones by Spawner
+		if (factionAt.isSafezone() && reason == CreatureSpawnEvent.SpawnReason.SPAWNER) return;
 
-        if (factionAt instanceof ClaimableFaction && ((!(factionAt instanceof Raidable) || !((Raidable) factionAt).isRaidable())) && event.getEntity() instanceof Monster) {
-            switch (reason) {
-                case SPAWNER:
-                case EGG:
-                case CUSTOM:
-                case BUILD_WITHER:
-                case BUILD_IRONGOLEM:
-                case BUILD_SNOWMAN:
-                    return;
-                default:
-                    event.setCancelled(true);
-            }
-        }
+        if (factionAt instanceof ClaimableFaction && ((!(factionAt instanceof Raidable) || !((Raidable) factionAt).isRaidable())) && event.getEntity() instanceof Monster)
+			switch (reason) {
+				case SPAWNER:
+				case EGG:
+				case CUSTOM:
+				case BUILD_WITHER:
+				case BUILD_IRONGOLEM:
+				case BUILD_SNOWMAN:
+					return;
+				default:
+					event.setCancelled(true);
+			}
     }
 
     // Prevents players attacking or taking damage when in safe-zone protected areas.
@@ -380,9 +325,8 @@ public class ProtectionListener implements Listener {
             Player player = (Player) entity;
             Faction playerFactionAt = plugin.getFactionManager().getFactionAt(player.getLocation());
             EntityDamageEvent.DamageCause cause = event.getCause();
-            if (playerFactionAt.isSafezone() && cause != EntityDamageEvent.DamageCause.SUICIDE && cause != EntityDamageEvent.DamageCause.VOID) {
-                event.setCancelled(true);
-            }
+            if (playerFactionAt.isSafezone() && cause != EntityDamageEvent.DamageCause.SUICIDE && cause != EntityDamageEvent.DamageCause.VOID)
+				event.setCancelled(true);
 
             Player attacker = BukkitUtils.getFinalAttacker(event, true);
             if (attacker != null) {
@@ -416,11 +360,9 @@ public class ProtectionListener implements Listener {
                                     .replace("{allyColour}", color.toString())
                                     .replace("{player}", hiddenAstrixedName));
                             attacker.sendMessage(color + hiddenAstrixedName + ChatColor.YELLOW + " is an ally.");
-                        } else {
-                            attacker.sendMessage(Lang.of("factions.protection.attack_ally")
-                                    .replace("{allyColour}", color.toString())
-                                    .replace("{player}", hiddenAstrixedName));
-                        }
+                        } else attacker.sendMessage(Lang.of("factions.protection.attack_ally")
+								.replace("{allyColour}", color.toString())
+								.replace("{player}", hiddenAstrixedName));
                     }
                 }catch (NoFactionFoundException ignored){}
             }
@@ -431,17 +373,14 @@ public class ProtectionListener implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
         Entity entity = event.getEntity();
-        if (entity instanceof Player && ((Player) entity).getFoodLevel() > event.getFoodLevel() && plugin.getFactionManager().getFactionAt(entity.getLocation()).isSafezone()) {
-            event.setCancelled(true);
-        }
+        if (entity instanceof Player && ((Player) entity).getFoodLevel() > event.getFoodLevel() && plugin.getFactionManager().getFactionAt(entity.getLocation()).isSafezone())
+			event.setCancelled(true);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onPotionSplash(PotionSplashEvent event) {
         ThrownPotion potion = event.getEntity();
-        if (!BukkitUtils.isDebuff(potion)) {
-            return;
-        }
+        if (!BukkitUtils.isDebuff(potion)) return;
 
         // Prevents potion effecting players that are in safe-zones.
         Faction factionAt = plugin.getFactionManager().getFactionAt(potion.getLocation());
@@ -454,15 +393,13 @@ public class ProtectionListener implements Listener {
         if (source instanceof Player) {
             Player player = (Player) source;
             //Allow faction members to splash damage their own, PlayerFaction playerFaction = plugin.getFactionManager().getPlayerFaction(player);
-            for (LivingEntity affected : event.getAffectedEntities()) {
-                if (affected instanceof Player && !player.equals(affected)) {
-                    Player target = (Player) affected;
-                    if (target.equals(source)) continue; // allow the source to be affected regardless
-                    if (plugin.getFactionManager().getFactionAt(target.getLocation()).isSafezone()/*Nope || playerFaction.getMembers().containsKey(other.getUniqueId())*/) {
-                        event.setIntensity(affected, 0);
-                    }
-                }
-            }
+            for (LivingEntity affected : event.getAffectedEntities())
+				if (affected instanceof Player && !player.equals(affected)) {
+					Player target = (Player) affected;
+					if (target.equals(source)) continue; // allow the source to be affected regardless
+					if (plugin.getFactionManager().getFactionAt(target.getLocation()).isSafezone()/*Nope || playerFaction.getMembers().containsKey(other.getUniqueId())*/)
+						event.setIntensity(affected, 0);
+				}
         }
     }
 
@@ -478,9 +415,8 @@ public class ProtectionListener implements Listener {
                     Faction factionAt = plugin.getFactionManager().getFactionAt(target.getLocation());
 
                     try{
-                        if (factionAt.isSafezone() || factionAt == plugin.getFactionManager().getPlayerFaction((Player) target)){
-                            event.setCancelled(true);
-                        }
+                        if (factionAt.isSafezone() || factionAt == plugin.getFactionManager().getPlayerFaction((Player) target))
+							event.setCancelled(true);
                     } catch (NoFactionFoundException ignored) {}
                 }
                 break;
@@ -491,16 +427,12 @@ public class ProtectionListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (!event.hasBlock()) {
-            return;
-        }
+        if (!event.hasBlock()) return;
 
         Block block = event.getClickedBlock();
         Action action = event.getAction();
         if (action == Action.PHYSICAL) { // Prevent players from trampling on crops or pressure plates, etc.
-            if (!attemptBuild(event.getPlayer(), block.getLocation(), null)) {
-                event.setCancelled(true);
-            }
+            if (!attemptBuild(event.getPlayer(), block.getLocation(), null)) event.setCancelled(true);
         } else if (action == Action.RIGHT_CLICK_BLOCK) {
             boolean canRightClick;
             MaterialData blockData;
@@ -511,44 +443,35 @@ public class ProtectionListener implements Listener {
             if (canRightClick) {
                 Material itemType = event.hasItem() ? event.getItem().getType() : null;
 
-                if (Material.EYE_OF_ENDER == itemType && Material.ENDER_PORTAL_FRAME == blockType && block.getData() != 4) {
-                    // If the player is right clicking an Ender Portal Frame with an Ender Portal Eye and it is empty.
-                    canRightClick = false;
+				// If the player is right clicking an Ender Portal Frame with an Ender Portal Eye and it is empty.
+				if (Material.EYE_OF_ENDER == itemType && Material.ENDER_PORTAL_FRAME == blockType && block.getData() != 4)
+					canRightClick = false;
+				else // If the player is right clicking a Cauldron that contains liquid with a Glass Bottle.
+					if (Material.GLASS_BOTTLE == itemType && (blockData = block.getState().getData()) instanceof Cauldron && !((Cauldron) blockData).isEmpty())
+						canRightClick = false;
+					else // Finally, check if this block is not blacklisted with the item the player right clicked it with.
+					if (itemType != null && ITEM_ON_BLOCK_RIGHT_CLICK_DENY.get(itemType).contains(block.getType()))
+						canRightClick = false;
+            } else // Allow workbench use in safezones.
+				if (block.getType() == Material.WORKBENCH && plugin.getFactionManager().getFactionAt(block.getLocation()).isSafezone())
+					canRightClick = true;
 
-                } else if (Material.GLASS_BOTTLE == itemType && (blockData = block.getState().getData()) instanceof Cauldron && !((Cauldron) blockData).isEmpty()) {
-                    // If the player is right clicking a Cauldron that contains liquid with a Glass Bottle.
-                    canRightClick = false;
-
-                } else if (itemType != null && ITEM_ON_BLOCK_RIGHT_CLICK_DENY.get(itemType).contains(block.getType())) {
-                    // Finally, check if this block is not blacklisted with the item the player right clicked it with.
-                    canRightClick = false;
-
-                }
-            } else if (block.getType() == Material.WORKBENCH && plugin.getFactionManager().getFactionAt(block.getLocation()).isSafezone()) {
-                // Allow workbench use in safezones.
-                canRightClick = true;
-            }
-
-            if (!canRightClick && !attemptBuild(event.getPlayer(), block.getLocation(), Lang.of("factions.protection.cannot_interact"), true)) {
-                event.setCancelled(true);
-            }
+            if (!canRightClick && !attemptBuild(event.getPlayer(), block.getLocation(), Lang.of("factions.protection.cannot_interact"), true))
+				event.setCancelled(true);
         }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBlockBurn(BlockBurnEvent event) {
         Faction factionAt = plugin.getFactionManager().getFactionAt(event.getBlock().getLocation());
-        if (factionAt instanceof WarzoneFaction || (factionAt instanceof Raidable && !((Raidable) factionAt).isRaidable())) {
-            event.setCancelled(true);
-        }
+        if (factionAt instanceof WarzoneFaction || (factionAt instanceof Raidable && !((Raidable) factionAt).isRaidable()))
+			event.setCancelled(true);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBlockFade(BlockFadeEvent event) {
         Faction factionAt = plugin.getFactionManager().getFactionAt(event.getBlock().getLocation());
-        if (factionAt instanceof ClaimableFaction && !(factionAt instanceof PlayerFaction)) {
-            event.setCancelled(true);
-        }
+        if (factionAt instanceof ClaimableFaction && !(factionAt instanceof PlayerFaction)) event.setCancelled(true);
     }
 
     /*@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
@@ -562,62 +485,52 @@ public class ProtectionListener implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBlockForm(BlockFormEvent event) {
         Faction factionAt = plugin.getFactionManager().getFactionAt(event.getBlock().getLocation());
-        if (factionAt instanceof ClaimableFaction && !(factionAt instanceof PlayerFaction)) {
-            event.setCancelled(true);
-        }
+        if (factionAt instanceof ClaimableFaction && !(factionAt instanceof PlayerFaction)) event.setCancelled(true);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onEntityChangeBlock(EntityChangeBlockEvent event) {
         Entity entity = event.getEntity();
-        if (entity instanceof LivingEntity && !attemptBuild(entity, event.getBlock().getLocation(), null)) {
-            event.setCancelled(true);
-        }
+        if (entity instanceof LivingEntity && !attemptBuild(entity, event.getBlock().getLocation(), null))
+			event.setCancelled(true);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
-        if (!attemptBuild(event.getPlayer(), event.getBlock().getLocation(), Lang.of("factions.protection.cannot_build"))) {
-            event.setCancelled(true);
-        }
+        if (!attemptBuild(event.getPlayer(), event.getBlock().getLocation(), Lang.of("factions.protection.cannot_build")))
+			event.setCancelled(true);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (!attemptBuild(event.getPlayer(), event.getBlockPlaced().getLocation(), Lang.of("factions.protection.cannot_build"), false, true)) {
-            event.setCancelled(true);
-        }
+        if (!attemptBuild(event.getPlayer(), event.getBlockPlaced().getLocation(), Lang.of("factions.protection.cannot_build"), false, true))
+			event.setCancelled(true);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBucketFill(PlayerBucketFillEvent event) {
-        if (!attemptBuild(event.getPlayer(), event.getBlockClicked().getLocation(), Lang.of("factions.protection.cannot_build"))) {
-            event.setCancelled(true);
-        }
+        if (!attemptBuild(event.getPlayer(), event.getBlockClicked().getLocation(), Lang.of("factions.protection.cannot_build")))
+			event.setCancelled(true);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBucketEmpty(PlayerBucketEmptyEvent event) {
-        if (!attemptBuild(event.getPlayer(), event.getBlockClicked().getLocation(), Lang.of("factions.protection.cannot_build"))) {
-            event.setCancelled(true);
-        }
+        if (!attemptBuild(event.getPlayer(), event.getBlockClicked().getLocation(), Lang.of("factions.protection.cannot_build")))
+			event.setCancelled(true);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onHangingBreakByEntity(HangingBreakByEntityEvent event) {
         Entity remover = event.getRemover();
-        if (remover instanceof Player) {
-            if (!attemptBuild(remover, event.getEntity().getLocation(), Lang.of("factions.protection.cannot_build"))) {
-                event.setCancelled(true);
-            }
-        }
+        if (remover instanceof Player)
+			if (!attemptBuild(remover, event.getEntity().getLocation(), Lang.of("factions.protection.cannot_build")))
+				event.setCancelled(true);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onHangingPlace(HangingPlaceEvent event) {
-        if (!attemptBuild(event.getPlayer(), event.getEntity().getLocation(), Lang.of("factions.protection.cannot_build"))) {
-            event.setCancelled(true);
-        }
+        if (!attemptBuild(event.getPlayer(), event.getEntity().getLocation(), Lang.of("factions.protection.cannot_build")))
+			event.setCancelled(true);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
@@ -626,9 +539,8 @@ public class ProtectionListener implements Listener {
         if (entered instanceof Player) {
             Vehicle vehicle = event.getVehicle();
 
-            if(vehicle instanceof Minecart){ //Allow entering minecarts in other people's claims
-                return;
-            }
+			//Allow entering minecarts in other people's claims
+			if(vehicle instanceof Minecart) return;
 
             if (!attemptBuild(event.getEntered(), vehicle.getLocation(), Lang.of("factions.protection.cannot_enter_vehicle"))) {
                 event.setCancelled(true);
@@ -651,18 +563,14 @@ public class ProtectionListener implements Listener {
     public void onVehicleDamage(VehicleDamageEvent event) {
         Player damager = null;
         Entity attacker = event.getAttacker();
-        if (attacker instanceof Player) {
-            damager = (Player) attacker;
-        } else if (attacker instanceof Projectile) {
+        if (attacker instanceof Player) damager = (Player) attacker;
+		else if (attacker instanceof Projectile) {
             ProjectileSource shooter = ((Projectile) attacker).getShooter();
-            if (shooter instanceof Player) {
-                damager = (Player) shooter;
-            }
+            if (shooter instanceof Player) damager = (Player) shooter;
         }
 
-        if (damager != null && !attemptBuild(attacker, damager.getLocation(), Lang.of("factions.protection.cannot_build"))) {
-            event.setCancelled(true);
-        }
+        if (damager != null && !attemptBuild(attacker, damager.getLocation(), Lang.of("factions.protection.cannot_build")))
+			event.setCancelled(true);
     }
 
     // Prevents items that are in Item Frames OR hanging entities (PAINTINGS, etc) being removed.
@@ -671,9 +579,8 @@ public class ProtectionListener implements Listener {
         Entity entity = event.getEntity();
         if (entity instanceof Hanging) {
             Player attacker = BukkitUtils.getFinalAttacker(event, false);
-            if (attacker != null && !attemptBuild(attacker, entity.getLocation(), Lang.of("factions.protection.cannot_build"))) {
-                event.setCancelled(true);
-            }
+            if (attacker != null && !attemptBuild(attacker, entity.getLocation(), Lang.of("factions.protection.cannot_build")))
+				event.setCancelled(true);
         }
     }
 
@@ -681,11 +588,9 @@ public class ProtectionListener implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onHangingInteractByPlayer(PlayerInteractEntityEvent event) {
         Entity entity = event.getRightClicked();
-        if (entity instanceof Hanging) {
-            if (!attemptBuild(event.getPlayer(), entity.getLocation(), Lang.of("factions.protection.cannot_build"))) {
-                event.setCancelled(true);
-            }
-        }
+        if (entity instanceof Hanging)
+			if (!attemptBuild(event.getPlayer(), entity.getLocation(), Lang.of("factions.protection.cannot_build")))
+				event.setCancelled(true);
     }
 
     /**
@@ -724,44 +629,32 @@ public class ProtectionListener implements Listener {
         HCFactions plugin = JavaPlugin.getPlugin(HCFactions.class);
 
         // Allow CREATIVE players with specified permission to bypass this protection.
-        if (player != null && player.getGameMode() == GameMode.CREATIVE && player.hasPermission(PROTECTION_BYPASS_PERMISSION)) {
-            return true;
-        }
+        if (player != null && player.getGameMode() == GameMode.CREATIVE && player.hasPermission(PROTECTION_BYPASS_PERMISSION))
+			return true;
 
         if (player != null && player.getWorld().getEnvironment() == World.Environment.THE_END) {
-            if(denyMessage != null){
-                player.sendMessage(Lang.of("factions.protection.cannot_build_end"));
-            }
+            if(denyMessage != null) player.sendMessage(Lang.of("factions.protection.cannot_build_end"));
             return false;
         }
 
         boolean result = false;
         Faction factionAt = plugin.getFactionManager().getFactionAt(location);
-        if(factionAt.getName().equalsIgnoreCase("glowstone") && location.getBlock().getType() == Material.GLOWSTONE){
-            return true;
-        }
+        if(factionAt.getName().equalsIgnoreCase("glowstone") && location.getBlock().getType() == Material.GLOWSTONE)
+			return true;
 
-        if (!(factionAt instanceof ClaimableFaction)) {
-            result = true;
-        } else if (factionAt instanceof Raidable && ((Raidable) factionAt).isRaidable()) {
-            result = true;
-        }
+        if (!(factionAt instanceof ClaimableFaction)) result = true;
+		else if (factionAt instanceof Raidable && ((Raidable) factionAt).isRaidable()) result = true;
 
-        if (player != null && factionAt instanceof PlayerFaction) {
-            try{
-                if(plugin.getFactionManager().getPlayerFaction(player) == factionAt) {
-                    result = true;
-                }
-            }catch(NoFactionFoundException ignored){}
-        }
+        if (player != null && factionAt instanceof PlayerFaction) try {
+			if (plugin.getFactionManager().getPlayerFaction(player) == factionAt) result = true;
+		} catch (NoFactionFoundException ignored) {
+		}
 
         if (result) {
             // Show this message last as the other messages look cleaner.
             if (!isInteraction && factionAt instanceof WarzoneFaction) {
                 if (denyMessage != null && player != null) {
-                    if(Math.abs(location.getX()) > 300 | Math.abs(location.getZ()) > 300){
-                        return true;
-                    }
+                    if(Math.abs(location.getX()) > 300 | Math.abs(location.getZ()) > 300) return true;
 
                     player.sendMessage(Lang.of("factions.protection.cannot_build_system_faction")
                             .replace("{faction}", factionAt.getFormattedName(player)));
@@ -769,9 +662,8 @@ public class ProtectionListener implements Listener {
 
                 return false;
             }
-        } else if (denyMessage != null && player != null) {
-            player.sendMessage(String.format(denyMessage, factionAt.getFormattedName(player)));
-        }
+        } else if (denyMessage != null && player != null)
+			player.sendMessage(String.format(denyMessage, factionAt.getFormattedName(player)));
 
         return result;
     }

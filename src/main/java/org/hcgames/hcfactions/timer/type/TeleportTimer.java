@@ -16,6 +16,7 @@ import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.manager.FactionManager;
 import org.hcgames.hcfactions.timer.PlayerTimer;
 import org.hcgames.hcfactions.timer.TimerCooldown;
+import org.hcgames.hcfactions.util.text.CC;
 import org.mineacademy.fo.settings.Lang;
 
 import javax.annotation.Nullable;
@@ -149,7 +150,7 @@ public class TeleportTimer extends PlayerTimer implements Listener{
         UUID uuid = player.getUniqueId();
         if(getRemaining(uuid) > 0L){
             clearCooldown(uuid);
-            if(reason != null && !reason.isEmpty()) player.sendMessage(reason);
+            if(reason != null && !reason.isEmpty()) player.sendMessage(CC.translate(reason));
         }
     }
 

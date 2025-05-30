@@ -80,7 +80,7 @@ public final class FactionHomeCommand extends FactionSubCommand {
 
 			return;
 		}
-		TimerAPI.callHome(player, playerFaction);
+		TimerAPI.callHome(player, playerFaction, getLabel());
 	/**
 	 * This need to be moved to Core Plugin, tomorrow.
 	 *  Faction factionAt = plugin.getFactionManager().getFactionAt(player.getLocation());

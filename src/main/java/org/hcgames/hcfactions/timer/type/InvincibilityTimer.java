@@ -39,6 +39,7 @@ import org.hcgames.hcfactions.timer.TimerCooldown;
 import org.hcgames.hcfactions.timer.event.TimerClearEvent;
 import org.hcgames.hcfactions.util.BukkitUtils;
 import org.hcgames.hcfactions.util.DurationFormatter;
+import org.hcgames.hcfactions.util.text.CC;
 import org.hcgames.hcfactions.visualise.VisualType;
 import org.mineacademy.fo.settings.Lang;
 
@@ -111,8 +112,8 @@ public class InvincibilityTimer extends PlayerTimer implements Listener{
                 location = BukkitUtils.getHighestLocation(location, location);
                 for(Player player : players)
 					if (getRemaining(player) > 0L && player.teleport(location, PlayerTeleportEvent.TeleportCause.PLUGIN))
-						player.sendMessage(Lang.of("Timer-Invincibility-LandClaimedTeleported")
-								.replace("{timerName}", getDisplayName()));
+						player.sendMessage(CC.translate(Lang.of("Timer-Invincibility-LandClaimedTeleported")
+                                .replace("{timerName}", getDisplayName())));
             }
         }
     }
@@ -122,8 +123,8 @@ public class InvincibilityTimer extends PlayerTimer implements Listener{
         Player player = event.getPlayer();
         if(setCooldown(player, player.getUniqueId(), defaultCooldown, true)){
             setPaused(player.getUniqueId(), true);
-            player.sendMessage(Lang.of("Timer-Invincibility-TimerStartedRespawn")
-                    .replace("{timerName}", getDisplayName()));
+            player.sendMessage(CC.translate(Lang.of("Timer-Invincibility-TimerStartedRespawn")
+                    .replace("{timerName}", getDisplayName())));
         }
     }
 
@@ -154,9 +155,9 @@ public class InvincibilityTimer extends PlayerTimer implements Listener{
         long remaining = getRemaining(player);
         if(remaining > 0L){
             event.setCancelled(true);
-            player.sendMessage(Lang.of("Timer-Invincibility-EmptyBucketNotAllowed")
+            player.sendMessage(CC.translate(Lang.of("Timer-Invincibility-EmptyBucketNotAllowed")
                     .replace("{timeLeft}", DurationFormatter.getRemaining(remaining, true, false))
-                    .replace("{timerName}", getDisplayName()));
+                    .replace("{timerName}", getDisplayName())));
         }
     }
 
@@ -167,9 +168,9 @@ public class InvincibilityTimer extends PlayerTimer implements Listener{
         long remaining = getRemaining(player);
         if(remaining > 0L){
             event.setCancelled(true);
-            player.sendMessage(Lang.of("Timer-Invincibility-IgniteBlocksNotAllowed")
+            player.sendMessage(CC.translate(Lang.of("Timer-Invincibility-IgniteBlocksNotAllowed")
                     .replace("{timeLeft}", DurationFormatter.getRemaining(remaining, true, false))
-                    .replace("{timerName}", getDisplayName()));
+                    .replace("{timerName}", getDisplayName())));
         }
     }
 
@@ -195,9 +196,9 @@ public class InvincibilityTimer extends PlayerTimer implements Listener{
             MetadataValue value = player.getMetadata(ITEM_PICKUP_MESSAGE_META_KEY).isEmpty() ? null : player.getMetadata(ITEM_PICKUP_MESSAGE_META_KEY).get(0);
             if(value != null && value.asLong() - millis <= 0L){
                 player.setMetadata(ITEM_PICKUP_MESSAGE_META_KEY, new FixedMetadataValue(plugin, millis + ITEM_PICKUP_MESSAGE_DELAY));
-                player.sendMessage(Lang.of("Timer-Invincibility-PickupNotAllowed")
+                player.sendMessage(CC.translate(Lang.of("Timer-Invincibility-PickupNotAllowed")
                         .replace("{timeLeft}", DurationFormatter.getRemaining(remaining, true, false))
-                        .replace("{timerName}", getDisplayName()));
+                        .replace("{timerName}", getDisplayName())));
             }
         }
     }
@@ -216,8 +217,8 @@ public class InvincibilityTimer extends PlayerTimer implements Listener{
 		if(!player.hasPlayedBefore()){
             if(canApply() && setCooldown(player, player.getUniqueId(), defaultCooldown, true)){
                 setPaused(player.getUniqueId(), true);
-                player.sendMessage(Lang.of("Timer-Invincibility-TimerStartedSpawn")
-                        .replace("{timerName}", getDisplayName()));
+                player.sendMessage(CC.translate(Lang.of("Timer-Invincibility-TimerStartedSpawn")
+                        .replace("{timerName}", getDisplayName())));
             }
         }else if (isPaused(player) && getRemaining(player) > 0L && !FactionsAPI.getFactionAt(player.getLocation()).isSafezone())
 			setPaused(player.getUniqueId(), false);
@@ -241,8 +242,8 @@ public class InvincibilityTimer extends PlayerTimer implements Listener{
 			// Allow player to enter own claim, but just remove PVP Protection when teleporting.
 			if(event.getEnterCause() == PlayerClaimEnterEvent.EnterCause.TELEPORT)
 				if (toFaction instanceof PlayerFaction && (FactionsAPI.hasFaction(player) && FactionsAPI.getPlayerFaction(player) == toFaction)) {
-					player.sendMessage(Lang.of("Timer-Invincibility-EnterOwnClaim")
-							.replace("{timerName}", getDisplayName()));
+					player.sendMessage(CC.translate(Lang.of("Timer-Invincibility-EnterOwnClaim")
+							.replace("{timerName}", getDisplayName())));
 					clearCooldown(player);
 				}
         }
@@ -256,11 +257,11 @@ public class InvincibilityTimer extends PlayerTimer implements Listener{
         if(toFaction != null && (remaining = getRemaining(player)) > 0L)
 			if (!toFaction.isSafezone() && !(toFaction instanceof RoadFaction) && !(toFaction instanceof WarzoneFaction) && !(toFaction instanceof WildernessFaction)) {
 				event.setCancelled(true);
-				player.sendMessage(Lang.of("Timer-Invincibility-CannotEnterFactionLand")
-						.replace("{timeLeft}", DurationFormatter.getRemaining(remaining, true, false))
-						.replace("{factionName}", toFaction.getFormattedName(player))
-						.replace("{pvpCommand}", PVP_COMMAND)
-						.replace("{timerName}", getDisplayName()));
+				player.sendMessage(CC.translate(Lang.of("Timer-Invincibility-CannotEnterFactionLand")
+                        .replace("{timeLeft}", DurationFormatter.getRemaining(remaining, true, false))
+                        .replace("{factionName}", toFaction.getFormattedName(player))
+                        .replace("{pvpCommand}", PVP_COMMAND)
+                        .replace("{timerName}", getDisplayName())));
 			}
     }
 
@@ -286,20 +287,20 @@ public class InvincibilityTimer extends PlayerTimer implements Listener{
             Player player = (Player) entity;
             if((remaining = getRemaining(player)) > 0L){
                 event.setCancelled(true);
-                attacker.sendMessage(Lang.of("Events-PVP-TimerRunning")
+                attacker.sendMessage(CC.translate(Lang.of("Events-PVP-TimerRunning")
                         .replace("{player}", player.getName())
                         .replace("{pvpTimerName}", getDisplayName())
-                        .replace("{pvpTimerTimeRemaining}", DurationFormatter.getRemaining(remaining, true, false)));
+                        .replace("{pvpTimerTimeRemaining}", DurationFormatter.getRemaining(remaining, true, false))));
 
                 return;
             }
 
             if((remaining = getRemaining(attacker)) > 0L){
                 event.setCancelled(true);
-                attacker.sendMessage(Lang.of("Timer-Invincibility-CannotAttackPlayers")
+                attacker.sendMessage(CC.translate(Lang.of("Timer-Invincibility-CannotAttackPlayers")
                         .replace("{timeLeft}", DurationFormatter.getRemaining(remaining, true, false))
                         .replace("{pvpCommand}", PVP_COMMAND)
-                        .replace("{timerName}", getDisplayName()));
+                        .replace("{timerName}", getDisplayName())));
             }
         }
     }

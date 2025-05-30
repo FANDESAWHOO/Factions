@@ -26,13 +26,13 @@ public final class FactionForceDemoteArgument extends FactionSubCommand {
 
     @Override
 	public String getUsage(){
-        return Lang.of("commands.staff.forcedemote.usage", label, getName());
+        return Lang.of("Commands.staff.forcedemote.usage", label, getName());
     }
 
     @Override
     public void onCommand() {
         if (args.length < 2) {
-            Lang.of("commands.error.usage", getUsage());
+            Lang.of("Commands.error.usage", getUsage());
             return;
         }
 
@@ -48,17 +48,17 @@ public final class FactionForceDemoteArgument extends FactionSubCommand {
 					}
 
                 if (member == null) {
-                    tell(Lang.of("commands.error.member_not_found", args[1]));
+                    tell(Lang.of("Commands.error.member_not_found", args[1]));
                     return;
                 }
 
                 if (member.getRole() == Role.LEADER) {
-                    tell(Lang.of("command.staff.forcedemote.leader_demote", member.getCachedName()));
+                    tell(Lang.of("Command.staff.forcedemote.leader_demote", member.getCachedName()));
                     return;
                 }
 
                 if(member.getRole() == Role.LEADER){
-                    tell(Lang.of("command.staff.forcedemote.user_demote", member.getCachedName()));
+                    tell(Lang.of("Command.staff.forcedemote.user_demote", member.getCachedName()));
                     return;
                 }
 
@@ -70,12 +70,12 @@ public final class FactionForceDemoteArgument extends FactionSubCommand {
 				else newRole = Role.MEMBER;
 
                 member.setRole(newRole);
-                faction.broadcast(Lang.of("commands.staff.forcedemote.demote_broadcast", member.getCachedName(), newRole.getName()));
+                faction.broadcast(Lang.of("Commands.staff.forcedemote.demote_broadcast", member.getCachedName(), newRole.getName()));
             }
 
             @Override
             public void onFail(FailReason reason) {
-                tell(Lang.of("commands.error.faction_not_found", args[1]));
+                tell(Lang.of("Commands.error.faction_not_found", args[1]));
             }
         });
         return;

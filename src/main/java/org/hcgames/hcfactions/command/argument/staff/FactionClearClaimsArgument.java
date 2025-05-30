@@ -42,7 +42,7 @@ public final class FactionClearClaimsArgument extends FactionSubCommand {
     
     @Override
 	public String getUsage() {
-        return Lang.of("commands.staff.clearclaims.usage", label, getName());
+        return Lang.of("Commands.staff.clearclaims.usage", label, getName());
     }
 
     @Override
@@ -54,7 +54,7 @@ public final class FactionClearClaimsArgument extends FactionSubCommand {
 
         if (args[1].equalsIgnoreCase("all")) {
             if (!(sender instanceof ConsoleCommandSender)) {
-                tell(Lang.of("commands.error.console_only"));
+                tell(Lang.of("Commands.error.console_only"));
                 return;
             }
 
@@ -68,13 +68,13 @@ public final class FactionClearClaimsArgument extends FactionSubCommand {
             public void onSuccess(ClaimableFaction claimableFaction) {
                 claimableFaction.removeClaims(claimableFaction.getClaims(), sender);
                 if (claimableFaction instanceof PlayerFaction)
-					((PlayerFaction) claimableFaction).broadcast(Lang.of("commands.staff.clearclaims.cleared_faction_broadcast", sender.getName()));
-                tell(Lang.of("commands.staff.clearclaims.cleared", claimableFaction.getName()));
+					((PlayerFaction) claimableFaction).broadcast(Lang.of("Commands.staff.clearclaims.cleared_faction_broadcast", sender.getName()));
+                tell(Lang.of("Commands.staff.clearclaims.cleared", claimableFaction.getName()));
             }
 
             @Override
             public void onFail(FailReason reason) {
-                tell(Lang.of("commands.error.faction_not_found", args[1]));
+                tell(Lang.of("Commands.error.faction_not_found", args[1]));
             }
         });
         return;
@@ -104,7 +104,7 @@ public final class FactionClearClaimsArgument extends FactionSubCommand {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return Lang.of("commands.staff.clearclaims.console_prompt.prompt");
+            return Lang.of("Commands.staff.clearclaims.console_prompt.prompt");
         }
 
         @Override
@@ -118,17 +118,17 @@ public final class FactionClearClaimsArgument extends FactionSubCommand {
 						}
 
                     Conversable conversable = context.getForWhom();
-                    plugin.getServer().broadcastMessage(Lang.of("commands.staff.clearclaims.console_prompt.cleared",
+                    plugin.getServer().broadcastMessage(Lang.of("Commands.staff.clearclaims.console_prompt.cleared",
                             (conversable instanceof CommandSender ? " by " + ((CommandSender) conversable).getName() : "")));
 
                     return Prompt.END_OF_CONVERSATION;
                 }
                 case "no": {
-                    context.getForWhom().sendRawMessage(Lang.of("commands.staff.clearclaims.console_prompt.cancelled"));
+                    context.getForWhom().sendRawMessage(Lang.of("Commands.staff.clearclaims.console_prompt.cancelled"));
                     return Prompt.END_OF_CONVERSATION;
                 }
                 default: {
-                    context.getForWhom().sendRawMessage(Lang.of("commands.staff.clearclaims.console_prompt.cancelled_unknown"));
+                    context.getForWhom().sendRawMessage(Lang.of("Commands.staff.clearclaims.console_prompt.cancelled_unknown"));
                     return Prompt.END_OF_CONVERSATION;
                 }
             }

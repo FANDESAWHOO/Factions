@@ -31,7 +31,7 @@ public final class FactionCreateSystemArgument extends FactionSubCommand {
 	@Override
 	public void onCommand() {
 		if (args.length < 2) {
-            tell(Lang.of("command.error.usage", getUsage()));
+            tell(Lang.of("Command.error.usage", getUsage()));
             return;
         }
 	    String name = args[1];

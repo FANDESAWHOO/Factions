@@ -72,6 +72,8 @@ public final class Configuration extends SimpleSettings {
     public static String database;
     public static String username;
     public static String password;
+    // API
+    public static Boolean api;
 
 
     public static Boolean mongo;
@@ -146,5 +148,7 @@ public final class Configuration extends SimpleSettings {
 
         preventAllyAttackDamage = getBoolean("preventAllyAttackDamage");
         messageDebug = getBoolean("messageDebug");
+
+        api = getBoolean("API.our");
     }
 }

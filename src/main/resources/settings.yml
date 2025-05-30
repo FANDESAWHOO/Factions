@@ -29,15 +29,6 @@
 #    PS: Everything above applies for all files in ${project.name}/ folder.
 #
 # !-----------------------------------------------------------------------------------------------!
-
-# -------------------------------------------------------------------------------------------------
-# Example of a section
-# -------------------------------------------------------------------------------------------------
-Example:
-
-  # An example of a config key
-  Sample_Flag: true
-
 # -------------------------------------------------------------------------------------------------
 # The formats used in the {date}, {date_short}, {date_month} and {location}. 
 #
@@ -153,3 +144,6 @@ mongo:
   username: "uyiynvbaeurstqdxiuv3"
   password: "rmpqalpSJnlVDhf0LfLW"
 kit-map: false
+API:
+  # SHOULD USE OUR SYSTEMS (LISTENERS & TIMERS & OTHERS)
+  our: true

@@ -113,6 +113,8 @@ public class HCFactions extends SimplePlugin {
         registerEvents(new SignSubclaimListener(this));
         registerEvents(new ProtectionListener(this));
         registerEvents(new FactionChatListener(this));
+        if(Configuration.api)
+            registerEvents(new FactionListener());
     }
 
 
@@ -128,7 +130,8 @@ public class HCFactions extends SimplePlugin {
         } else factionManager = new FlatFileFactionManager(this);
 
 		getLogger().info("FactionManager initialized successfully.");
-    	timerManager = new TimerManager(this);
+        if(Configuration.api)
+    	    timerManager = new TimerManager(this);
 		claimHandler = new ClaimHandler(this);
         worldEdit = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
         Plugin statsPlugin = getServer().getPluginManager().getPlugin("Stats");

@@ -3,10 +3,9 @@ package org.hcgames.hcfactions.command.subcommand;
 
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.api.FactionsAPI;
+import org.hcgames.hcfactions.api.TimerAPI;
 import org.hcgames.hcfactions.command.FactionSubCommand;
-import org.hcgames.hcfactions.timer.type.StuckTimer;
-import org.hcgames.hcfactions.util.DurationFormatter;
 import org.mineacademy.fo.settings.Lang;
 
 /**
@@ -44,7 +43,8 @@ public final class FactionStuckCommand extends FactionSubCommand {
             //tell(ChatColor.RED + "You can only use this command from the overworld.");
             return;
         }
-
+        TimerAPI.callStuck(player, FactionsAPI.getPlayerFaction(player), getLabel());
+       /** MOVED TO TIMERS API.
         StuckTimer stuckTimer = HCFactions.getInstance().getTimerManager().getStuckTimer();
 
         if (!stuckTimer.setCooldown(player, player.getUniqueId())) {
@@ -56,7 +56,7 @@ public final class FactionStuckCommand extends FactionSubCommand {
 
         tell(Lang.of("Commands-Factions-Stuck-Teleporting")
                 .replace("{time}", DurationFormatter.getRemaining(stuckTimer.getRemaining(player), true, false))
-                .replace("{maxBlocksDistance}", String.valueOf(StuckTimer.MAX_MOVE_DISTANCE)));
+                .replace("{maxBlocksDistance}", String.valueOf(StuckTimer.MAX_MOVE_DISTANCE)));*/
         //tell(ChatColor.YELLOW + stuckTimer.getName() + ChatColor.YELLOW + " timer has started. " +
         //        "Teleport will occur in " + ChatColor.AQUA + DurationFormatter.getRemaining(stuckTimer.getRemaining(player), true, false) + ChatColor.YELLOW + ". " +
         //        "This will cancel if you move more than " + StuckTimer.MAX_MOVE_DISTANCE + " blocks.");
