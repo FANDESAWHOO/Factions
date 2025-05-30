@@ -2,7 +2,7 @@ name: HCFactions
 version: 1.0
 authors: [SystemUpdate, DoctorDark]
 main: org.hcgames.hcfactions.HCFactions
-depend: [WorldEdit]
+depend: [WorldEdit, Vault]
 commands:
 
 

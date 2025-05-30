@@ -1,4 +1,4 @@
-package org.hcgames.hcfactions.event.timer;
+package org.hcgames.hcfactions.api.events;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,8 +7,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.hcgames.hcfactions.api.enums.TimerTypes;
 import org.hcgames.hcfactions.faction.PlayerFaction;
-import org.hcgames.hcfactions.timer.TimerTypes;
 
 @AllArgsConstructor
 @Getter

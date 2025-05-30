@@ -12,7 +12,6 @@ import org.mineacademy.fo.settings.Lang;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 public final class FactionDepositCommand extends FactionSubCommand {
 	private final HCFactions plugin;
@@ -44,8 +43,8 @@ public final class FactionDepositCommand extends FactionSubCommand {
 			return;
 		}
 
-		UUID uuid = player.getUniqueId();
-		Integer playerBalance = EconomyAPI.getBalance(uuid).intValue();
+		// UNUSED NOW UUID uuid = player.getUniqueId();
+		Integer playerBalance = EconomyAPI.getBalance(player).intValue();
 
 		Integer amount;
 		if (args[1].equalsIgnoreCase("all")) amount = playerBalance;
@@ -68,7 +67,7 @@ public final class FactionDepositCommand extends FactionSubCommand {
 			return;
 		}
 
-		EconomyAPI.subtractBalance(uuid, amount);
+		EconomyAPI.subtractBalance(player, amount);
 
 		playerFaction.setBalance(playerFaction.getBalance() + amount);
 		playerFaction.broadcast(Lang.of("Commands-Factions-Deposit-BroadcastDeposit")

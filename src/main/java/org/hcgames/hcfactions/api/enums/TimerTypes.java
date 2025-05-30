@@ -1,4 +1,4 @@
-package org.hcgames.hcfactions.timer;
+package org.hcgames.hcfactions.api.enums;
 
 public enum TimerTypes {
 	COMBAT,

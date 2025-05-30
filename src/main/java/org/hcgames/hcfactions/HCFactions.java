@@ -4,8 +4,12 @@ package org.hcgames.hcfactions;
 import com.google.common.base.Joiner;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import lombok.Getter;
+import net.milkbowl.vault.chat.Chat;
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.hcgames.hcfactions.claim.Claim;
 import org.hcgames.hcfactions.claim.ClaimHandler;
 import org.hcgames.hcfactions.faction.ClaimableFaction;
@@ -38,6 +42,10 @@ public class HCFactions extends SimplePlugin {
     private ItemDb itemDb;
     public static final Joiner SPACE_JOINER = Joiner.on(' ');
   //  public static final Joiner COMMA_JOINER = Joiner.on(", ");
+    private Economy econ = null;
+    private Permission perms = null;
+    private Chat chat = null;
+
     private MongoManager mongoManager;
     private WorldEditPlugin worldEdit;
     private FactionManager factionManager;
@@ -83,7 +91,9 @@ public class HCFactions extends SimplePlugin {
     public void onPluginStart() {
         registerManagers();
         registerListeners();
-
+        setupChat();
+        setupEconomy();
+        setupPermissions();
         getLogger().info("HCFactions has been enabled successfully!");
 
         getServer().getScheduler().runTaskTimerAsynchronously(this, this::saveData, (60 * 20) * 5, (60 * 20) * 5);
@@ -117,8 +127,6 @@ public class HCFactions extends SimplePlugin {
             registerEvents(new FactionListener());
     }
 
-
-
     private void registerManagers() {
 
         itemDb = new SimpleItemDb(this);
@@ -129,10 +137,10 @@ public class HCFactions extends SimplePlugin {
             factionManager = new MongoFactionManager(this);
         } else factionManager = new FlatFileFactionManager(this);
 
-		getLogger().info("FactionManager initialized successfully.");
+        getLogger().info("FactionManager initialized successfully.");
         if(Configuration.api)
-    	    timerManager = new TimerManager(this);
-		claimHandler = new ClaimHandler(this);
+            timerManager = new TimerManager(this);
+        claimHandler = new ClaimHandler(this);
         worldEdit = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
         Plugin statsPlugin = getServer().getPluginManager().getPlugin("Stats");
         if (statsPlugin instanceof Stats) stats = (Stats) statsPlugin;
@@ -141,5 +149,23 @@ public class HCFactions extends SimplePlugin {
     public static HCFactions getInstance() {
         return (HCFactions) SimplePlugin.getInstance();
     }
+    private boolean setupEconomy() {
+        if (getServer().getPluginManager().getPlugin("Vault") == null) return false;
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) return false;
+        econ = rsp.getProvider();
+        return econ != null;
+    }
 
+    private boolean setupChat() {
+        RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
+        chat = rsp.getProvider();
+        return chat != null;
+    }
+
+    private boolean setupPermissions() {
+        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+        perms = rsp.getProvider();
+        return perms != null;
+    }
 }

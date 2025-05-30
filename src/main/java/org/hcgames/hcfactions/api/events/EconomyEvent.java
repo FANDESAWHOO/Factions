@@ -1,4 +1,4 @@
-package org.hcgames.hcfactions.event.timer;
+package org.hcgames.hcfactions.api.events;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,16 +7,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.hcgames.hcfactions.faction.PlayerFaction;
+import org.hcgames.hcfactions.api.enums.EconomyTypes;
+
 @AllArgsConstructor
 @Getter
 @Setter
-public class HomeEvent extends Event implements Cancellable {
+public class EconomyEvent extends Event implements Cancellable {
+
 
 	private static final HandlerList handlers = new HandlerList();
 	private boolean cancelled;
-	private final Player player;
-	private final PlayerFaction faction;
+	private final Player id;
+	private final int amount;
+	private final EconomyTypes timer;
 
 
 	@Override
@@ -32,4 +35,5 @@ public class HomeEvent extends Event implements Cancellable {
 	public HandlerList getHandlers() {
 		return handlers;
 	}
+
 }

@@ -89,7 +89,7 @@ public final class FactionWithdrawCommand extends FactionSubCommand {
             return;
         }
 
-        EconomyAPI.addBalance(uuid, amount);
+        EconomyAPI.addBalance(player, amount);
         playerFaction.setBalance(factionBalance - amount);
         playerFaction.broadcast(Lang.of("Commands-Factions-Withdraw-Broadcast")
                 .replace("{player}", factionMember.getRole().getAstrix() + sender.getName())
