@@ -26,7 +26,7 @@ public final class FactionRemoveArgument extends FactionSubCommand {
     private final HCFactions plugin;
 
     public FactionRemoveArgument() {
-        super("remove | delete | forcedisband | forceremove");
+        super("remove|delete|forcedisband|forceremove");
         setDescription( "Remove a faction.");
         plugin = HCFactions.getInstance();
        // this.aliases = new String[]{"delete", "forcedisband", "forceremove"};
@@ -48,13 +48,13 @@ public final class FactionRemoveArgument extends FactionSubCommand {
     @Override
     public void onCommand() {
         if (args.length < 2) {
-            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
+            tell(ChatColor.RED + "Usage: " + getUsage());
             return;
         }
 
         if (args[1].equalsIgnoreCase("all")) {
             if (!(sender instanceof ConsoleCommandSender)) {
-                sender.sendMessage(ChatColor.RED + "This command can be only executed from console.");
+                tell(ChatColor.RED + "This command can be only executed from console.");
                 return;
             }
 
@@ -72,7 +72,7 @@ public final class FactionRemoveArgument extends FactionSubCommand {
 
             @Override
             public void onFail(FailReason reason) {
-                sender.sendMessage(Lang.of("commands.error.faction_not_found", args[1]));
+                tell(Lang.of("commands.error.faction_not_found", args[1]));
             }
         });
 

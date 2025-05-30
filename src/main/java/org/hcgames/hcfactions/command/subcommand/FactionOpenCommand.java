@@ -28,21 +28,19 @@ public final class FactionOpenCommand extends FactionSubCommand {
 
 	    @Override
 	    public void onCommand() {
-	        checkConsole();
-
 	        Player player = (Player) sender;
 	        PlayerFaction playerFaction = null;
 	        try {
 	            playerFaction = plugin.getFactionManager().getPlayerFaction(player);
 	        } catch (NoFactionFoundException e) {
-	            sender.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
+	            tell(Lang.of("Commands-Factions-Global-NotInFaction"));
 	            return;
 	        }
 
 	        FactionMember factionMember = playerFaction.getMember(player.getUniqueId());
 
 	        if (factionMember.getRole() != Role.LEADER) {
-	            sender.sendMessage(Lang.of("Commands-Factions-Open-LeaderRequired"));
+	            tell(Lang.of("Commands-Factions-Open-LeaderRequired"));
 	            return;
 	        }
 

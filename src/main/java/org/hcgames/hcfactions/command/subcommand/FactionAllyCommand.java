@@ -24,7 +24,7 @@ public final class FactionAllyCommand extends FactionSubCommand {
 	private final HCFactions plugin;
 
 	public FactionAllyCommand() {
-		super("ally | alliance");
+		super("ally|alliance");
 		setDescription("Make an ally pact with other factions.");
 		plugin = HCFactions.getInstance();
 
@@ -37,18 +37,13 @@ public final class FactionAllyCommand extends FactionSubCommand {
 
 	@Override
 	public void onCommand() {
-		if (!(sender instanceof Player)) {
-			sender.sendMessage(Lang.of("Commands-ConsoleOnly"));
-			return;
-		}
-
 		if (Configuration.factionMaxAllies <= 0) {
-			sender.sendMessage(Lang.of("Commands-Factions-Ally-AlliesDisabled"));
+			tell(Lang.of("Commands-Factions-Ally-AlliesDisabled"));
 			return;
 		}
 
 		if (args.length < 2) {
-			sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
+			tell(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
 			return;
 		}
 
@@ -57,12 +52,12 @@ public final class FactionAllyCommand extends FactionSubCommand {
 		try {
 			playerFaction = plugin.getFactionManager().getPlayerFaction(player);
 		} catch (NoFactionFoundException e) {
-			sender.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
+			tell(Lang.of("Commands-Factions-Global-NotInFaction"));
 			return;
 		}
 
 		if (playerFaction.getMember(player.getUniqueId()).getRole() == Role.MEMBER) {
-			sender.sendMessage(Lang.of("Commands-Factions-Ally-OfficerRequired"));
+			tell(Lang.of("Commands-Factions-Ally-OfficerRequired"));
 			return;
 		}
 
@@ -70,19 +65,19 @@ public final class FactionAllyCommand extends FactionSubCommand {
 			@Override
 			public void onSuccess(PlayerFaction faction) {
 				if (playerFaction == faction) {
-					sender.sendMessage(Lang.of("Commands-Factions-Ally-RequestingOwnFaction").replace("{relationName}", RELATION.getDisplayName()));
+					tell(Lang.of("Commands-Factions-Ally-RequestingOwnFaction").replace("{relationName}", RELATION.getDisplayName()));
 					return;
 				}
 
 				Collection<UUID> allied = playerFaction.getAllied();
 
 				if (allied.size() >= Configuration.factionMaxAllies) {
-					sender.sendMessage(Lang.of("Commands-Factions-Ally-OwnFactionLimitReached").replace("{allyLimit}", String.valueOf(Configuration.factionMaxAllies)));
+					tell(Lang.of("Commands-Factions-Ally-OwnFactionLimitReached").replace("{allyLimit}", String.valueOf(Configuration.factionMaxAllies)));
 					return;
 				}
 
 				if (faction.getAllied().size() >= Configuration.factionMaxAllies) {
-					sender.sendMessage(Lang.of("Commands-Factions-Ally-OtherFactionLimitReached")
+					tell(Lang.of("Commands-Factions-Ally-OtherFactionLimitReached")
 							.replace("{allyLimit}", String.valueOf(Configuration.factionMaxAllies))
 							.replace("{otherFactionName}", faction.getFormattedName(sender)));
 
@@ -90,7 +85,7 @@ public final class FactionAllyCommand extends FactionSubCommand {
 				}
 
 				if (allied.contains(faction.getUniqueID())) {
-					sender.sendMessage(Lang.of("Commands-Factions-Ally-RequestingOwnFaction")
+					tell(Lang.of("Commands-Factions-Ally-RequestingOwnFaction")
 							.replace("{relationName}", RELATION.getDisplayName())
 							.replace("{otherFactionName}", faction.getFormattedName(playerFaction)));
 
@@ -116,7 +111,7 @@ public final class FactionAllyCommand extends FactionSubCommand {
 				}
 
 				if (playerFaction.getRequestedRelations().putIfAbsent(faction.getUniqueID(), RELATION) != null) {
-					sender.sendMessage(Lang.of("Commands-Factions-Ally-AlreadyRequested")
+					tell(Lang.of("Commands-Factions-Ally-AlreadyRequested")
 							.replace("{relationName}", RELATION.getDisplayName())
 							.replace("{otherFactionName}", faction.getFormattedName(playerFaction)));
 
@@ -136,7 +131,7 @@ public final class FactionAllyCommand extends FactionSubCommand {
 
 			@Override
 			public void onFail(FailReason reason) {
-				sender.sendMessage(Lang.of("commands.error.faction_not_found", args[1]));
+				tell(Lang.of("commands.error.faction_not_found", args[1]));
 			}
 		});
 

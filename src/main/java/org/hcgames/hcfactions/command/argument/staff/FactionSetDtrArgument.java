@@ -24,7 +24,7 @@ public final class FactionSetDtrArgument extends FactionSubCommand {
     private final HCFactions plugin;
 
     public FactionSetDtrArgument() {
-        super("setdtr | dtr");
+        super("setdtr|dtr");
         setDescription("Sets the DTR of a faction.");
         plugin = HCFactions.getInstance();
     //    this.permission = "hcf.command.faction.argument." + getName();
@@ -39,20 +39,20 @@ public final class FactionSetDtrArgument extends FactionSubCommand {
     @Override
     public void onCommand() {
         if (args.length < 3) {
-            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
+            tell(ChatColor.RED + "Usage: " + getUsage());
             return;
         }
 
         Double[] newDTR = {JavaUtils.tryParseDouble(args[2])};
 
         if (newDTR[0] == null) {
-            sender.sendMessage(ChatColor.RED + "'" + args[2] + "' is not a valid number.");
+            tell(ChatColor.RED + "'" + args[2] + "' is not a valid number.");
             return;
         }
 
         if(sender instanceof Player)
 			if (newDTR[0] <= 0 && !sender.hasPermission("hcf.command.faction.argument." + getName() + ".raidable")) {
-				sender.sendMessage("You don't have permission to make factions raidable.");
+				tell("You don't have permission to make factions raidable.");
 				return;
 			}
 
@@ -78,7 +78,7 @@ public final class FactionSetDtrArgument extends FactionSubCommand {
 
             @Override
             public void onFail(FailReason reason) {
-                sender.sendMessage(Lang.of("commands.error.faction_not_found", args[1]));
+                tell(Lang.of("commands.error.faction_not_found", args[1]));
             }
         });
 

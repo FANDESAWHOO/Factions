@@ -20,7 +20,7 @@ public final class FactionShowCommand extends FactionSubCommand {
     private final HCFactions plugin;
 
     public FactionShowCommand() {
-        super("show | i | info | who");
+        super("show|i|info|who");
         setDescription("Get details about a faction.");
         plugin = HCFactions.getInstance();
 
@@ -39,19 +39,19 @@ public final class FactionShowCommand extends FactionSubCommand {
 
         if (args.length < 2) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
+                tell(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
                 return;
             }
 
             try {
                 namedFaction = plugin.getFactionManager().getPlayerFaction((Player) sender);
             } catch (NoFactionFoundException e) {
-                sender.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
+                tell(Lang.of("Commands-Factions-Global-NotInFaction"));
                 return;
             }
 
             if (namedFaction == null) {
-                sender.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
+                tell(Lang.of("Commands-Factions-Global-NotInFaction"));
                 return;
             }
 
@@ -73,7 +73,7 @@ public final class FactionShowCommand extends FactionSubCommand {
                 @Override
                 public void onFail(FailReason reason) {
                     if(finalNamedFaction == null)
-						sender.sendMessage(Lang.of("commands.error.faction_not_found", args[1]));
+						tell(Lang.of("commands.error.faction_not_found", args[1]));
                 }
             }, true);
 

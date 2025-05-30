@@ -1,6 +1,5 @@
 package org.hcgames.hcfactions.command.subcommand;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.command.FactionSubCommand;
@@ -16,7 +15,7 @@ public final class FactionMessageCommand extends FactionSubCommand {
     private final HCFactions plugin;
 
     public FactionMessageCommand() {
-        super("message | msg");
+        super("message|msg");
         setDescription("Sends a message to your faction.");
         plugin = HCFactions.getInstance();
     }
@@ -29,13 +28,8 @@ public final class FactionMessageCommand extends FactionSubCommand {
 
     @Override
     public void onCommand() {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "Only players can use faction chat.");
-            return;
-        }
-
         if (args.length < 2) {
-            sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
+            tell(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
             return;
         }
 
@@ -44,7 +38,7 @@ public final class FactionMessageCommand extends FactionSubCommand {
         try {
             playerFaction = plugin.getFactionManager().getPlayerFaction(player);
         } catch (NoFactionFoundException e) {
-            sender.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
+            tell(Lang.of("Commands-Factions-Global-NotInFaction"));
             return;
         }
 

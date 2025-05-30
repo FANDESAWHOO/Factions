@@ -41,12 +41,12 @@ public final class FactionForceJoinArgument extends FactionSubCommand {
     @Override
     public void onCommand() {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "Only players can join factions.");
+            tell(ChatColor.RED + "Only players can join factions.");
             return;
         }
 
         if (args.length < 2) {
-            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
+            tell(ChatColor.RED + "Usage: " + getUsage());
             return;
         }
 
@@ -54,7 +54,7 @@ public final class FactionForceJoinArgument extends FactionSubCommand {
 
         try{
             plugin.getFactionManager().getPlayerFaction(player);
-            sender.sendMessage(ChatColor.RED + "You are already in a faction.");
+            tell(ChatColor.RED + "You are already in a faction.");
         }catch (NoFactionFoundException e){
             plugin.getFactionManager().advancedSearch(args[1], PlayerFaction.class, new SearchCallback<PlayerFaction>() {
                 @Override
@@ -65,7 +65,7 @@ public final class FactionForceJoinArgument extends FactionSubCommand {
 
                 @Override
                 public void onFail(FailReason reason) {
-                    sender.sendMessage(Lang.of("commands.error.faction_not_found", args[1]));
+                    tell(Lang.of("commands.error.faction_not_found", args[1]));
                 }
             });
         }

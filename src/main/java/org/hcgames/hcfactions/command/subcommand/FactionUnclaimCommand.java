@@ -38,7 +38,7 @@ public final class FactionUnclaimCommand extends FactionSubCommand {
     @Override
     public void onCommand() {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "Only players can un-claim land from a faction.");
+            tell(ChatColor.RED + "Only players can un-claim land from a faction.");
             return;
         }
 
@@ -47,22 +47,22 @@ public final class FactionUnclaimCommand extends FactionSubCommand {
         try {
             playerFaction = plugin.getFactionManager().getPlayerFaction(player);
         } catch (NoFactionFoundException e) {
-            sender.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
+            tell(Lang.of("Commands-Factions-Global-NotInFaction"));
             return;
         }
 
         FactionMember factionMember = playerFaction.getMember(player);
 
         if(factionMember.getRole() == Role.MEMBER || factionMember.getRole() == Role.CAPTAIN){
-            sender.sendMessage(Lang.of("Commands-Factions-Unclaim-CoLeaderRequired"));
+            tell(Lang.of("Commands-Factions-Unclaim-CoLeaderRequired"));
             return;
         }
 
         Collection<Claim> factionClaims = playerFaction.getClaims();
 
         if (factionClaims.isEmpty()) {
-            sender.sendMessage(Lang.of("Commands-Factions-Unclaim-NoClaims"));
-            //sender.sendMessage(ChatColor.RED + "Your faction does not own any claims.");
+            tell(Lang.of("Commands-Factions-Unclaim-NoClaims"));
+            //tell(ChatColor.RED + "Your faction does not own any claims.");
             return;
         }
 
@@ -73,8 +73,8 @@ public final class FactionUnclaimCommand extends FactionSubCommand {
             Location location = player.getLocation();
             Claim claimAt = plugin.getFactionManager().getClaimAt(location);
             if (claimAt == null || !factionClaims.contains(claimAt)) {
-                sender.sendMessage(Lang.of("Commands-Factions-Unclaim-NoClaimHere"));
-                //sender.sendMessage(ChatColor.RED + "Your faction does not own a claim here.");
+                tell(Lang.of("Commands-Factions-Unclaim-NoClaimHere"));
+                //tell(ChatColor.RED + "Your faction does not own a claim here.");
                 return;
             }
 
@@ -82,8 +82,8 @@ public final class FactionUnclaimCommand extends FactionSubCommand {
         }
 
         if (!playerFaction.removeClaims(removingClaims, player)) {
-            sender.sendMessage(Lang.of("Commands-Factions-Unclaim-ErrorRemoving"));
-            //sender.sendMessage(ChatColor.RED + "Error when removing claims, please contact an Administrator.");
+            tell(Lang.of("Commands-Factions-Unclaim-ErrorRemoving"));
+            //tell(ChatColor.RED + "Error when removing claims, please contact an Administrator.");
             return;
         }
 

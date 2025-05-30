@@ -34,7 +34,7 @@ public final class FactionMuteArgument extends FactionSubCommand {
     @Override
     public void onCommand() {
         if (args.length < 3) {
-            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
+            tell(ChatColor.RED + "Usage: " + getUsage());
             return;
         }
 
@@ -46,16 +46,16 @@ public final class FactionMuteArgument extends FactionSubCommand {
                 ConsoleCommandSender console = Bukkit.getConsoleSender();
                 for (UUID uuid : faction.getMembers().keySet()) {
                     String commandLine = "mute " + uuid.toString() + " " + extraArgs;
-                    sender.sendMessage(ChatColor.RED + ChatColor.BOLD.toString() + "Executing " + ChatColor.RED + commandLine);
+                    tell(ChatColor.RED + ChatColor.BOLD.toString() + "Executing " + ChatColor.RED + commandLine);
                     console.getServer().dispatchCommand(sender, commandLine);
                 }
 
-                sender.sendMessage(ChatColor.RED + ChatColor.BOLD.toString() + "Executed mute action on faction " + faction.getName() + ".");
+                tell(ChatColor.RED + ChatColor.BOLD.toString() + "Executed mute action on faction " + faction.getName() + ".");
             }
 
             @Override
             public void onFail(FailReason reason){
-                sender.sendMessage(Lang.of("commands.error.faction_not_found", args[1]));
+                tell(Lang.of("commands.error.faction_not_found", args[1]));
             }
         });
 

@@ -29,14 +29,14 @@ public final class FactionReviveCommand extends FactionSubCommand {
     @Override
     public void onCommand(){
         if(!(sender instanceof Player)){
-            sender.sendMessage(Lang.of("Error-Messages.PlayerOnly"));
+            tell(Lang.of("Error-Messages.PlayerOnly"));
             return;
         }
 
         Player player = (Player) sender;
 
         if(args.length < 2){
-            sender.sendMessage(getUsage());
+            tell(getUsage());
             return;
         }
 
@@ -44,19 +44,19 @@ public final class FactionReviveCommand extends FactionSubCommand {
         try {
             faction = plugin.getFactionManager().getPlayerFaction(player.getUniqueId());
         } catch (NoFactionFoundException e) {
-            sender.sendMessage(Lang.of("Error-Messages.NotInFaction"));
+            tell(Lang.of("Error-Messages.NotInFaction"));
             //invalid faction
             return;
         }
 
         if(faction.getMember(player).getRole() == Role.MEMBER){
-            sender.sendMessage(Lang.of("Commands.Factions.Revive.Officer-Required"));
+            tell(Lang.of("Commands.Factions.Revive.Officer-Required"));
             //officer required
             return;
         }
 
         if(faction.getLives() <= 0){
-            sender.sendMessage(Lang.of("Commands.Factions.Revive.Not-Enough").replace("{player}", args[1]));
+            tell(Lang.of("Commands.Factions.Revive.Not-Enough").replace("{player}", args[1]));
             //faction doesn't have enough lives
             return;
         }
@@ -70,14 +70,14 @@ public final class FactionReviveCommand extends FactionSubCommand {
          *
         findOfflinePlayer(args[1], deadPlayer -> {
     	   if(deadPlayer == null){
-               sender.sendMessage(Lang.of("Error-Messages.InvalidPlayer").replace("{player}", args[1]));
+               tell(Lang.of("Error-Messages.InvalidPlayer").replace("{player}", args[1]));
                //player not found
                return;
            }
 
          /*  FactionUser user;
            if(!HCF.getPlugin().getUserManager().userExists(deadPlayer.getUniqueId()) || ((user = HCF.getPlugin().getUserManager().getUser(deadPlayer.getUniqueId())) == null) || user.getDeathban() == null){
-               sender.sendMessage(Lang.of("Commands.Factions.Revive.Not-Deathbanned"));
+               tell(Lang.of("Commands.Factions.Revive.Not-Deathbanned"));
                //not deathbanned
                return;
            }

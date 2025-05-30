@@ -34,15 +34,15 @@ public final class FactionSetHomeCommand extends FactionSubCommand {
     @Override
     public void onCommand() {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(Lang.of("Commands-ConsoleOnly"));
+            tell(Lang.of("Commands-ConsoleOnly"));
             return;
         }
 
         Player player = (Player) sender;
 
         if (Configuration.maxHeightFactionHome != -1 && player.getLocation().getY() > Configuration.maxHeightFactionHome) {
-            //sender.sendMessage(ChatColor.RED + "You can not set your faction home above y " + plugin.getConfiguration().getMaxHeightFactionHome() + ".");
-            sender.sendMessage(Lang.of("Commands-Factions-SetHome-MaxHeight")
+            //tell(ChatColor.RED + "You can not set your faction home above y " + plugin.getConfiguration().getMaxHeightFactionHome() + ".");
+            tell(Lang.of("Commands-Factions-SetHome-MaxHeight")
                     .replace("{maxHeight}", String.valueOf(Configuration.maxHeightFactionHome)));
             return;
         }
@@ -51,15 +51,15 @@ public final class FactionSetHomeCommand extends FactionSubCommand {
         try {
             playerFaction = plugin.getFactionManager().getPlayerFaction(player);
         } catch (NoFactionFoundException e) {
-            sender.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
+            tell(Lang.of("Commands-Factions-Global-NotInFaction"));
             return;
         }
 
         FactionMember factionMember = playerFaction.getMember(player);
 
         if (factionMember.getRole() == Role.MEMBER) {
-            sender.sendMessage(Lang.of("Commands-Factions-SetHome-OfficerRequired"));
-            //sender.sendMessage(ChatColor.RED + "You must be a faction officer to set the home.");
+            tell(Lang.of("Commands-Factions-SetHome-OfficerRequired"));
+            //tell(ChatColor.RED + "You must be a faction officer to set the home.");
             return;
         }
 
@@ -73,7 +73,7 @@ public final class FactionSetHomeCommand extends FactionSubCommand {
 			}
 
         if (!insideTerritory) {
-            player.sendMessage(Lang.of("Commands-Factions-SetHome-NotInsideHomeTerritory"));
+            tell(Lang.of("Commands-Factions-SetHome-NotInsideHomeTerritory"));
             //player.sendMessage(ChatColor.RED + "You may only set your home in your territory.");
             return;
         }

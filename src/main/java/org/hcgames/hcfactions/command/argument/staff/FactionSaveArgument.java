@@ -21,7 +21,7 @@ public final class FactionSaveArgument extends FactionSubCommand {
 	
 	  @Override
 	    public void onCommand() {
-		  sender.sendMessage(ChatColor.RED + "Saved succesfully.");
+		  tell(ChatColor.RED + "Saved succesfully.");
 		  plugin.getFactionManager().saveFactionData();
 		  return;
 	  }

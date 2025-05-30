@@ -22,21 +22,21 @@ public final class FactionRemoveCooldownCommand extends FactionSubCommand {
 
 	 
 	    @Override
-		public final String getUsage() {
+		public String getUsage() {
 	        return Lang.of("Commands.Factions.RemoveCooldown.Usage");
 	    }
 
 	    @Override
 	    public void onCommand(){
 	        if(args.length < 3){
-	            sender.sendMessage(getUsage());
+	            tell(getUsage());
 	            return;
 	        }
 
 	        Player player = plugin.getServer().getPlayer(args[1]);
 
 	        if(player == null){
-	            sender.sendMessage(Lang.of("Error-Messages.InvalidPlayer").replace("{player}", args[1]));
+	            tell(Lang.of("Error-Messages.InvalidPlayer").replace("{player}", args[1]));
 	            return;
 	        }
 
@@ -44,24 +44,24 @@ public final class FactionRemoveCooldownCommand extends FactionSubCommand {
 	        try {
 	            faction = plugin.getFactionManager().getFaction(args[2]);
 	        } catch (NoFactionFoundException e) {
-	            sender.sendMessage(Lang.of("Error-Messages.InvalidFaction").replace("{faction}", args[2]));
+	            tell(Lang.of("Error-Messages.InvalidFaction").replace("{faction}", args[2]));
 	            return;
 	        }
 
 	        if(!(faction instanceof PlayerFaction)){
-	            sender.sendMessage(Lang.of("Commands.Factions.RemoveCooldown.InvalidFactionType").replace("{faction}", faction.getName()));
+	            tell(Lang.of("Commands.Factions.RemoveCooldown.InvalidFactionType").replace("{faction}", faction.getName()));
 	            return;
 	        }
 
 	        PlayerFaction pFaction = (PlayerFaction) faction;
 
 	        if(!pFaction.hasCooldown(player.getUniqueId())){
-	            sender.sendMessage(Lang.of("Commands.Factions.RemoveCooldown.NotOnCooldown").replace("{player}", player.getName()));
+	            tell(Lang.of("Commands.Factions.RemoveCooldown.NotOnCooldown").replace("{player}", player.getName()));
 	            return;
 	        }
 
 	        pFaction.removeCooldown(player.getUniqueId());
-	        sender.sendMessage(Lang.of("Commands.Factions.RemoveCooldown.CooldownRemoved").replace("{player}", player.getName()).replace("{faction}", faction.getName()));
+	        tell(Lang.of("Commands.Factions.RemoveCooldown.CooldownRemoved").replace("{player}", player.getName()).replace("{faction}", faction.getName()));
 
 	    }
 

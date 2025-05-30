@@ -14,12 +14,11 @@ import org.mineacademy.fo.settings.Lang;
  */
 public final class FactionStuckCommand extends FactionSubCommand {
 
-    private final HCFactions plugin;
+
 
     public FactionStuckCommand() {
-        super("stuck | trap | trapped");
+        super("stuck|trap|trapped");
         setDescription("Teleport to a safe position.");
-        plugin = HCFactions.getInstance();
 
     }
 
@@ -36,29 +35,29 @@ public final class FactionStuckCommand extends FactionSubCommand {
         Player player = (Player) sender;
         /*
         if(HCF.getPlugin().getSOTWManager().isPaused()){
-            sender.sendMessage(HCF.getPlugin().getMessages().getString("Commands.Factions.Subcommand.Stuck.SOTW-Paused-Disabled"));
+            tell(HCF.getPlugin().getMessages().getString("Commands.Factions.Subcommand.Stuck.SOTW-Paused-Disabled"));
             return true;
         }*/
 
         if (player.getWorld().getEnvironment() != World.Environment.NORMAL) {
-            sender.sendMessage(Lang.of("Commands-Factions-Stuck-OverworldOnly"));
-            //sender.sendMessage(ChatColor.RED + "You can only use this command from the overworld.");
+            tell(Lang.of("Commands-Factions-Stuck-OverworldOnly"));
+            //tell(ChatColor.RED + "You can only use this command from the overworld.");
             return;
         }
 
         StuckTimer stuckTimer = HCFactions.getInstance().getTimerManager().getStuckTimer();
 
         if (!stuckTimer.setCooldown(player, player.getUniqueId())) {
-            sender.sendMessage(Lang.of("Commands-Factions-Stuck-TimerRunning")
+            tell(Lang.of("Commands-Factions-Stuck-TimerRunning")
                     .replace("{timerName}", stuckTimer.getDisplayName()));
-            //sender.sendMessage(ChatColor.RED + "Your " + stuckTimer.getName() + ChatColor.RED + " timer is already active.");
+            //tell(ChatColor.RED + "Your " + stuckTimer.getName() + ChatColor.RED + " timer is already active.");
             return;
         }
 
-        sender.sendMessage(Lang.of("Commands-Factions-Stuck-Teleporting")
+        tell(Lang.of("Commands-Factions-Stuck-Teleporting")
                 .replace("{time}", DurationFormatter.getRemaining(stuckTimer.getRemaining(player), true, false))
                 .replace("{maxBlocksDistance}", String.valueOf(StuckTimer.MAX_MOVE_DISTANCE)));
-        //sender.sendMessage(ChatColor.YELLOW + stuckTimer.getName() + ChatColor.YELLOW + " timer has started. " +
+        //tell(ChatColor.YELLOW + stuckTimer.getName() + ChatColor.YELLOW + " timer has started. " +
         //        "Teleport will occur in " + ChatColor.AQUA + DurationFormatter.getRemaining(stuckTimer.getRemaining(player), true, false) + ChatColor.YELLOW + ". " +
         //        "This will cancel if you move more than " + StuckTimer.MAX_MOVE_DISTANCE + " blocks.");
 

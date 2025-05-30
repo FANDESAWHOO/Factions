@@ -32,7 +32,7 @@ public final class FactionForcePromoteArgument extends FactionSubCommand {
     @Override
     public void onCommand() {
         if (args.length < 2) {
-            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
+            tell(ChatColor.RED + "Usage: " + getUsage());
             return;
         }
 
@@ -48,12 +48,12 @@ public final class FactionForcePromoteArgument extends FactionSubCommand {
 					}
 
                 if (member == null) {
-                    sender.sendMessage(ChatColor.RED + "Faction containing member with IGN or UUID " + args[1] + " not found.");
+                    tell(ChatColor.RED + "Faction containing member with IGN or UUID " + args[1] + " not found.");
                     return;
                 }
 
                 if (member.getRole() != Role.MEMBER) {
-                    sender.sendMessage(ChatColor.RED + member.getCachedName() + " is already a " + member.getRole().getName() + '.');
+                    tell(ChatColor.RED + member.getCachedName() + " is already a " + member.getRole().getName() + '.');
                     return;
                 }
 
@@ -63,7 +63,7 @@ public final class FactionForcePromoteArgument extends FactionSubCommand {
 
             @Override
             public void onFail(FailReason reason) {
-                sender.sendMessage(Lang.of("commands.error.faction_not_found", args[1]));
+                tell(Lang.of("commands.error.faction_not_found", args[1]));
             }
         });
         return;

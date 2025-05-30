@@ -19,7 +19,7 @@ public final class FactionInviteCommand extends FactionSubCommand {
 	private final HCFactions plugin;
 
 	public FactionInviteCommand() {
-		super("invite | inv | invitemember | inviteplayer");
+		super("invite|inv|invitemember|inviteplayer");
 		setDescription("Invite a player to the faction.");
 		plugin = HCFactions.getInstance();
 
@@ -31,18 +31,13 @@ public final class FactionInviteCommand extends FactionSubCommand {
 
 	@Override
 	public void onCommand() {
-		if (!(sender instanceof Player)) {
-			sender.sendMessage(Lang.of("Commands-Factions-Invite-PlayersOnlyCMD"));
-			return;
-		}
-
 		if (args.length < 2) {
-			sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
+			tell(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
 			return;
 		}
 
 		if(args[1].length() > 17){
-			sender.sendMessage(Lang.of("Commands-Factions-Invite-InvalidUsername")
+			tell(Lang.of("Commands-Factions-Invite-InvalidUsername")
 					.replace("{username}", args[1]));
 			return;
 		}
@@ -50,7 +45,7 @@ public final class FactionInviteCommand extends FactionSubCommand {
 		Player invitee = plugin.getServer().getPlayer(args[1]);
 
 		if(invitee == null){
-			sender.sendMessage(Lang.of("Commands-Pay-UnknownPlayer").replace("{player}", args[1]));
+			tell(Lang.of("Commands-Pay-UnknownPlayer").replace("{player}", args[1]));
 			return;
 		}
 
@@ -59,12 +54,12 @@ public final class FactionInviteCommand extends FactionSubCommand {
 		try {
 			playerFaction = plugin.getFactionManager().getPlayerFaction(player);
 		} catch (NoFactionFoundException e) {
-			sender.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
+			tell(Lang.of("Commands-Factions-Global-NotInFaction"));
 			return;
 		}
 
 		if (playerFaction.getMember(player.getUniqueId()).getRole() == Role.MEMBER) {
-			sender.sendMessage(Lang.of("Commands-Factions-Invite-OfficerRequired"));
+			tell(Lang.of("Commands-Factions-Invite-OfficerRequired"));
 			return;
 		}
 
@@ -72,18 +67,18 @@ public final class FactionInviteCommand extends FactionSubCommand {
 		String name = args[1];
 
 		if (playerFaction.findMember(name) != null) {
-			sender.sendMessage(Lang.of("Commands-Factions-Invite-AlreadyInFaction")
+			tell(Lang.of("Commands-Factions-Invite-AlreadyInFaction")
 					.replace("{player}", name));
 			return;
 		}
 
 		if (!Configuration.kitMap) { // && !HCF.getPlugin().getEotwHandler().isEndOfTheWorld() && playerFaction.isRaidable()
-			sender.sendMessage(Lang.of("Commands-Factions-Invite-NoInviteWhileRaidable"));
+			tell(Lang.of("Commands-Factions-Invite-NoInviteWhileRaidable"));
 			return;
 		}
 
 		if (!invitedPlayerNames.add(name.toLowerCase())) {
-			sender.sendMessage(Lang.of("Commands-Factions-Invite-AlreadyInvited")
+			tell(Lang.of("Commands-Factions-Invite-AlreadyInvited")
 					.replace("{player}", name));
 			return;
 		}

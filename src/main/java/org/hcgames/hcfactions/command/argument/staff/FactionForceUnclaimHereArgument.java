@@ -30,12 +30,12 @@ public final class FactionForceUnclaimHereArgument extends FactionSubCommand {
     @Override
     public void onCommand() {
         if (args.length < 2) {
-            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
+            tell(ChatColor.RED + "Usage: " + getUsage());
             return;
         }
 
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "Only players can un-claim land from a faction.");
+            tell(ChatColor.RED + "Only players can un-claim land from a faction.");
             return;
         }
 
@@ -43,7 +43,7 @@ public final class FactionForceUnclaimHereArgument extends FactionSubCommand {
         Claim claimAt = plugin.getFactionManager().getClaimAt(player.getLocation());
 
         if (claimAt == null) {
-            sender.sendMessage(ChatColor.RED + "There is not a claim at your current position.");
+            tell(ChatColor.RED + "There is not a claim at your current position.");
             return;
         }
 
@@ -53,10 +53,10 @@ public final class FactionForceUnclaimHereArgument extends FactionSubCommand {
                 return;
             }
         } catch (NoFactionFoundException e) {
-            sender.sendMessage(ChatColor.RED + "Failed to remove claim " + claimAt.getClaimUniqueID().toString());
+            tell(ChatColor.RED + "Failed to remove claim " + claimAt.getClaimUniqueID().toString());
         }
 
-        sender.sendMessage(ChatColor.RED + "Failed to remove claim " + claimAt.getClaimUniqueID().toString());
+        tell(ChatColor.RED + "Failed to remove claim " + claimAt.getClaimUniqueID().toString());
         return;
     }
 

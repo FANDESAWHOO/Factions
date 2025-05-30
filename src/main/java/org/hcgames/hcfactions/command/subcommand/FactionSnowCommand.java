@@ -52,7 +52,7 @@ public final class FactionSnowCommand extends FactionSubCommand {
     @Override
     public void onCommand(){
        /* if(!BreakConfig.christmasMap){
-            sender.sendMessage(ChatColor.RED + "Requires christmas map break config option.");
+            tell(ChatColor.RED + "Requires christmas map break config option.");
             return true;
         }*/
 
@@ -61,19 +61,19 @@ public final class FactionSnowCommand extends FactionSubCommand {
 
         if(args.length < 2){
             if(!(sender instanceof Player)){
-                sender.sendMessage(ChatColor.RED + "Usage: " + getUsage() + " [factionName]");
+                tell(ChatColor.RED + "Usage: " + getUsage() + " [factionName]");
                 return;
             }
 
             Player player = (Player) sender;
             if(!plugin.getFactionManager().hasFaction(player)){
-                sender.sendMessage(ChatColor.RED + "You are not in a faction.");
+                tell(ChatColor.RED + "You are not in a faction.");
                 return;
             }
 
             PlayerFaction playerFaction = plugin.getFactionManager().getPlayerFaction(player);
             if(playerFaction.getMember(player).getRole() == Role.MEMBER){
-                sender.sendMessage(Lang.of("Commands-Factions-Kick-OfficerRequired"));
+                tell(Lang.of("Commands-Factions-Kick-OfficerRequired"));
                 return;
             }
 
@@ -85,24 +85,24 @@ public final class FactionSnowCommand extends FactionSubCommand {
             try{
                 found = plugin.getFactionManager().getFaction(args[1]);
             }catch(NoFactionFoundException e){
-                sender.sendMessage(ChatColor.RED + "No faction found by name " + args[1]);
+                tell(ChatColor.RED + "No faction found by name " + args[1]);
                 return;
             }
 
             if(!(found instanceof ClaimableFaction)){
-                sender.sendMessage(ChatColor.RED + "You cannot toggle snow for that faction.");
+                tell(ChatColor.RED + "You cannot toggle snow for that faction.");
                 return;
             }
 
             faction = (ClaimableFaction) found;
         }else{
-            sender.sendMessage(ChatColor.RED + "No permission.");
+            tell(ChatColor.RED + "No permission.");
             return;
         }
 
         boolean newState = !faction.isSnowfall();
         faction.setSnowfall(newState);
-        sender.sendMessage(Lang.of("commands.snow." + (own ? "own" : "other"), newState ? "enabled" : "disabled", faction.getName()));
+        tell(Lang.of("commands.snow." + (own ? "own" : "other"), newState ? "enabled" : "disabled", faction.getName()));
         return;
     }
 }

@@ -33,7 +33,7 @@ public final class FactionForceLeaderArgument extends FactionSubCommand {
     @Override
     public void onCommand() {
         if (args.length < 2) {
-            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
+            tell(ChatColor.RED + "Usage: " + getUsage());
             return;
         }
 
@@ -50,12 +50,12 @@ public final class FactionForceLeaderArgument extends FactionSubCommand {
 					}
 
                 if (member == null) {
-                    sender.sendMessage(ChatColor.RED + "Faction containing member with IGN or UUID " + args[1] + " not found.");
+                    tell(ChatColor.RED + "Faction containing member with IGN or UUID " + args[1] + " not found.");
                     return;
                 }
 
                 if (member.getRole() == Role.LEADER) {
-                    sender.sendMessage(ChatColor.RED + member.getCachedName() + " is already the leader of " + faction.getFormattedName(sender) + ChatColor.RED + '.');
+                    tell(ChatColor.RED + member.getCachedName() + " is already the leader of " + faction.getFormattedName(sender) + ChatColor.RED + '.');
                     return;
                 }
 
@@ -69,12 +69,12 @@ public final class FactionForceLeaderArgument extends FactionSubCommand {
                 member.setRole(Role.LEADER);
                 faction.broadcast(ChatColor.YELLOW + sender.getName() + " has forcefully set the leader to " + newLeaderName + '.');
 
-                sender.sendMessage(ChatColor.GOLD.toString() + ChatColor.BOLD + "Leader of " + faction.getName() + " was forcefully set from " + oldLeaderName + " to " + newLeaderName + '.');
+                tell(ChatColor.GOLD.toString() + ChatColor.BOLD + "Leader of " + faction.getName() + " was forcefully set from " + oldLeaderName + " to " + newLeaderName + '.');
             }
 
             @Override
             public void onFail(FailReason reason) {
-                sender.sendMessage(Lang.of("commands.error.faction_not_found", args[1]));
+                tell(Lang.of("commands.error.faction_not_found", args[1]));
             }
         });
 

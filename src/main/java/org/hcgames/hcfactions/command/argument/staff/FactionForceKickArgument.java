@@ -32,7 +32,7 @@ public final class FactionForceKickArgument extends FactionSubCommand {
     @Override
     public void onCommand() {
         if (args.length < 2) {
-            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
+            tell(ChatColor.RED + "Usage: " + getUsage());
             return;
         }
 
@@ -48,12 +48,12 @@ public final class FactionForceKickArgument extends FactionSubCommand {
 					}
 
                 if (member == null) {
-                    sender.sendMessage(ChatColor.RED + "Faction containing member with IGN or UUID " + args[1] + " not found.");
+                    tell(ChatColor.RED + "Faction containing member with IGN or UUID " + args[1] + " not found.");
                     return;
                 }
 
                 if (member.getRole() == Role.LEADER) {
-                    sender.sendMessage(ChatColor.RED + "You cannot forcefully kick faction leaders. Use /f forceremove instead.");
+                    tell(ChatColor.RED + "You cannot forcefully kick faction leaders. Use /f forceremove instead.");
                     return;
                 }
 
@@ -63,7 +63,7 @@ public final class FactionForceKickArgument extends FactionSubCommand {
 
             @Override
             public void onFail(FailReason reason) {
-                sender.sendMessage(Lang.of("commands.error.faction_not_found", args[1]));
+                tell(Lang.of("commands.error.faction_not_found", args[1]));
             }
         });
         return;

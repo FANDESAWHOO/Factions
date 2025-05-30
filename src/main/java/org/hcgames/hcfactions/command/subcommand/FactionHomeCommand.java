@@ -31,8 +31,6 @@ public final class FactionHomeCommand extends FactionSubCommand {
 
 	@Override
 	public void onCommand() {
-		checkConsole();
-
 		Player player = (Player) sender;
 
 		if (args.length >= 2 && args[1].equalsIgnoreCase("set")) {
@@ -63,19 +61,19 @@ public final class FactionHomeCommand extends FactionSubCommand {
 		try {
 			playerFaction = plugin.getFactionManager().getPlayerFaction(uuid);
 		} catch (NoFactionFoundException e) {
-			sender.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
+			tell(Lang.of("Commands-Factions-Global-NotInFaction"));
 			return;
 		}
 
 		Optional<Location> home = playerFaction.getHome();
 
 		if (!home.isPresent()) {
-			sender.sendMessage(Lang.of("Commands-Factions-Home-NoFactionHomeSet"));
+			tell(Lang.of("Commands-Factions-Home-NoFactionHomeSet"));
 			return;
 		}
 
 		if (Configuration.maxHeightFactionHome != -1 && home.get().getY() > Configuration.maxHeightFactionHome) {
-			sender.sendMessage(Lang.of("Commands-Factions-Home-HomeAboveHeightLimit")
+			tell(Lang.of("Commands-Factions-Home-HomeAboveHeightLimit")
 					.replace("{factionHomeHeightLimit}", String.valueOf(Configuration.maxHeightFactionHome))
 					.replace("{factionHomeX}", String.valueOf(home.get().getBlockX()))
 					.replace("{factionHomeZ}", String.valueOf(home.get().getBlockZ())));
@@ -88,7 +86,7 @@ public final class FactionHomeCommand extends FactionSubCommand {
 	 *  Faction factionAt = plugin.getFactionManager().getFactionAt(player.getLocation());
 
 		if (factionAt != playerFaction && factionAt instanceof PlayerFaction && Configuration.allowTeleportingInEnemyTerritory) {
-			sender.sendMessage(Lang.of("Commands-Factions-Home-InEnemyClaim")
+			tell(Lang.of("Commands-Factions-Home-InEnemyClaim")
 					.replace("{commandLabel}", getLabel()));
 			return;
 		}
@@ -115,7 +113,7 @@ public final class FactionHomeCommand extends FactionSubCommand {
 			}
 
 			if (millis == -1L) {
-				sender.sendMessage(Lang.of("Commands-Factions-Home-DisabledInWorld")
+				tell(Lang.of("Commands-Factions-Home-DisabledInWorld")
 						.replace("{worldName}", name));
 				return;
 			}

@@ -33,7 +33,7 @@ public final class FactionBanArgument extends FactionSubCommand {
     @Override
     public void onCommand() {
         if (args.length < 3) {
-            sender.sendMessage(Lang.of("commands.error.usage", getUsage()));
+            tell(Lang.of("commands.error.usage", getUsage()));
             return;
         }
 
@@ -46,16 +46,16 @@ public final class FactionBanArgument extends FactionSubCommand {
 
                 for (UUID uuid : faction.getMembers().keySet()) {
                     String commandLine = "ban " + uuid.toString() + " " + extraArgs;
-                    sender.sendMessage(Lang.of("commands.staff.ban.executing", commandLine));
+                    tell(Lang.of("commands.staff.ban.executing", commandLine));
                     console.getServer().dispatchCommand(sender, commandLine);
                 }
 
-                sender.sendMessage(Lang.of("commands.staff.ban.executed", faction.getName()));
+                tell(Lang.of("commands.staff.ban.executed", faction.getName()));
             }
 
             @Override
             public void onFail(FailReason reason){
-                sender.sendMessage(Lang.of("commands.error.faction_not_found", args[1]));
+                tell(Lang.of("commands.error.faction_not_found", args[1]));
             }
         });
         return;

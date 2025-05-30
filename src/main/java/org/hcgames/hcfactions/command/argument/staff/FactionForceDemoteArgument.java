@@ -48,17 +48,17 @@ public final class FactionForceDemoteArgument extends FactionSubCommand {
 					}
 
                 if (member == null) {
-                    sender.sendMessage(Lang.of("commands.error.member_not_found", args[1]));
+                    tell(Lang.of("commands.error.member_not_found", args[1]));
                     return;
                 }
 
                 if (member.getRole() == Role.LEADER) {
-                    sender.sendMessage(Lang.of("command.staff.forcedemote.leader_demote", member.getCachedName()));
+                    tell(Lang.of("command.staff.forcedemote.leader_demote", member.getCachedName()));
                     return;
                 }
 
                 if(member.getRole() == Role.LEADER){
-                    sender.sendMessage(Lang.of("command.staff.forcedemote.user_demote", member.getCachedName()));
+                    tell(Lang.of("command.staff.forcedemote.user_demote", member.getCachedName()));
                     return;
                 }
 
@@ -75,7 +75,7 @@ public final class FactionForceDemoteArgument extends FactionSubCommand {
 
             @Override
             public void onFail(FailReason reason) {
-                sender.sendMessage(Lang.of("commands.error.faction_not_found", args[1]));
+                tell(Lang.of("commands.error.faction_not_found", args[1]));
             }
         });
         return;

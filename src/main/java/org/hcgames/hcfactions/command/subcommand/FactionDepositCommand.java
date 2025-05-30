@@ -18,7 +18,7 @@ public final class FactionDepositCommand extends FactionSubCommand {
 	private final HCFactions plugin;
 
 	public FactionDepositCommand() {
-		super("deposit | d");
+		super("deposit|d");
 		setDescription("Deposits money to the faction balance.");
 		plugin = HCFactions.getInstance();
 	}
@@ -30,10 +30,8 @@ public final class FactionDepositCommand extends FactionSubCommand {
 
 	@Override
 	public void onCommand() {
-		checkConsole();
-
 		if (args.length < 2) {
-			sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
+			tell(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
 			return;
 		}
 
@@ -42,7 +40,7 @@ public final class FactionDepositCommand extends FactionSubCommand {
 		try {
 			playerFaction = plugin.getFactionManager().getPlayerFaction(player);
 		} catch (NoFactionFoundException e) {
-			sender.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
+			tell(Lang.of("Commands-Factions-Global-NotInFaction"));
 			return;
 		}
 
@@ -52,18 +50,18 @@ public final class FactionDepositCommand extends FactionSubCommand {
 		Integer amount;
 		if (args[1].equalsIgnoreCase("all")) amount = playerBalance;
 		else if ((amount = (JavaUtils.tryParseInt(args[1]))) == null) {
-			sender.sendMessage(Lang.of("Commands-Factions-Deposit-InvalidNumber")
+			tell(Lang.of("Commands-Factions-Deposit-InvalidNumber")
 					.replace("{amount}", args[1]));
 			return;
 		}
 
 		if (amount <= 0) {
-			sender.sendMessage(Lang.of("Commands-Factions-Deposit-AmountNotPositive"));
+			tell(Lang.of("Commands-Factions-Deposit-AmountNotPositive"));
 			return;
 		}
 
 		if (playerBalance < amount) {
-			sender.sendMessage(Lang.of("Commands-Factions-Deposit-NotEnoughFunds")
+			tell(Lang.of("Commands-Factions-Deposit-NotEnoughFunds")
 					.replace("{requiredAmount}", "$" + JavaUtils.format(amount))
 					.replace("{currentAmount}",  "$" + JavaUtils.format(playerBalance)));
 

@@ -74,23 +74,23 @@ public final class FactionHelpCommand extends FactionSubCommand {
 		int totalPageCount = (pages.size() / HELP_PER_PAGE) + 1;
 
 		if (pageNumber < 1) {
-			sender.sendMessage(Lang.of("Commands-Factions-Help-PageLessThanOne"));
+			tell(Lang.of("Commands-Factions-Help-PageLessThanOne"));
 			return;
 		}
 
 		if (pageNumber > totalPageCount) {
-			sender.sendMessage(Lang.of("Commands-Factions-Help-NoMorePages")
+			tell(Lang.of("Commands-Factions-Help-NoMorePages")
 					.replace("{totalPageCount}", String.valueOf(totalPageCount)));
 			return;
 		}
 
-		sender.sendMessage(Lang.of("Commands-Factions-Help-Header")
+		tell(Lang.of("Commands-Factions-Help-Header")
 				.replace("{currentPageNumber}", String.valueOf(pageNumber))
 				.replace("{totalPageCount}", String.valueOf(totalPageCount)));
 
-		for (String message : pages.get(pageNumber)) sender.sendMessage("  " + message);
+		for (String message : pages.get(pageNumber)) tell("  " + message);
 
-		sender.sendMessage(Lang.of("Commands-Factions-Help-Footer")
+		tell(Lang.of("Commands-Factions-Help-Footer")
 				.replace("{currentPageNumber}", String.valueOf(pageNumber))
 				.replace("{totalPageCount}", String.valueOf(totalPageCount))
 				.replace("{commandLabel}", label));

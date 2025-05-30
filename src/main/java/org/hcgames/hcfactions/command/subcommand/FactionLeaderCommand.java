@@ -16,7 +16,7 @@ public final class FactionLeaderCommand extends FactionSubCommand {
 	private final HCFactions plugin;
 
 	public FactionLeaderCommand() {
-		super("leader | setleader | newleader");
+		super("leader|setleader|newleader");
 		setDescription("Sets the new leader for your faction.");
 		plugin = HCFactions.getInstance();
 
@@ -29,13 +29,8 @@ public final class FactionLeaderCommand extends FactionSubCommand {
 
 	@Override
 	public void onCommand() {
-		if (!(sender instanceof Player)) {
-			sender.sendMessage(Lang.of("Commands-Factions-Leader-PlayerOnlyCMD"));
-			return;
-		}
-
 		if (args.length < 2) {
-			sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
+			tell(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
 			return;
 		}
 
@@ -44,7 +39,7 @@ public final class FactionLeaderCommand extends FactionSubCommand {
 		try {
 			playerFaction = plugin.getFactionManager().getPlayerFaction(player);
 		} catch (NoFactionFoundException e) {
-			sender.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
+			tell(Lang.of("Commands-Factions-Global-NotInFaction"));
 			return;
 		}
 
@@ -53,23 +48,23 @@ public final class FactionLeaderCommand extends FactionSubCommand {
 		Role selfRole = selfMember.getRole();
 
 		if (selfRole != Role.LEADER) {
-			sender.sendMessage(Lang.of("Commands-Factions-Leader-LeaderRequired"));
-			//sender.sendMessage(ChatColor.RED + "You must be the current faction leader to transfer the faction.");
+			tell(Lang.of("Commands-Factions-Leader-LeaderRequired"));
+			//tell(ChatColor.RED + "You must be the current faction leader to transfer the faction.");
 			return;
 		}
 
 		FactionMember targetMember = playerFaction.findMember(args[1]);
 
 		if (targetMember == null) {
-			//sender.sendMessage(ChatColor.RED + "Player '" + args[1] + "' is not in your faction.");
-			sender.sendMessage(Lang.of("Commands-Factions-Leader-PlayerNotInFaction")
+			//tell(ChatColor.RED + "Player '" + args[1] + "' is not in your faction.");
+			tell(Lang.of("Commands-Factions-Leader-PlayerNotInFaction")
 					.replace("{name}", args[1]));
 			return;
 		}
 
 		if (targetMember.getUniqueId().equals(uuid)) {
-			//sender.sendMessage(ChatColor.RED + "You are already the faction leader.");
-			sender.sendMessage(Lang.of("Commands-Factions-Leader-AlreadyLeader"));
+			//tell(ChatColor.RED + "You are already the faction leader.");
+			tell(Lang.of("Commands-Factions-Leader-AlreadyLeader"));
 			return;
 		}
 

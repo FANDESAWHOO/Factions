@@ -18,7 +18,7 @@ public final class FactionAnnouncementCommand extends FactionSubCommand {
 	private final HCFactions plugin;
 
 	public FactionAnnouncementCommand() {
-		super("announcement | motd | announce");
+		super("announcement|motd|announce");
 		setDescription("Set your faction announcement.");
 		plugin = HCFactions.getInstance();
 
@@ -31,10 +31,10 @@ public final class FactionAnnouncementCommand extends FactionSubCommand {
 
 	@Override
 	public void onCommand() {
-		checkConsole();
+
 
 		if (args.length < 2) {
-			sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
+			tell(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
 			return;
 		}
 
@@ -44,12 +44,12 @@ public final class FactionAnnouncementCommand extends FactionSubCommand {
 		try {
 			playerFaction = plugin.getFactionManager().getPlayerFaction(player);
 		} catch (NoFactionFoundException e) {
-			sender.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
+			tell(Lang.of("Commands-Factions-Global-NotInFaction"));
 			return;
 		}
 
 		if (playerFaction.getMember(player.getUniqueId()).getRole() == Role.MEMBER) {
-			sender.sendMessage(Lang.of("Commands-Factions-Announcement-OfficerRequired"));
+			tell(Lang.of("Commands-Factions-Announcement-OfficerRequired"));
 			return;
 		}
 
@@ -60,12 +60,12 @@ public final class FactionAnnouncementCommand extends FactionSubCommand {
 		else newAnnouncement = HCFactions.SPACE_JOINER.join(Arrays.copyOfRange(args, 1, args.length));
 
 		if (!oldAnnouncement.isPresent() && newAnnouncement == null) {
-			sender.sendMessage(Lang.of("Commands-Factions-Announcement-AlreadyUnset"));
+			tell(Lang.of("Commands-Factions-Announcement-AlreadyUnset"));
 			return;
 		}
 
 		if (oldAnnouncement.isPresent() && newAnnouncement != null && oldAnnouncement.get().equals(newAnnouncement)) {
-			sender.sendMessage(Lang.of("Commands-Factions-Announcement-SameAnnouncement")
+			tell(Lang.of("Commands-Factions-Announcement-SameAnnouncement")
 					.replace("%currentAnnouncement%", newAnnouncement));
 			return;
 		}

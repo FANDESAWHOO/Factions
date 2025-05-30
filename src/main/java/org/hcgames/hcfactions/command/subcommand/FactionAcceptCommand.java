@@ -21,7 +21,7 @@ public final class FactionAcceptCommand extends FactionSubCommand {
 	private final HCFactions plugin;
 
 	public FactionAcceptCommand() {
-		super("accept | join | a");
+		super("accept|join|a");
 		setAliases(new String[]{"make", "define"});
 		setDescription("Accept a join request from an existing faction.");
 		plugin = HCFactions.getInstance();
@@ -37,7 +37,7 @@ public final class FactionAcceptCommand extends FactionSubCommand {
 		checkConsole();
 
 		if (args.length < 2) {
-			sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
+			tell(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
 			return;
 		}
 
@@ -45,7 +45,7 @@ public final class FactionAcceptCommand extends FactionSubCommand {
 
 		try {
 			if (plugin.getFactionManager().getPlayerFaction(player) != null) {
-				sender.sendMessage(Lang.of("Commands-Factions-Accept-InFactionAlready"));
+				tell(Lang.of("Commands-Factions-Accept-InFactionAlready"));
 				return;
 			}
 		} catch (NoFactionFoundException e) {}
@@ -54,14 +54,14 @@ public final class FactionAcceptCommand extends FactionSubCommand {
 			@Override
 			public void onSuccess(PlayerFaction faction) {
 				if (faction.getMembers().size() >= Configuration.factionMaxMembers) {
-					sender.sendMessage(Lang.of("Commands-Factions-Accept-FactionFull")
+					tell(Lang.of("Commands-Factions-Accept-FactionFull")
 							.replace("{factionName}", faction.getFormattedName(sender))
 							.replace("{factionPlayerLimits}", String.valueOf(Configuration.factionMaxMembers)));
 					return;
 				}
 
 				if (!faction.isOpen() && !faction.getInvitedPlayerNames().contains(player.getName().toLowerCase())) {
-					sender.sendMessage(Lang.of("Commands-Factions-Accept-NotInvited").replace("{factionName}", faction.getFormattedName(sender)));
+					tell(Lang.of("Commands-Factions-Accept-NotInvited").replace("{factionName}", faction.getFormattedName(sender)));
 					return;
 				}
 
@@ -71,7 +71,7 @@ public final class FactionAcceptCommand extends FactionSubCommand {
 
 			@Override
 			public void onFail(FailReason reason) {
-				sender.sendMessage(Lang.of("commands.error.faction_not_found", args[1]));
+				tell(Lang.of("commands.error.faction_not_found", args[1]));
 			}
 		});
 	}

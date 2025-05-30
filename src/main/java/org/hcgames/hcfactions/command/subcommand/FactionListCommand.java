@@ -22,7 +22,7 @@ public final class FactionListCommand extends FactionSubCommand {
 	private final HCFactions plugin;
 
 	public FactionListCommand() {
-		super("list | l");
+		super("list|l");
 		setDescription("See a list of all factions.");
 		plugin = HCFactions.getInstance();
 	}
@@ -40,9 +40,9 @@ public final class FactionListCommand extends FactionSubCommand {
 		else {
 			page = JavaUtils.tryParseInt(args[1]);
 			if (page == null) {
-				sender.sendMessage(Lang.of("Commands-Invalid-Number")
+				tell(Lang.of("Commands-Invalid-Number")
 						.replace("{number}", args[1]));
-				//sender.sendMessage(ChatColor.RED + "'" + args[1] + "' is not a valid number.");
+				//tell(ChatColor.RED + "'" + args[1] + "' is not a valid number.");
 				return;
 			}
 		}
@@ -57,7 +57,7 @@ public final class FactionListCommand extends FactionSubCommand {
 
 	private void showList(int pageNumber, String label, CommandSender sender) {
 		if (pageNumber < 1) {
-			sender.sendMessage(Lang.of("Commands-Factions-List-PageLessThanOne"));
+			tell(Lang.of("Commands-Factions-List-PageLessThanOne"));
 			return;
 		}
 
@@ -113,22 +113,22 @@ public final class FactionListCommand extends FactionSubCommand {
 		int maxPages = pages.size();
 
 		if (pageNumber > maxPages) {
-			sender.sendMessage(Lang.of("Commands-Factions-List-NoMorePages")
+			tell(Lang.of("Commands-Factions-List-NoMorePages")
 					.replace("{totalPageCount}", String.valueOf(maxPages)));
 			return;
 		}
 
-		sender.sendMessage(Lang.of("Commands-Factions-List-Header")
+		tell(Lang.of("Commands-Factions-List-Header")
 				.replace("{currentPageNumber}", String.valueOf(pageNumber))
 				.replace("{totalPageCount}", String.valueOf(maxPages)));
 
 		Collection<String> components = pages.get(pageNumber);
 		for (String component : components) {
 			if (component == null) continue;
-			sender.sendMessage(component);
+			tell(component);
 		}
 
-		sender.sendMessage(Lang.of("Commands-Factions-List-Footer")
+		tell(Lang.of("Commands-Factions-List-Footer")
 				.replace("{currentPageNumber}", String.valueOf(pageNumber))
 				.replace("{totalPageCount}", String.valueOf(maxPages))
 				.replace("{commandLabel}", label));

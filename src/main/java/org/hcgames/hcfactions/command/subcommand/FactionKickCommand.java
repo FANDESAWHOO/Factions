@@ -8,6 +8,7 @@ import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.FactionMember;
 import org.hcgames.hcfactions.structure.Role;
+import org.hcgames.hcfactions.util.text.CC;
 import org.mineacademy.fo.settings.Lang;
 
 import java.util.Optional;
@@ -17,7 +18,7 @@ public final class FactionKickCommand extends FactionSubCommand {
 	private final HCFactions plugin;
 
 	public FactionKickCommand() {
-		super("kick | kickmember | kickplayer");
+		super("kick|kickmember|kickplayer");
 		setDescription("Kick a player from the faction.");
 		plugin = HCFactions.getInstance();
 	}
@@ -29,14 +30,8 @@ public final class FactionKickCommand extends FactionSubCommand {
 
 	@Override
 	public void onCommand() {
-		if (!(sender instanceof Player)) {
-			sender.sendMessage(Lang.of("Commands-Factions-Kick-PlayerOnlyCMD"));
-			//sender.sendMessage(ChatColor.RED + "Only players can kick from a faction.");
-			return;
-		}
-
 		if (args.length < 2) {
-			sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
+			tell(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
 			return;
 		}
 
@@ -45,57 +40,57 @@ public final class FactionKickCommand extends FactionSubCommand {
 		try {
 			playerFaction = plugin.getFactionManager().getPlayerFaction(player);
 		} catch (NoFactionFoundException e) {
-			sender.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
+			tell(Lang.of("Commands-Factions-Global-NotInFaction"));
 			return;
 		}
 
 		if (playerFaction.isRaidable() && !Configuration.kitMap) { //  && !HCF.getPlugin().getEotwHandler().isEndOfTheWorld()
-			sender.sendMessage(Lang.of("Commands-Factions-Kick-Raidable"));
-			//sender.sendMessage(ChatColor.RED + "You cannot kick players whilst your faction is raidable.");
+			tell(Lang.of("Commands-Factions-Kick-Raidable"));
+			//tell(ChatColor.RED + "You cannot kick players whilst your faction is raidable.");
 			return;
 		}
 
 		FactionMember targetMember = playerFaction.findMember(args[1]);
 
 		if (targetMember == null) {
-			sender.sendMessage(Lang.of("Commands-Factions-Kick-NoMemberNamed")
+			tell(Lang.of("Commands-Factions-Kick-NoMemberNamed")
 					.replace("{name}", args[1]));
-			//sender.sendMessage(ChatColor.RED + "Your faction does not have a member named '" + args[1] + "'.");
+			//tell(ChatColor.RED + "Your faction does not have a member named '" + args[1] + "'.");
 			return;
 		}
 
 		Role selfRole = playerFaction.getMember(player.getUniqueId()).getRole();
 
 		if (selfRole == Role.MEMBER) {
-			sender.sendMessage(Lang.of("Commands-Factions-Kick-OfficerRequired"));
-			//sender.sendMessage(ChatColor.RED + "You must be a faction officer to kick members.");
+			tell(Lang.of("Commands-Factions-Kick-OfficerRequired"));
+			//tell(ChatColor.RED + "You must be a faction officer to kick members.");
 			return;
 		}
 
 		Role targetRole = targetMember.getRole();
 
 		if (targetRole == Role.LEADER) {
-			sender.sendMessage(Lang.of("Commands-Factions-Kick-CannotKickLeader"));
-			//sender.sendMessage(ChatColor.RED + "You cannot kick the faction leader.");
+			tell(Lang.of("Commands-Factions-Kick-CannotKickLeader"));
+			//tell(ChatColor.RED + "You cannot kick the faction leader.");
 			return;
 		}
 
 		if ((targetRole == Role.CAPTAIN || targetRole == Role.COLEADER) && selfRole == Role.CAPTAIN) {
-			sender.sendMessage(Lang.of("Commands-Factions-Kick-CoLeaderRequired"));
-			//sender.sendMessage(ChatColor.RED + "You must be a faction leader to kick captains.");
+			tell(Lang.of("Commands-Factions-Kick-CoLeaderRequired"));
+			//tell(ChatColor.RED + "You must be a faction leader to kick captains.");
 			return;
 		}
 
 		if(targetRole == Role.COLEADER && selfRole == Role.COLEADER){
-			sender.sendMessage(Lang.of("Commands-Factions-Kick-LeaderRequired"));
+			tell(Lang.of("Commands-Factions-Kick-LeaderRequired"));
 			return;
 		}
 
 		Optional<Player> onlineTarget = targetMember.toOnlinePlayer();
 		if (playerFaction.removeMember(sender, onlineTarget.orElse(null), targetMember.getUniqueId(), true, true)) {
 			//onlineTarget.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD + "You were kicked from the faction by " + sender.getName() + '.');
-			if (onlineTarget.isPresent()) onlineTarget.get().sendMessage(Lang.of("Commands-Factions-Kick-Kicked")
-					.replace("{sender}", sender.getName()));
+			if (onlineTarget.isPresent()) onlineTarget.get().sendMessage(CC.translate(Lang.of("Commands-Factions-Kick-Kicked")
+					.replace("{sender}", sender.getName())));
 
 			playerFaction.broadcast(Lang.of("Commands-Factions-Kick-KickedBroadcast")
 					.replace("{player}", targetMember.getCachedName())

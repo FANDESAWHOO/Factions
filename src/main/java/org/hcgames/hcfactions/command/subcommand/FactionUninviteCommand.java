@@ -18,7 +18,7 @@ public final class FactionUninviteCommand extends FactionSubCommand {
     private final HCFactions plugin;
 
     public FactionUninviteCommand() {
-        super("uninvite | deinvite | deinv | uninv | revoke");
+        super("uninvite|deinvite|deinv|uninv|revoke");
         setDescription("Revoke an invitation to a player.");
         plugin = HCFactions.getInstance();
     }
@@ -32,12 +32,12 @@ public final class FactionUninviteCommand extends FactionSubCommand {
     @Override
     public void onCommand() {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "Only players can un-invite from a faction.");
+            tell(ChatColor.RED + "Only players can un-invite from a faction.");
             return;
         }
 
         if (args.length < 2) {
-            sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
+            tell(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
             return;
         }
 
@@ -46,14 +46,14 @@ public final class FactionUninviteCommand extends FactionSubCommand {
         try {
             playerFaction = plugin.getFactionManager().getPlayerFaction(player);
         } catch (NoFactionFoundException e) {
-            sender.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
+            tell(Lang.of("Commands-Factions-Global-NotInFaction"));
             return;
         }
         FactionMember factionMember = playerFaction.getMember(player);
 
         if (factionMember.getRole() == Role.MEMBER) {
-            sender.sendMessage(Lang.of("Commands-Factions-Uninvite-OfficerRequired"));
-            //sender.sendMessage(ChatColor.RED + "You must be a faction officer to un-invite players.");
+            tell(Lang.of("Commands-Factions-Uninvite-OfficerRequired"));
+            //tell(ChatColor.RED + "You must be a faction officer to un-invite players.");
             return;
         }
 
@@ -61,15 +61,15 @@ public final class FactionUninviteCommand extends FactionSubCommand {
 
         if (args[1].equalsIgnoreCase("all")) {
             invitedPlayerNames.clear();
-            sender.sendMessage(Lang.of("Commands-Factions-Uninvite-ClearedAll"));
-            //sender.sendMessage(ChatColor.YELLOW + "You have cleared all pending invitations.");
+            tell(Lang.of("Commands-Factions-Uninvite-ClearedAll"));
+            //tell(ChatColor.YELLOW + "You have cleared all pending invitations.");
             return;
         }
 
         if (!invitedPlayerNames.remove(args[1])) {
-            sender.sendMessage(Lang.of("Commands-Factions-Uninvite-NoPendingInvites")
+            tell(Lang.of("Commands-Factions-Uninvite-NoPendingInvites")
                     .replace("{name}", args[1]));
-            //sender.sendMessage(ChatColor.RED + "There is not a pending invitation for " + args[1] + '.');
+            //tell(ChatColor.RED + "There is not a pending invitation for " + args[1] + '.');
             return;
         }
 

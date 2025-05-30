@@ -1,6 +1,5 @@
 package org.hcgames.hcfactions.command.subcommand;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.command.FactionSubCommand;
@@ -28,33 +27,28 @@ public final class FactionLeaveCommand extends FactionSubCommand {
 
 	@Override
 	public void onCommand() {
-		if (!(sender instanceof Player)) {
-			sender.sendMessage(ChatColor.RED + "Only players can leave faction.");
-			return;
-		}
-
 		Player player = (Player) sender;
 		PlayerFaction playerFaction;
 		try {
 			playerFaction = plugin.getFactionManager().getPlayerFaction(player);
 		} catch (NoFactionFoundException e) {
-			sender.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
+			tell(Lang.of("Commands-Factions-Global-NotInFaction"));
 			return;
 		}
 
 		UUID uuid = player.getUniqueId();
 		if (playerFaction.getMember(uuid).getRole() == Role.LEADER) {
-			sender.sendMessage(Lang.of("Commands-Factions-Leave-CannotLeaveAsLeader")
+			tell(Lang.of("Commands-Factions-Leave-CannotLeaveAsLeader")
 					.replace("{commandLabel}", getLabel()));
-			//sender.sendMessage(ChatColor.RED + "You cannot leave factions as a leader. Either use " + ChatColor.GOLD + '/' + label + " disband" + ChatColor.RED + " or " +
+			//tell(ChatColor.RED + "You cannot leave factions as a leader. Either use " + ChatColor.GOLD + '/' + label + " disband" + ChatColor.RED + " or " +
 			//       ChatColor.GOLD + '/' + label + " leader" + ChatColor.RED + '.');
 
 			return;
 		}
 
 		if (playerFaction.removeMember(player, player, player.getUniqueId(), false, false)) {
-			sender.sendMessage(Lang.of("Commands-Factions-Leave-LeaveSuccess"));
-			//sender.sendMessage(ChatColor.YELLOW + "Successfully left the faction.");
+			tell(Lang.of("Commands-Factions-Leave-LeaveSuccess"));
+			//tell(ChatColor.YELLOW + "Successfully left the faction.");
 			playerFaction.broadcast(Lang.of("Commands-Factions-Leave-LeaveBroadcast")
 					.replace("{sender}", sender.getName()));
 			//playerFaction.broadcast(Relation.ENEMY.toChatColour() + sender.getName() + ChatColor.YELLOW + " has left the faction.");

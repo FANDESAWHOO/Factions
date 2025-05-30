@@ -23,7 +23,7 @@ public final class FactionWithdrawCommand extends FactionSubCommand {
     private final HCFactions plugin;
 
     public FactionWithdrawCommand() {
-        super("withdraw | w");
+        super("withdraw|w");
         setDescription("Withdraws money from the faction balance.");
         plugin = HCFactions.getInstance();
     }
@@ -36,12 +36,12 @@ public final class FactionWithdrawCommand extends FactionSubCommand {
     @Override
     public void onCommand() {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "Only players can update the faction balance.");
+            tell(ChatColor.RED + "Only players can update the faction balance.");
             return;
         }
 
         if (args.length < 2) {
-            sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
+            tell(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
             return;
         }
 
@@ -50,7 +50,7 @@ public final class FactionWithdrawCommand extends FactionSubCommand {
         try {
             playerFaction = plugin.getFactionManager().getPlayerFaction(player);
         } catch (NoFactionFoundException e) {
-            sender.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
+            tell(Lang.of("Commands-Factions-Global-NotInFaction"));
             return;
         }
 
@@ -58,8 +58,8 @@ public final class FactionWithdrawCommand extends FactionSubCommand {
         FactionMember factionMember = playerFaction.getMember(uuid);
 
         if (factionMember.getRole() == Role.MEMBER) {
-            sender.sendMessage(Lang.of("Commands-Factions-Withdraw-OfficerRequired"));
-            //sender.sendMessage(ChatColor.RED + "You must be a faction officer to withdraw money.");
+            tell(Lang.of("Commands-Factions-Withdraw-OfficerRequired"));
+            //tell(ChatColor.RED + "You must be a faction officer to withdraw money.");
             return;
         }
 
@@ -68,22 +68,22 @@ public final class FactionWithdrawCommand extends FactionSubCommand {
 
         if (args[1].equalsIgnoreCase("all")) amount = factionBalance;
 		else if ((amount = (JavaUtils.tryParseInt(args[1]))) == null) {
-			sender.sendMessage(Lang.of("Commands-Factions-Deposit-InvalidNumber")
+			tell(Lang.of("Commands-Factions-Deposit-InvalidNumber")
 					.replace("{amount}", args[1]));
 			return;
 		}
 
         if (amount <= 0) {
-            sender.sendMessage(Lang.of("Commands-Factions-Withdraw-MustBePositive"));
-            //sender.sendMessage(ChatColor.RED + "Amount must be positive.");
+            tell(Lang.of("Commands-Factions-Withdraw-MustBePositive"));
+            //tell(ChatColor.RED + "Amount must be positive.");
             return;
         }
 
         if (amount > factionBalance) {
-            sender.sendMessage(Lang.of("Commands-Factions-Withdraw-MustBePositive")
+            tell(Lang.of("Commands-Factions-Withdraw-MustBePositive")
                     .replace("{requiredAmount}", EconomyAPI.ECONOMY_SYMBOL + JavaUtils.format(amount))
                     .replace("{currentBalance}", EconomyAPI.ECONOMY_SYMBOL + JavaUtils.format(factionBalance)));
-            //sender.sendMessage(ChatColor.RED + "Your faction need at least " + EconomyManager.ECONOMY_SYMBOL +
+            //tell(ChatColor.RED + "Your faction need at least " + EconomyManager.ECONOMY_SYMBOL +
             //        JavaUtils.format(amount) + " to do this, whilst it only has " + EconomyManager.ECONOMY_SYMBOL + JavaUtils.format(factionBalance) + '.');
 
             return;

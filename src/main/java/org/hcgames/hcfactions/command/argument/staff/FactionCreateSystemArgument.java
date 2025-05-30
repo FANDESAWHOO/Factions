@@ -31,14 +31,14 @@ public final class FactionCreateSystemArgument extends FactionSubCommand {
 	@Override
 	public void onCommand() {
 		if (args.length < 2) {
-            sender.sendMessage(Lang.of("command.error.usage", getUsage()));
+            tell(Lang.of("command.error.usage", getUsage()));
             return;
         }
 	    String name = args[1];
 	    int value = Configuration.factionNameMinCharacters;
 	   
 	    if (name.length() < value) {
-            sender.sendMessage(Lang.of("Commands-Factions-Create-MinimumChars")
+            tell(Lang.of("Commands-Factions-Create-MinimumChars")
                     .replace("{minChars}", String.valueOf(value)));
             return;
         }
@@ -46,19 +46,19 @@ public final class FactionCreateSystemArgument extends FactionSubCommand {
         value = Configuration.factionNameMaxCharacters;
 
         if (name.length() > value) {
-            sender.sendMessage(Lang.of("Commands-Factions-Create-MaximumChars")
+            tell(Lang.of("Commands-Factions-Create-MaximumChars")
                     .replace("{maxChars}", String.valueOf(value)));
             return;
         }
 
         if (!JavaUtils.isAlphanumeric(name)) {
-            sender.sendMessage(Lang.of("Commands-Factions-Create-MustBeAlphanumeric"));
+            tell(Lang.of("Commands-Factions-Create-MustBeAlphanumeric"));
             return;
         }
 
         try {
             if(plugin.getFactionManager().getFaction(name) != null){
-                sender.sendMessage(Lang.of("Commands-Factions-Create-NameAlreadyExists")
+                tell(Lang.of("Commands-Factions-Create-NameAlreadyExists")
                         .replace("{factionName}", name));
                 return;
             }

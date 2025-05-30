@@ -29,24 +29,22 @@ public final class FactionDisbandCommand extends FactionSubCommand {
 	 */
 	@Override
 	public void onCommand() {
-		checkConsole();
-
 		Player player = (Player) sender;
 		PlayerFaction playerFaction;
 		try {
 			playerFaction = plugin.getFactionManager().getPlayerFaction(player);
 		} catch (NoFactionFoundException e) {
-			sender.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
+			tell(Lang.of("Commands-Factions-Global-NotInFaction"));
 			return;
 		}
 
 		if (playerFaction.isRaidable() && !Configuration.kitMap) { //  && !HCF.getPlugin().getEotwHandler().isEndOfTheWorld()
-			sender.sendMessage(Lang.of("Commands-Factions-Disband-Raidable"));
+			tell(Lang.of("Commands-Factions-Disband-Raidable"));
 			return;
 		}
 
 		if (playerFaction.getMember(player.getUniqueId()).getRole() != Role.LEADER) {
-			sender.sendMessage(Lang.of("Commands-Factions-Disband-LeaderRequired"));
+			tell(Lang.of("Commands-Factions-Disband-LeaderRequired"));
 			return;
 		}
 		plugin.getFactionManager().removeFaction(playerFaction, sender);

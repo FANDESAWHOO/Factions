@@ -14,7 +14,7 @@ public final class FactionFocusCommand extends FactionSubCommand {
 	private final HCFactions plugin;
 
 	public FactionFocusCommand(){
-		super("focus | unfocus");
+		super("focus|unfocus");
 		setDescription("Focus on a player or argument");
 		plugin = HCFactions.getInstance();
 	}
@@ -25,12 +25,10 @@ public final class FactionFocusCommand extends FactionSubCommand {
 
 	@Override
 	public void onCommand(){
-		checkConsole();
-
 		Player player = (Player) sender;
 
 		if(args.length < 2){
-			sender.sendMessage(getUsage());
+			tell(getUsage());
 			return;
 		}
 
@@ -38,7 +36,7 @@ public final class FactionFocusCommand extends FactionSubCommand {
 		try{
 			faction = plugin.getFactionManager().getPlayerFaction(player);
 		}catch(NoFactionFoundException e){
-			sender.sendMessage(Lang.of("Error-Messages.NotInFaction"));
+			tell(Lang.of("Error-Messages.NotInFaction"));
 			//not in faction
 			return;
 		}
@@ -52,13 +50,13 @@ public final class FactionFocusCommand extends FactionSubCommand {
 			try{
 				targetFaction = plugin.getFactionManager().getFaction(name);
 			}catch(NoFactionFoundException e){
-				sender.sendMessage(Lang.of("Commands.Factions.Focus.Error.NotFound").replace("{name}", name));
+				tell(Lang.of("Commands.Factions.Focus.Error.NotFound").replace("{name}", name));
 				//player or faction not found
 				return;
 			}
 
 			if(!(targetFaction instanceof PlayerFaction)){
-				sender.sendMessage(Lang.of("Commands.Factions.Focus.Error.NotPlayerFaction"));
+				tell(Lang.of("Commands.Factions.Focus.Error.NotPlayerFaction"));
 				//faction isn't player faction
 				return;
 			}

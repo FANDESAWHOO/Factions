@@ -14,7 +14,7 @@ public final class FactionClaimCommand extends FactionSubCommand {
 	private final HCFactions plugin;
 
 	public FactionClaimCommand() {
-		super("claim | claimland");
+		super("claim|claimland");
 		setDescription("Claim land in the Wilderness.");
 		plugin = HCFactions.getInstance();
 
@@ -33,8 +33,6 @@ public final class FactionClaimCommand extends FactionSubCommand {
 	 */
 	@Override
 	public void onCommand() {
-		checkConsole();
-
 		Player player = (Player) sender;
 		UUID uuid = player.getUniqueId();
 
@@ -42,34 +40,34 @@ public final class FactionClaimCommand extends FactionSubCommand {
 		try {
 			playerFaction = plugin.getFactionManager().getPlayerFaction(uuid);
 		} catch (NoFactionFoundException e) {
-			sender.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
+			tell(Lang.of("Commands-Factions-Global-NotInFaction"));
 			return;
 		}
 
 
 		if (playerFaction.isRaidable()) {
-			sender.sendMessage(Lang.of("Commands-Factions-Claim-NoClaimRaidable"));
+			tell(Lang.of("Commands-Factions-Claim-NoClaimRaidable"));
 			return;
 		}
 
 		PlayerInventory inventory = player.getInventory();
 
 		if (inventory.contains(plugin.getClaimHandler().getClaimWand())) {
-			sender.sendMessage(Lang.of("Commands-Factions-Claim-ClaimWandInvAlready"));
+			tell(Lang.of("Commands-Factions-Claim-ClaimWandInvAlready"));
 			return;
 		}
 
 		if (inventory.contains(plugin.getClaimHandler().getClaimWand())) {
-			sender.sendMessage(Lang.of("Commands-Factions-Claim-SubClaimInInvError"));
+			tell(Lang.of("Commands-Factions-Claim-SubClaimInInvError"));
 			return;
 		}
 
 		if (!inventory.addItem(plugin.getClaimHandler().getClaimWand()).isEmpty()) {
-			sender.sendMessage(Lang.of("Commands-Factions-Claim-InvFull"));
+			tell(Lang.of("Commands-Factions-Claim-InvFull"));
 			return;
 		}
 
-		sender.sendMessage(Lang.of("Commands-Factions-Claim-Added")
+		tell(Lang.of("Commands-Factions-Claim-Added")
 				.replace("{commandLabel}", getLabel()));
 
 		return;

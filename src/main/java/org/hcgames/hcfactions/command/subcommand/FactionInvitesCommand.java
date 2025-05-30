@@ -31,8 +31,6 @@ public final class FactionInvitesCommand extends FactionSubCommand {
 
 	@Override
 	public void onCommand() {
-	   checkConsole();
-
 		List<String> receivedInvites = new ArrayList<>();
 		for (Faction faction : plugin.getFactionManager().getFactions())
 			if (faction instanceof PlayerFaction) {
@@ -44,17 +42,17 @@ public final class FactionInvitesCommand extends FactionSubCommand {
 		try {
 			PlayerFaction playerFaction = plugin.getFactionManager().getPlayerFaction((Player) sender);
 			Set<String> sentInvites = playerFaction.getInvitedPlayerNames();
-			sender.sendMessage(Lang.of("Commands-Factions-Invites-SentBy")
+			tell(Lang.of("Commands-Factions-Invites-SentBy")
 					.replace("{factionName}", playerFaction.getFormattedName(sender))
 					.replace("{inviteCount}", String.valueOf(sentInvites.size()))
 					.replace("{invites}", (sentInvites.isEmpty() ? Lang.of("Commands-Factions-SentByNoInvites-SentBy") : JOINER.join(sentInvites))));
 		} catch (NoFactionFoundException e) {}
 
 
-		sender.sendMessage(Lang.of("Commands-Factions-Invites-Requested")
+		tell(Lang.of("Commands-Factions-Invites-Requested")
 				.replace("{inviteCount}", String.valueOf(receivedInvites.size()))
 				.replace("{invites}", (receivedInvites.isEmpty() ? Lang.of("Commands-Factions-Invites-RequestedNoInvites") : JOINER.join(receivedInvites))));
-		//sender.sendMessage(ChatColor.AQUA + "Requested (" + receivedInvites.size() + ')' + ChatColor.DARK_AQUA + ": " +
+		//tell(ChatColor.AQUA + "Requested (" + receivedInvites.size() + ')' + ChatColor.DARK_AQUA + ": " +
 		//        ChatColor.GRAY + (receivedInvites.isEmpty() ? "No factions have invited you." : JOINER.join(receivedInvites) + '.'));
 
 	}

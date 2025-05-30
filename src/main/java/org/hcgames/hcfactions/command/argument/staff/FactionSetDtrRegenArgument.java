@@ -22,7 +22,7 @@ public final class FactionSetDtrRegenArgument extends FactionSubCommand {
     private final HCFactions plugin;
 
     public FactionSetDtrRegenArgument() {
-        super("setdtrregen | setdtrregeneration");
+        super("setdtrregen|setdtrregeneration");
         setDescription("Sets the DTR cooldown of a faction.");
         plugin = HCFactions.getInstance();
        // this.permission = "hcf.command.faction.argument." + getName();
@@ -37,19 +37,19 @@ public final class FactionSetDtrRegenArgument extends FactionSubCommand {
     @Override
     public void onCommand() {
         if (args.length < 3) {
-            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
+            tell(ChatColor.RED + "Usage: " + getUsage());
             return;
         }
 
         long newRegen = JavaUtils.parse(args[2]);
 
         if (newRegen < 0L) {
-            sender.sendMessage(ChatColor.RED + "Faction DTR regeneration duration cannot be negative.");
+            tell(ChatColor.RED + "Faction DTR regeneration duration cannot be negative.");
             return;
         }
 
         if (newRegen > FactionManager.MAX_DTR_REGEN_MILLIS) {
-            sender.sendMessage(ChatColor.RED + "Cannot set factions DTR regen above " + FactionManager.MAX_DTR_REGEN_WORDS + ".");
+            tell(ChatColor.RED + "Cannot set factions DTR regen above " + FactionManager.MAX_DTR_REGEN_WORDS + ".");
             return;
         }
 
@@ -66,7 +66,7 @@ public final class FactionSetDtrRegenArgument extends FactionSubCommand {
 
             @Override
             public void onFail(FailReason reason) {
-                sender.sendMessage(Lang.of("commands.error.faction_not_found", args[1]));
+                tell(Lang.of("commands.error.faction_not_found", args[1]));
             }
         });
         return;

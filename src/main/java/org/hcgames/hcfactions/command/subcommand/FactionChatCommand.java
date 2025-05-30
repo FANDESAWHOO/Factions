@@ -18,7 +18,7 @@ public final class FactionChatCommand extends FactionSubCommand {
 	private final HCFactions plugin;
 
 	public FactionChatCommand() {
-		super("chat | c");
+		super("chat|c");
 		setDescription("Toggle faction chat only mode on or off.");
 		plugin = HCFactions.getInstance();
 	}
@@ -30,14 +30,14 @@ public final class FactionChatCommand extends FactionSubCommand {
 
 	@Override
 	public void onCommand() {
-	    checkConsole();
+
 
 		Player player = (Player) sender;
 		PlayerFaction playerFaction;
 		try {
 			playerFaction = plugin.getFactionManager().getPlayerFaction(player.getUniqueId());
 		} catch (NoFactionFoundException e) {
-			sender.sendMessage(ChatColor.RED + "You are not in a faction.");
+			tell(ChatColor.RED + "You are not in a faction.");
 			return;
 		}
 
@@ -49,7 +49,7 @@ public final class FactionChatCommand extends FactionSubCommand {
 			parsed = ChatChannel.parse(args[1], null);
 
 			if(parsed != null && parsed == ChatChannel.OFFICER && member.getRole() == Role.MEMBER){
-				sender.sendMessage(Lang.of("Commands-Factions-Chat-OfficerOnly"));
+				tell(Lang.of("Commands-Factions-Chat-OfficerOnly"));
 				return;
 			}
 		}else{
@@ -75,7 +75,7 @@ public final class FactionChatCommand extends FactionSubCommand {
 		if(newChannel == ChatChannel.OFFICER && member.getRole() == Role.MEMBER) newChannel = newChannel.getRotation();
 
 		member.setChatChannel(newChannel);
-		sender.sendMessage(Lang.of("Commands-Factions-Chat-SwitchedMode")
+		tell(Lang.of("Commands-Factions-Chat-SwitchedMode")
 				.replace("{newMode}", newChannel.getDisplayName().toLowerCase()));
 
 	}

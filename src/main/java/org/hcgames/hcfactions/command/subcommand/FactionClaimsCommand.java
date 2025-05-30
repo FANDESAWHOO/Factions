@@ -42,12 +42,12 @@ public final class FactionClaimsCommand extends FactionSubCommand {
 
 		if (args.length < 2) {
 			if (!(sender instanceof Player)) {
-				sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
+				tell(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
 				return;
 			}
 
 			if (selfFaction == null) {
-				sender.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
+				tell(Lang.of("Commands-Factions-Global-NotInFaction"));
 				return;
 			}
 
@@ -62,7 +62,7 @@ public final class FactionClaimsCommand extends FactionSubCommand {
 
 				@Override
 				public void onFail(FailReason reason) {
-					sender.sendMessage(Lang.of("commands.error.faction_not_found", args[1]));
+					tell(Lang.of("commands.error.faction_not_found", args[1]));
 				}
 			});
 			return;
@@ -75,24 +75,24 @@ public final class FactionClaimsCommand extends FactionSubCommand {
 		Collection<Claim> claims = targetFaction.getClaims();
 
 		if (claims.isEmpty()) {
-			sender.sendMessage(Lang.of("Commands-Factions-Claims-FactionClaimedNothing")
+			tell(Lang.of("Commands-Factions-Claims-FactionClaimedNothing")
 					.replace("{factionName}", targetFaction.getFormattedName(sender)));
 			return;
 		}
 
 		if (sender instanceof Player && !sender.isOp() && (targetFaction instanceof PlayerFaction && !((PlayerFaction) targetFaction).getHome().isPresent()))
 			if (selfFaction != targetFaction) {
-				sender.sendMessage(Lang.of("Commands-Factions-Claims-CannotViewNoHome")
+				tell(Lang.of("Commands-Factions-Claims-CannotViewNoHome")
 						.replace("{factionName}", targetFaction.getFormattedName(sender)));
 				return;
 			}
 
-		sender.sendMessage(Lang.of("Commands-Factions-Claims-ClaimListHeader")
+		tell(Lang.of("Commands-Factions-Claims-ClaimListHeader")
 				.replace("{factionName}", targetFaction.getFormattedName(sender))
 				.replace("{claimsAmount}", String.valueOf(claims.size())));
 
 		for (Claim claim : claims)
-			sender.sendMessage(Lang.of("Commands-Factions-Claims-ClaimListItem")
+			tell(Lang.of("Commands-Factions-Claims-ClaimListItem")
 					.replace("{claimName}", claim.getFormattedName()));
 	}
 

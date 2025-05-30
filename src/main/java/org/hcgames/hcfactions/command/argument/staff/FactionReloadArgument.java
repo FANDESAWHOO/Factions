@@ -27,7 +27,7 @@ public final class FactionReloadArgument extends FactionSubCommand {
     @Override
     public void onCommand() {
         //plugin.getMessages().reload();
-        sender.sendMessage(ChatColor.RED + "Command disabled.");
+        tell(ChatColor.RED + "Command disabled.");
         return;
     }
 

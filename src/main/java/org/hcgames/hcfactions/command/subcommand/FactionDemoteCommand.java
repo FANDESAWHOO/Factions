@@ -19,7 +19,7 @@ public final class FactionDemoteCommand extends FactionSubCommand {
 	private final HCFactions plugin;
 
 	public FactionDemoteCommand() {
-		super("demote | uncaptain | delcaptain | delofficer");
+		super("demote|uncaptain|delcaptain|delofficer");
 		setDescription("Demotes a player to a member.");
 		plugin = HCFactions.getInstance();
 	}
@@ -31,10 +31,8 @@ public final class FactionDemoteCommand extends FactionSubCommand {
 
 	@Override
 	public void onCommand() {
-		checkConsole();
-
 		if (args.length < 2) {
-			sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
+			tell(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
 			return;
 		}
 
@@ -43,19 +41,19 @@ public final class FactionDemoteCommand extends FactionSubCommand {
 		try {
 			playerFaction = plugin.getFactionManager().getPlayerFaction(player);
 		} catch (NoFactionFoundException e) {
-			sender.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
+			tell(Lang.of("Commands-Factions-Global-NotInFaction"));
 			return;
 		}
 
 		//if (playerFaction.getMember(player.getUniqueId()).getRole() != Role.LEADER) {
-		//    sender.sendMessage(plugin.getMessagesOld().getString("Commands-Factions-Demote-OfficerRequired"));
+		//    tell(plugin.getMessagesOld().getString("Commands-Factions-Demote-OfficerRequired"));
 		//    return;
 		//}
 
 		FactionMember targetMember = playerFaction.findMember(args[1]);
 
 		if (targetMember == null) {
-			sender.sendMessage(Lang.of("Commands-Factions-Demote-PlayerNotInFaction"));
+			tell(Lang.of("Commands-Factions-Demote-PlayerNotInFaction"));
 			return;
 		}
 
@@ -65,27 +63,27 @@ public final class FactionDemoteCommand extends FactionSubCommand {
 
 
 		if(currentRole == Role.MEMBER || currentRole == Role.CAPTAIN && targetRole == Role.CAPTAIN){
-			sender.sendMessage(Lang.of("Commands-Factions-Demote-LeaderRequired"));
+			tell(Lang.of("Commands-Factions-Demote-LeaderRequired"));
 			return;
 		}
 
 		if(targetRole == Role.MEMBER){
-			sender.sendMessage(Lang.of("Commands-Factions-Demote-LowestRank").replace("{player}", targetMember.getCachedName()));
+			tell(Lang.of("Commands-Factions-Demote-LowestRank").replace("{player}", targetMember.getCachedName()));
 			return;
 		}
 
 		if(targetRole == Role.LEADER){
-			sender.sendMessage(Lang.of("Comamnds-Factions-Demote-LeaderDemote"));
+			tell(Lang.of("Comamnds-Factions-Demote-LeaderDemote"));
 			return;
 		}
 
 		if(!(currentRole == Role.LEADER) && targetRole == Role.COLEADER){
-			sender.sendMessage(Lang.of("Commands-Factions-Demote-LeaderRequired"));
+			tell(Lang.of("Commands-Factions-Demote-LeaderRequired"));
 			return;
 		}
 
 		if(!(currentRole == Role.COLEADER || currentRole == Role.LEADER) && targetRole != Role.CAPTAIN){
-			sender.sendMessage(Lang.of("Commands-Factions-Demote-CoLeaderRequired"));
+			tell(Lang.of("Commands-Factions-Demote-CoLeaderRequired"));
 			return;
 		}
 

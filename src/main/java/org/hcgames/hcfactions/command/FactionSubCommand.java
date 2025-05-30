@@ -6,6 +6,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.hcgames.hcfactions.util.text.CC;
 import org.mineacademy.fo.settings.Lang;
 
 import java.util.Arrays;
@@ -54,6 +55,9 @@ public abstract class FactionSubCommand implements TabCompleter {
 			return false;
 		}
 		return true;
+	}
+	protected void tell(String label){
+		sender.sendMessage(CC.translate(label));
 	}
 	protected boolean checkConsole() {
 		if (!(sender instanceof Player)) {

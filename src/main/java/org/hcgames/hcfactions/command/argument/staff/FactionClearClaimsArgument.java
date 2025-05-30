@@ -48,13 +48,13 @@ public final class FactionClearClaimsArgument extends FactionSubCommand {
     @Override
     public void onCommand() {
         if (args.length < 2) {
-            sender.sendMessage(Lang.of("command.error.usage", getUsage()));
+            tell(Lang.of("command.error.usage", getUsage()));
             return;
         }
 
         if (args[1].equalsIgnoreCase("all")) {
             if (!(sender instanceof ConsoleCommandSender)) {
-                sender.sendMessage(Lang.of("commands.error.console_only"));
+                tell(Lang.of("commands.error.console_only"));
                 return;
             }
 
@@ -69,12 +69,12 @@ public final class FactionClearClaimsArgument extends FactionSubCommand {
                 claimableFaction.removeClaims(claimableFaction.getClaims(), sender);
                 if (claimableFaction instanceof PlayerFaction)
 					((PlayerFaction) claimableFaction).broadcast(Lang.of("commands.staff.clearclaims.cleared_faction_broadcast", sender.getName()));
-                sender.sendMessage(Lang.of("commands.staff.clearclaims.cleared", claimableFaction.getName()));
+                tell(Lang.of("commands.staff.clearclaims.cleared", claimableFaction.getName()));
             }
 
             @Override
             public void onFail(FailReason reason) {
-                sender.sendMessage(Lang.of("commands.error.faction_not_found", args[1]));
+                tell(Lang.of("commands.error.faction_not_found", args[1]));
             }
         });
         return;

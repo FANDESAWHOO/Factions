@@ -52,15 +52,15 @@ public final class FactionForceRenameArgument extends FactionSubCommand {
     @Override
     public void onCommand() {
         if (args.length < 2) {
-            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
+            tell(ChatColor.RED + "Usage: " + getUsage());
             return;
         }
 
         String newName = args[2];
 
         if (Configuration.factionDisallowedNames.contains(newName)) {
-            //sender.sendMessage(ChatColor.RED + "'" + newName + "' is a blocked faction name.");
-            sender.sendMessage(Lang.of("Commands-Factions-Rename-BlockedName")
+            //tell(ChatColor.RED + "'" + newName + "' is a blocked faction name.");
+            tell(Lang.of("Commands-Factions-Rename-BlockedName")
                     .replace("{factionName}", newName));
             return;
         }
@@ -68,8 +68,8 @@ public final class FactionForceRenameArgument extends FactionSubCommand {
         int value = Configuration.factionNameMinCharacters;
 
         if (newName.length() < value) {
-            //sender.sendMessage(ChatColor.RED + "Faction names must have at least " + value + " characters.");
-            sender.sendMessage(Lang.of("Commands-Factions-Rename-MinimumChars")
+            //tell(ChatColor.RED + "Faction names must have at least " + value + " characters.");
+            tell(Lang.of("Commands-Factions-Rename-MinimumChars")
                     .replace("{minChars}", String.valueOf(value)));
             return;
         }
@@ -77,22 +77,22 @@ public final class FactionForceRenameArgument extends FactionSubCommand {
         value = Configuration.factionNameMaxCharacters;
 
         if (newName.length() > value) {
-            //sender.sendMessage(ChatColor.RED + "Faction names cannot be longer than " + value + " characters.");
-            sender.sendMessage(Lang.of("Commands-Factions-Rename-MaximumChars")
+            //tell(ChatColor.RED + "Faction names cannot be longer than " + value + " characters.");
+            tell(Lang.of("Commands-Factions-Rename-MaximumChars")
                     .replace("{maxChars}", String.valueOf(value)));
             return;
         }
 
         if (!JavaUtils.isAlphanumeric(newName)) {
-            //sender.sendMessage(ChatColor.RED + "Faction names may only be alphanumeric.");
-            sender.sendMessage(Lang.of("Commands-Factions-Rename-MustBeAlphanumeric"));
+            //tell(ChatColor.RED + "Faction names may only be alphanumeric.");
+            tell(Lang.of("Commands-Factions-Rename-MustBeAlphanumeric"));
             return;
         }
 
         try {
             if (plugin.getFactionManager().getFaction(newName) != null) {
-                //sender.sendMessage(ChatColor.RED + "Faction " + newName + ChatColor.RED + " already exists.");
-                sender.sendMessage(Lang.of("Commands-Factions-Rename-NameAlreadyExists")
+                //tell(ChatColor.RED + "Faction " + newName + ChatColor.RED + " already exists.");
+                tell(Lang.of("Commands-Factions-Rename-NameAlreadyExists")
                         .replace("{factionNewName}", newName));
                 return;
             }
@@ -109,7 +109,7 @@ public final class FactionForceRenameArgument extends FactionSubCommand {
 
             @Override
             public void onFail(FailReason reason) {
-                sender.sendMessage(Lang.of("commands.error.faction_not_found", args[1]));
+                tell(Lang.of("commands.error.faction_not_found", args[1]));
             }
         });
 

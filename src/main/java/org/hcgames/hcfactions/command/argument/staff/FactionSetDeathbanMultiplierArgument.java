@@ -38,7 +38,7 @@ public final class FactionSetDeathbanMultiplierArgument extends FactionSubComman
     @Override
     public void onCommand() {
         if (args.length < 3) {
-            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
+            tell(ChatColor.RED + "Usage: " + getUsage());
             return;
         }
 
@@ -48,17 +48,17 @@ public final class FactionSetDeathbanMultiplierArgument extends FactionSubComman
                 Double multiplier = JavaUtils.tryParseDouble(args[2]);
 
                 if (multiplier == null) {
-                    sender.sendMessage(ChatColor.RED + "'" + args[2] + "' is not a valid number.");
+                    tell(ChatColor.RED + "'" + args[2] + "' is not a valid number.");
                     return;
                 }
 
                 if (multiplier < MIN_MULTIPLIER) {
-                    sender.sendMessage(ChatColor.RED + "Deathban multipliers may not be less than " + MIN_MULTIPLIER + '.');
+                    tell(ChatColor.RED + "Deathban multipliers may not be less than " + MIN_MULTIPLIER + '.');
                     return;
                 }
 
                 if (multiplier > MAX_MULTIPLIER) {
-                    sender.sendMessage(ChatColor.RED + "Deathban multipliers may not be more than " + MAX_MULTIPLIER + '.');
+                    tell(ChatColor.RED + "Deathban multipliers may not be more than " + MAX_MULTIPLIER + '.');
                     return;
                 }
 
@@ -70,7 +70,7 @@ public final class FactionSetDeathbanMultiplierArgument extends FactionSubComman
 
             @Override
             public void onFail(FailReason reason) {
-                sender.sendMessage(Lang.of("commands.error.faction_not_found", args[1]));
+                tell(Lang.of("commands.error.faction_not_found", args[1]));
             }
         });
 

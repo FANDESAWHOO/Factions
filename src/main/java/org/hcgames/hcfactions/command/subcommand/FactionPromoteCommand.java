@@ -18,7 +18,7 @@ public final class FactionPromoteCommand extends FactionSubCommand {
     private final HCFactions plugin;
 
     public FactionPromoteCommand() {
-        super("promote | captain | officer | mod | moderator");
+        super("promote|captain|officer|mod|moderator");
         setDescription( "Promotes a player to a captain.");
         plugin = HCFactions.getInstance();
 
@@ -33,12 +33,12 @@ public final class FactionPromoteCommand extends FactionSubCommand {
     @Override
     public void onCommand() {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "Only players can set faction captains.");
+            tell(ChatColor.RED + "Only players can set faction captains.");
             return;
         }
 
         if (args.length < 2) {
-            sender.sendMessage(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
+            tell(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
             return;
         }
 
@@ -49,29 +49,29 @@ public final class FactionPromoteCommand extends FactionSubCommand {
         try {
             playerFaction = plugin.getFactionManager().getPlayerFaction(uuid);
         } catch (NoFactionFoundException e) {
-            sender.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
+            tell(Lang.of("Commands-Factions-Global-NotInFaction"));
             return;
         }
 
         //if (playerFaction.getMember(uuid).getRole() != Role.LEADER) {
-          //  sender.sendMessage(plugin.getMessagesOld().getString("Commands-Factions-Promote-LeaderRequired"));
-            //sender.sendMessage(ChatColor.RED + "You must be a faction leader to assign members as a captain.");
+          //  tell(plugin.getMessagesOld().getString("Commands-Factions-Promote-LeaderRequired"));
+            //tell(ChatColor.RED + "You must be a faction leader to assign members as a captain.");
          //   return;
         //}
 
         FactionMember targetMember = playerFaction.findMember(args[1]);
 
         if (targetMember == null) {
-            sender.sendMessage(Lang.of("Commands-Factions-Promote-PlayerNotInFaction"));
-            //sender.sendMessage(ChatColor.RED + "That player is not in your faction.");
+            tell(Lang.of("Commands-Factions-Promote-PlayerNotInFaction"));
+            //tell(ChatColor.RED + "That player is not in your faction.");
             return;
         }
 
 //        if (targetMember.getRole() != Role.MEMBER) {
-  //          sender.sendMessage(plugin.getMessagesOld().getString("Commands-Factions-Promote-PromotionTooHigh")
+  //          tell(plugin.getMessagesOld().getString("Commands-Factions-Promote-PromotionTooHigh")
     //                .replace("{player}", targetMember.getName())
      //               .replace("{playerRole}", targetMember.getRole().getName()));
-           //sender.sendMessage(ChatColor.RED + "You can only assign captains to members, " + targetMember.getName() + " is a " + targetMember.getRole().getName() + '.');
+           //tell(ChatColor.RED + "You can only assign captains to members, " + targetMember.getName() + " is a " + targetMember.getRole().getName() + '.');
       //      return;
       //  }
 
@@ -79,18 +79,18 @@ public final class FactionPromoteCommand extends FactionSubCommand {
         Role targetRole = targetMember.getRole();
 
         if(targetRole == Role.MEMBER && !(currentRole == Role.LEADER || currentRole == Role.COLEADER)){
-            sender.sendMessage(Lang.of("Commands-Factions-Promote-CoLeaderRequired"));
+            tell(Lang.of("Commands-Factions-Promote-CoLeaderRequired"));
             //Need to be co leader or leader to promote members to captains
             return;
         }
 
         if(targetRole == Role.CAPTAIN && currentRole != Role.LEADER){
-            sender.sendMessage(Lang.of("Commands-Factions-Promote-LeaderRequired"));
+            tell(Lang.of("Commands-Factions-Promote-LeaderRequired"));
             return;
         }
 
         if(targetRole == Role.COLEADER || targetRole == Role.LEADER){
-            sender.sendMessage(Lang.of("Commands-Factions-Promote-PromotionTooHigh")
+            tell(Lang.of("Commands-Factions-Promote-PromotionTooHigh")
                     .replace("{player}", targetMember.getCachedName()).replace("{playerRole}",
                             targetMember.getRole().getName()));
             //promotion too high

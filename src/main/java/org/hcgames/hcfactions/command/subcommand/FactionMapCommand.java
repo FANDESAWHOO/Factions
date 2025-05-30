@@ -32,7 +32,6 @@ public final class FactionMapCommand extends FactionSubCommand {
 
 	@Override
 	public void onCommand() {
-		checkConsole();
 		Player player = (Player) sender;
 		UUID uuid = player.getUniqueId();
 
@@ -51,8 +50,8 @@ public final class FactionMapCommand extends FactionSubCommand {
 			if (!LandMap.updateMap(player, plugin, visualType, true)) return;
 		} else {
 			HCFactions.getInstance().getVisualiseHandler().clearVisualBlocks(player, visualType, null);
-			//     sender.sendMessage(HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Map-DisabledClaimPillars"));
-			sender.sendMessage(ChatColor.RED + "Claim pillars are no longer shown.");
+			//     tell(HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Map-DisabledClaimPillars"));
+			tell(ChatColor.RED + "Claim pillars are no longer shown.");
 		}
 
 		player.setMetadata("claimMap", new FixedMetadataValue(plugin, newShowingMap));

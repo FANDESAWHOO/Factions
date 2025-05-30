@@ -7,8 +7,12 @@ import org.mineacademy.fo.annotation.AutoRegister;
 import org.mineacademy.fo.command.SimpleCommand;
 import org.mineacademy.fo.settings.Lang;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  *  Class to handle the command and tab completion for the faction command.
@@ -29,7 +33,8 @@ public final class FactionCommand extends SimpleCommand {
 		commands.add(class1);
 	}
 	public FactionCommand() {
-		super("faction | fac | f");
+		super("faction|fac|f");
+		setMinArguments(0);
 		addArgument(new FactionAcceptCommand());
 		addArgument(new FactionAllyCommand());
 		addArgument(new FactionAnnouncementCommand());
@@ -38,10 +43,7 @@ public final class FactionCommand extends SimpleCommand {
 		addArgument(new FactionClaimCommand());
 		addArgument(new FactionClaimChunkCommand());
 		addArgument(new FactionClaimForArgument());
-		addArgument(new FactionAcceptCommand());
 		addArgument(new FactionClearClaimsArgument());
-		addArgument(new FactionAcceptCommand());
-		addArgument(new FactionAcceptCommand());
 		addArgument(new FactionDepositCommand());
 		addArgument(new FactionDisbandCommand());
 		addArgument(new FactionSetDtrRegenArgument());
@@ -53,10 +55,8 @@ public final class FactionCommand extends SimpleCommand {
 		addArgument(new FactionForceUnclaimHereArgument());
 		addArgument(help = new FactionHelpCommand());
 		addArgument(new FactionHomeCommand());
-		addArgument(new FactionAcceptCommand());
 		addArgument(new FactionInvitesCommand());
 		addArgument(new FactionKickCommand());
-		addArgument(new FactionAcceptCommand());
 		addArgument(new FactionLeaveCommand());
 		addArgument(new FactionListCommand());
 		addArgument(new FactionMapCommand());
@@ -77,12 +77,12 @@ public final class FactionCommand extends SimpleCommand {
 		addArgument(new FactionUninviteCommand());
 		addArgument(new FactionWithdrawCommand());
 		//addArgument(new FactionLivesCommand());
-		addArgument(new FactionAcceptCommand());
 		addArgument(new FactionFocusCommand());
 		addArgument(new FactionRemoveCooldownCommand());
 		addArgument(new FactionReloadArgument());
 		addArgument(new FactionForceRenameArgument());
 		addArgument(new FactionSnowCommand());
+		addArgument(new FactionCreateCommand());
 		//addArgument(new FactionPastFactionsCommand(plugin));
 	}
 
@@ -99,15 +99,43 @@ public final class FactionCommand extends SimpleCommand {
 	 * Executed when the command is run. You can get the variables sender and args directly,
 	 * and use convenience checks in the simple command class.
 	 */
+
 	@Override
 	protected void onCommand() {
 		checkPerm(getPermission());
-		if(args.length >= 1){
-			FactionSubCommand argument = getSubCommand(args[0]);
-			if(argument == null) tell(Lang.of("Commands-Unknown-Subcommand")
+
+		if (args.length == 0) {
+			help.execute(sender, getLabel(), args);
+			return;
+		}
+
+		FactionSubCommand sub = getSubCommand(args[0]);
+		if (sub == null) {
+			// Mensaje de error mejorado
+			tell(Lang.of("Commands-Unknown-Subcommand")
 					.replace("{subCommand}", args[0])
-					.replace("{commandLabel}", getName()));
-			else argument.execute(sender, getLabel(), args);
-		} else help.execute(sender, getLabel(), args);
+					.replace("{commandLabel}", getLabel()));
+			return;
+		}
+		sub.execute(sender, getLabel(), args);
+	}
+
+	@Override
+	protected List<String> tabComplete() {
+		if (args.length == 1) return commands.stream()
+				.flatMap(sub -> Stream.concat(
+						Stream.of(sub.getName()),
+						Arrays.stream(sub.getAliases())
+				))
+				.filter(name -> name.toLowerCase().startsWith(args[0].toLowerCase()))
+				.collect(Collectors.toList());
+		if (args.length >= 2) {
+			FactionSubCommand sub = getSubCommand(args[0]);
+			if (sub != null) {
+				String[] subArgs = Arrays.copyOfRange(args, 1, args.length);
+				return sub.onTabComplete(sender, null, getLabel(), subArgs);
+			}
+		}
+		return Collections.emptyList();
 	}
 }

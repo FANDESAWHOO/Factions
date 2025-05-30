@@ -17,7 +17,7 @@ public final class FactionClaimChunkCommand extends FactionSubCommand {
 	private final HCFactions plugin;
 
 	public FactionClaimChunkCommand() {
-		super("claimchunk | chunkclaim");
+		super("claimchunk|chunkclaim");
 		setDescription("Claim a chunk of land in the Wilderness.");
 		plugin = HCFactions.getInstance();
 
@@ -30,24 +30,23 @@ public final class FactionClaimChunkCommand extends FactionSubCommand {
 
 	@Override
 	public void onCommand() {
-		checkConsole();
 		Player player = (Player) sender;
 		PlayerFaction playerFaction;
 		try{
 			playerFaction = plugin.getFactionManager().getPlayerFaction(player);
 		}catch (NoFactionFoundException e){
-			sender.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
+			tell(Lang.of("Commands-Factions-Global-NotInFaction"));
 			return;
 		}
 
 
 		if (playerFaction.isRaidable()) {
-			sender.sendMessage(Lang.of("Commands-Factions-ClaimChunk-NoClaimRaidable"));
+			tell(Lang.of("Commands-Factions-ClaimChunk-NoClaimRaidable"));
 			return;
 		}
 
 		if (playerFaction.getMember(player.getUniqueId()).getRole() == Role.MEMBER) {
-			sender.sendMessage(Lang.of("Commands-Factions-ClaimChunk-OfficerRequired"));
+			tell(Lang.of("Commands-Factions-ClaimChunk-OfficerRequired"));
 			return;
 		}
 

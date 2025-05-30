@@ -13,7 +13,7 @@ public final class FactionFriendlyFireCommand extends FactionSubCommand {
 	private final HCFactions plugin;
 
 	public FactionFriendlyFireCommand() {
-		super("friendlyfire | damage | ff");
+		super("friendlyfire|damage|ff");
 		setDescription("Toggle friendly fire.");
 		plugin = HCFactions.getInstance();
 
@@ -26,18 +26,17 @@ public final class FactionFriendlyFireCommand extends FactionSubCommand {
 
 	@Override
 	public void onCommand() {
-		checkConsole();
 		Player player = (Player) sender;
 		PlayerFaction playerFaction;
 
 		try {
 			playerFaction = plugin.getFactionManager().getPlayerFaction(player);
 		} catch (NoFactionFoundException e) {
-			sender.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
+			tell(Lang.of("Commands-Factions-Global-NotInFaction"));
 			return;
 		}
 		if (playerFaction.getMember(player.getUniqueId()).getRole() == Role.MEMBER) {
-			player.sendMessage("Must be an Officer or higher...");
+			tell("Must be an Officer or higher...");
 			return;
 		}
 		if(playerFaction.isFriendly_fire()) playerFaction.broadcast("An officer has toggled off the friendly fire...");
