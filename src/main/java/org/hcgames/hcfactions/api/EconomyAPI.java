@@ -1,50 +1,54 @@
 package org.hcgames.hcfactions.api;
 
+import lombok.Setter;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.api.enums.EconomyTypes;
 import org.hcgames.hcfactions.api.events.EconomyEvent;
+import org.hcgames.hcfactions.api.interfaces.IEconomy;
 import org.mineacademy.fo.Common;
 
 /**
- * BETA VERSION
- * MAYBE WE NEED TO USE
- * A INTERFACE CLASS
- * AND CHANGE ECONOMYOVERRIDE
- * TO A EconomyManaer INTERFACE
+ * STABLE VERSION
+ * CHANGED REFLECTION METHOD
+ * TO IEconomy INTERFACE
+ * :)
  */
-public class EconomyAPI {
-	public static String ECONOMY_SYMBOL = "$";
-	public static boolean customEvents = !Configuration.api;
-	public static Class economyOverride = null; // YOU MUST OVERRIDE THIS TO MAKE WORK
-	
+public final class EconomyAPI {
+	public static final String ECONOMY_SYMBOL = "$";
+	private static final boolean API = Configuration.api;
+	private static final boolean customEvents = Configuration.customEvents;
+	@Setter
+	private static IEconomy economy = null; // YOU MUST OVERRIDE THIS TO MAKE WORK
+
 	public static void subtractBalance(Player id, int amount){
-       if (customEvents)
-		   Common.callEvent(new EconomyEvent(false ,id ,amount, EconomyTypes.subtract));
-	   else HCFactions.getInstance().getEcon().withdrawPlayer(id, amount);
+       if (!API){
+		   if (customEvents) {
+			   Common.callEvent(new EconomyEvent(false, id, amount, EconomyTypes.subtract));
+			   return;
+		   }
+		   if(economy != null ) economy.subtractBalance(id.getUniqueId(), amount);
+	   } else HCFactions.getInstance().getEcon().withdrawPlayer(id, amount);
 	}
 
 	public static void addBalance(Player id, int amount) {
-		if (customEvents)
-			Common.callEvent(new EconomyEvent(false ,id ,amount, EconomyTypes.deposit));
-		else HCFactions.getInstance().getEcon().depositPlayer(id, amount);
+	if(!API){
+		if (customEvents) {
+			Common.callEvent(new EconomyEvent(false, id, amount, EconomyTypes.deposit));
+			return;
+		}
+		if(economy != null) economy.addBalance(id.getUniqueId(), amount);
+	} else
+		HCFactions.getInstance().getEcon().depositPlayer(id, amount);
 	}
 	
 	public static Double getBalance(Player player){
-		if (customEvents) {
-			if (economyOverride == null) throw new IllegalStateException("No custom economy provider set.");
-
-			try {
-				return (Double) economyOverride
-						.getClass()
-						.getMethod("getBalance", Player.class)
-						.invoke(economyOverride, player);
-
-			} catch (Exception e) {
-				throw new RuntimeException("Failed to invoke custom getBalance", e);
-			}
-		} else return HCFactions.getInstance().getEcon().getBalance(player);
+		if(!API){
+			if (customEvents) Common.callEvent(new EconomyEvent(false, player, 0, EconomyTypes.balance));
+			if(economy != null) return economy.getBalance(player.getUniqueId());
+		}
+		return HCFactions.getInstance().getEcon().getBalance(player);
 	}
 
 }

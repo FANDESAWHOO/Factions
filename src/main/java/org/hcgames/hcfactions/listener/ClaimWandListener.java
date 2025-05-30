@@ -21,7 +21,7 @@
 package org.hcgames.hcfactions.listener;
 
 
-
+import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -37,11 +37,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.hcgames.hcfactions.HCFactions;
@@ -61,9 +57,10 @@ import java.util.UUID;
 public class ClaimWandListener implements Listener{
 
     private final HCFactions plugin;
-
-    public ClaimWandListener(HCFactions plugin) {
-        this.plugin = plugin;
+    @Getter
+    private static final ClaimWandListener claimWandListener = new ClaimWandListener();
+    private ClaimWandListener() {
+        plugin = HCFactions.getInstance();
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -71,9 +68,7 @@ public class ClaimWandListener implements Listener{
         Action action = event.getAction();
 
         // They didn't use a claiming wand for this action, so ignore.
-        if (action == Action.PHYSICAL || !event.hasItem() || !isClaimingWand(event.getItem())) {
-            return;
-        }
+        if (action == Action.PHYSICAL || !event.hasItem() || !isClaimingWand(event.getItem())) return;
 
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
@@ -116,9 +111,7 @@ public class ClaimWandListener implements Listener{
             Location blockLocation = block.getLocation();
 
             // Don't hoe the soil block.
-            if (action == Action.RIGHT_CLICK_BLOCK) {
-                event.setCancelled(true);
-            }
+            if (action == Action.RIGHT_CLICK_BLOCK) event.setCancelled(true);
 
             if (plugin.getClaimHandler().canClaimHere(player, blockLocation)) {
                 ClaimSelection revert;
@@ -146,14 +139,12 @@ public class ClaimWandListener implements Listener{
                 // Prevent players clicking in the same spot twice.
                 int blockX = blockLocation.getBlockX();
                 int blockZ = blockLocation.getBlockZ();
-                if (oldPosition != null && blockX == oldPosition.getBlockX() && blockZ == oldPosition.getBlockZ()) {
-                    return;
-                }
+                if (oldPosition != null && blockX == oldPosition.getBlockX() && blockZ == oldPosition.getBlockZ())
+					return;
 
                 // Allow at least 1 tick before players can update one of the positions to prevent lag/visual glitches with delayed task below.
-                if ((System.currentTimeMillis() - claimSelection.getLastUpdateMillis()) <= ClaimHandler.PILLAR_BUFFER_DELAY_MILLIS) {
-                    return;
-                }
+                if ((System.currentTimeMillis() - claimSelection.getLastUpdateMillis()) <= ClaimHandler.PILLAR_BUFFER_DELAY_MILLIS)
+					return;
 
                 if (opposite != null) {
                     int xDiff = Math.abs(opposite.getBlockX() - blockX) + 1; // Add one as it gets a weird offset
@@ -166,12 +157,11 @@ public class ClaimWandListener implements Listener{
                     }
                 }
 
-                if (oldPosition != null) {
-                    HCFactions.getInstance().getVisualiseHandler().clearVisualBlocks(player, VisualType.CREATE_CLAIM_SELECTION, visualBlock -> {
-                        Location location = visualBlock.getLocation();
-                        return location.getBlockX() == oldPosition.getBlockX() && location.getBlockZ() == oldPosition.getBlockZ();
-                    });
-                }
+                if (oldPosition != null)
+					HCFactions.getInstance().getVisualiseHandler().clearVisualBlocks(player, VisualType.CREATE_CLAIM_SELECTION, visualBlock -> {
+						Location location = visualBlock.getLocation();
+						return location.getBlockX() == oldPosition.getBlockX() && location.getBlockZ() == oldPosition.getBlockZ();
+					});
 
                 if (selectionId == 1) claimSelection.setPos1(blockLocation);
                 if (selectionId == 2) claimSelection.setPos2(blockLocation);
@@ -192,9 +182,9 @@ public class ClaimWandListener implements Listener{
                             .replace("{claimArea}", String.valueOf(claim.getArea())));
                 }
 
-                final int blockY = block.getY();
-                final int maxHeight = player.getWorld().getMaxHeight();
-                final List<Location> locations = new ArrayList<>(maxHeight);
+                int blockY = block.getY();
+                int maxHeight = player.getWorld().getMaxHeight();
+                List<Location> locations = new ArrayList<>(maxHeight);
                 for (int i = blockY; i < maxHeight; i++) {
                     Location other = blockLocation.clone();
                     other.setY(i);
@@ -219,9 +209,7 @@ public class ClaimWandListener implements Listener{
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        if (isClaimingWand(event.getPlayer().getItemInHand())) {
-            event.setCancelled(true);
-        }
+        if (isClaimingWand(event.getPlayer().getItemInHand())) event.setCancelled(true);
     }
 
     @EventHandler
@@ -266,9 +254,8 @@ public class ClaimWandListener implements Listener{
     // Prevents dropping Claiming Wands on death.
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
-        if (event.getDrops().remove(plugin.getClaimHandler().getClaimWand())) {
-            plugin.getClaimHandler().clearClaimSelection(event.getEntity());
-        }
+        if (event.getDrops().remove(plugin.getClaimHandler().getClaimWand()))
+			plugin.getClaimHandler().clearClaimSelection(event.getEntity());
     }
 
     // Doesn't get called when opening own inventory.

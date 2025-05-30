@@ -74,7 +74,7 @@ public final class Configuration extends SimpleSettings {
     public static String password;
     // API
     public static Boolean api;
-
+    public static Boolean customEvents;
 
     public static Boolean mongo;
 
@@ -150,5 +150,6 @@ public final class Configuration extends SimpleSettings {
         messageDebug = getBoolean("messageDebug");
 
         api = getBoolean("API.our");
+        customEvents = getBoolean("API.events");
     }
 }

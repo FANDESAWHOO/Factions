@@ -143,7 +143,9 @@ mongo:
   database: "bz5tv19wwqmhwvd"
   username: "uyiynvbaeurstqdxiuv3"
   password: "rmpqalpSJnlVDhf0LfLW"
+# IMPORTANT FOR FACTION THINGS.
 kit-map: false
+# SHOULD USE OUR SYSTEMS (LISTENERS & TIMERS & OTHERS)
 API:
-  # SHOULD USE OUR SYSTEMS (LISTENERS & TIMERS & OTHERS)
-  our: true
+  our: true # FALSE MEANS USE EVENTS OR INTERFACES
+  events: false # TRUE MEANS INTERFACES | FALSE MEANS EVENTS

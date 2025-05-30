@@ -95,9 +95,7 @@ public enum VisualType{
             @Override
             VisualBlockData generate(Player player, Location location){
                 int y = location.getBlockY();
-                if(y == 0 || y % 3 == 0){
-                    return new VisualBlockData(types[materialCounter]);
-                }
+                if(y == 0 || y % 3 == 0) return new VisualBlockData(types[materialCounter]);
 
                 Faction faction = HCFactions.getInstance().getFactionManager().getFactionAt(location);
                 return new VisualBlockData(Material.STAINED_GLASS, (faction != null ? faction.getRelation(player) : Relation.ENEMY).toDyeColour().getData());

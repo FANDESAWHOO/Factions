@@ -88,11 +88,11 @@
              Please see the maven-shade-plugin below and configure inclusions properly otherwise
              your file will shade with all the dependencies resulting it crashes and huge file size. -->
         <dependency>
-            <groupId>org.hcgames.stats</groupId>
-            <artifactId>Stats</artifactId>
-            <version>1.0.0</version>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.8.8-R0.1-SNAPSHOT</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/libs/stats.jar</systemPath>
+            <systemPath>${project.basedir}/libs/wspigot.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.github.MilkBowl</groupId>
@@ -117,13 +117,6 @@
             <version>6.1-SNAPSHOT</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/libs/worldedit-bukkit-6.1.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.8.8-R0.1-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/libs/wspigot.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>${foundation.path}</groupId>

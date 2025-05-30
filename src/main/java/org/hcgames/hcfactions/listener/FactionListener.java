@@ -1,5 +1,6 @@
 package org.hcgames.hcfactions.listener;
 
+import lombok.Getter;
 import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -51,8 +52,9 @@ public class FactionListener implements Listener{
 	private static final long LAND_CHANGE_MSG_THRESHOLD = 225L;
 
 	private final HCFactions plugin;
-
-	public FactionListener(){
+	@Getter
+    private static final FactionListener factionListener = new FactionListener();
+	private FactionListener(){
 		plugin = HCFactions.getInstance();
 	}
 

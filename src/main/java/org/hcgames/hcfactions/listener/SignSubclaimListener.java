@@ -24,17 +24,12 @@ package org.hcgames.hcfactions.listener;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import lombok.RequiredArgsConstructor;
+import lombok.Getter;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Chest;
-import org.bukkit.block.DoubleChest;
-import org.bukkit.block.Sign;
+import org.bukkit.block.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -49,7 +44,6 @@ import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.material.MaterialData;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
@@ -59,14 +53,9 @@ import org.hcgames.hcfactions.structure.FactionMember;
 import org.hcgames.hcfactions.structure.Role;
 import org.mineacademy.fo.settings.Lang;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-@RequiredArgsConstructor
+
 public class SignSubclaimListener implements Listener{
 
     private static final int MAX_SIGN_LINE_CHARS = 16;
@@ -79,7 +68,12 @@ public class SignSubclaimListener implements Listener{
     };
 
     private final HCFactions plugin;
+    @Getter
+    private final SignSubclaimListener signSubclaimListener = new SignSubclaimListener();
 
+    private SignSubclaimListener(){
+        this.plugin = HCFactions.getInstance();
+    }
     private SubclaimType getSubclaimType(String value, boolean creating) {
         if (creating) {
             value = value.toUpperCase();

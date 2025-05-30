@@ -20,7 +20,7 @@
 
 package org.hcgames.hcfactions.listener;
 
-import lombok.RequiredArgsConstructor;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -39,10 +39,15 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
+
 public class FactionChatListener implements Listener{
 
     private final HCFactions plugin;
+    @Getter private final static FactionChatListener chatListener = new FactionChatListener();
+
+    private FactionChatListener(){
+        this.plugin = HCFactions.getInstance();
+    }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onPlayerChat(AsyncPlayerChatEvent event) {

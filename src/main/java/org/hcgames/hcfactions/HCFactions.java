@@ -8,7 +8,6 @@ import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.hcgames.hcfactions.claim.Claim;
 import org.hcgames.hcfactions.claim.ClaimHandler;
@@ -28,7 +27,6 @@ import org.hcgames.hcfactions.util.cuboid.NamedCuboid;
 import org.hcgames.hcfactions.util.itemdb.ItemDb;
 import org.hcgames.hcfactions.util.itemdb.SimpleItemDb;
 import org.hcgames.hcfactions.visualise.VisualiseHandler;
-import org.hcgames.stats.Stats;
 import org.mineacademy.fo.plugin.SimplePlugin;
 
 /**
@@ -50,7 +48,6 @@ public class HCFactions extends SimplePlugin {
     private WorldEditPlugin worldEdit;
     private FactionManager factionManager;
     private ClaimHandler claimHandler;
-    private Stats stats;
     private VisualiseHandler visualiseHandler;
     private TimerManager timerManager;
 
@@ -101,7 +98,6 @@ public class HCFactions extends SimplePlugin {
     }
     @Override
     public void onPluginStop() {
-
         saveData();
         if (mongoManager != null) mongoManager.disconnect();
 		saveConfig();
@@ -118,13 +114,15 @@ public class HCFactions extends SimplePlugin {
     }
 
     private void registerListeners() {
-        registerEvents(new ClaimWandListener(this));
-        registerEvents(new NameCacheListener(this));
-        registerEvents(new SignSubclaimListener(this));
-        registerEvents(new ProtectionListener(this));
-        registerEvents(new FactionChatListener(this));
-        if(Configuration.api)
-            registerEvents(new FactionListener());
+        registerEvents(ClaimWandListener.getClaimWandListener());
+        registerEvents(NameCacheListener.getNameCacheListener());
+        registerEvents(NameCacheListener.getNameCacheListener());
+        registerEvents(ProtectionListener.getProtectionListener());
+        registerEvents(FactionChatListener.getChatListener());
+        if(Configuration.api) {
+            registerEvents(FactionListener.getFactionListener());
+            registerEvents(ChatListener.getChatListener());
+        }
     }
 
     private void registerManagers() {
@@ -142,8 +140,6 @@ public class HCFactions extends SimplePlugin {
             timerManager = new TimerManager(this);
         claimHandler = new ClaimHandler(this);
         worldEdit = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
-        Plugin statsPlugin = getServer().getPluginManager().getPlugin("Stats");
-        if (statsPlugin instanceof Stats) stats = (Stats) statsPlugin;
     }
 
     public static HCFactions getInstance() {
