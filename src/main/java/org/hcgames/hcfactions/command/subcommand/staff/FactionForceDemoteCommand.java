@@ -1,4 +1,4 @@
-package org.hcgames.hcfactions.command.argument.staff;
+package org.hcgames.hcfactions.command.subcommand.staff;
 
 
 import org.hcgames.hcfactions.HCFactions;
@@ -12,11 +12,11 @@ import org.mineacademy.fo.settings.Lang;
 import java.util.Collections;
 import java.util.List;
 
-public final class FactionForceDemoteArgument extends FactionSubCommand {
+public final class FactionForceDemoteCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionForceDemoteArgument() {
+    public FactionForceDemoteCommand() {
         super("forcedemote");
         setDescription( "Forces the demotion status of a player.");
         plugin = HCFactions.getInstance();

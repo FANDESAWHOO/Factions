@@ -18,7 +18,7 @@
  *   in this Software without prior written authorization of the copyright holder.
  */
 
-package org.hcgames.hcfactions.command.argument.staff;
+package org.hcgames.hcfactions.command.subcommand.staff;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.defaults.BukkitCommand;
@@ -32,11 +32,11 @@ import org.hcgames.hcfactions.util.JavaUtils;
 import org.mineacademy.fo.settings.Lang;
 
 
-public final class FactionForceRenameArgument extends FactionSubCommand {
+public final class FactionForceRenameCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionForceRenameArgument() {
+    public FactionForceRenameCommand() {
         super("forcename");
         setDescription( "Forces a rename of a faction.");
         plugin = HCFactions.getInstance();

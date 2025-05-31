@@ -1,4 +1,4 @@
-package org.hcgames.hcfactions.command.argument.staff;
+package org.hcgames.hcfactions.command.subcommand.staff;
 
 
 import org.hcgames.hcfactions.Configuration;
@@ -11,11 +11,11 @@ import org.mineacademy.fo.settings.Lang;
 
 
 
-public final class FactionCreateSystemArgument extends FactionSubCommand {
+public final class FactionCreateSystemCommand extends FactionSubCommand {
 	
 	private final HCFactions plugin;
 	
-	public FactionCreateSystemArgument() {
+	public FactionCreateSystemCommand() {
 	    super("createsystem");
 	    setDescription("Create a system faction.");
 		plugin = HCFactions.getInstance();

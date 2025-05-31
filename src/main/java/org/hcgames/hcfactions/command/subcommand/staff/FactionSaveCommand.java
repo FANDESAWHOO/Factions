@@ -1,4 +1,4 @@
-package org.hcgames.hcfactions.command.argument.staff;
+package org.hcgames.hcfactions.command.subcommand.staff;
 
 import net.md_5.bungee.api.ChatColor;
 import org.hcgames.hcfactions.HCFactions;
@@ -8,11 +8,11 @@ import org.hcgames.hcfactions.command.FactionSubCommand;
  * Why? 18:20 28/5/2025
  */
 
-public final class FactionSaveArgument extends FactionSubCommand {
+public final class FactionSaveCommand extends FactionSubCommand {
 	
 	private final HCFactions plugin;
 	
-	public FactionSaveArgument() {
+	public FactionSaveCommand() {
 		super("save");
 		setDescription( "Save to database the factions :)");
 		plugin = HCFactions.getInstance();

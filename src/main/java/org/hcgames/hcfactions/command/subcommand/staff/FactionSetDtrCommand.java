@@ -1,4 +1,4 @@
-package org.hcgames.hcfactions.command.argument.staff;
+package org.hcgames.hcfactions.command.subcommand.staff;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -19,11 +19,11 @@ import java.util.List;
 /**
  * Faction argument used to set the DTR of {@link Faction}s.
  */
-public final class FactionSetDtrArgument extends FactionSubCommand {
+public final class FactionSetDtrCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionSetDtrArgument() {
+    public FactionSetDtrCommand() {
         super("setdtr|dtr");
         setDescription("Sets the DTR of a faction.");
         plugin = HCFactions.getInstance();

@@ -1,4 +1,4 @@
-package org.hcgames.hcfactions.command.argument.staff;
+package org.hcgames.hcfactions.command.subcommand.staff;
 
 import org.bukkit.ChatColor;
 import org.hcgames.hcfactions.HCFactions;
@@ -11,20 +11,19 @@ import org.mineacademy.fo.settings.Lang;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
-public final class FactionForceLeaderArgument extends FactionSubCommand {
+public final class FactionForcePromoteCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionForceLeaderArgument() {
-        super("forceleader");
-        setDescription("Forces the leader of a faction.");
+    public FactionForcePromoteCommand() {
+        super("forcepromote");
+        setDescription("Forces the promotion status of a player.");
         plugin = HCFactions.getInstance();
-     //   this.permission = "hcf.command.faction.argument." + getName();
+       // this.permission = "hcf.command.faction.argument." + getName();
     }
 
-    
+  
     @Override
 	public String getUsage() {
         return '/' + label + ' ' + getName() + " <playerName>";
@@ -38,7 +37,6 @@ public final class FactionForceLeaderArgument extends FactionSubCommand {
         }
 
         plugin.getFactionManager().advancedSearch(args[1], PlayerFaction.class, new SearchCallback<PlayerFaction>() {
-
             @Override
             public void onSuccess(PlayerFaction faction) {
                 FactionMember member = null;
@@ -54,22 +52,13 @@ public final class FactionForceLeaderArgument extends FactionSubCommand {
                     return;
                 }
 
-                if (member.getRole() == Role.LEADER) {
-                    tell(ChatColor.RED + member.getCachedName() + " is already the leader of " + faction.getFormattedName(sender) + ChatColor.RED + '.');
+                if (member.getRole() != Role.MEMBER) {
+                    tell(ChatColor.RED + member.getCachedName() + " is already a " + member.getRole().getName() + '.');
                     return;
                 }
 
-                Optional<FactionMember> leader = faction.getLeader();
-                String oldLeaderName = leader.isPresent() ? "none" : leader.get().getCachedName();
-                String newLeaderName = member.getCachedName();
-
-                // Demote the previous leader, promoting the new.
-                if (leader.isPresent()) leader.get().setRole(Role.CAPTAIN);
-
-                member.setRole(Role.LEADER);
-                faction.broadcast(ChatColor.YELLOW + sender.getName() + " has forcefully set the leader to " + newLeaderName + '.');
-
-                tell(ChatColor.GOLD.toString() + ChatColor.BOLD + "Leader of " + faction.getName() + " was forcefully set from " + oldLeaderName + " to " + newLeaderName + '.');
+                member.setRole(Role.CAPTAIN);
+                faction.broadcast(ChatColor.GOLD.toString() + ChatColor.BOLD + sender.getName() + " has been forcefully assigned as a captain.");
             }
 
             @Override
@@ -77,7 +66,6 @@ public final class FactionForceLeaderArgument extends FactionSubCommand {
                 tell(Lang.of("Commands.error.faction_not_found", args[1]));
             }
         });
-
         return;
     }
 

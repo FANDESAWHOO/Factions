@@ -1,4 +1,4 @@
-package org.hcgames.hcfactions.command.argument.staff;
+package org.hcgames.hcfactions.command.subcommand.staff;
 
 
 import org.bukkit.command.ConsoleCommandSender;
@@ -13,11 +13,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-public final class FactionBanArgument extends FactionSubCommand {
+public final class FactionBanCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionBanArgument() {
+    public FactionBanCommand() {
         super("ban");
         setDescription("Bans every member in this faction.");
         plugin = HCFactions.getInstance();

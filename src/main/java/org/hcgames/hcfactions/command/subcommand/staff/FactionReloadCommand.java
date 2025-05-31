@@ -1,4 +1,4 @@
-package org.hcgames.hcfactions.command.argument.staff;
+package org.hcgames.hcfactions.command.subcommand.staff;
 
 import org.bukkit.ChatColor;
 import org.hcgames.hcfactions.command.FactionSubCommand;
@@ -9,10 +9,10 @@ import java.util.List;
  * Why SystemUpdate removed this?
  * Other thing i don't gonna know.
  */
-public final class FactionReloadArgument extends FactionSubCommand {
+public final class FactionReloadCommand extends FactionSubCommand {
 
    
-    public FactionReloadArgument() {
+    public FactionReloadCommand() {
         super("reload");
         setDescription( "Reloads the messages file from .");
       //  this.permission = "hcf.command.faction.argument." + getName();

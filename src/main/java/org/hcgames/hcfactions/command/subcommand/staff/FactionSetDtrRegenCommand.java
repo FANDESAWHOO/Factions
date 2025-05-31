@@ -1,4 +1,4 @@
-package org.hcgames.hcfactions.command.argument.staff;
+package org.hcgames.hcfactions.command.subcommand.staff;
 
 import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
@@ -17,11 +17,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public final class FactionSetDtrRegenArgument extends FactionSubCommand {
+public final class FactionSetDtrRegenCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionSetDtrRegenArgument() {
+    public FactionSetDtrRegenCommand() {
         super("setdtrregen|setdtrregeneration");
         setDescription("Sets the DTR cooldown of a faction.");
         plugin = HCFactions.getInstance();

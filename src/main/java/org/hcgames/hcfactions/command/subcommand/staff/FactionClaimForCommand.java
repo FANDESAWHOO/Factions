@@ -1,4 +1,4 @@
-package org.hcgames.hcfactions.command.argument.staff;
+package org.hcgames.hcfactions.command.subcommand.staff;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.Selection;
@@ -17,11 +17,11 @@ import java.util.List;
 /**
  * Used to claim land for other {@link ClaimableFaction}s.
  */
-public final class FactionClaimForArgument extends FactionSubCommand {
+public final class FactionClaimForCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionClaimForArgument() {
+    public FactionClaimForCommand() {
         super("claimfor");
         setDescription("Claims land for another faction.");
         plugin = HCFactions.getInstance();

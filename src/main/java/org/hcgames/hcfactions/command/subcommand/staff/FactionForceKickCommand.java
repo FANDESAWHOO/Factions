@@ -1,4 +1,4 @@
-package org.hcgames.hcfactions.command.argument.staff;
+package org.hcgames.hcfactions.command.subcommand.staff;
 
 import org.bukkit.ChatColor;
 import org.hcgames.hcfactions.HCFactions;
@@ -12,11 +12,11 @@ import org.mineacademy.fo.settings.Lang;
 import java.util.Collections;
 import java.util.List;
 
-public final class FactionForceKickArgument extends FactionSubCommand {
+public final class FactionForceKickCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionForceKickArgument() {
+    public FactionForceKickCommand() {
         super("forcekick");
         setDescription("Forcefully kick a player from their faction.");
         plugin = HCFactions.getInstance();

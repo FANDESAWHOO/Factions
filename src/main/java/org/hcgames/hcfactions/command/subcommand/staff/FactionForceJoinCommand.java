@@ -1,4 +1,4 @@
-package org.hcgames.hcfactions.command.argument.staff;
+package org.hcgames.hcfactions.command.subcommand.staff;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -21,11 +21,11 @@ import java.util.List;
 /**
  * Faction argument used to forcefully join {@link Faction}s.
  */
-public final class FactionForceJoinArgument extends FactionSubCommand {
+public final class FactionForceJoinCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionForceJoinArgument() {
+    public FactionForceJoinCommand() {
         super("forcejoin");
         setDescription("Forcefully join a faction.");
         plugin = HCFactions.getInstance();

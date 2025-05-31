@@ -1,4 +1,4 @@
-package org.hcgames.hcfactions.command.argument.staff;
+package org.hcgames.hcfactions.command.subcommand.staff;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -15,14 +15,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public final class FactionSetDeathbanMultiplierArgument extends FactionSubCommand {
+public final class FactionSetDeathbanMultiplierCommand extends FactionSubCommand {
 
     private static final double MIN_MULTIPLIER = 0.0;
     private static final double MAX_MULTIPLIER = 5.0;
 
     private final HCFactions plugin;
 
-    public FactionSetDeathbanMultiplierArgument() {
+    public FactionSetDeathbanMultiplierCommand() {
         super("setdeathbanmultiplier");
         setDescription("Sets the deathban multiplier of a faction.");
         plugin = HCFactions.getInstance();

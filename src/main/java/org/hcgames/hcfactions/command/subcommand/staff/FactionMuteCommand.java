@@ -1,4 +1,4 @@
-package org.hcgames.hcfactions.command.argument.staff;
+package org.hcgames.hcfactions.command.subcommand.staff;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -14,11 +14,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-public final class FactionMuteArgument extends FactionSubCommand {
+public final class FactionMuteCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionMuteArgument() {
+    public FactionMuteCommand() {
         super("mute");
         setDescription( "Mutes every member in this faction.");
         plugin = HCFactions.getInstance();

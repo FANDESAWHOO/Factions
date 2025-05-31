@@ -1,4 +1,4 @@
-package org.hcgames.hcfactions.command.argument.staff;
+package org.hcgames.hcfactions.command.subcommand.staff;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -20,12 +20,12 @@ import java.util.List;
 /**
  * Faction argument used to forcefully remove {@link Faction}s.
  */
-public final class FactionRemoveArgument extends FactionSubCommand {
+public final class FactionRemoveCommand extends FactionSubCommand {
 
     private final ConversationFactory factory;
     private final HCFactions plugin;
 
-    public FactionRemoveArgument() {
+    public FactionRemoveCommand() {
         super("remove|delete|forcedisband|forceremove");
         setDescription( "Remove a faction.");
         plugin = HCFactions.getInstance();

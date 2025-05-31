@@ -1,4 +1,4 @@
-package org.hcgames.hcfactions.command.argument.staff;
+package org.hcgames.hcfactions.command.subcommand.staff;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -10,11 +10,11 @@ import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import java.util.Collections;
 import java.util.List;
 
-public final class FactionForceUnclaimHereArgument extends FactionSubCommand {
+public final class FactionForceUnclaimHereCommand extends FactionSubCommand {
 
     private final HCFactions plugin;
 
-    public FactionForceUnclaimHereArgument() {
+    public FactionForceUnclaimHereCommand() {
         super("forceunclaimhere");
         setDescription( "Forces land unclaim where you are standing.");
         plugin = HCFactions.getInstance();
