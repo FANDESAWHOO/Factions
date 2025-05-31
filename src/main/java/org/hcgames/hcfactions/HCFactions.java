@@ -32,11 +32,7 @@ import org.hcgames.hcfactions.util.itemdb.SimpleItemDb;
 import org.hcgames.hcfactions.visualise.VisualiseHandler;
 import org.mineacademy.fo.plugin.SimplePlugin;
 
-/**
- * FORKED FROM HCGames (System Update) FACTIONS
- * DON'T SELL THIS PLUGIN
- * PLEASE DON'T TALK SHIT
- */
+
 @Getter
 public class HCFactions extends SimplePlugin {
 
