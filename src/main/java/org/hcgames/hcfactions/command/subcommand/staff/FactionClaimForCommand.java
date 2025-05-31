@@ -1,13 +1,15 @@
 package org.hcgames.hcfactions.command.subcommand.staff;
 
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldedit.bukkit.selections.Selection;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.claim.Claim;
 import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.faction.ClaimableFaction;
 import org.hcgames.hcfactions.manager.SearchCallback;
+import org.hcgames.hcfactions.wand.WandManager;
 import org.mineacademy.fo.settings.Lang;
 
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * Changed from WorldEdit to Custom Wand
  * Used to claim land for other {@link ClaimableFaction}s.
  */
 public final class FactionClaimForCommand extends FactionSubCommand {
@@ -51,21 +54,17 @@ public final class FactionClaimForCommand extends FactionSubCommand {
             @Override
             public void onSuccess(ClaimableFaction faction) {
                 Player player = (Player) sender;
-                WorldEditPlugin worldEditPlugin = plugin.getWorldEdit();
+                Location selection = WandManager.getWandManager().getSelection(player,"1");
+                Location selection2 = WandManager.getWandManager().getSelection(player,"2");
 
-                if (worldEditPlugin == null) {
-                    tell(Lang.of("Commands.claimfor.worldedit_required"));
+
+
+                if (selection == null || selection2 == null) {
+                    tell(ChatColor.RED + "You need to select 2 positions with the claim wand. You can get it with /claimwand");
                     return;
                 }
 
-                Selection selection = worldEditPlugin.getSelection(player);
-
-                if (selection == null) {
-                    tell(Lang.of("Commands.claimfor.worldedit_selection_required"));
-                    return;
-                }
-
-                if (faction.addClaim(new Claim(faction, selection.getMinimumPoint(), selection.getMaximumPoint()), sender))
+                if (faction.addClaim(new Claim(faction, selection, selection2), sender))
 					tell(Lang.of("Commands.claimfor.claimed", faction.getName()));
             }
 

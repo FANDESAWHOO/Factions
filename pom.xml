@@ -54,6 +54,10 @@
             <url>https://jitpack.io</url>
         </repository>
         <repository>
+            <id>mavenengine</id>
+            <url>https://maven.enginehub.org/repo/</url>
+        </repository>
+        <repository>
             <id>mvnrepository</id>
             <url>http://mvnrepository.com/artifact</url>
         </repository>
@@ -128,11 +132,9 @@
             <version>3.12.14</version>
         </dependency>
         <dependency>
-            <groupId>com.sk89q</groupId>
-            <artifactId>worldedit</artifactId>
-            <version>6.1-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/libs/worldedit-bukkit-6.1.jar</systemPath>
+            <groupId>com.sk89q.worldedit</groupId>
+            <artifactId>worldedit-bukkit</artifactId>
+            <version>7.3.0</version>
         </dependency>
         <dependency>
             <groupId>${foundation.path}</groupId>
