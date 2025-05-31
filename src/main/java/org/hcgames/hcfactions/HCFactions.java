@@ -21,6 +21,9 @@ import org.hcgames.hcfactions.manager.FlatFileFactionManager;
 import org.hcgames.hcfactions.manager.MongoFactionManager;
 import org.hcgames.hcfactions.structure.FactionMember;
 import org.hcgames.hcfactions.timer.TimerManager;
+import org.hcgames.hcfactions.user.MongoUserManager;
+import org.hcgames.hcfactions.user.UserListener;
+import org.hcgames.hcfactions.user.UserManager;
 import org.hcgames.hcfactions.util.PersistableLocation;
 import org.hcgames.hcfactions.util.cuboid.Cuboid;
 import org.hcgames.hcfactions.util.cuboid.NamedCuboid;
@@ -50,6 +53,7 @@ public class HCFactions extends SimplePlugin {
     private ClaimHandler claimHandler;
     private VisualiseHandler visualiseHandler;
     private TimerManager timerManager;
+    private UserManager userManager;
 
 
    public void register(){
@@ -122,6 +126,7 @@ public class HCFactions extends SimplePlugin {
         if(Configuration.api) {
             registerEvents(FactionListener.getFactionListener());
             registerEvents(ChatListener.getChatListener());
+            registerEvents(UserListener.getUserListener());
         }
     }
 
@@ -140,6 +145,7 @@ public class HCFactions extends SimplePlugin {
             timerManager = new TimerManager(this);
         claimHandler = new ClaimHandler(this);
         worldEdit = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
+        userManager = new MongoUserManager(this);
     }
 
     public static HCFactions getInstance() {

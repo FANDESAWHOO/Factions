@@ -26,7 +26,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 import lombok.Getter;
 import lombok.Setter;
-
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bson.Document;
 import org.bukkit.Bukkit;
@@ -38,20 +38,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
-import org.hcgames.hcfactions.event.playerfaction.FactionDtrChangeEvent;
-import org.hcgames.hcfactions.event.playerfaction.PlayerFactionHomeSetEvent;
-import org.hcgames.hcfactions.event.playerfaction.PlayerJoinFactionEvent;
-import org.hcgames.hcfactions.event.playerfaction.PlayerJoinedFactionEvent;
-import org.hcgames.hcfactions.event.playerfaction.PlayerLeaveFactionEvent;
-import org.hcgames.hcfactions.event.playerfaction.PlayerLeftFactionEvent;
+import org.hcgames.hcfactions.event.playerfaction.*;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.focus.FocusTarget;
-import org.hcgames.hcfactions.structure.FactionMember;
-import org.hcgames.hcfactions.structure.FactionRelation;
-import org.hcgames.hcfactions.structure.Raidable;
-import org.hcgames.hcfactions.structure.RegenStatus;
-import org.hcgames.hcfactions.structure.Relation;
-import org.hcgames.hcfactions.structure.Role;
+import org.hcgames.hcfactions.structure.*;
+import org.hcgames.hcfactions.user.FactionUser;
 import org.hcgames.hcfactions.util.DurationFormatter;
 import org.hcgames.hcfactions.util.GenericUtils;
 import org.hcgames.hcfactions.util.JavaUtils;
@@ -60,21 +51,8 @@ import org.hcgames.hcfactions.util.collect.ConcurrentSet;
 import org.hcgames.hcfactions.util.text.CC;
 import org.mineacademy.fo.settings.Lang;
 
-
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -84,8 +62,10 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
     private static final Joiner INFO_JOINER = Joiner.on(ChatColor.GRAY + ", ");
 
     // The UUID is the Faction unique ID.
-    private final Map<UUID, Relation> requestedRelations = new ConcurrentHashMap<>();
-    private final Map<UUID, FactionRelation> relations = new ConcurrentHashMap<>();
+    @Getter
+	private final Map<UUID, Relation> requestedRelations = new ConcurrentHashMap<>();
+    @Getter
+	private final Map<UUID, FactionRelation> relations = new ConcurrentHashMap<>();
 
     private final Map<UUID, FactionMember> members = new ConcurrentHashMap<>();
     private final Set<String> invitedPlayers = new ConcurrentSet<>();
@@ -95,14 +75,23 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
 
     private PersistableLocation home;
     private String announcement;
-    private boolean open;
-    private int balance;
-    private int lives = 0;
+    @Setter
+	@Getter
+	private boolean open;
+    @Setter
+	@Getter
+	private int balance;
+    @Setter
+	@Getter
+	private int lives = 0;
     private double deathsUntilRaidable = 1.0D;
     private long regenCooldownTimestamp;
     @Getter @Setter private boolean friendly_fire = false;
     @Getter private long lastDtrUpdateTimestamp;
 
+    public static String parsePapi(Player player, String text) {
+        return PlaceholderAPI.setPlaceholders(player, text);
+    }
     public PlayerFaction(String name) {
         super(name);
     }
@@ -111,34 +100,28 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
         super(map);
 
         GenericUtils.castMap(map.get("members"), String.class, FactionMember.class).entrySet().stream().filter(entry
-                -> entry.getValue() != null).forEach(entry -> this.members.put(UUID.fromString(entry.getKey()), entry.getValue()));
+                -> entry.getValue() != null).forEach(entry -> members.put(UUID.fromString(entry.getKey()), entry.getValue()));
         //invitedPlayers.addAll(GenericUtils.createList(map.get("invitedPlayers"), String.class).stream().map(UUID::fromString).collect(Collectors.toList()));
-        this.invitedPlayers.addAll(GenericUtils.createList(map.get("invitedPlayerNames"), String.class));
+        invitedPlayers.addAll(GenericUtils.createList(map.get("invitedPlayerNames"), String.class));
 
-        if(map.containsKey("home")){
-            home = (PersistableLocation) map.get("home");
-        }
+        if(map.containsKey("home")) home = (PersistableLocation) map.get("home");
 
-        if(map.containsKey("announcement")){
-            announcement = (String) map.get("announcement");
-        }
+        if(map.containsKey("announcement")) announcement = (String) map.get("announcement");
 
         GenericUtils.castMap(map.get("relations"), String.class, FactionRelation.class).entrySet().forEach(entry ->
                 relations.put(UUID.fromString(entry.getKey()), entry.getValue()));
 
-        for (Map.Entry<String, String> entry : GenericUtils.castMap(map.get("requestedRelations"), String.class, String.class).entrySet()) {
-            requestedRelations.put(UUID.fromString(entry.getKey()), Relation.valueOf(entry.getValue()));
-        }
+        for (Map.Entry<String, String> entry : GenericUtils.castMap(map.get("requestedRelations"), String.class, String.class).entrySet())
+			requestedRelations.put(UUID.fromString(entry.getKey()), Relation.valueOf(entry.getValue()));
 
-        for (Map.Entry<String, String> entry : GenericUtils.castMap(map.get("previousMembers"), String.class, String.class).entrySet()) {
-            previousMembers.put(UUID.fromString(entry.getKey()), Long.valueOf(entry.getValue()));
-        }
+        for (Map.Entry<String, String> entry : GenericUtils.castMap(map.get("previousMembers"), String.class, String.class).entrySet())
+			previousMembers.put(UUID.fromString(entry.getKey()), Long.valueOf(entry.getValue()));
 
-        this.open = (Boolean) map.get("open");
-        this.balance = (Integer) map.get("balance");
-        this.deathsUntilRaidable = (Double) map.get("deathsUntilRaidable");
-        this.regenCooldownTimestamp = Long.parseLong((String) map.get("regenCooldownTimestamp"));
-        this.lastDtrUpdateTimestamp = Long.parseLong((String) map.get("lastDtrUpdateTimestamp"));
+        open = (Boolean) map.get("open");
+        balance = (Integer) map.get("balance");
+        deathsUntilRaidable = (Double) map.get("deathsUntilRaidable");
+        regenCooldownTimestamp = Long.parseLong((String) map.get("regenCooldownTimestamp"));
+        lastDtrUpdateTimestamp = Long.parseLong((String) map.get("lastDtrUpdateTimestamp"));
         lives = (int) map.get("lives");
     }
 
@@ -146,30 +129,24 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
         super(document);
 
         Document relations = (Document) document.get("relations");
-        for(Map.Entry<String, Object> entry : relations.entrySet()){
-            this.relations.put(UUID.fromString(entry.getKey()), new FactionRelation((Document) entry.getValue()));
-        }
+        for(Map.Entry<String, Object> entry : relations.entrySet())
+			this.relations.put(UUID.fromString(entry.getKey()), new FactionRelation((Document) entry.getValue()));
 
         Document requestedRelations = (Document) document.get("requestedRelations");
-        for(Map.Entry<String, Object> entry : requestedRelations.entrySet()){
-            this.requestedRelations.put(UUID.fromString(entry.getKey()), Relation.valueOf((String) entry.getValue()));
-        }
+        for(Map.Entry<String, Object> entry : requestedRelations.entrySet())
+			this.requestedRelations.put(UUID.fromString(entry.getKey()), Relation.valueOf((String) entry.getValue()));
 
         Document members = (Document) document.get("members");
-        for(Map.Entry<String, Object> entry : members.entrySet()){
-            this.members.put(UUID.fromString(entry.getKey()), new FactionMember((Document) entry.getValue()));
-        }
+        for(Map.Entry<String, Object> entry : members.entrySet())
+			this.members.put(UUID.fromString(entry.getKey()), new FactionMember((Document) entry.getValue()));
 
         invitedPlayers.addAll(GenericUtils.createList(document.get("invitedPlayerNames"), Document.class)
                 .stream().map(invites -> invites.getString("entry")).collect(Collectors.toList()));
 
-        if(document.containsKey("home")){
-            home = new PersistableLocation(document.get("home", Document.class));
-        }
+        if(document.containsKey("home")) home = new PersistableLocation(document.get("home", Document.class));
 
-        for(Map.Entry<String, Object> entry : document.get("previousMembers", Document.class).entrySet()){
-            this.previousMembers.put(UUID.fromString(entry.getKey()), Long.valueOf(String.valueOf(entry.getValue())));
-        }
+        for(Map.Entry<String, Object> entry : document.get("previousMembers", Document.class).entrySet())
+			previousMembers.put(UUID.fromString(entry.getKey()), Long.valueOf(String.valueOf(entry.getValue())));
         
         announcement = (String) document.getOrDefault("announcement", null);
         open = document.getBoolean("open");
@@ -185,40 +162,32 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
     public Map<String, Object> serialize() {
         Map<String, Object> map = super.serialize();
 
-        Map<String, FactionRelation> relationsSaveMap = new LinkedHashMap<>(this.relations.size());
-        for (Map.Entry<UUID, FactionRelation> entry : relations.entrySet()) {
-            relationsSaveMap.put(entry.getKey().toString(), entry.getValue());
-        }
+        Map<String, FactionRelation> relationsSaveMap = new LinkedHashMap<>(relations.size());
+        for (Map.Entry<UUID, FactionRelation> entry : relations.entrySet())
+			relationsSaveMap.put(entry.getKey().toString(), entry.getValue());
         map.put("relations", relationsSaveMap);
 
         Map<String, String> requestedRelationsSaveMap = new HashMap<>(requestedRelations.size());
-        for (Map.Entry<UUID, Relation> entry : requestedRelations.entrySet()) {
-            requestedRelationsSaveMap.put(entry.getKey().toString(), entry.getValue().name());
-        }
+        for (Map.Entry<UUID, Relation> entry : requestedRelations.entrySet())
+			requestedRelationsSaveMap.put(entry.getKey().toString(), entry.getValue().name());
         map.put("requestedRelations", requestedRelationsSaveMap);
 
-        Map<String, FactionMember> saveMap = new LinkedHashMap<>(this.members.size());
-        for (Map.Entry<UUID, FactionMember> entry : members.entrySet()) {
-            saveMap.put(entry.getKey().toString(), entry.getValue());
-        }
+        Map<String, FactionMember> saveMap = new LinkedHashMap<>(members.size());
+        for (Map.Entry<UUID, FactionMember> entry : members.entrySet())
+			saveMap.put(entry.getKey().toString(), entry.getValue());
         map.put("members", saveMap);
 
         Map<String, String> previousMembersSaveMap = new LinkedHashMap<>(previousMembers.size());
-        for(Map.Entry<UUID, Long> entry : previousMembers.entrySet()){
-            previousMembersSaveMap.put(entry.getKey().toString(), Long.toString(entry.getValue()));
-        }
+        for(Map.Entry<UUID, Long> entry : previousMembers.entrySet())
+			previousMembersSaveMap.put(entry.getKey().toString(), Long.toString(entry.getValue()));
         map.put("previousMembers", previousMembersSaveMap);
 
         if (home != null) map.put("home", home);
         if (announcement != null) map.put("announcement", announcement);
 
-        if(home != null){
-            map.put("home", home);
-        }
+        if(home != null) map.put("home", home);
 
-        if(announcement != null){
-            map.put("announcement", announcement);
-        }
+        if(announcement != null) map.put("announcement", announcement);
 
         map.put("invitedPlayerNames", new ArrayList<>(invitedPlayers));
         map.put("open", open);
@@ -235,37 +204,29 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
         Document document = super.toDocument();
 
         Document relations = new Document();
-        for (Map.Entry<UUID, FactionRelation> entry : this.relations.entrySet()) {
-            relations.put(entry.getKey().toString(), entry.getValue().toDocument());
-        }
+        for (Map.Entry<UUID, FactionRelation> entry : this.relations.entrySet())
+			relations.put(entry.getKey().toString(), entry.getValue().toDocument());
         document.put("relations", relations);
 
         Document requestedRelations = new Document();
-        for (Map.Entry<UUID, Relation> entry : this.requestedRelations.entrySet()) {
-            requestedRelations.put(entry.getKey().toString(), entry.getValue().name());
-        }
+        for (Map.Entry<UUID, Relation> entry : this.requestedRelations.entrySet())
+			requestedRelations.put(entry.getKey().toString(), entry.getValue().name());
         document.put("requestedRelations", requestedRelations);
 
         Document members = new Document();
-        for (Map.Entry<UUID, FactionMember> entry : this.members.entrySet()){
-            members.put(entry.getKey().toString(), entry.getValue().toDocument());
-        }
+        for (Map.Entry<UUID, FactionMember> entry : this.members.entrySet())
+			members.put(entry.getKey().toString(), entry.getValue().toDocument());
         document.put("members", members);
 
 
         Document previousMembers = new Document();
-        for(Map.Entry<UUID, Long> entry : this.previousMembers.entrySet()){
-            previousMembers.put(entry.getKey().toString(), Long.toString(entry.getValue()));
-        }
+        for(Map.Entry<UUID, Long> entry : this.previousMembers.entrySet())
+			previousMembers.put(entry.getKey().toString(), Long.toString(entry.getValue()));
         document.put("previousMembers", previousMembers);
 
-        if(home != null){
-            document.put("home", home.toDocument());
-        }
+        if(home != null) document.put("home", home.toDocument());
 
-        if(announcement != null){
-            document.put("announcement", announcement);
-        }
+        if(announcement != null) document.put("announcement", announcement);
 
         document.put("invitedPlayerNames", invitedPlayers.stream().map(invited -> new Document("entry", invited)).collect(Collectors.toList()));
         document.put("open", open);
@@ -279,9 +240,7 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
     }
 
     public boolean addMember(CommandSender sender, @Nullable Player player, UUID playerUUID, FactionMember factionMember, boolean force) {
-        if (members.containsKey(playerUUID)) {
-            return false;
-        }
+        if (members.containsKey(playerUUID)) return false;
 
         HCFactions factions = JavaPlugin.getPlugin(HCFactions.class);
         if(previousMembers.containsKey(playerUUID) && !force && Configuration.antiRotationEnabled){
@@ -297,9 +256,7 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
 
         PlayerJoinFactionEvent eventPre = new PlayerJoinFactionEvent(sender, player, playerUUID, this);
         Bukkit.getServer().getPluginManager().callEvent(eventPre);
-        if (eventPre.isCancelled()) {
-            return false;
-        }
+        if (eventPre.isCancelled()) return false;
 
         // Set the player as a member before calling the
         // event so we can change the scoreboard.
@@ -312,20 +269,16 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
     }
 
     public boolean removeMember(CommandSender sender, @Nullable Player player, UUID playerUUID, boolean kick, boolean force) {
-        if (!this.members.containsKey(playerUUID)) {
-            return true;
-        }
+        if (!members.containsKey(playerUUID)) return true;
 
         // Call pre event.
         PlayerLeaveFactionEvent preEvent = new PlayerLeaveFactionEvent(sender, player, playerUUID, this, PlayerLeaveFactionEvent.FactionLeaveCause.LEAVE, kick, false);
         Bukkit.getServer().getPluginManager().callEvent(preEvent);
-        if (preEvent.isCancelled()) {
-            return false;
-        }
+        if (preEvent.isCancelled()) return false;
 
-        this.members.remove(playerUUID);
+        members.remove(playerUUID);
         previousMembers.put(playerUUID, System.currentTimeMillis());
-        this.setDeathsUntilRaidable(Math.min(this.deathsUntilRaidable, this.getMaximumDeathsUntilRaidable()));
+        setDeathsUntilRaidable(Math.min(deathsUntilRaidable, getMaximumDeathsUntilRaidable()));
 
         // Call after event.
         PlayerLeftFactionEvent event = new PlayerLeftFactionEvent(sender, player, playerUUID, this, PlayerLeaveFactionEvent.FactionLeaveCause.LEAVE, kick, false);
@@ -367,25 +320,14 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
                 continue;
             }
 
-            if(faction instanceof PlayerFaction){
-                results.add((PlayerFaction) faction);
-            }else{
-                iterator.remove();
-            }
+            if(faction instanceof PlayerFaction) results.add((PlayerFaction) faction);
+			else iterator.remove();
         }
 
         return results;
     }
 
-    public Map<UUID, Relation> getRequestedRelations() {
-        return requestedRelations;
-    }
-
-    public Map<UUID, FactionRelation> getRelations() {
-        return relations;
-    }
-
-    public void removeRequestedRelation(UUID uuid){
+	public void removeRequestedRelation(UUID uuid){
         requestedRelations.remove(uuid);
     }
 
@@ -425,9 +367,7 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
     }
     public List<String> getOnlineNames(){
     	List<String> names = new ArrayList<>();
-    	for(Player p : getOnlinePlayers(null)) {
-    		names.add(p.getName());
-    	}
+    	for(Player p : getOnlinePlayers(null)) names.add(p.getName());
     	return names;
     }
     
@@ -439,9 +379,7 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
     public List<String> getOfflinePlayers() {
     	
     	List<String> names = new ArrayList<>();
-    	for(OfflinePlayer name : getOfflinePlayers(null)) {
-    		names.add(name.getName());
-    	}
+    	for(OfflinePlayer name : getOfflinePlayers(null)) names.add(name.getName());
         return names;
     }
 
@@ -471,9 +409,7 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
 
         for (Map.Entry<UUID, FactionMember> entry : members.entrySet()) {
             Player target = Bukkit.getServer().getPlayer(entry.getKey());
-            if (target == null || (senderPlayer != null && !senderPlayer.canSee(target))) {
-                continue;
-            }
+            if (target == null || (senderPlayer != null && !senderPlayer.canSee(target))) continue;
 
             results.put(entry.getKey(), entry.getValue());
         }
@@ -486,10 +422,7 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
 
         for (Map.Entry<UUID, FactionMember> entry : members.entrySet()) {
             Player target = Bukkit.getServer().getPlayer(entry.getKey());
-            if (target != null && (senderPlayer == null || senderPlayer.canSee(target))) {
-                // Está en línea y visible, lo salteamos
-                continue;
-            }
+            if (target != null && (senderPlayer == null || senderPlayer.canSee(target))) continue;
 
             results.put(entry.getKey(), entry.getValue());
         }
@@ -505,11 +438,8 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
      */
     public Optional<FactionMember> getLeader() {//TODO: Cache
         Map<UUID, FactionMember> members = this.members;
-        for (Map.Entry<UUID, FactionMember> entry : members.entrySet()) {
-            if (entry.getValue().getRole() == Role.LEADER) {
-                return Optional.of(entry.getValue());
-            }
-        }
+        for (Map.Entry<UUID, FactionMember> entry : members.entrySet())
+			if (entry.getValue().getRole() == Role.LEADER) return Optional.of(entry.getValue());
 
         return Optional.empty();
     }
@@ -535,11 +465,7 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
     }
 
     public FactionMember findMember(String name){
-        for(FactionMember member : members.values()){
-            if(member.getCachedName().equalsIgnoreCase(name)){
-                return member;
-            }
-        }
+        for(FactionMember member : members.values()) if (member.getCachedName().equalsIgnoreCase(name)) return member;
 
         return null;
     }
@@ -585,38 +511,14 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
         this.announcement = announcement;
     }
 
-    public boolean isOpen() {
-        return open;
-    }
-
-    public void setOpen(boolean open) {
-        this.open = open;
-    }
-
-    public int getBalance() {
-        return balance;
-    }
-
-    public void setBalance(int balance) {
-        this.balance = balance;
-    }
-
-    public int getLives(){
-        return lives;
-    }
-
-    public void setLives(int lives){
-        this.lives = lives;
-    }
-
-    @Override
+	@Override
     public boolean isRaidable() {
         return deathsUntilRaidable <= 0;
     }
 
     @Override
     public double getDeathsUntilRaidable() {
-        return this.getDeathsUntilRaidable(true);
+        return getDeathsUntilRaidable(true);
     }
 
     @Override
@@ -635,22 +537,16 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
     }
 
     public double getDeathsUntilRaidable(boolean updateLastCheck) {
-        if (updateLastCheck){
-            this.updateDeathsUntilRaidable();
-        }
+        if (updateLastCheck) updateDeathsUntilRaidable();
 
         return deathsUntilRaidable;
     }
 
     public ChatColor getDtrColour() {
-        this.updateDeathsUntilRaidable();
-        if (deathsUntilRaidable < 0) {
-            return ChatColor.RED;
-        } else if (deathsUntilRaidable < 1) {
-            return ChatColor.YELLOW;
-        } else {
-            return ChatColor.GREEN;
-        }
+        updateDeathsUntilRaidable();
+        if (deathsUntilRaidable < 0) return ChatColor.RED;
+		else if (deathsUntilRaidable < 1) return ChatColor.YELLOW;
+		else return ChatColor.GREEN;
     }
 
     /**
@@ -658,30 +554,28 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
      * how much is gained every x seconds as set in configuration.
      */
     private void updateDeathsUntilRaidable() {
-        if (this.getRegenStatus() == RegenStatus.REGENERATING) {
+        if (getRegenStatus() == RegenStatus.REGENERATING) {
             long now = System.currentTimeMillis();
-            long millisPassed = now - this.lastDtrUpdateTimestamp;
+            long millisPassed = now - lastDtrUpdateTimestamp;
             long millisBetweenUpdates = Configuration.factionDtrUpdateMillis;
 
             if (millisPassed >= millisBetweenUpdates) {
                 long remainder = millisPassed % millisBetweenUpdates;  // the remaining time until the next update
                 int multiplier = (int) (((double) millisPassed + remainder) / millisBetweenUpdates);
-                this.lastDtrUpdateTimestamp = now - remainder;
-                this.setDeathsUntilRaidable(this.deathsUntilRaidable + (multiplier * millisBetweenUpdates));
+                lastDtrUpdateTimestamp = now - remainder;
+                setDeathsUntilRaidable(deathsUntilRaidable + (multiplier * millisBetweenUpdates));
             }
         }
     }
 
     @Override
     public double setDeathsUntilRaidable(double deathsUntilRaidable) {
-        return this.setDeathsUntilRaidable(deathsUntilRaidable, true);
+        return setDeathsUntilRaidable(deathsUntilRaidable, true);
     }
 
     private double setDeathsUntilRaidable(double deathsUntilRaidable, boolean limit) {
         deathsUntilRaidable = Math.round(deathsUntilRaidable * 100.0) / 100.0; // remove trailing numbers after decimal
-        if (limit) {
-            deathsUntilRaidable = Math.min(deathsUntilRaidable, getMaximumDeathsUntilRaidable());
-        }
+        if (limit) deathsUntilRaidable = Math.min(deathsUntilRaidable, getMaximumDeathsUntilRaidable());
 
         // the DTR is the same, don't call an event
         if (Math.abs(deathsUntilRaidable - this.deathsUntilRaidable) != 0) {
@@ -689,12 +583,11 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
             Bukkit.getServer().getPluginManager().callEvent(event);
             if (!event.isCancelled()) {
                 deathsUntilRaidable = Math.round(event.getNewDtr() * 100.0) / 100.0;
-                if (deathsUntilRaidable > 0 && this.deathsUntilRaidable <= 0) {
-                    // Inform the server for easier log lookups for 'insiding' etc.
-                    JavaPlugin.getPlugin(HCFactions.class).getLogger().info("Faction " + getName() + " is now raidable.");
-                }
+				// Inform the server for easier log lookups for 'insiding' etc.
+				if (deathsUntilRaidable > 0 && this.deathsUntilRaidable <= 0)
+					JavaPlugin.getPlugin(HCFactions.class).getLogger().info("Faction " + getName() + " is now raidable.");
 
-                this.lastDtrUpdateTimestamp = System.currentTimeMillis();
+                lastDtrUpdateTimestamp = System.currentTimeMillis();
                 return this.deathsUntilRaidable = deathsUntilRaidable;
             }
         }
@@ -714,27 +607,24 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
     @Override
     public void setRemainingRegenerationTime(long millis) {
         long systemMillis = System.currentTimeMillis();
-        this.regenCooldownTimestamp = systemMillis + millis;
+        regenCooldownTimestamp = systemMillis + millis;
 
         // needs to be multiplied by 2 because as soon as they lose regeneration delay, the timestamp will update
-        this.lastDtrUpdateTimestamp = systemMillis + (Configuration.factionDtrUpdateMillis * 2);
+        lastDtrUpdateTimestamp = systemMillis + (Configuration.factionDtrUpdateMillis * 2);
     }
 
     @Override
     public RegenStatus getRegenStatus() {
-        if (getRemainingRegenerationTime() > 0L) {
-            return RegenStatus.PAUSED;
-        } else if (getMaximumDeathsUntilRaidable() > this.deathsUntilRaidable) {
-            return RegenStatus.REGENERATING;
-        } else {
-            return RegenStatus.FULL;
-        }
+        if (getRemainingRegenerationTime() > 0L) return RegenStatus.PAUSED;
+		else if (getMaximumDeathsUntilRaidable() > deathsUntilRaidable) return RegenStatus.REGENERATING;
+		else return RegenStatus.FULL;
     }
      /*
       * Soon can be configurable
       * Like DTRShock configuration file
       * Especially thanks to DoctorDark 
       * For let me do this.
+      * And will be using PlaceHolder!
       */
     @Override
     public void sendInformation(CommandSender sender) {
@@ -758,12 +648,12 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
             FactionMember factionMember = entry.getValue();
             Optional<Player> target = factionMember.toOnlinePlayer();
 
-    /*   FactionUser user = HCF.getPlugin().getUserManager().getUser(entry.getKey());
+       FactionUser user = HCFactions.getInstance().getUserManager().getUser(entry.getKey());
             int kills = user.getKills();
             combinedKills += kills;
 
             ChatColor color;
-            Deathban deathban = user.getDeathban();
+           /* Deathban deathban = user.getDeathban();
             if (deathban != null && deathban.isActive()) {
                 color = ChatColor.RED;
             } else if (!target.isPresent() || (sender instanceof Player && !((Player) sender).canSee(target.get()))) {
@@ -771,7 +661,7 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
             } else {
                 color = ChatColor.GREEN;
             }*/
-            String memberName = factionMember.getCachedName() + ChatColor.GRAY + " [" + ChatColor.RED  /*kills*/ + ChatColor.GRAY + "]";
+            String memberName = factionMember.getCachedName() + ChatColor.GRAY + " [" + ChatColor.RED  +kills + ChatColor.GRAY + "]";
            //  String memberName = color + factionMember.getCachedName() + ChatColor.GRAY + " [" + ChatColor.RED + kills + ChatColor.GRAY + "]";
             switch (factionMember.getRole()) {
                 case LEADER:
@@ -792,11 +682,9 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
         sender.sendMessage(CC.translate("&6DTR: &e" + JavaUtils.format(getDeathsUntilRaidable(false))));
         sender.sendMessage(CC.translate("&6Faction Home: &e"+ (home == null ? "None" : String.valueOf(home.getLocation().getBlockX()) + " "+String.valueOf(home.getLocation().getBlockZ()))));
 
-        if (!allyNames.isEmpty()) {
-            sender.sendMessage(CC.translate("&6Allies: &c" + String.join(ChatColor.GRAY + ", " + "&c", allyNames)));
-        } else {
-        	sender.sendMessage(CC.translate("&6Allies: &cNone"));
-        }
+        if (!allyNames.isEmpty())
+			sender.sendMessage(CC.translate("&6Allies: &c" + String.join(ChatColor.GRAY + ", " + "&c", allyNames)));
+		else sender.sendMessage(CC.translate("&6Allies: &cNone"));
             sender.sendMessage(CC.translate("&6Balance: &f$"  + balance));
             sender.sendMessage(CC.translate("&6Members: &e"+ getOnlinePlayers(sender).size() + " / "+members.size()));
             if(!getOnlinePlayers().isEmpty()) {
@@ -827,22 +715,17 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
                 ChatColor.GRAY + "/" + JavaUtils.format(getMaximumDeathsUntilRaidable()));
 
         long dtrRegenRemaining = getRemainingRegenerationTime();
-        if (dtrRegenRemaining > 0L) {
-            sender.sendMessage(ChatColor.GOLD + "Time Until Regen: " + ChatColor.RED + DurationFormatUtils.formatDurationWords(dtrRegenRemaining, true, true));
-        }
+        if (dtrRegenRemaining > 0L)
+			sender.sendMessage(ChatColor.GOLD + "Time Until Regen: " + ChatColor.RED + DurationFormatUtils.formatDurationWords(dtrRegenRemaining, true, true));
 
      //   sender.sendMessage(ChatColor.GRAY + BukkitUtils.STRAIGHT_LINE_DEFAULT);
     }
     private String formatPlayers(Collection<?> players) {
         return players.stream()
                 .map(player -> {
-                  if (player instanceof Player) {
-                    return ((Player) player).getName();
-                  } else if (player instanceof OfflinePlayer) {
-                    return ((OfflinePlayer) player).getName();
-                  } else {
-                    return null;
-                  }
+                  if (player instanceof Player) return ((Player) player).getName();
+				  else if (player instanceof OfflinePlayer) return ((OfflinePlayer) player).getName();
+				  else return null;
                 })
                 .filter(Objects::nonNull)
                 .collect(Collectors.joining(", "));
@@ -1016,7 +899,7 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
      * @param ignore  the {@link FactionMember} with {@link UUID}s not to send message to
      */
     public void broadcast(String message, @Nullable UUID... ignore) {
-        this.broadcast(new String[]{message}, ignore);
+        broadcast(new String[]{message}, ignore);
     }
 
     /**
