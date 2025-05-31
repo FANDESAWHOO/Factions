@@ -17,14 +17,10 @@ import org.hcgames.hcfactions.claim.Claim;
 import org.hcgames.hcfactions.faction.ClaimableFaction;
 import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.faction.system.RoadFaction;
-import org.hcgames.hcfactions.util.cuboid.Cuboid;
-
 
 import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.function.Consumer;
 
 public class WallBorderListener implements Listener{
 
@@ -57,10 +53,8 @@ public class WallBorderListener implements Listener{
             public void run(){
                 if(!player.isEnqueued()){
                     Location location = player.get().getLocation();
-                    if(now.equals(location)){
-                        handlePositionChanged(player.get(), location.getWorld(),
-                                location.getBlockX(), location.getBlockY(), location.getBlockZ());
-                    }
+                    if(now.equals(location)) handlePositionChanged(player.get(), location.getWorld(),
+							location.getBlockX(), location.getBlockY(), location.getBlockZ());
                 }
             }
         }.runTaskLater(plugin, 4L);
@@ -74,9 +68,8 @@ public class WallBorderListener implements Listener{
         int toZ = to.getBlockZ();
 
         Location from = event.getFrom();
-        if(from.getBlockX() != toX || from.getBlockY() != toY || from.getBlockZ() != toZ){
-            handlePositionChanged(event.getPlayer(), to.getWorld(), toX, toY, toZ);
-        }
+        if(from.getBlockX() != toX || from.getBlockY() != toY || from.getBlockZ() != toZ)
+			handlePositionChanged(event.getPlayer(), to.getWorld(), toX, toY, toZ);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -85,17 +78,15 @@ public class WallBorderListener implements Listener{
     }
 
     private void handlePositionChanged(Player player, World toWorld, int toX, int toY, int toZ){
-        final VisualType visualType;
+        VisualType visualType;
         //final Timer relevantTimer;
 
         boolean flag = false; // TRUE is is in combat, FALSE is has invincibility timer
-     /*   if(flag = (plugin.getTimerManager().getCombatTimer().getRemaining(player) > 0L)){
-            visualType = VisualType.SPAWN_BORDER;
-        }else if(plugin.getTimerManager().getInvincibilityTimer().getRemaining(player) > 0L){
-            visualType = VisualType.CLAIM_BORDER;
-        }else{
-            return;
-        }*/
+      if(flag == (plugin.getTimerManager().getCombatTimer().getRemaining(player) > 0L))
+		  visualType = VisualType.SPAWN_BORDER;
+	  else if(plugin.getTimerManager().getInvincibilityTimer().getRemaining(player) > 0L)
+		  visualType = VisualType.CLAIM_BORDER;
+	  else return;
 
         // Clear any visualises that are no longer within distance.
      /*   plugin.getVisualiseHandler().clearVisualBlocks(player, visualType, visualBlock -> {
@@ -115,30 +106,19 @@ public class WallBorderListener implements Listener{
         int maxZ = toZ + WALL_BORDER_HORIZONTAL_DISTANCE;
 
         Collection<Claim> added = new HashSet<>();
-        for(int x = minX; x < maxX; x++){
-            for(int z = minZ; z < maxZ; z++){
-                Faction faction = plugin.getFactionManager().getFactionAt(toWorld, x, z);
-                if(faction instanceof ClaimableFaction){
-                    // Special case for these.
-                    if(flag){
-                        if(!faction.isSafezone()){
-                            continue;
-                        }
-                    }else{
-                        if(faction instanceof RoadFaction || faction.isSafezone()){
-                            continue;
-                        }
-                    }
+        for(int x = minX; x < maxX; x++)
+			for (int z = minZ; z < maxZ; z++) {
+				Faction faction = plugin.getFactionManager().getFactionAt(toWorld, x, z);
+				if (faction instanceof ClaimableFaction) {
+					// Special case for these.
+					if (flag) {
+						if (!faction.isSafezone()) continue;
+					} else if (faction instanceof RoadFaction || faction.isSafezone()) continue;
 
-                    Collection<Claim> claims = ((ClaimableFaction) faction).getClaims();
-                    for(Claim claim : claims){
-                        if(toWorld.equals(claim.getWorld())){
-                            added.add(claim);
-                        }
-                    }
-                }
-            }
-        }
+					Collection<Claim> claims = ((ClaimableFaction) faction).getClaims();
+					for (Claim claim : claims) if (toWorld.equals(claim.getWorld())) added.add(claim);
+				}
+			}
 
         added.forEach(claim -> {
             for(Vector edge : claim.edges()){ //TODO: Don't use #edges(), find a way just to get for surrounding x and z loop

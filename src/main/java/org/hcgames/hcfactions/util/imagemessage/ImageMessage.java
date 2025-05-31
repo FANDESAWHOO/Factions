@@ -21,12 +21,12 @@
 package org.hcgames.hcfactions.util.imagemessage;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.libs.joptsimple.internal.Strings;
 import org.bukkit.entity.Player;
 
 import javax.imageio.ImageIO;
-import java.awt.Color;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
@@ -82,17 +82,17 @@ public final class ImageMessage {
     }
 
     public ImageMessage appendText(String ... text) {
-        for (int i = 0; i < Math.min(text.length, this.lines.length); ++i) {
-            String[] arrstring = this.lines;
+        for (int i = 0; i < Math.min(text.length, lines.length); ++i) {
+            String[] arrstring = lines;
             arrstring[i] = arrstring[i] + ' ' + text[i];
         }
         return this;
     }
 
     public ImageMessage appendCenteredText(String ... text) {
-        for (int i = 0; i < Math.min(text.length, this.lines.length); ++i) {
-            String line = this.lines[i];
-            this.lines[i] = line + this.center(text[i], 65 - line.length());
+        for (int i = 0; i < Math.min(text.length, lines.length); ++i) {
+            String line = lines[i];
+            lines[i] = line + center(text[i], 65 - line.length());
         }
         return this;
     }
@@ -101,11 +101,9 @@ public final class ImageMessage {
         double ratio = (double)image.getHeight() / (double)image.getWidth();
         BufferedImage resizedImage = ImageMessage.resizeImage(image, (int)((double)height / ratio), height);
         ChatColor[][] chatImage = new ChatColor[resizedImage.getWidth()][resizedImage.getHeight()];
-        for (int x = 0; x < resizedImage.getWidth(); ++x) {
-            for (int y = 0; y < resizedImage.getHeight(); ++y) {
-                chatImage[x][y] = ImageMessage.getClosestChatColor(new Color(resizedImage.getRGB(x, y), true));
-            }
-        }
+        for (int x = 0; x < resizedImage.getWidth(); ++x)
+			for (int y = 0; y < resizedImage.getHeight(); ++y)
+				chatImage[x][y] = ImageMessage.getClosestChatColor(new Color(resizedImage.getRGB(x, y), true));
         return chatImage;
     }
 
@@ -144,9 +142,7 @@ public final class ImageMessage {
     }
 
     private static ChatColor getClosestChatColor(Color color) {
-        if (color.getAlpha() < 128) {
-            return null;
-        }
+        if (color.getAlpha() < 128) return null;
         for (int i = 0; i < colors.length; ++i) {
             if (!ImageMessage.areIdentical(colors[i], color)) continue;
             return ChatColor.values()[i];
@@ -163,21 +159,17 @@ public final class ImageMessage {
     }
 
     private String center(String string, int length) {
-        if (string.length() > length) {
-            return string.substring(0, length);
-        }
-        if (string.length() == length) {
-            return string;
-        }
-        return Strings.repeat(' ', (length - string.length()) / 2) + string;
+        if (string.length() > length) return string.substring(0, length);
+        if (string.length() == length) return string;
+        return Strings.repeat(" ", (length - string.length()) / 2) + string;
     }
 
     public String[] getLines() {
-        return Arrays.copyOf(this.lines, this.lines.length);
+        return Arrays.copyOf(lines, lines.length);
     }
 
     public void sendToPlayer(Player player) {
-        player.sendMessage(this.lines);
+        player.sendMessage(lines);
     }
 }
 

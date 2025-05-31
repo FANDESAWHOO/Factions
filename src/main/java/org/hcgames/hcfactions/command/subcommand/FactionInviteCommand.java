@@ -1,5 +1,8 @@
 package org.hcgames.hcfactions.command.subcommand;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.Configuration;
@@ -9,7 +12,6 @@ import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.Relation;
 import org.hcgames.hcfactions.structure.Role;
-import org.hcgames.hcfactions.util.text.FancyMessage;
 import org.mineacademy.fo.settings.Lang;
 
 import java.util.Set;
@@ -86,8 +88,13 @@ public final class FactionInviteCommand extends FactionSubCommand {
 		Player target = Bukkit.getPlayer(name);
 		if (target != null) {
 			name = target.getName(); // fix casing.
-
-			FancyMessage message = new FancyMessage(Lang.of("Commands-Factions-Invite-InviteReceived")
+			TextComponent component = Component.text().content(Lang.of("Commands-Factions-Invite-InviteReceived")
+					.replace("{relationColour}", Relation.ENEMY.toChatColour() + "")
+					.replace("{sender}", sender.getName())
+					.replace("{factionName}", playerFaction.getName()))
+					.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND,"/" + getLabel() + " accept " + playerFaction.getName()))
+					.build();
+		/*FIXED?	FancyMessage message = new FancyMessage(Lang.of("Commands-Factions-Invite-InviteReceived")
 					.replace("{relationColour}", Relation.ENEMY.toChatColour() + "")
 					.replace("{sender}", sender.getName())
 					.replace("{factionName}", playerFaction.getName()));

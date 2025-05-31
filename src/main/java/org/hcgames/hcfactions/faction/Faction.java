@@ -23,18 +23,18 @@ package org.hcgames.hcfactions.faction;
 import com.google.common.base.Preconditions;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
-import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.api.FactionsAPI;
 import org.hcgames.hcfactions.event.faction.FactionRenameEvent;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.structure.Relation;
 import org.hcgames.hcfactions.util.Mongoable;
-
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -45,15 +45,20 @@ public abstract class Faction implements Mongoable, ConfigurationSerializable{
 
     private final UUID uuid;
 
-    protected String displayName;
+    @Getter
+	protected String displayName;
     private String name;
 
     protected final long creationMillis;
     @Getter private long lastRenameMillis;
 
-    protected double dtrLossMultiplier = 1.0;
-    protected double deathbanMultiplier = 1.0;
-    protected boolean safezone;
+    @Setter
+	@Getter
+	protected double dtrLossMultiplier = 1.0;
+    @Getter
+	protected double deathbanMultiplier = 1.0;
+    @Getter
+	protected boolean safezone;
 
     private Faction(){throw new RuntimeException("This should never happen");}
 
@@ -74,9 +79,7 @@ public abstract class Faction implements Mongoable, ConfigurationSerializable{
         lastRenameMillis = Long.valueOf((String) map.get("lastRenameMillis"));
         safezone = (boolean) map.get("safezone");
 
-        if(map.containsKey("displayName")){
-            displayName = (String) map.get("displayName");
-        }
+        if(map.containsKey("displayName")) displayName = (String) map.get("displayName");
     }
 
     public Faction(Document document){
@@ -86,12 +89,11 @@ public abstract class Faction implements Mongoable, ConfigurationSerializable{
         lastRenameMillis = Long.valueOf(document.getString("lastRenameMillis"));
         safezone = document.getBoolean("safezone");
 
-        if(document.containsKey("displayName")){
-            this.displayName = document.getString("displayName");
-        }
+        if(document.containsKey("displayName")) displayName = document.getString("displayName");
     }
 
-    public Map<String, Object> serialize(){
+    @Override
+	public Map<String, Object> serialize(){
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("uuid", uuid.toString());
         map.put("name", name);
@@ -103,7 +105,8 @@ public abstract class Faction implements Mongoable, ConfigurationSerializable{
         return map;
     }
 
-    public Document toDocument(){
+    @Override
+	public Document toDocument(){
         Document document = new Document();
         document.put("_id", uuid.toString());
         document.put("name", name);
@@ -124,26 +127,18 @@ public abstract class Faction implements Mongoable, ConfigurationSerializable{
     }
 
     public boolean setName(String name, CommandSender sender){
-        if(this.name.equals(name)){
-            return false;
-        }
+        if(this.name.equals(name)) return false;
 
         FactionRenameEvent event = new FactionRenameEvent(sender, this, this.name, name, false);
         Bukkit.getServer().getPluginManager().callEvent(event);
 
-        if(event.isCancelled()){
-            return false;
-        }
+        if(event.isCancelled()) return false;
 
         this.name = name;
         return true;
     }
 
-    public String getDisplayName(){
-        return displayName;
-    }
-
-    private boolean hasDisplayName(){
+	private boolean hasDisplayName(){
         return displayName != null;
     }
 
@@ -152,18 +147,14 @@ public abstract class Faction implements Mongoable, ConfigurationSerializable{
     }
 
     public boolean setDisplayName(String name, CommandSender sender){
-        if(this.displayName.equals(name)){
-            return false;
-        }
+        if(displayName.equals(name)) return false;
 
-        FactionRenameEvent event = new FactionRenameEvent(sender, this, this.displayName, name, true);
+        FactionRenameEvent event = new FactionRenameEvent(sender, this, displayName, name, true);
         Bukkit.getServer().getPluginManager().callEvent(event);
 
-        if(event.isCancelled()){
-            return false;
-        }
+        if(event.isCancelled()) return false;
 
-        this.displayName = name;
+        displayName = name;
         return true;
     }
 
@@ -194,42 +185,20 @@ public abstract class Faction implements Mongoable, ConfigurationSerializable{
     }
 
     public void setDeathban(boolean deathban) {
-        if (deathban != isDeathban()) {
-            this.deathbanMultiplier = deathban ? 1.0D : 0.5D;
-        }
+        if (deathban != isDeathban()) deathbanMultiplier = deathban ? 1.0D : 0.5D;
     }
 
-    public double getDeathbanMultiplier() {
-        return deathbanMultiplier;
-    }
-
-    public void setDeathbanMultiplier(double deathbanMultiplier) {
+	public void setDeathbanMultiplier(double deathbanMultiplier) {
         Preconditions.checkArgument(deathbanMultiplier >= 0, "Deathban multiplier may not be negative");
         this.deathbanMultiplier = deathbanMultiplier;
     }
 
-    public double getDtrLossMultiplier() {
-        return dtrLossMultiplier;
-    }
-
-    public void setDtrLossMultiplier(double dtrLossMultiplier) {
-        this.dtrLossMultiplier = dtrLossMultiplier;
-    }
-
-    public boolean isSafezone() {
-        return safezone;
-    }
-
-    public Relation getFactionRelation(Faction faction) {
+	public Relation getFactionRelation(Faction faction) {
         if (faction instanceof PlayerFaction) {
             PlayerFaction playerFaction = (PlayerFaction) faction;
-            if (playerFaction == this) {
-                return Relation.MEMBER;
-            }
+            if (playerFaction == this) return Relation.MEMBER;
 
-            if (playerFaction.getAllied().contains(uuid)) {
-                return Relation.ALLY;
-            }
+            if (playerFaction.getAllied().contains(uuid)) return Relation.ALLY;
         }
 
         return Relation.ENEMY;
@@ -237,7 +206,7 @@ public abstract class Faction implements Mongoable, ConfigurationSerializable{
 
     public Relation getRelation(CommandSender sender) {
         try{
-            return sender instanceof Player ? getFactionRelation(HCFactions.getPlugin(HCFactions.class).getFactionManager().getPlayerFaction((Player) sender)) : Relation.ENEMY;
+            return sender instanceof Player ? getFactionRelation(FactionsAPI.getPlayerFaction((Player) sender)) : Relation.ENEMY;
         }catch(NoFactionFoundException e){
             return Relation.ENEMY;
         }

@@ -42,14 +42,7 @@ import org.hcgames.hcfactions.util.GenericUtils;
 import org.hcgames.hcfactions.util.text.Names;
 import org.mineacademy.fo.settings.Lang;
 
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ClaimableFaction extends Faction{
@@ -131,9 +124,7 @@ public class ClaimableFaction extends Faction{
         FactionClaimChangeEvent event = new FactionClaimChangeEvent(sender, this, adding, ClaimChangeEvent.ClaimChangeReason.CLAIM);
         Bukkit.getServer().getPluginManager().callEvent(event);
 
-        if (event.isCancelled() || !claims.addAll(adding)) {
-            return false;
-        }
+        if (event.isCancelled() || !claims.addAll(adding)) return false;
 
         Bukkit.getServer().getPluginManager().callEvent(new FactionClaimChangedEvent(sender, this, adding, ClaimChangeEvent.ClaimChangeReason.CLAIM));
         return true;
@@ -149,25 +140,18 @@ public class ClaimableFaction extends Faction{
 
 
     public boolean removeClaims(Collection<Claim> toRemove, CommandSender sender) {
-        if (sender == null) {
-            sender = Bukkit.getConsoleSender();
-        }
+        if (sender == null) sender = Bukkit.getConsoleSender();
 
-        if(toRemove.isEmpty() || claims.isEmpty()){
-            return false;
-        }
+        if(toRemove.isEmpty() || claims.isEmpty()) return false;
 
-        int expected = this.claims.size() - toRemove.size();
+        int expected = claims.size() - toRemove.size();
 
         FactionClaimChangeEvent event = new FactionClaimChangeEvent(sender, this, new ArrayList<>(claims), ClaimChangeEvent.ClaimChangeReason.UNCLAIM);
         Bukkit.getPluginManager().callEvent(event);
-        if (event.isCancelled() || !this.claims.removeAll(toRemove)) { // we clone the collection so we can show what we removed to the event.
-            return false;
-        }
+		// we clone the collection so we can show what we removed to the event.
+		if (event.isCancelled() || !claims.removeAll(toRemove)) return false;
 
-        if (expected != this.claims.size()) {
-            return false;
-        }
+        if (expected != claims.size()) return false;
 
         if (this instanceof PlayerFaction) {
             HCFactions plugin = JavaPlugin.getPlugin(HCFactions.class);
@@ -177,11 +161,8 @@ public class ClaimableFaction extends Faction{
             Optional<FactionMember> leader = playerFaction.getLeader();
             UUID leaderUUID;
 
-            if(!leader.isPresent()){
-                throw new RuntimeException("Leader is not present for faction " + playerFaction);
-            }else{
-                leaderUUID = leader.get().getUniqueId();
-            }
+            if(!leader.isPresent()) throw new RuntimeException("Leader is not present for faction " + playerFaction);
+			else leaderUUID = leader.get().getUniqueId();
 
             int refund = 0;
             for (Claim claim : toRemove) {

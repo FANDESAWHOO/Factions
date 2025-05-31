@@ -464,7 +464,7 @@ public class ProtectionListener implements Listener {
 					if (itemType != null && ITEM_ON_BLOCK_RIGHT_CLICK_DENY.get(itemType).contains(block.getType()))
 						canRightClick = false;
             } else // Allow workbench use in safezones.
-				if (block.getType() == Material.WORKBENCH && plugin.getFactionManager().getFactionAt(block.getLocation()).isSafezone())
+				if (block.getType() == CompMaterial.CRAFTING_TABLE.getMaterial() && plugin.getFactionManager().getFactionAt(block.getLocation()).isSafezone())
 					canRightClick = true;
 
             if (!canRightClick && !attemptBuild(event.getPlayer(), block.getLocation(), Lang.of("factions.protection.cannot_interact"), true))

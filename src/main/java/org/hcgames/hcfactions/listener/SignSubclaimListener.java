@@ -51,6 +51,7 @@ import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.FactionMember;
 import org.hcgames.hcfactions.structure.Role;
+import org.mineacademy.fo.remain.CompMaterial;
 import org.mineacademy.fo.settings.Lang;
 
 import java.util.*;
@@ -72,31 +73,22 @@ public class SignSubclaimListener implements Listener{
     private final SignSubclaimListener signSubclaimListener = new SignSubclaimListener();
 
     private SignSubclaimListener(){
-        this.plugin = HCFactions.getInstance();
+        plugin = HCFactions.getInstance();
     }
     private SubclaimType getSubclaimType(String value, boolean creating) {
-        if (creating) {
-            value = value.toUpperCase();
-        }
+        if (creating) value = value.toUpperCase();
 
-        for (SubclaimType type : SubclaimType.values()) {
-            if (creating) {
-                if (type.aliases.contains(value)) {
-                    return type;
-                }
-            } else {
-                if (type.outputText.equals(value)) {
-                    return type;
-                }
-            }
-        }
+        for (SubclaimType type : SubclaimType.values())
+			if (creating) {
+				if (type.aliases.contains(value)) return type;
+			} else if (type.outputText.equals(value)) return type;
 
         return null;
     }
 
     private boolean isSubclaimable(Block block) {
         Material type = block.getType();
-        return type == Material.FENCE_GATE || type == Material.TRAP_DOOR || block.getState() instanceof InventoryHolder;
+        return type == CompMaterial.OAK_FENCE_GATE.getMaterial() || type == CompMaterial.ACACIA_TRAPDOOR.getMaterial() || block.getState() instanceof InventoryHolder;
     }
 
     private SubclaimType getSubclaimType(Sign sign, boolean creating) {
@@ -109,9 +101,7 @@ public class SignSubclaimListener implements Listener{
             Collection<Sign> attachedSigns = getAttachedSigns(block);
             for (Sign attachedSign : attachedSigns) {
                 SubclaimType subclaimType = getSubclaimType(attachedSign, creating);
-                if (subclaimType != null) {
-                    return subclaimType;
-                }
+                if (subclaimType != null) return subclaimType;
             }
         }
 
@@ -147,18 +137,14 @@ public class SignSubclaimListener implements Listener{
 
                     String[] lines = event.getLines();
                     subclaimType = getSubclaimType(lines[0], true);
-                    if (subclaimType == null || !subclaimType.isEnabled()) {
-                        return;
-                    }
+                    if (subclaimType == null || !subclaimType.isEnabled()) return;
 
                     List<String> memberList = null;
                     if (subclaimType == SubclaimType.MEMBER) {
                         memberList = new ArrayList<>(3);
                         for (int i = 1; i < lines.length; i++) {
                             String line = lines[i];
-                            if (StringUtils.isNotBlank(line)) {
-                                memberList.add(line);
-                            }
+                            if (StringUtils.isNotBlank(line)) memberList.add(line);
                         }
 
                         if (memberList.isEmpty()) {
@@ -195,21 +181,15 @@ public class SignSubclaimListener implements Listener{
                             .replace("{blockX}", String.valueOf(attachedBlock.getX()))
                             .replace("{blockZ}", String.valueOf(attachedBlock.getZ())));
 
-                    if (subclaimType == SubclaimType.LEADER) {
-                        builder.append("leaders");
-                    } else if (subclaimType == SubclaimType.CAPTAIN) {
-                        builder.append("captains");
-                    } else if (memberList != null) { // Should never be null, but best safe; SubclaimType.PRIVATE
+                    if (subclaimType == SubclaimType.LEADER) builder.append("leaders");
+					else if (subclaimType == SubclaimType.CAPTAIN) builder.append("captains");
+					else if (memberList != null) { // Should never be null, but best safe; SubclaimType.PRIVATE
                         builder.append("members ").append(ChatColor.RED).append('[');
 
                         List<String> membersToAdd = new ArrayList<>();
-                        for(String member : memberList){
-                            for(FactionMember factionMember : playerFaction.getMembers().values()){
-                                if(factionMember.getCachedName().equals(member)){
-                                    membersToAdd.add(member);
-                                }
-                            }
-                        }
+                        for(String member : memberList)
+							for (FactionMember factionMember : playerFaction.getMembers().values())
+								if (factionMember.getCachedName().equals(member)) membersToAdd.add(member);
 
                         builder.append(Joiner.on(", ").join(membersToAdd)).append("]");
                     }
@@ -227,9 +207,9 @@ public class SignSubclaimListener implements Listener{
         }*/
 
         Player player = event.getPlayer();
-        if (player.getGameMode() == GameMode.CREATIVE && player.hasPermission(ProtectionListener.PROTECTION_BYPASS_PERMISSION)) {//TODO: Use org.hcgames.listener.protectionlistener
-            return;
-        }
+		//TODO: Use org.hcgames.listener.protectionlistener
+		if (player.getGameMode() == GameMode.CREATIVE && player.hasPermission(ProtectionListener.PROTECTION_BYPASS_PERMISSION))
+			return;
 
         Block block = event.getBlock();
         BlockState state = block.getState();
@@ -242,9 +222,7 @@ public class SignSubclaimListener implements Listener{
                 org.bukkit.material.Sign materialSign = (org.bukkit.material.Sign) signData;
                 subclaimObjectBlock = block.getRelative(materialSign.getAttachedFace());
             }
-        } else {
-            subclaimObjectBlock = block;
-        }
+        } else subclaimObjectBlock = block;
 
         if (subclaimObjectBlock != null && !checkSubclaimIntegrity(player, subclaimObjectBlock)) {
             event.setCancelled(true);
@@ -254,35 +232,28 @@ public class SignSubclaimListener implements Listener{
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onInventoryMoveItem(InventoryMoveItemEvent event) {
-        if (Configuration.subclaimHopperCheck) {//TODO: "CoreHook"
-            return;
-        }
+		//TODO: "CoreHook"
+		if (Configuration.subclaimHopperCheck) return;
 
         // Have to do this hackery since Bukkit doesn't
         // provide an API for us to do this
         InventoryHolder holder = event.getSource().getHolder();
         Collection<Block> sourceBlocks;
-        if (holder instanceof Chest) {
-            sourceBlocks = Collections.singletonList(((Chest) holder).getBlock());
-        } else if (holder instanceof DoubleChest) {
+        if (holder instanceof Chest) sourceBlocks = Collections.singletonList(((Chest) holder).getBlock());
+		else if (holder instanceof DoubleChest) {
             DoubleChest doubleChest = (DoubleChest) holder;
             sourceBlocks = Lists.newArrayList(((Chest) doubleChest.getLeftSide()).getBlock(), ((Chest) doubleChest.getRightSide()).getBlock());
-        } else {
-            return;
-        }
+        } else return;
 
-        for (Block block : sourceBlocks) {
-            if (getSubclaimType(block, false) != null) {
-                event.setCancelled(true);
-                break;
-            }
-        }
+        for (Block block : sourceBlocks)
+			if (getSubclaimType(block, false) != null) {
+				event.setCancelled(true);
+				break;
+			}
     }
 
     private String getShortenedName(String originalName) {
-        if (originalName.length() >= MAX_SIGN_LINE_CHARS) {
-            originalName = originalName.substring(0, MAX_SIGN_LINE_CHARS);
-        }
+        if (originalName.length() >= MAX_SIGN_LINE_CHARS) originalName = originalName.substring(0, MAX_SIGN_LINE_CHARS);
 
         return originalName;
     }
@@ -291,13 +262,11 @@ public class SignSubclaimListener implements Listener{
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Player player = event.getPlayer();
-            if (player.getGameMode() == GameMode.CREATIVE && player.hasPermission(ProtectionListener.PROTECTION_BYPASS_PERMISSION)) {
-                return;
-            }
+            if (player.getGameMode() == GameMode.CREATIVE && player.hasPermission(ProtectionListener.PROTECTION_BYPASS_PERMISSION))
+				return;
 
-            if (Configuration.kitMap) {//TODO: Core hook
-                return;
-            }
+			//TODO: Core hook
+			if (Configuration.kitMap) return;
 
             Block block = event.getClickedBlock();
             if (!checkSubclaimIntegrity(player, block)) {
@@ -315,9 +284,7 @@ public class SignSubclaimListener implements Listener{
      * @return true if allowed to open
      */
     private boolean checkSubclaimIntegrity(Player player, Block subclaimObject) {
-        if (!isSubclaimable(subclaimObject)) {
-            return true; // Not even subclaimed.
-        }
+        if (!isSubclaimable(subclaimObject)) return true; // Not even subclaimed.
 
         PlayerFaction playerFaction;
         try {
@@ -326,23 +293,16 @@ public class SignSubclaimListener implements Listener{
             return true;
         }
 
-        if(playerFaction.isRaidable()){
-            return true;
-        }
+        if(playerFaction.isRaidable()) return true;
 
         Role role = playerFaction.getMember(player).getRole();
-        if (role == Role.LEADER || role  == Role.COLEADER) {
-            return true; // Let leaders & co leaders open regardless.
-        }
+        if (role == Role.LEADER || role  == Role.COLEADER) return true; // Let leaders & co leaders open regardless.
 
-        if (!playerFaction.getName().equals(plugin.getFactionManager().getFactionAt(subclaimObject).getName())) {
-            return true; // Let enemies be able to open
-        }
+        if (!playerFaction.getName().equals(plugin.getFactionManager().getFactionAt(subclaimObject).getName()))
+			return true; // Let enemies be able to open
 
         Collection<Sign> attachedSigns = getAttachedSigns(subclaimObject);
-        if (attachedSigns.isEmpty()) {
-            return true;
-        }
+        if (attachedSigns.isEmpty()) return true;
 
         boolean flag = true;
         String playerName = getShortenedName(player.getName());
@@ -350,9 +310,7 @@ public class SignSubclaimListener implements Listener{
         for (Sign attachedSign : attachedSigns) {
             SubclaimType subclaimType = getSubclaimType(attachedSign, false);
 
-            if (subclaimType == null) {
-                continue;
-            }
+            if (subclaimType == null) continue;
 
             // No need to conditional check leaders as they can open anything.
             if (subclaimType == SubclaimType.CAPTAIN) {
@@ -365,15 +323,9 @@ public class SignSubclaimListener implements Listener{
             }
 
             if (subclaimType == SubclaimType.MEMBER){
-                if(role == Role.CAPTAIN){
-                    return true;
-                }
+                if(role == Role.CAPTAIN) return true;
 
-                for(String line : attachedSign.getLines()){
-                    if(line.equalsIgnoreCase(playerName)){
-                        return true;
-                    }
-                }
+                for(String line : attachedSign.getLines()) if (line.equalsIgnoreCase(playerName)) return true;
                 flag = false;
             }
         }
@@ -419,9 +371,8 @@ public class SignSubclaimListener implements Listener{
             BlockState relativeState = relative.getState();
             if (relativeState instanceof Sign) {
                 org.bukkit.material.Sign materialSign = (org.bukkit.material.Sign) relativeState.getData();
-                if (relative.getRelative(materialSign.getAttachedFace()).equals(block)) {
-                    results.add((Sign) relative.getState());
-                }
+                if (relative.getRelative(materialSign.getAttachedFace()).equals(block))
+					results.add((Sign) relative.getState());
             }
         }
 

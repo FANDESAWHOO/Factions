@@ -20,6 +20,7 @@
 
 package org.hcgames.hcfactions.util.itemdb;
 
+import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.inventory.ItemStack;
@@ -31,7 +32,8 @@ import java.util.Map;
 
 public class ItemData
 implements ConfigurationSerializable {
-    private final Material material;
+    @Getter
+	private final Material material;
     private final short itemData;
 
     public ItemData(MaterialData data) {
@@ -50,35 +52,28 @@ implements ConfigurationSerializable {
 
     public ItemData(Map<String, Object> map) {
         Object object = map.get("itemType");
-        if (!(object instanceof String)) {
-            throw new AssertionError("Incorrectly configurised");
-        }
-        this.material = Material.getMaterial((String)object);
+        if (!(object instanceof String)) throw new AssertionError("Incorrectly configurised");
+        material = Material.getMaterial((String)object);
         object = map.get("itemData");
-        if (!(object instanceof Short)) {
-            throw new AssertionError("Incorrectly configurised");
-        }
-        this.itemData = (Short)object;
+        if (!(object instanceof Short)) throw new AssertionError("Incorrectly configurised");
+        itemData = (Short)object;
     }
 
-    public Map<String, Object> serialize() {
+    @Override
+	public Map<String, Object> serialize() {
         LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-        map.put("itemType", this.material.name());
-        map.put("itemData", this.itemData);
+        map.put("itemType", material.name());
+        map.put("itemData", itemData);
         return map;
     }
 
-    public Material getMaterial() {
-        return this.material;
-    }
-
-    @Deprecated
+	@Deprecated
     public short getItemData() {
-        return this.itemData;
+        return itemData;
     }
 
     public String getItemName() {
-        return HCFactions.getInstance().getItemDb().getName(new ItemStack(this.material, 1, this.itemData));
+        return HCFactions.getInstance().getItemDb().getName(new ItemStack(material, 1, itemData));
     }
 
     public static ItemData fromItemName(String string) {
@@ -88,40 +83,33 @@ implements ConfigurationSerializable {
 
     public static ItemData fromStringValue(String value) {
         int firstBracketIndex = value.indexOf(40);
-        if (firstBracketIndex == -1) {
-            return null;
-        }
+        if (firstBracketIndex == -1) return null;
         int otherBracketIndex = value.indexOf(41);
-        if (otherBracketIndex == -1) {
-            return null;
-        }
+        if (otherBracketIndex == -1) return null;
         String itemName = value.substring(0, firstBracketIndex);
         String itemData = value.substring(firstBracketIndex + 1, otherBracketIndex);
         Material material = Material.getMaterial(itemName);
         return new ItemData(material, Short.parseShort(itemData));
     }
 
-    public String toString() {
-        return String.valueOf(this.material.name()) + "(" + String.valueOf(this.itemData) + ")";
+    @Override
+	public String toString() {
+        return String.valueOf(material.name()) + "(" + String.valueOf(itemData) + ")";
     }
 
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || this.getClass() != o.getClass()) {
-            return false;
-        }
+    @Override
+	public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         ItemData itemData1 = (ItemData)o;
-        if (this.itemData != itemData1.itemData) {
-            return false;
-        }
-        return this.material == itemData1.material;
+        if (itemData != itemData1.itemData) return false;
+        return material == itemData1.material;
     }
 
-    public int hashCode() {
-        int result = this.material != null ? this.material.hashCode() : 0;
-        result = 31 * result + this.itemData;
+    @Override
+	public int hashCode() {
+        int result = material != null ? material.hashCode() : 0;
+        result = 31 * result + itemData;
         return result;
     }
 }

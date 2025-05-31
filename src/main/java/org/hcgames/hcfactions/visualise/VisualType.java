@@ -1,13 +1,14 @@
 package org.hcgames.hcfactions.visualise;
 
 
-import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.structure.Relation;
+import org.mineacademy.fo.remain.CompColor;
+import org.mineacademy.fo.remain.CompMaterial;
 
 import java.util.ArrayList;
 
@@ -22,7 +23,7 @@ public enum VisualType{
         private final BlockFiller blockFiller = new BlockFiller(){
             @Override
             VisualBlockData generate(Player player, Location location){
-                return new VisualBlockData(Material.STAINED_GLASS, DyeColor.RED.getData());
+                return new VisualBlockData(CompMaterial.RED_STAINED_GLASS_PANE.getMaterial(), CompColor.RED.getDye().getDyeData());
             }
         };
 
@@ -38,7 +39,7 @@ public enum VisualType{
         private final BlockFiller blockFiller = new BlockFiller(){
             @Override
             VisualBlockData generate(Player player, Location location){
-                return new VisualBlockData(Material.STAINED_GLASS, DyeColor.PINK.getData());
+                return new VisualBlockData(CompMaterial.PINK_STAINED_GLASS_PANE.getMaterial(), CompColor.PINK.getDye().getDyeData());
             }
         };
 
@@ -60,7 +61,7 @@ public enum VisualType{
         private final BlockFiller blockFiller = new BlockFiller(){
             @Override
             VisualBlockData generate(Player player, Location location){
-                return new VisualBlockData(Material.LOG, (byte) 1);
+                return new VisualBlockData(CompMaterial.BIRCH_LOG.getMaterial(), (byte) 1);
             }
         };
 
@@ -98,7 +99,7 @@ public enum VisualType{
                 if(y == 0 || y % 3 == 0) return new VisualBlockData(types[materialCounter]);
 
                 Faction faction = HCFactions.getInstance().getFactionManager().getFactionAt(location);
-                return new VisualBlockData(Material.STAINED_GLASS, (faction != null ? faction.getRelation(player) : Relation.ENEMY).toDyeColour().getData());
+                return new VisualBlockData(CompMaterial.BLACK_STAINED_GLASS.getMaterial(), (faction != null ? faction.getRelation(player) : Relation.ENEMY).toDyeColour().getDyeData());
             }
 
             @Override

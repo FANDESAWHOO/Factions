@@ -8,20 +8,12 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.material.MaterialData;
+import org.hcgames.hcfactions.util.NMSU;
 import org.hcgames.hcfactions.util.cuboid.Cuboid;
-
 
 import javax.annotation.Nullable;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class VisualiseHandler{
@@ -35,9 +27,7 @@ public class VisualiseHandler{
     public LinkedHashMap<Location, VisualBlockData> generate(Player player, Cuboid cuboid, VisualType visualType, boolean canOverwrite){
         Collection<Location> locations = new HashSet<>(cuboid.getSizeX() * cuboid.getSizeY() * cuboid.getSizeZ());
         Iterator<Location> iterator = cuboid.locationIterator();
-        while(iterator.hasNext()){
-            locations.add(iterator.next());
-        }
+        while(iterator.hasNext()) locations.add(iterator.next());
 
         LinkedHashMap<Location, VisualBlockData> results = new LinkedHashMap<>();
         ArrayList<VisualBlockData> filled = visualType.blockFiller().bulkGenerate(player, locations);
@@ -46,14 +36,10 @@ public class VisualiseHandler{
             int count = 0;
             Map<Location, MaterialData> updatedBlocks = new HashMap<>();
             for(Location location : locations){
-                if(!canOverwrite && storedVisualises.contains(player.getUniqueId(), location)){
-                    continue;
-                }
+                if(!canOverwrite && storedVisualises.contains(player.getUniqueId(), location)) continue;
 
                 Material previousType = location.getBlock().getType();
-                if(previousType.isSolid() || previousType != Material.AIR){
-                    continue;
-                }
+                if(previousType.isSolid() || previousType != Material.AIR) continue;
 
                 VisualBlockData visualBlockData = filled.get(count++);
                 results.put(location, visualBlockData);
@@ -77,9 +63,8 @@ public class VisualiseHandler{
             // Have to send a packet to the original block type, don't send if the fake block has the same data properties though.
             Block block = location.getBlock();
             VisualBlockData visualBlockData = visualBlock.getBlockData();
-            if(visualBlockData.getBlockType() != block.getType() || visualBlockData.getData() != block.getData()){
-                player.sendBlockChange(location, block.getType(), block.getData());
-            }
+            if(visualBlockData.getBlockType() != block.getType() || visualBlockData.getData() != block.getData())
+				NMSU.sendBlockChange0(player, location, block);
         }
     }
 
@@ -91,14 +76,10 @@ public class VisualiseHandler{
             if (filled != null) {
                 int count = 0;
                 for (Location location : locations) {
-                    if (!canOverwrite && storedVisualises.contains(player.getUniqueId(), location)) {
-                        continue;
-                    }
+                    if (!canOverwrite && storedVisualises.contains(player.getUniqueId(), location)) continue;
 
                     Material previousType = location.getBlock().getType();
-                    if (previousType.isSolid() || previousType != Material.AIR) {
-                        continue;
-                    }
+                    if (previousType.isSolid() || previousType != Material.AIR) continue;
 
                     VisualBlockData visualBlockData = filled.get(count++);
                     results.put(location, visualBlockData);
@@ -114,11 +95,9 @@ public class VisualiseHandler{
     public void clearVisualBlocks(Chunk chunk){
         if(!storedVisualises.isEmpty()){
             Set<Location> keys = storedVisualises.columnKeySet();
-            for(Location location : new HashSet<>(keys)){
-                if(location.getWorld().equals(chunk.getWorld()) && chunk.getX() == (((int) location.getX()) >> 4) && chunk.getZ() == (((int) location.getZ()) >> 4)){
-                    keys.remove(location);
-                }
-            }
+            for(Location location : new HashSet<>(keys))
+				if (location.getWorld().equals(chunk.getWorld()) && chunk.getX() == (((int) location.getX()) >> 4) && chunk.getZ() == (((int) location.getZ()) >> 4))
+					keys.remove(location);
         }
     }
 
@@ -132,9 +111,7 @@ public class VisualiseHandler{
                                   @Nullable Predicate<VisualBlock> predicate,
                                   boolean sendRemovalPackets){
 
-        if(!storedVisualises.containsRow(player.getUniqueId())){
-            return;
-        }
+        if(!storedVisualises.containsRow(player.getUniqueId())) return;
 
         Map<Location, VisualBlock> results = new HashMap<>(storedVisualises.row(player.getUniqueId())); // copy to prevent commodification
         Map<Location, VisualBlock> removed = new HashMap<>();
@@ -142,9 +119,9 @@ public class VisualiseHandler{
             VisualBlock visualBlock = entry.getValue();
             if((predicate == null || predicate.test(visualBlock)) && (visualType == null || visualBlock.getVisualType() == visualType)){
                 Location location = entry.getKey();
-                if(removed.put(location, visualBlock) == null){ // not really necessary, but might as well
-                    clearVisualBlock(player, location, sendRemovalPackets); // this will call remove on storedVisualises.
-                }
+				// not really necessary, but might as well
+				if(removed.put(location, visualBlock) == null)
+					clearVisualBlock(player, location, sendRemovalPackets); // this will call remove on storedVisualises.
             }
         }
     }
