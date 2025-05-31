@@ -22,7 +22,8 @@ package org.hcgames.hcfactions.util.collect;
 
 
 
-import com.vexsoftware.votifier.io.netty.util.internal.PlatformDependent;
+
+import io.netty.util.internal.PlatformDependent;
 
 import java.io.Serializable;
 import java.util.AbstractSet;

@@ -48,7 +48,7 @@ public class MongoFactionManager extends FlatFileFactionManager implements Facti
 
     @Override
     public void init(){
-        collection = plugin.getMongoManager().getMongoDatabase().getCollection("HCFactions");
+        collection = plugin.getMongoManager().getMongoDatabase().getCollection("HCF");
         config = new Config(plugin, "factions.yml");
     }
 

@@ -562,3 +562,7 @@ Timer-Combat-SBPrefix: '&4&l'
 Timer-Combat-Name: '&cCombat'
 Timer-Invincibility-SBPrefix: '&a&l'
 Timer-Teleport-SBPrefix: '&e&l'
+Broadcasts:
+  Faction:
+    Create: "Faction {factionName} has been created by {player}"
+    Disband: "Faction {factionName} has been disbanded by {player}"
