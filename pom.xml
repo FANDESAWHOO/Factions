@@ -21,7 +21,7 @@
     <properties>
 
         <!-- Change to your name or the main project author. -->
-        <author>kangarko</author>
+        <author>doctordark</author>
 
         <!-- Change to the full path where your main plugin class is located. -->
         <main.class>org.hcgames.hcfactions.HCFactions</main.class>
