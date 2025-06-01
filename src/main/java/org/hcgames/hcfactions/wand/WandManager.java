@@ -54,7 +54,7 @@ public final class WandManager extends Tool {
 		Action action = event.getAction();
 		Player player = event.getPlayer();
 		Block block = event.getClickedBlock();
-		Map<String, Location> locs = selectionMap.containsKey(player) ? (HashMap)selectionMap.get(player) : new HashMap();
+		HashMap<String, Location> locs = !selectionMap.containsKey(player) ? new HashMap() : (HashMap) selectionMap.get(player);
 		if(action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.LEFT_CLICK_AIR))
 			player.sendMessage(ChatColor.RED + "You must select a block and not Air.");
 
