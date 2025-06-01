@@ -54,6 +54,7 @@ public final class FactionCommand extends SimpleCommand {
 		addArgument(new FactionForceLeaderCommand());
 		addArgument(new FactionForcePromoteCommand());
 		addArgument(new FactionForceUnclaimHereCommand());
+		addArgument(new FactionSaveCommand());
 		addArgument(help = new FactionHelpCommand());
 		addArgument(new FactionHomeCommand());
 		addArgument(new FactionInvitesCommand());

@@ -37,6 +37,7 @@ import org.bukkit.potion.PotionType;
 import org.hcgames.hcfactions.util.JavaUtils;
 import org.mineacademy.fo.remain.Remain;
 
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -240,12 +241,30 @@ implements ItemDb {
         if (items.isEmpty() || items.get(0).getType() == Material.AIR) return null;
         return items;
     }
-
     @Override
     public String getName(ItemStack item) {
-        return ((ItemStack)Remain.asNMSCopy(item)).getType().name();
-    }
+        try {
+            Object nmsItem = Remain.asNMSCopy(item);
 
+            if (nmsItem == null)
+                return "Air";
+
+            Method getNameMethod = nmsItem.getClass().getMethod("getName");
+
+            Object nameComponent = getNameMethod.invoke(nmsItem);
+
+            if (nameComponent != null) {
+                Method toStringMethod = nameComponent.getClass().getMethod("toString");
+                return (String) toStringMethod.invoke(nameComponent);
+            }
+
+            return "Unknown";
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return "Unknown";
+        }
+    }
     @Deprecated
     @Override
     public String getPrimaryName(ItemStack item) {
