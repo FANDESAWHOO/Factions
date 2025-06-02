@@ -51,22 +51,24 @@ public final class WandManager extends Tool {
 	 */
 	@Override
 	protected void onBlockClick(PlayerInteractEvent event) {
-		Action action = event.getAction();
-		Player player = event.getPlayer();
-		Block block = event.getClickedBlock();
-		HashMap<String, Location> locs = !selectionMap.containsKey(player) ? new HashMap() : (HashMap) selectionMap.get(player);
-		if(action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.LEFT_CLICK_AIR))
-			player.sendMessage(ChatColor.RED + "You must select a block and not Air.");
+		if(event.getPlayer().hasPermission("tools.use")){
+			Action action = event.getAction();
+			Player player = event.getPlayer();
+			Block block = event.getClickedBlock();
+			HashMap<String, Location> locs = !selectionMap.containsKey(player) ? new HashMap() : (HashMap) selectionMap.get(player);
+			if(action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.LEFT_CLICK_AIR))
+				player.sendMessage(ChatColor.RED + "You must select a block and not Air.");
 
-		if(action.equals((Action.RIGHT_CLICK_BLOCK))) {
-			locs.put("1", block.getLocation());
-			selectionMap.put(player,locs);
-			player.sendMessage(ChatColor.GREEN + "You selected the first point at: "+block.getX() + ", "+block.getY()+", "+block.getZ());
-		} else if (action.equals(Action.LEFT_CLICK_BLOCK)) {
-			locs.put("2", block.getLocation());
-			selectionMap.put(player,locs);
-			player.sendMessage(ChatColor.GREEN + "You selected the second point at: "+block.getX() + ", "+block.getY()+", "+block.getZ());
+			if(action.equals((Action.RIGHT_CLICK_BLOCK))) {
+				locs.put("1", block.getLocation());
+				selectionMap.put(player,locs);
+				player.sendMessage(ChatColor.GREEN + "You selected the first point at: "+block.getX() + ", "+block.getY()+", "+block.getZ());
+			} else if (action.equals(Action.LEFT_CLICK_BLOCK)) {
+				locs.put("2", block.getLocation());
+				selectionMap.put(player,locs);
+				player.sendMessage(ChatColor.GREEN + "You selected the second point at: "+block.getX() + ", "+block.getY()+", "+block.getZ());
+			}
+			event.setCancelled(true);
 		}
-		event.setCancelled(true);
 	}
 }
