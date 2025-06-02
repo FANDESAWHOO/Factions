@@ -57,7 +57,6 @@ public class VisualiseUtil {
     public static void sendBulk(Player player, Chunk chunk, Map<Location, MaterialData> input) {
         Objects.requireNonNull(chunk, "Chunk cannot be null");
 
-        // Se obtiene la referencia al jugador en NMS
         Object connection = Remain.getPlayerConnection(player);
 
         int size = input.size();
@@ -69,13 +68,11 @@ public class VisualiseUtil {
             Location location = entry.getKey();
             MaterialData materialData = entry.getValue();
 
-            // Calculamos la posición relativa dentro del chunk
             short relativePosition = (short) ((location.getBlockX() & 15) << 12 | (location.getBlockZ() & 15) << 8 | location.getBlockY());
 
-            // Guardamos la posición en el array
+
             positions[index++] = relativePosition;
 
-            // Aplicamos el cambio de bloque en el mundo del jugador
             Block block = location.getBlock();
             block.setType(materialData.getItemType());
             NMSU.sendBlockChange0(player,location, block);

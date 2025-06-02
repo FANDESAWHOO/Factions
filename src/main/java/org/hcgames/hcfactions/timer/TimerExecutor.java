@@ -64,6 +64,10 @@ public final class TimerExecutor extends SimpleCommand {
                         .replace("{commandLabel}", getName()));
                 return;
             }else argument.onCommand(sender, getLabel(), args);
+        } else {
+            /**
+             * Help here
+             */
         }
        
     }
