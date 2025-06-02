@@ -56,6 +56,5 @@ public class FactionPastFactionsCommand extends FactionSubCommand {
 	                sender.sendMessage(Lang.of("commands.pastfactions.other", player.getName(), pastFactions.isEmpty() ? "None" : HCFactions.COMMA_JOINER.join(pastFactions)));
 	            }
 	        }
-	        return;
 	    }
 }
