@@ -85,7 +85,7 @@ public final class FactionCommand extends SimpleCommand {
 		addArgument(new FactionForceRenameCommand());
 		addArgument(new FactionSnowCommand());
 		addArgument(new FactionCreateCommand());
-		//addArgument(new FactionPastFactionsCommand(plugin));
+		addArgument(new FactionPastFactionsCommand());
 	}
 
 	public FactionSubCommand getSubCommand(String key) {

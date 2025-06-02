@@ -38,7 +38,7 @@ public class HCFactions extends SimplePlugin {
 
     private ItemDb itemDb;
     public static final Joiner SPACE_JOINER = Joiner.on(' ');
-  //  public static final Joiner COMMA_JOINER = Joiner.on(", ");
+    public static final Joiner COMMA_JOINER = Joiner.on(", ");
     private Economy econ = null;
     private Permission perms = null;
     private Chat chat = null;
@@ -103,11 +103,6 @@ public class HCFactions extends SimplePlugin {
 		saveConfig();
     }
 
-    @Override
-    protected void onReloadablesStart() {
-        super.onReloadablesStart();
-        // FOR TASKS.
-    }
 
     private void saveData() {
         factionManager.saveFactionData();
