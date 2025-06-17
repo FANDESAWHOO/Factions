@@ -5,4 +5,15 @@ package org.hcgames.hcfactions.structure;
  *
  */
 public enum FactionPermission {
+	DISBAND,
+	KICK,
+	INVITE,
+	HOME,
+	BREAK,
+	INTERACT,
+	RENAME,
+	PROMOTE,
+	UNPROMOTE,
+	SETHOME,
+	ALL
 }

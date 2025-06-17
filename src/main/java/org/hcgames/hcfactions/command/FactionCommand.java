@@ -32,7 +32,7 @@ public final class FactionCommand extends SimpleCommand {
     public void addArgument(FactionSubCommand class1){
 		commands.add(class1);
 	}
-	public FactionCommand() {
+	private FactionCommand() {
 		super("faction|fac|f");
 		setAutoHandleHelp(false);
 		setMinArguments(0);
