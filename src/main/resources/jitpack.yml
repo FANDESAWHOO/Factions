@@ -1,2 +1,6 @@
-jdk:
-  - openjdk17
+jdk: openjdk17
+install:
+  - mvn versions:resolve-ranges
+  - mvn dependency:resolve-plugins
+before_install:
+  - chmod +x mvnw
