@@ -10,7 +10,10 @@ import org.mineacademy.fo.settings.Lang;
 import java.util.List;
 import java.util.UUID;
 
-
+/**
+ * HCGAMES
+ * COMMAND
+ */
 public class FactionPastFactionsCommand extends FactionSubCommand {
 	  private final HCFactions plugin;
 
