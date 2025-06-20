@@ -76,7 +76,7 @@ public class PlayerJoinFactionEvent extends PlayerFactionEvent implements Cancel
         return handlers;
     }
 
-    @Override
+
     public PlayerFaction getFaction() {
         return (PlayerFaction) super.getFaction();
     }
