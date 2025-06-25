@@ -22,6 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * WorldEdit change the API
  * On determinate versions
  * And im lazy to manage that xd
+ * UPDATE: WILL CHANGE THIS TO USE CUBOID :)
  */
 public final class WandManager extends Tool {
 
@@ -35,6 +36,9 @@ public final class WandManager extends Tool {
 
 	private WandManager(){
 
+	}
+	public Map<String, Location> getSelection(Player player){
+		return selectionMap.get(player);
 	}
     public Location getSelection(Player player, String position) {
 		return selectionMap.get(player).get(position);
