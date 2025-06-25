@@ -54,8 +54,8 @@ public final class FactionClaimForCommand extends FactionSubCommand {
             @Override
             public void onSuccess(ClaimableFaction faction) {
                 Player player = (Player) sender;
-                Location selection = WandManager.getWandManager().getSelection(player,"1");
-                Location selection2 = WandManager.getWandManager().getSelection(player,"2");
+                Location selection = WandManager.getWandManager().getSelection(player,"1").getMinimumPoint();
+                Location selection2 = WandManager.getWandManager().getSelection(player,"2").getMaximumPoint();
 
 
 
