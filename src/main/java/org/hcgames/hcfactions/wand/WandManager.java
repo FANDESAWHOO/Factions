@@ -2,12 +2,12 @@ package org.hcgames.hcfactions.wand;
 
 import lombok.Getter;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.hcgames.hcfactions.util.cuboid.Cuboid;
 import org.mineacademy.fo.menu.model.ItemCreator;
 import org.mineacademy.fo.menu.tool.Tool;
 import org.mineacademy.fo.remain.CompMaterial;
@@ -22,11 +22,11 @@ import java.util.concurrent.ConcurrentHashMap;
  * WorldEdit change the API
  * On determinate versions
  * And im lazy to manage that xd
- * UPDATE: WILL CHANGE THIS TO USE CUBOID :)
+ * UPDATE: CHANGED THIS TO USE CUBOID :)
  */
 public final class WandManager extends Tool {
 
-	private final Map<Player, Map<String, Location>> selectionMap = new ConcurrentHashMap<>();
+	private final Map<Player, Map<String, Cuboid>> selectionMap = new ConcurrentHashMap<>();
 
 	/**
 	 * Singleton of the class
@@ -37,10 +37,10 @@ public final class WandManager extends Tool {
 	private WandManager(){
 
 	}
-	public Map<String, Location> getSelection(Player player){
+	public Map<String, Cuboid> getSelection(Player player){
 		return selectionMap.get(player);
 	}
-    public Location getSelection(Player player, String position) {
+    public Cuboid getSelection(Player player, String position) {
 		return selectionMap.get(player).get(position);
 	}
 	@Override
@@ -59,16 +59,16 @@ public final class WandManager extends Tool {
 			Action action = event.getAction();
 			Player player = event.getPlayer();
 			Block block = event.getClickedBlock();
-			HashMap<String, Location> locs = !selectionMap.containsKey(player) ? new HashMap() : (HashMap) selectionMap.get(player);
+			HashMap<String, Cuboid> locs = !selectionMap.containsKey(player) ? new HashMap() : (HashMap) selectionMap.get(player);
 			if(action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.LEFT_CLICK_AIR))
 				player.sendMessage(ChatColor.RED + "You must select a block and not Air.");
 
 			if(action.equals((Action.RIGHT_CLICK_BLOCK))) {
-				locs.put("1", block.getLocation());
+				locs.put("1", new Cuboid(block.getLocation()));
 				selectionMap.put(player,locs);
 				player.sendMessage(ChatColor.GREEN + "You selected the first point at: "+block.getX() + ", "+block.getY()+", "+block.getZ());
 			} else if (action.equals(Action.LEFT_CLICK_BLOCK)) {
-				locs.put("2", block.getLocation());
+				locs.put("2", new Cuboid(block.getLocation()));
 				selectionMap.put(player,locs);
 				player.sendMessage(ChatColor.GREEN + "You selected the second point at: "+block.getX() + ", "+block.getY()+", "+block.getZ());
 			}
