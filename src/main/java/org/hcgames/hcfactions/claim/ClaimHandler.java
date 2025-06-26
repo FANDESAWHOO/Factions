@@ -37,18 +37,16 @@ import org.hcgames.hcfactions.manager.FactionManager;
 import org.hcgames.hcfactions.structure.Role;
 import org.hcgames.hcfactions.util.cuboid.Cuboid;
 import org.hcgames.hcfactions.util.cuboid.CuboidDirection;
-import org.hcgames.hcfactions.visualise.VisualType;
 import org.mineacademy.fo.menu.model.ItemCreator;
 import org.mineacademy.fo.remain.CompMaterial;
 import org.mineacademy.fo.settings.Lang;
 
+import java.util.*;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
-
+/**
+ *  The fields need to be
+ *  Configurable to make better
+ */
 public class ClaimHandler {
 
     public static final int MIN_CLAIM_HEIGHT = 0;
@@ -71,7 +69,7 @@ public class ClaimHandler {
 
     public ClaimHandler(HCFactions plugin) {
         this.plugin = plugin;
-        this.claimSelectionMap = new HashMap<>();
+        claimSelectionMap = new HashMap<>();
 
         claimWand = ItemCreator.of(CompMaterial.DIAMOND_HOE).name(Lang.of("factions.claiming.wand.item.name"))
                 .lore(Lang.of("factions.claiming.wand.item.lore")).make();
@@ -90,17 +88,13 @@ public class ClaimHandler {
      * @return the price of the {@link Claim}
      */
     public int calculatePrice(Cuboid claim, int currentClaims, boolean selling) {
-        if (currentClaims == -1 || !claim.hasBothPositionsSet()) {
-            return 0;
-        }
+        if (currentClaims == -1 || !claim.hasBothPositionsSet()) return 0;
 
         int multiplier = 1;
         int remaining = claim.getArea();
         double price = 0;
         while (remaining > 0) {
-            if (--remaining % NEXT_PRICE_MULTIPLIER_AREA == 0) {
-                multiplier++;
-            }
+            if (--remaining % NEXT_PRICE_MULTIPLIER_AREA == 0) multiplier++;
 
             price += (CLAIM_PRICE_PER_BLOCK * multiplier);
         }
@@ -110,19 +104,15 @@ public class ClaimHandler {
             price += (currentClaims * NEXT_PRICE_MULTIPLIER_CLAIM);
         }
 
-        if (selling) {
-            price *= CLAIM_SELL_MULTIPLIER; // if selling the claim, make the price cheaper (currently 80%).
-        }
+        if (selling) price *= CLAIM_SELL_MULTIPLIER; // if selling the claim, make the price cheaper (currently 80%).
 
         return (int) price;
     }
 
     public boolean clearClaimSelection(Player player) {
         ClaimSelection claimSelection = plugin.getClaimHandler().claimSelectionMap.remove(player.getUniqueId());
-        if (claimSelection != null) {
-            //HCF.getPlugin().getVisualiseHandler().clearVisualBlocks(player, VisualType.CREATE_CLAIM_SELECTION, null);
-            return true;
-        }
+		//HCF.getPlugin().getVisualiseHandler().clearVisualBlocks(player, VisualType.CREATE_CLAIM_SELECTION, null);
+		if (claimSelection != null) return true;
 
         return false;
     }
@@ -171,23 +161,20 @@ public class ClaimHandler {
         int locX = location.getBlockX();
         int locZ = location.getBlockZ();
 
-        final FactionManager factionManager = plugin.getFactionManager();
+        FactionManager factionManager = plugin.getFactionManager();
         boolean flag = Configuration.allowClaimsBesidesRoads;
 
-        for (int x = locX - CLAIM_BUFFER_RADIUS; x < locX + CLAIM_BUFFER_RADIUS; x++) {
-            for (int z = locZ - CLAIM_BUFFER_RADIUS; z < locZ + CLAIM_BUFFER_RADIUS; z++) {
-                Faction factionAtNew = factionManager.getFactionAt(world, x, z);
-                if(factionAtNew instanceof ClaimableFaction && playerFaction != factionAtNew){
-                    if(factionAtNew instanceof RoadFaction && flag){
-                        continue;
-                    }
+        for (int x = locX - CLAIM_BUFFER_RADIUS; x < locX + CLAIM_BUFFER_RADIUS; x++)
+			for (int z = locZ - CLAIM_BUFFER_RADIUS; z < locZ + CLAIM_BUFFER_RADIUS; z++) {
+				Faction factionAtNew = factionManager.getFactionAt(world, x, z);
+				if (factionAtNew instanceof ClaimableFaction && playerFaction != factionAtNew) {
+					if (factionAtNew instanceof RoadFaction && flag) continue;
 
-                    player.sendMessage(Lang.of("factions.claiming.enemy_claims_nearby")
-                            .replace("{radius}", String.valueOf(CLAIM_BUFFER_RADIUS)));
-                    return false;
-                }
-            }
-        }
+					player.sendMessage(Lang.of("factions.claiming.enemy_claims_nearby")
+							.replace("{radius}", String.valueOf(CLAIM_BUFFER_RADIUS)));
+					return false;
+				}
+			}
 
         return true;
     }
@@ -256,32 +243,28 @@ public class ClaimHandler {
         int minimumZ = claim.getMinimumZ();
         int maximumZ = claim.getMaximumZ();
 
-        final FactionManager factionManager = plugin.getFactionManager();
-        for (int x = minimumX; x < maximumX; x++) {
-            for (int z = minimumZ; z < maximumZ; z++) {
-                Faction factionAt = factionManager.getFactionAt(world, x, z);
-                if (factionAt != null && !(factionAt instanceof WildernessFaction)) {
-                    player.sendMessage(Lang.of("factions.claiming.claim_part_in_wilderness"));
-                    return false;
-                }
-            }
-        }
+        FactionManager factionManager = plugin.getFactionManager();
+        for (int x = minimumX; x < maximumX; x++)
+			for (int z = minimumZ; z < maximumZ; z++) {
+				Faction factionAt = factionManager.getFactionAt(world, x, z);
+				if (factionAt != null && !(factionAt instanceof WildernessFaction)) {
+					player.sendMessage(Lang.of("factions.claiming.claim_part_in_wilderness"));
+					return false;
+				}
+			}
 
         boolean flag = Configuration.allowClaimsBesidesRoads;
-        for (int x = minimumX - CLAIM_BUFFER_RADIUS; x < maximumX + CLAIM_BUFFER_RADIUS; x++) {
-            for (int z = minimumZ - CLAIM_BUFFER_RADIUS; z < maximumZ + CLAIM_BUFFER_RADIUS; z++) {
-                Faction factionAtNew = factionManager.getFactionAt(world, x, z);
-                if(factionAtNew instanceof ClaimableFaction && playerFaction != factionAtNew){
-                    if(factionAtNew instanceof RoadFaction && flag){
-                        continue;
-                    }
+        for (int x = minimumX - CLAIM_BUFFER_RADIUS; x < maximumX + CLAIM_BUFFER_RADIUS; x++)
+			for (int z = minimumZ - CLAIM_BUFFER_RADIUS; z < maximumZ + CLAIM_BUFFER_RADIUS; z++) {
+				Faction factionAtNew = factionManager.getFactionAt(world, x, z);
+				if (factionAtNew instanceof ClaimableFaction && playerFaction != factionAtNew) {
+					if (factionAtNew instanceof RoadFaction && flag) continue;
 
-                    player.sendMessage(Lang.of("factions.claiming.enemy_claims_nearby")
-                            .replace("{radius}", String.valueOf(CLAIM_BUFFER_RADIUS)));
-                    return false;
-                }
-            }
-        }
+					player.sendMessage(Lang.of("factions.claiming.enemy_claims_nearby")
+							.replace("{radius}", String.valueOf(CLAIM_BUFFER_RADIUS)));
+					return false;
+				}
+			}
 
         Location minimum = claim.getMinimumPoint();
         Location maximum = claim.getMaximumPoint();

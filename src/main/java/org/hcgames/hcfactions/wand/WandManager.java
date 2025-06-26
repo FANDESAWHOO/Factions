@@ -12,7 +12,6 @@ import org.mineacademy.fo.menu.model.ItemCreator;
 import org.mineacademy.fo.menu.tool.Tool;
 import org.mineacademy.fo.remain.CompMaterial;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -59,7 +58,7 @@ public final class WandManager extends Tool {
 			Action action = event.getAction();
 			Player player = event.getPlayer();
 			Block block = event.getClickedBlock();
-			HashMap<String, Cuboid> locs = !selectionMap.containsKey(player) ? new HashMap() : (HashMap) selectionMap.get(player);
+			Map<String, Cuboid> locs = selectionMap.containsKey(player) ? selectionMap.get(player) : selectionMap.putIfAbsent(player,null);
 			if(action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.LEFT_CLICK_AIR))
 				player.sendMessage(ChatColor.RED + "You must select a block and not Air.");
 
