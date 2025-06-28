@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 
 /**
  * Credits to Azurite
- * (Keano)
+ * (Keano) USING PacketPlayOutScoreboardTeam
  */
 @Getter
 public abstract class NametagPacket {

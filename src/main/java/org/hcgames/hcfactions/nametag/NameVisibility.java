@@ -1,9 +1,12 @@
 package org.hcgames.hcfactions.nametag;
 
+import lombok.Getter;
+
 /**
  * Will be used right this
  * But soon will be reformed
  */
+@Getter
 public enum NameVisibility {
 	ALWAYS("always"),
 	NEVER("never"),
