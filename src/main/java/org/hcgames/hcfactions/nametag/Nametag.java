@@ -27,9 +27,9 @@ public class Nametag {
 	//	Tasks.executeLater(getManager(), 5L, () -> protocolVersion = Utils.getProtocolVersion(player));
 	}
 
-	//public void delete() {
-	//	packet.delete();
-	//}
+	public void delete() {
+		packet.delete();
+	}
 
 	@SneakyThrows
 	public NametagPacket createPacket(Player player) {

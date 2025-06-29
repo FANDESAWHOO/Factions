@@ -1,8 +1,11 @@
 package org.hcgames.hcfactions.nametag;
 
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.nametag.adapter.FactionsAdapter;
+import org.hcgames.hcfactions.nametag.listener.NametagListener;
 
 import java.util.Map;
 import java.util.UUID;
@@ -17,7 +20,7 @@ public class NametagManager {
 		nametags = new ConcurrentHashMap<>();
 		adapter = new FactionsAdapter();
 
-	//	new NametagListener(this);
+		Bukkit.getPluginManager().registerEvents(new NametagListener(), HCFactions.getInstance());
 	}
 
 	public void handleUpdate(Player viewer, Player target) {
