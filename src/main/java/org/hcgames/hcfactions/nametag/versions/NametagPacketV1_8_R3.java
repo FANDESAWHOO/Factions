@@ -1,6 +1,7 @@
 package org.hcgames.hcfactions.nametag.versions;
 
 import net.minecraft.server.v1_8_R3.Packet;
+import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardTeam;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.nametag.NameVisibility;
 import org.hcgames.hcfactions.nametag.NametagPacket;
@@ -14,14 +15,14 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class NametagPacketV1_8_R3 extends NametagPacket {
-	private static final Field a = ReflectionUtil.getDeclaredField(net.minecraft.server.v1_7_R4.PacketPlayOutScoreboardTeam.class, "a");
-	private static final Field b = ReflectionUtil.getDeclaredField(net.minecraft.server.v1_7_R4.PacketPlayOutScoreboardTeam.class, "b");
-	private static final Field c = ReflectionUtil.getDeclaredField(net.minecraft.server.v1_7_R4.PacketPlayOutScoreboardTeam.class, "c");
-	private static final Field d = ReflectionUtil.getDeclaredField(net.minecraft.server.v1_7_R4.PacketPlayOutScoreboardTeam.class, "d");
-	private static final Field e = ReflectionUtil.getDeclaredField(net.minecraft.server.v1_7_R4.PacketPlayOutScoreboardTeam.class, "e");
-	private static final Field i = ReflectionUtil.getDeclaredField(net.minecraft.server.v1_7_R4.PacketPlayOutScoreboardTeam.class, "I");
-	private static final Field h = ReflectionUtil.getDeclaredField(net.minecraft.server.v1_7_R4.PacketPlayOutScoreboardTeam.class, "H");
-	private static final Field g = ReflectionUtil.getDeclaredField(net.minecraft.server.v1_7_R4.PacketPlayOutScoreboardTeam.class, "g");
+	private static final Field a = ReflectionUtil.getDeclaredField(PacketPlayOutScoreboardTeam.class, "a");
+	private static final Field b = ReflectionUtil.getDeclaredField(PacketPlayOutScoreboardTeam.class, "b");
+	private static final Field c = ReflectionUtil.getDeclaredField(PacketPlayOutScoreboardTeam.class, "c");
+	private static final Field d = ReflectionUtil.getDeclaredField(PacketPlayOutScoreboardTeam.class, "d");
+	private static final Field e = ReflectionUtil.getDeclaredField(PacketPlayOutScoreboardTeam.class, "e");
+	private static final Field i = ReflectionUtil.getDeclaredField(PacketPlayOutScoreboardTeam.class, "I");
+	private static final Field h = ReflectionUtil.getDeclaredField(PacketPlayOutScoreboardTeam.class, "H");
+	private static final Field g = ReflectionUtil.getDeclaredField(PacketPlayOutScoreboardTeam.class, "g");
 
 
 	private final Map<String, NameInfo> teams;
