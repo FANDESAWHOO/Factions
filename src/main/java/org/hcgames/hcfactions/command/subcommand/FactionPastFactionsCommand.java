@@ -19,31 +19,31 @@ public class FactionPastFactionsCommand extends FactionSubCommand {
 
 	public FactionPastFactionsCommand() {
 		super("pastfactions");
-		setDescription( "See past factions of a user");
+		setDescription("See past factions of a user");
 		plugin = HCFactions.getInstance();
 	}
 
 
 	@Override
-	public String getUsage(){
+	public String getUsage() {
 		return "/f " + label + " pastfactions [name]";
 	}
 
 
 	@Override
-	public void onCommand(){
-		if(args.length < 2){
-			if(!(sender instanceof Player)){
+	public void onCommand() {
+		if (args.length < 2) {
+			if (!(sender instanceof Player)) {
 				sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
 				return;
 			}
 
-			List<String> pastFactions  = HCFactions.getInstance().getUserManager().getUser(((Player)sender).getUniqueId()).getPastFactions();
+			List<String> pastFactions = HCFactions.getInstance().getUserManager().getUser(((Player) sender).getUniqueId()).getPastFactions();
 			sender.sendMessage(Lang.of("commands.pastfactions.own", pastFactions.isEmpty() ? "None" : HCFactions.COMMA_JOINER.join(pastFactions)));
-		}else{
+		} else {
 			Player player = plugin.getServer().getPlayer(args[1]);
 
-			if(player == null) plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+			if (player == null) plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
 				UUID user = UUIDHandler.getUUID(args[1]);
 
 				if (user == null || !HCFactions.getInstance().getUserManager().userExists(user)) {
@@ -54,7 +54,7 @@ public class FactionPastFactionsCommand extends FactionSubCommand {
 				List<String> pastFactions = HCFactions.getInstance().getUserManager().getUser(user).getPastFactions();
 				sender.sendMessage(Lang.of("commands.pastfactions.other", args[1], pastFactions.isEmpty() ? "None" : HCFactions.COMMA_JOINER.join(pastFactions)));
 			});
-			else{
+			else {
 				List<String> pastFactions = HCFactions.getInstance().getUserManager().getUser(player.getUniqueId()).getPastFactions();
 				sender.sendMessage(Lang.of("commands.pastfactions.other", player.getName(), pastFactions.isEmpty() ? "None" : HCFactions.COMMA_JOINER.join(pastFactions)));
 			}

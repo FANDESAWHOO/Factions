@@ -25,10 +25,14 @@ public abstract class FactionSubCommand implements TabCompleter {
 	 * INFO FOR THE COMMAND
 	 */
 	private final String name;
-	@Setter protected boolean isPlayerOnly = false;
-	@Setter protected String description;
-	@Setter protected String permission;
-	@Setter protected String[] aliases;
+	@Setter
+	protected boolean isPlayerOnly = false;
+	@Setter
+	protected String description;
+	@Setter
+	protected String permission;
+	@Setter
+	protected String[] aliases;
 	/**
 	 * COMMAND FUNCTIONS!
 	 */
@@ -40,32 +44,10 @@ public abstract class FactionSubCommand implements TabCompleter {
 	 * For have a method to return
 	 * All SubCommands for /f help
 	 *
-	public void addArgument(){
+	 public void addArgument(){
 	 if(!FactionCommand.getInstance().getCommands().contains(this))
-        FactionCommand.getInstance().getCommands().add(this);
-	}*/
-
-	/**
-	 * Simple methods to
-	 * Copy Simple Command!
-	 */
-	protected boolean checkPerm(){
-		if(!(sender.hasPermission(getPermission()))){
-			sender.sendMessage(Lang.of("No_Permission"));
-			return false;
-		}
-		return true;
-	}
-	protected void tell(String label){
-		sender.sendMessage(CC.translate(label));
-	}
-	protected boolean checkConsole() {
-		if (!(sender instanceof Player)) {
-			sender.sendMessage(Lang.of("Commands.No_Console"));
-			return false;
-		}
-		return true;
-	}
+	 FactionCommand.getInstance().getCommands().add(this);
+	 }*/
 
 	public FactionSubCommand(String rawName) {
 		String[] parts = rawName.split("\\|");
@@ -76,16 +58,7 @@ public abstract class FactionSubCommand implements TabCompleter {
 				.toArray(String[]::new);
 		permission = "faction.command." + name;
 		description = "No description set";
-	//	addArgument();
-	}
-
-	public boolean matches(String input) {
-		if (name.equalsIgnoreCase(input))
-			return true;
-		for (String alias : aliases)
-			if (alias.equalsIgnoreCase(input))
-				return true;
-		return false;
+		//	addArgument();
 	}
 
 	public FactionSubCommand(String rawName, String description) {
@@ -98,7 +71,7 @@ public abstract class FactionSubCommand implements TabCompleter {
 
 		this.description = description;
 		permission = "faction.command." + name;
-	//	addArgument();
+		//	addArgument();
 	}
 
 	public FactionSubCommand(String rawName, String description, String permission) {
@@ -111,8 +84,42 @@ public abstract class FactionSubCommand implements TabCompleter {
 
 		this.description = description;
 		this.permission = permission;
-	//	addArgument();
+		//	addArgument();
 	}
+
+	/**
+	 * Simple methods to
+	 * Copy Simple Command!
+	 */
+	protected boolean checkPerm() {
+		if (!(sender.hasPermission(getPermission()))) {
+			sender.sendMessage(Lang.of("No_Permission"));
+			return false;
+		}
+		return true;
+	}
+
+	protected void tell(String label) {
+		sender.sendMessage(CC.translate(label));
+	}
+
+	protected boolean checkConsole() {
+		if (!(sender instanceof Player)) {
+			sender.sendMessage(Lang.of("Commands.No_Console"));
+			return false;
+		}
+		return true;
+	}
+
+	public boolean matches(String input) {
+		if (name.equalsIgnoreCase(input))
+			return true;
+		for (String alias : aliases)
+			if (alias.equalsIgnoreCase(input))
+				return true;
+		return false;
+	}
+
 	public void execute(CommandSender sender, String label, String[] args) {
 		this.sender = sender;
 		this.label = label;
@@ -128,6 +135,7 @@ public abstract class FactionSubCommand implements TabCompleter {
 
 		onCommand();
 	}
+
 	public abstract void onCommand();
 
 	public abstract String getUsage();

@@ -230,14 +230,13 @@ public class LongObjectHashMap<V> implements Cloneable, Serializable {
 	}
 
 	private class ValueIterator implements Iterator<V> {
+		long prevKey = EMPTY_KEY;
+		V prevValue;
 		private int count;
 		private int index;
 		private int innerIndex;
 		private int expectedModCount;
 		private long lastReturned = EMPTY_KEY;
-
-		long prevKey = EMPTY_KEY;
-		V prevValue;
 
 		ValueIterator() {
 			expectedModCount = modCount;

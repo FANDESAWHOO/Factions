@@ -28,40 +28,39 @@ import org.bukkit.event.HandlerList;
 import org.hcgames.hcfactions.event.FactionEvent;
 import org.hcgames.hcfactions.faction.Faction;
 
-public class FactionCreateEvent extends FactionEvent<Faction> implements Cancellable{
+public class FactionCreateEvent extends FactionEvent<Faction> implements Cancellable {
 
-    private static final HandlerList handlers = new HandlerList();
-    private boolean cancelled;
+	private static final HandlerList handlers = new HandlerList();
+	@Getter
+	private final CommandSender sender;
+	private boolean cancelled;
 
-    @Getter
-    private final CommandSender sender;
+	public FactionCreateEvent(@NonNull Faction faction, @NonNull CommandSender sender, boolean async) {
+		super(faction, async);
+		this.sender = sender;
+	}
 
-    public FactionCreateEvent(@NonNull Faction faction, @NonNull CommandSender sender, boolean async){
-        super(faction, async);
-        this.sender = sender;
-    }
+	public FactionCreateEvent(@NonNull Faction faction, @NonNull CommandSender sender) {
+		this(faction, sender, false);
+	}
 
-    public FactionCreateEvent(@NonNull Faction faction, @NonNull CommandSender sender){
-        this(faction, sender, false);
-    }
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 
-    @Override
-    public boolean isCancelled() {
-        return cancelled;
-    }
+	@Override
+	public boolean isCancelled() {
+		return cancelled;
+	}
 
-    @Override
-    public void setCancelled(boolean cancelled) {
-        this.cancelled = cancelled;
-    }
+	@Override
+	public void setCancelled(boolean cancelled) {
+		this.cancelled = cancelled;
+	}
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
-    }
+	@Override
+	public HandlerList getHandlers() {
+		return handlers;
+	}
 
 }

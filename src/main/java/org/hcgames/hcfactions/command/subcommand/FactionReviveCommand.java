@@ -11,84 +11,84 @@ import org.mineacademy.fo.settings.Lang;
 
 public final class FactionReviveCommand extends FactionSubCommand {
 
-    private final HCFactions plugin;
+	private final HCFactions plugin;
 
-    public FactionReviveCommand(){
-        super("revive");
-        setDescription("Revive a player with faction lives");
-        plugin = HCFactions.getInstance();
+	public FactionReviveCommand() {
+		super("revive");
+		setDescription("Revive a player with faction lives");
+		plugin = HCFactions.getInstance();
 
-    }
+	}
 
-    
-    @Override
-	public String getUsage(){
-        return Lang.of("Commands.Factions.Revive.Usage");
-    }
 
-    @Override
-    public void onCommand(){
-        if(!(sender instanceof Player)){
-            tell(Lang.of("Error-Messages.PlayerOnly"));
-            return;
-        }
+	@Override
+	public String getUsage() {
+		return Lang.of("Commands.Factions.Revive.Usage");
+	}
 
-        Player player = (Player) sender;
+	@Override
+	public void onCommand() {
+		if (!(sender instanceof Player)) {
+			tell(Lang.of("Error-Messages.PlayerOnly"));
+			return;
+		}
 
-        if(args.length < 2){
-            tell(getUsage());
-            return;
-        }
+		Player player = (Player) sender;
 
-        PlayerFaction faction;
-        try {
-            faction = plugin.getFactionManager().getPlayerFaction(player.getUniqueId());
-        } catch (NoFactionFoundException e) {
-            tell(Lang.of("Error-Messages.NotInFaction"));
-            //invalid faction
-            return;
-        }
+		if (args.length < 2) {
+			tell(getUsage());
+			return;
+		}
 
-        if(faction.getMember(player).getRole() == Role.MEMBER){
-            tell(Lang.of("Commands.Factions.Revive.Officer-Required"));
-            //officer required
-            return;
-        }
+		PlayerFaction faction;
+		try {
+			faction = plugin.getFactionManager().getPlayerFaction(player.getUniqueId());
+		} catch (NoFactionFoundException e) {
+			tell(Lang.of("Error-Messages.NotInFaction"));
+			//invalid faction
+			return;
+		}
 
-        if(faction.getLives() <= 0){
-            tell(Lang.of("Commands.Factions.Revive.Not-Enough").replace("{player}", args[1]));
-            //faction doesn't have enough lives
-            return;
-        }
+		if (faction.getMember(player).getRole() == Role.MEMBER) {
+			tell(Lang.of("Commands.Factions.Revive.Officer-Required"));
+			//officer required
+			return;
+		}
 
-        /**
-         * REMOVED TEMPORALLY BECAUSE
-         * FACTION SUB COMMAND RIGHT NOW
-         * REALLY DOESN'T HAVE ANYTHING METHOD
-         * LIKE THAT AND I DONT WANNA LOSE TIME RIGHT NOW
-         * XD
-         *
-        findOfflinePlayer(args[1], deadPlayer -> {
-    	   if(deadPlayer == null){
-               tell(Lang.of("Error-Messages.InvalidPlayer").replace("{player}", args[1]));
-               //player not found
-               return;
-           }
+		if (faction.getLives() <= 0) {
+			tell(Lang.of("Commands.Factions.Revive.Not-Enough").replace("{player}", args[1]));
+			//faction doesn't have enough lives
+			return;
+		}
 
-         /*  FactionUser user;
-           if(!HCF.getPlugin().getUserManager().userExists(deadPlayer.getUniqueId()) || ((user = HCF.getPlugin().getUserManager().getUser(deadPlayer.getUniqueId())) == null) || user.getDeathban() == null){
-               tell(Lang.of("Commands.Factions.Revive.Not-Deathbanned"));
-               //not deathbanned
-               return;
-           }
+		/**
+		 * REMOVED TEMPORALLY BECAUSE
+		 * FACTION SUB COMMAND RIGHT NOW
+		 * REALLY DOESN'T HAVE ANYTHING METHOD
+		 * LIKE THAT AND I DONT WANNA LOSE TIME RIGHT NOW
+		 * XD
+		 *
+		 findOfflinePlayer(args[1], deadPlayer -> {
+		 if(deadPlayer == null){
+		 tell(Lang.of("Error-Messages.InvalidPlayer").replace("{player}", args[1]));
+		 //player not found
+		 return;
+		 }
 
-           faction.setLives(faction.getLives() - 1);
-         //  user.removeDeathban();
-           faction.broadcast(Lang.of("Commands.Factions.Revive.Broadcast").replace("{player}",
-                   player.getName()).replace("{victim}", deadPlayer.getName()));
-           //broadcast
-       });*/
-       
-        return;
-    }
+		 /*  FactionUser user;
+		 if(!HCF.getPlugin().getUserManager().userExists(deadPlayer.getUniqueId()) || ((user = HCF.getPlugin().getUserManager().getUser(deadPlayer.getUniqueId())) == null) || user.getDeathban() == null){
+		 tell(Lang.of("Commands.Factions.Revive.Not-Deathbanned"));
+		 //not deathbanned
+		 return;
+		 }
+
+		 faction.setLives(faction.getLives() - 1);
+		 //  user.removeDeathban();
+		 faction.broadcast(Lang.of("Commands.Factions.Revive.Broadcast").replace("{player}",
+		 player.getName()).replace("{victim}", deadPlayer.getName()));
+		 //broadcast
+		 });*/
+
+		return;
+	}
 }

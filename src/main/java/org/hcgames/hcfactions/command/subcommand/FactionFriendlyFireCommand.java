@@ -19,7 +19,7 @@ public final class FactionFriendlyFireCommand extends FactionSubCommand {
 
 	}
 
-    @Override
+	@Override
 	public String getUsage() {
 		return '/' + label + ' ' + getName();
 	}
@@ -39,7 +39,7 @@ public final class FactionFriendlyFireCommand extends FactionSubCommand {
 			tell("Must be an Officer or higher...");
 			return;
 		}
-		if(playerFaction.isFriendly_fire()) playerFaction.broadcast("An officer has toggled off the friendly fire...");
+		if (playerFaction.isFriendly_fire()) playerFaction.broadcast("An officer has toggled off the friendly fire...");
 		else playerFaction.broadcast("An officer has toggled on the friendly fire...");
 		playerFaction.setFriendly_fire(!playerFaction.isFriendly_fire());
 	}

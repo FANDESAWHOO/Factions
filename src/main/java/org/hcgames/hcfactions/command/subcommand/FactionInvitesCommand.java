@@ -24,7 +24,8 @@ public final class FactionInvitesCommand extends FactionSubCommand {
 		setDescription("View faction invitations.");
 		plugin = HCFactions.getInstance();
 	}
-    @Override
+
+	@Override
 	public String getUsage() {
 		return '/' + label + ' ' + getName();
 	}
@@ -46,7 +47,8 @@ public final class FactionInvitesCommand extends FactionSubCommand {
 					.replace("{factionName}", playerFaction.getFormattedName(sender))
 					.replace("{inviteCount}", String.valueOf(sentInvites.size()))
 					.replace("{invites}", (sentInvites.isEmpty() ? Lang.of("Commands-Factions-SentByNoInvites-SentBy") : JOINER.join(sentInvites))));
-		} catch (NoFactionFoundException e) {}
+		} catch (NoFactionFoundException e) {
+		}
 
 
 		tell(Lang.of("Commands-Factions-Invites-Requested")

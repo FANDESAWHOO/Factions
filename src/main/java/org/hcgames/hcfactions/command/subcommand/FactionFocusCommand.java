@@ -13,29 +13,30 @@ import org.mineacademy.fo.settings.Lang;
 public final class FactionFocusCommand extends FactionSubCommand {
 	private final HCFactions plugin;
 
-	public FactionFocusCommand(){
+	public FactionFocusCommand() {
 		super("focus|unfocus");
 		setDescription("Focus on a player or argument");
 		plugin = HCFactions.getInstance();
 	}
-    @Override
+
+	@Override
 	public String getUsage() {
 		return Lang.of("Commands.Factions.Focus.Usage");
 	}
 
 	@Override
-	public void onCommand(){
+	public void onCommand() {
 		Player player = (Player) sender;
 
-		if(args.length < 2){
+		if (args.length < 2) {
 			tell(getUsage());
 			return;
 		}
 
 		PlayerFaction faction;
-		try{
+		try {
 			faction = plugin.getFactionManager().getPlayerFaction(player);
-		}catch(NoFactionFoundException e){
+		} catch (NoFactionFoundException e) {
 			tell(Lang.of("Error-Messages.NotInFaction"));
 			//not in faction
 			return;
@@ -46,16 +47,16 @@ public final class FactionFocusCommand extends FactionSubCommand {
 		Player targetPlayer = plugin.getServer().getPlayer(name);
 		Faction targetFaction;
 
-		if(targetPlayer == null){
-			try{
+		if (targetPlayer == null) {
+			try {
 				targetFaction = plugin.getFactionManager().getFaction(name);
-			}catch(NoFactionFoundException e){
+			} catch (NoFactionFoundException e) {
 				tell(Lang.of("Commands.Factions.Focus.Error.NotFound").replace("{name}", name));
 				//player or faction not found
 				return;
 			}
 
-			if(!(targetFaction instanceof PlayerFaction)){
+			if (!(targetFaction instanceof PlayerFaction)) {
 				tell(Lang.of("Commands.Factions.Focus.Error.NotPlayerFaction"));
 				//faction isn't player faction
 				return;
@@ -69,8 +70,8 @@ public final class FactionFocusCommand extends FactionSubCommand {
 		return;
 	}
 
-	private void handleFactionFocus(CommandSender sender, PlayerFaction current, PlayerFaction target){
-		if(current.isFocused(target.getUniqueID())){
+	private void handleFactionFocus(CommandSender sender, PlayerFaction current, PlayerFaction target) {
+		if (current.isFocused(target.getUniqueID())) {
 			plugin.getFactionManager().getFocusHandler().unfocus(current.fmk(target.getUniqueID()));
 			current.broadcast(Lang.of("Commands.Factions.Focus.UnFocus.Faction")
 					.replace("{player}", sender.getName()).replace("{focusedFaction}", target.getName()));
@@ -83,8 +84,8 @@ public final class FactionFocusCommand extends FactionSubCommand {
 		//focused
 	}
 
-	private void handleFactionFocus(CommandSender sender, PlayerFaction current, Player target){
-		if(current.isFocused(target.getUniqueId())){
+	private void handleFactionFocus(CommandSender sender, PlayerFaction current, Player target) {
+		if (current.isFocused(target.getUniqueId())) {
 			plugin.getFactionManager().getFocusHandler().unfocus(current.fmk(target.getUniqueId()));
 			current.broadcast(Lang.of("Commands.Factions.Focus.UnFocus.Player")
 					.replace("{player}", sender.getName()).replace("{focusedPlayer}", target.getName()));

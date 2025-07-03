@@ -22,31 +22,31 @@ public final class EconomyAPI {
 	@Setter
 	private static IEconomy economy = null; // YOU MUST OVERRIDE THIS TO MAKE WORK
 
-	public static void subtractBalance(Player id, int amount){
-       if (!API){
-		   if (customEvents) {
-			   Common.callEvent(new EconomyEvent(false, id, amount, EconomyTypes.subtract));
-			   return;
-		   }
-		   if(economy != null ) economy.subtractBalance(id.getUniqueId(), amount);
-	   } else HCFactions.getInstance().getEcon().withdrawPlayer(id, amount);
+	public static void subtractBalance(Player id, int amount) {
+		if (!API) {
+			if (customEvents) {
+				Common.callEvent(new EconomyEvent(false, id, amount, EconomyTypes.subtract));
+				return;
+			}
+			if (economy != null) economy.subtractBalance(id.getUniqueId(), amount);
+		} else HCFactions.getInstance().getEcon().withdrawPlayer(id, amount);
 	}
 
 	public static void addBalance(Player id, int amount) {
-	if(!API){
-		if (customEvents) {
-			Common.callEvent(new EconomyEvent(false, id, amount, EconomyTypes.deposit));
-			return;
-		}
-		if(economy != null) economy.addBalance(id.getUniqueId(), amount);
-	} else
-		HCFactions.getInstance().getEcon().depositPlayer(id, amount);
+		if (!API) {
+			if (customEvents) {
+				Common.callEvent(new EconomyEvent(false, id, amount, EconomyTypes.deposit));
+				return;
+			}
+			if (economy != null) economy.addBalance(id.getUniqueId(), amount);
+		} else
+			HCFactions.getInstance().getEcon().depositPlayer(id, amount);
 	}
-	
-	public static Double getBalance(Player player){
-		if(!API){
+
+	public static Double getBalance(Player player) {
+		if (!API) {
 			if (customEvents) Common.callEvent(new EconomyEvent(false, player, 0, EconomyTypes.balance));
-			if(economy != null) return economy.getBalance(player.getUniqueId());
+			if (economy != null) return economy.getBalance(player.getUniqueId());
 		}
 		return HCFactions.getInstance().getEcon().getBalance(player);
 	}

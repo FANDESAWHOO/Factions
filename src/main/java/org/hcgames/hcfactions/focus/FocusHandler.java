@@ -33,46 +33,45 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public class FocusHandler{
+public class FocusHandler {
 
-    private final ExpiringMap<UUID, FocusTarget> map = ExpiringMap.builder().asyncExpirationListener(inner = new Inner()).expiration(2, TimeUnit.HOURS).build();
+	private final HCFactions plugin;
+	private final Inner inner;
+	private final ExpiringMap<UUID, FocusTarget> map = ExpiringMap.builder().asyncExpirationListener(inner = new Inner()).expiration(2, TimeUnit.HOURS).build();
 
-    private final HCFactions plugin;
-    private final Inner inner;
+	public FocusHandler(HCFactions plugin) {
+		this.plugin = plugin;
+	}
 
-    public FocusHandler(HCFactions plugin){
-        this.plugin = plugin;
-    }
+	public void focus(PlayerFaction current, FocusTarget target) {
+		PlayerFactionFocusEvent event = new PlayerFactionFocusEvent(current, target, !Bukkit.isPrimaryThread());
+		plugin.getServer().getPluginManager().callEvent(event);
 
-    private class Inner implements ExpiringMap.ExpirationListener<UUID, FocusTarget> {
+		if (!event.isCancelled()) {
+			current.af(target);
+			map.put(target.getMapKey(), target);
+		}
+	}
 
-        @Override
-        public void expired(@Nullable UUID uuid, FocusTarget target){
-            Optional<PlayerFaction> factionOptional = target.getCurrent();
-            if(factionOptional.isPresent()) {
-                PlayerFaction current = factionOptional.get();
-                current.fr(target);
+	public void unfocus(UUID mapKey) {
+		if (map.containsKey(mapKey)) {
+			inner.expired(null, map.get(mapKey));
+			map.remove(mapKey);
+		}
+	}
 
-                PlayerFactionUnfocusEvent event = new PlayerFactionUnfocusEvent(current, target, !Bukkit.isPrimaryThread());
-                plugin.getServer().getPluginManager().callEvent(event);
-            }
-        }
-    }
+	private class Inner implements ExpiringMap.ExpirationListener<UUID, FocusTarget> {
 
-    public void focus(PlayerFaction current, FocusTarget target){
-        PlayerFactionFocusEvent event = new PlayerFactionFocusEvent(current, target, !Bukkit.isPrimaryThread());
-        plugin.getServer().getPluginManager().callEvent(event);
+		@Override
+		public void expired(@Nullable UUID uuid, FocusTarget target) {
+			Optional<PlayerFaction> factionOptional = target.getCurrent();
+			if (factionOptional.isPresent()) {
+				PlayerFaction current = factionOptional.get();
+				current.fr(target);
 
-        if(!event.isCancelled()) {
-            current.af(target);
-            map.put(target.getMapKey(), target);
-        }
-    }
-
-    public void unfocus(UUID mapKey){
-        if(map.containsKey(mapKey)){
-            inner.expired(null, map.get(mapKey));
-            map.remove(mapKey);
-        }
-    }
+				PlayerFactionUnfocusEvent event = new PlayerFactionUnfocusEvent(current, target, !Bukkit.isPrimaryThread());
+				plugin.getServer().getPluginManager().callEvent(event);
+			}
+		}
+	}
 }

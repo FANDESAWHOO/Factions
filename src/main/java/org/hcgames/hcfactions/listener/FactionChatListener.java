@@ -40,84 +40,85 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 
-public class FactionChatListener implements Listener{
+public class FactionChatListener implements Listener {
 
-    private final HCFactions plugin;
-    @Getter private final static FactionChatListener chatListener = new FactionChatListener();
+	@Getter
+	private final static FactionChatListener chatListener = new FactionChatListener();
+	private final HCFactions plugin;
 
-    private FactionChatListener(){
-        this.plugin = HCFactions.getInstance();
-    }
+	private FactionChatListener() {
+		this.plugin = HCFactions.getInstance();
+	}
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
-    public void onPlayerChat(AsyncPlayerChatEvent event) {
-        String message = event.getMessage();
-        Player player = event.getPlayer();
+	/**
+	 * Checks if a message should be posted in {@link ChatChannel#PUBLIC}.
+	 *
+	 * @param input the message to check
+	 * @return true if the message should be posted in {@link ChatChannel#PUBLIC}
+	 */
+	public static boolean isGlobalChannel(String input) {
+		int length = input.length();
 
-        PlayerFaction playerFaction = plugin.getFactionManager().hasFaction(player) ? plugin.getFactionManager().getPlayerFaction(player) : null;
-        ChatChannel chatChannel = playerFaction == null ? ChatChannel.PUBLIC : playerFaction.getMember(player).getChatChannel();
+		if (length > 1 && input.startsWith("!")) {
+			for (int i = 1; i < length; i++) {
+				char character = input.charAt(i);
 
-        // Handle faction or alliance chat modes.
-        Set<Player> recipients = event.getRecipients();
-        if (chatChannel == ChatChannel.FACTION || chatChannel == ChatChannel.ALLIANCE || chatChannel == ChatChannel.OFFICER) {
-            if (isGlobalChannel(message)) { // allow players to use '!' to bypass friendly chat.
-                message = message.substring(1, message.length()).trim();
-                event.setMessage(message);
-            } else {
-                Collection<Player> online = chatChannel == ChatChannel.OFFICER ? new ArrayList<>() : playerFaction.getOnlinePlayers();
-                if (chatChannel == ChatChannel.ALLIANCE) {
-                    Collection<PlayerFaction> allies = playerFaction.getAlliedFactions();
-                    for (PlayerFaction ally : allies) {
-                        online.addAll(ally.getOnlinePlayers());
-                    }
-                }
+				// Ignore whitespace to prevent blank messages
+				if (Character.isWhitespace(character)) {
+					continue;
+				}
 
-                if(chatChannel == ChatChannel.OFFICER){
-                    online.addAll(playerFaction.getOnlineMembers().entrySet().stream().filter(member ->
-                            member.getValue().getRole() != Role.MEMBER).map(member -> plugin.getServer()
-                            .getPlayer(member.getKey())).collect(Collectors.toList()));
-                }
+				// Player is faking a command
+				return character != '/';
+			}
+		}
 
-                recipients.retainAll(online);
-                event.setFormat(chatChannel.getRawFormat(player));
-                String displayName = player.getDisplayName();
-                ConsoleCommandSender console = Bukkit.getConsoleSender();
+		return false;
+	}
 
-                Bukkit.getPluginManager().callEvent(new PlayerFactionChatEvent(true, playerFaction, player, chatChannel, recipients, event.getMessage()));
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+	public void onPlayerChat(AsyncPlayerChatEvent event) {
+		String message = event.getMessage();
+		Player player = event.getPlayer();
 
-                event.setCancelled(true);
-                console.sendMessage(String.format(event.getFormat(), displayName, message));
-                for (Player recipient : event.getRecipients()) {
-                    recipient.sendMessage(String.format(event.getFormat(), displayName, message));
-                }
-            }
-        }
-    }
+		PlayerFaction playerFaction = plugin.getFactionManager().hasFaction(player) ? plugin.getFactionManager().getPlayerFaction(player) : null;
+		ChatChannel chatChannel = playerFaction == null ? ChatChannel.PUBLIC : playerFaction.getMember(player).getChatChannel();
 
-    /**
-     * Checks if a message should be posted in {@link ChatChannel#PUBLIC}.
-     *
-     * @param input the message to check
-     * @return true if the message should be posted in {@link ChatChannel#PUBLIC}
-     */
-    public static boolean isGlobalChannel(String input) {
-        int length = input.length();
+		// Handle faction or alliance chat modes.
+		Set<Player> recipients = event.getRecipients();
+		if (chatChannel == ChatChannel.FACTION || chatChannel == ChatChannel.ALLIANCE || chatChannel == ChatChannel.OFFICER) {
+			if (isGlobalChannel(message)) { // allow players to use '!' to bypass friendly chat.
+				message = message.substring(1, message.length()).trim();
+				event.setMessage(message);
+			} else {
+				Collection<Player> online = chatChannel == ChatChannel.OFFICER ? new ArrayList<>() : playerFaction.getOnlinePlayers();
+				if (chatChannel == ChatChannel.ALLIANCE) {
+					Collection<PlayerFaction> allies = playerFaction.getAlliedFactions();
+					for (PlayerFaction ally : allies) {
+						online.addAll(ally.getOnlinePlayers());
+					}
+				}
 
-        if (length > 1 && input.startsWith("!")) {
-            for (int i = 1; i < length; i++) {
-                char character = input.charAt(i);
+				if (chatChannel == ChatChannel.OFFICER) {
+					online.addAll(playerFaction.getOnlineMembers().entrySet().stream().filter(member ->
+							member.getValue().getRole() != Role.MEMBER).map(member -> plugin.getServer()
+							.getPlayer(member.getKey())).collect(Collectors.toList()));
+				}
 
-                // Ignore whitespace to prevent blank messages
-                if (Character.isWhitespace(character)) {
-                    continue;
-                }
+				recipients.retainAll(online);
+				event.setFormat(chatChannel.getRawFormat(player));
+				String displayName = player.getDisplayName();
+				ConsoleCommandSender console = Bukkit.getConsoleSender();
 
-                // Player is faking a command
-                return character != '/';
-            }
-        }
+				Bukkit.getPluginManager().callEvent(new PlayerFactionChatEvent(true, playerFaction, player, chatChannel, recipients, event.getMessage()));
 
-        return false;
-    }
+				event.setCancelled(true);
+				console.sendMessage(String.format(event.getFormat(), displayName, message));
+				for (Player recipient : event.getRecipients()) {
+					recipient.sendMessage(String.format(event.getFormat(), displayName, message));
+				}
+			}
+		}
+	}
 
 }

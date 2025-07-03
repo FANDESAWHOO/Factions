@@ -23,7 +23,7 @@ public final class FactionChatCommand extends FactionSubCommand {
 		plugin = HCFactions.getInstance();
 	}
 
-    @Override
+	@Override
 	public String getUsage() {
 		return '/' + label + ' ' + getName() + " [fac|public|ally] [message]";
 	}
@@ -45,17 +45,17 @@ public final class FactionChatCommand extends FactionSubCommand {
 		ChatChannel currentChannel = member.getChatChannel();
 		ChatChannel parsed;
 
-		if(args.length >= 2){
+		if (args.length >= 2) {
 			parsed = ChatChannel.parse(args[1], null);
 
-			if(parsed != null && parsed == ChatChannel.OFFICER && member.getRole() == Role.MEMBER){
+			if (parsed != null && parsed == ChatChannel.OFFICER && member.getRole() == Role.MEMBER) {
 				tell(Lang.of("Commands-Factions-Chat-OfficerOnly"));
 				return;
 			}
-		}else{
+		} else {
 			parsed = currentChannel.getRotation();
 
-			if(parsed == ChatChannel.OFFICER && member.getRole() == Role.MEMBER) parsed = currentChannel.getRotation();
+			if (parsed == ChatChannel.OFFICER && member.getRole() == Role.MEMBER) parsed = currentChannel.getRotation();
 		}
 
 		if (parsed == null && currentChannel != ChatChannel.PUBLIC) {
@@ -72,7 +72,7 @@ public final class FactionChatCommand extends FactionSubCommand {
 
 		ChatChannel newChannel = parsed == null ? currentChannel.getRotation() : parsed;
 
-		if(newChannel == ChatChannel.OFFICER && member.getRole() == Role.MEMBER) newChannel = newChannel.getRotation();
+		if (newChannel == ChatChannel.OFFICER && member.getRole() == Role.MEMBER) newChannel = newChannel.getRotation();
 
 		member.setChatChannel(newChannel);
 		tell(Lang.of("Commands-Factions-Chat-SwitchedMode")

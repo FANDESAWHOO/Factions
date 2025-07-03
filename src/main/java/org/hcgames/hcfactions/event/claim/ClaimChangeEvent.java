@@ -31,35 +31,36 @@ import org.hcgames.hcfactions.faction.ClaimableFaction;
 
 import java.util.Collection;
 
-@Getter @Setter
+@Getter
+@Setter
 public abstract class ClaimChangeEvent extends FactionEvent<ClaimableFaction> {
 
-    private final Collection<Claim> claims;
-    private final ClaimChangeReason reason;
-    private final CommandSender sender;
+	private final Collection<Claim> claims;
+	private final ClaimChangeReason reason;
+	private final CommandSender sender;
 
-    ClaimChangeEvent(@NonNull CommandSender sender, @NonNull ClaimableFaction faction, @NonNull Collection<Claim> claims, @NonNull ClaimChangeReason reason) {
-        super(faction);
-        Validate.isTrue(!claims.isEmpty(), "Claims cannot be empty");
-        this.sender = sender;
-        this.claims = claims;
-        this.reason = reason;
-    }
+	ClaimChangeEvent(@NonNull CommandSender sender, @NonNull ClaimableFaction faction, @NonNull Collection<Claim> claims, @NonNull ClaimChangeReason reason) {
+		super(faction);
+		Validate.isTrue(!claims.isEmpty(), "Claims cannot be empty");
+		this.sender = sender;
+		this.claims = claims;
+		this.reason = reason;
+	}
 
-    ClaimChangeEvent(@NonNull CommandSender sender, @NonNull ClaimableFaction faction, @NonNull Collection<Claim> claims, @NonNull ClaimChangeReason reason, boolean async) {
-        super(faction, async);
-        Validate.isTrue(!claims.isEmpty(), "Claims cannot be empty");
-        this.sender = sender;
-        this.claims = claims;
-        this.reason = reason;
-    }
+	ClaimChangeEvent(@NonNull CommandSender sender, @NonNull ClaimableFaction faction, @NonNull Collection<Claim> claims, @NonNull ClaimChangeReason reason, boolean async) {
+		super(faction, async);
+		Validate.isTrue(!claims.isEmpty(), "Claims cannot be empty");
+		this.sender = sender;
+		this.claims = claims;
+		this.reason = reason;
+	}
 
 
-    public boolean isSingleton(){
-        return claims.size() == 1;
-    }
+	public boolean isSingleton() {
+		return claims.size() == 1;
+	}
 
-    public enum ClaimChangeReason{
-        UNCLAIM, CLAIM, RESIZE, DISBAND
-    }
+	public enum ClaimChangeReason {
+		UNCLAIM, CLAIM, RESIZE, DISBAND
+	}
 }

@@ -24,7 +24,7 @@ public final class FactionHomeCommand extends FactionSubCommand {
 
 	}
 
-    @Override
+	@Override
 	public String getUsage() {
 		return '/' + label + ' ' + getName();
 	}
@@ -81,51 +81,51 @@ public final class FactionHomeCommand extends FactionSubCommand {
 			return;
 		}
 		TimerAPI.callHome(player, playerFaction, getLabel());
-	/**
-	 * This need to be moved to Core Plugin, tomorrow.
-	 *  Faction factionAt = plugin.getFactionManager().getFactionAt(player.getLocation());
+		/**
+		 * This need to be moved to Core Plugin, tomorrow.
+		 *  Faction factionAt = plugin.getFactionManager().getFactionAt(player.getLocation());
 
-		if (factionAt != playerFaction && factionAt instanceof PlayerFaction && Configuration.allowTeleportingInEnemyTerritory) {
-			tell(Lang.of("Commands-Factions-Home-InEnemyClaim")
-					.replace("{commandLabel}", getLabel()));
-			return;
-		}
+		 if (factionAt != playerFaction && factionAt instanceof PlayerFaction && Configuration.allowTeleportingInEnemyTerritory) {
+		 tell(Lang.of("Commands-Factions-Home-InEnemyClaim")
+		 .replace("{commandLabel}", getLabel()));
+		 return;
+		 }
 
-		long millis;
-		if (factionAt.isSafezone()) millis = 0L;
-		else {
-			String name;
-			switch (player.getWorld().getEnvironment()) {
-				case THE_END:
-					name = "End";
-					millis = Configuration.factionHomeTeleportDelayEnd;
-					break;
-				case NETHER:
-					name = "Nether";
-					millis = Configuration.factionHomeTeleportDelayNether;
-					break;
-				case NORMAL:
-					name = "Overworld";
-					millis = Configuration.factionHomeTeleportDelayNormal;
-					break;
-				default:
-					throw new IllegalArgumentException("Unrecognised environment");
-			}
+		 long millis;
+		 if (factionAt.isSafezone()) millis = 0L;
+		 else {
+		 String name;
+		 switch (player.getWorld().getEnvironment()) {
+		 case THE_END:
+		 name = "End";
+		 millis = Configuration.factionHomeTeleportDelayEnd;
+		 break;
+		 case NETHER:
+		 name = "Nether";
+		 millis = Configuration.factionHomeTeleportDelayNether;
+		 break;
+		 case NORMAL:
+		 name = "Overworld";
+		 millis = Configuration.factionHomeTeleportDelayNormal;
+		 break;
+		 default:
+		 throw new IllegalArgumentException("Unrecognised environment");
+		 }
 
-			if (millis == -1L) {
-				tell(Lang.of("Commands-Factions-Home-DisabledInWorld")
-						.replace("{worldName}", name));
-				return;
-			}
-		}
+		 if (millis == -1L) {
+		 tell(Lang.of("Commands-Factions-Home-DisabledInWorld")
+		 .replace("{worldName}", name));
+		 return;
+		 }
+		 }
 
-		if (factionAt != playerFaction && factionAt instanceof PlayerFaction) millis *= 2L;
+		 if (factionAt != playerFaction && factionAt instanceof PlayerFaction) millis *= 2L;
 
-		HCF.getPlugin().getTimerManager().getTeleportTimer().teleport(player, home.get(), millis,
-				HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Home-Teleporting")
-						.replace("{time}", DurationFormatter.getRemaining(millis, true, false)),
-				PlayerTeleportEvent.TeleportCause.COMMAND);
+		 HCF.getPlugin().getTimerManager().getTeleportTimer().teleport(player, home.get(), millis,
+		 HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Home-Teleporting")
+		 .replace("{time}", DurationFormatter.getRemaining(millis, true, false)),
+		 PlayerTeleportEvent.TeleportCause.COMMAND);
 
-		return;*/
+		 return;*/
 	}
 }

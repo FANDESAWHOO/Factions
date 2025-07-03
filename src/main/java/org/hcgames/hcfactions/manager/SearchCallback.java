@@ -34,26 +34,26 @@ import org.hcgames.hcfactions.faction.Faction;
 //TODO: Add more fail reasons as there is more possibilities
 public interface SearchCallback<T extends Faction> {
 
-    void onSuccess(T t);
+	void onSuccess(T t);
 
-    void onFail(FailReason reason);
+	void onFail(FailReason reason);
 
-    enum FailReason{
+	enum FailReason {
 
-        /**
-         * When the search fails to find a faction
-         */
-        NOT_FOUND,
+		/**
+		 * When the search fails to find a faction
+		 */
+		NOT_FOUND,
 
-        /**
-         * When the search succeeds however the faction found does not cast to the one provided.
-         */
-        CLASS_CAST,
+		/**
+		 * When the search succeeds however the faction found does not cast to the one provided.
+		 */
+		CLASS_CAST,
 
-        /**
-         * When the cause of it failing is unknown
-         */
-        UNKNOWN,
-    }
+		/**
+		 * When the cause of it failing is unknown
+		 */
+		UNKNOWN,
+	}
 
 }

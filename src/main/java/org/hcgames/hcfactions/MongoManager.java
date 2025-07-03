@@ -32,48 +32,49 @@ import org.bukkit.ChatColor;
 
 @Getter
 public class MongoManager {
-    private MongoClient mongoClient;
-    private MongoDatabase mongoDatabase;
-    private MongoCollection<Document> serverCollection;
-    private MongoCollection<Document> factionMongoCollection;
+	private MongoClient mongoClient;
+	private MongoDatabase mongoDatabase;
+	private MongoCollection<Document> serverCollection;
+	private MongoCollection<Document> factionMongoCollection;
 
-    public void connect() {
-        try {
-            String host = Configuration.host;
-            String databaseName = Configuration.database;
-            String username = Configuration.username;
-            String password = Configuration.password;
-            String replicaSet = "rs0";
+	public void connect() {
+		try {
+			String host = Configuration.host;
+			String databaseName = Configuration.database;
+			String username = Configuration.username;
+			String password = Configuration.password;
+			String replicaSet = "rs0";
 
-            if (host == null || databaseName == null || username == null || password == null) {
-                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "MongoDB configuration is missing or incomplete in config.yml!");
-                return;
-            }
+			if (host == null || databaseName == null || username == null || password == null) {
+				Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "MongoDB configuration is missing or incomplete in config.yml!");
+				return;
+			}
 
-            String uri = String.format("mongodb://%s:%s@%s/%s?replicaSet=%s", username, password, host, databaseName, replicaSet);
-
-
-            mongoClient = MongoClients.create(uri);
-            mongoDatabase = mongoClient.getDatabase(databaseName);
+			String uri = String.format("mongodb://%s:%s@%s/%s?replicaSet=%s", username, password, host, databaseName, replicaSet);
 
 
-            serverCollection = mongoDatabase.getCollection("server1");
-            factionMongoCollection = mongoDatabase.getCollection("factions1");
+			mongoClient = MongoClients.create(uri);
+			mongoDatabase = mongoClient.getDatabase(databaseName);
 
-            Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Connected to MongoDB successfully.");
-        } catch (MongoException e) {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Error connecting to MongoDB: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-    public MongoCollection getMongoCollection(String dat){
-        return mongoDatabase.getCollection(dat);
-    }
 
-    public void disconnect() {
-        if (mongoClient != null) {
-            mongoClient.close();
-            Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "Disconnected from MongoDB.");
-        }
-    }
+			serverCollection = mongoDatabase.getCollection("server1");
+			factionMongoCollection = mongoDatabase.getCollection("factions1");
+
+			Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Connected to MongoDB successfully.");
+		} catch (MongoException e) {
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Error connecting to MongoDB: " + e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	public MongoCollection getMongoCollection(String dat) {
+		return mongoDatabase.getCollection(dat);
+	}
+
+	public void disconnect() {
+		if (mongoClient != null) {
+			mongoClient.close();
+			Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "Disconnected from MongoDB.");
+		}
+	}
 }

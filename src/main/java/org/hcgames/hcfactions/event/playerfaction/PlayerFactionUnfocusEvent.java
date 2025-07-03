@@ -25,28 +25,28 @@ import org.bukkit.event.HandlerList;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.focus.FocusTarget;
 
-public class PlayerFactionUnfocusEvent extends PlayerFactionEvent{
+public class PlayerFactionUnfocusEvent extends PlayerFactionEvent {
 
-    private final static HandlerList handlers = new HandlerList();
+	private final static HandlerList handlers = new HandlerList();
 
-    @Getter
-    private final FocusTarget target;
+	@Getter
+	private final FocusTarget target;
 
-    public PlayerFactionUnfocusEvent(PlayerFaction faction, FocusTarget target, boolean async){
-        super(faction, async);
-        this.target = target;
-    }
+	public PlayerFactionUnfocusEvent(PlayerFaction faction, FocusTarget target, boolean async) {
+		super(faction, async);
+		this.target = target;
+	}
 
-    public PlayerFactionUnfocusEvent(PlayerFaction faction, FocusTarget target){
-        this(faction, target, false);
-    }
+	public PlayerFactionUnfocusEvent(PlayerFaction faction, FocusTarget target) {
+		this(faction, target, false);
+	}
 
-    @Override
-    public HandlerList getHandlers(){
-        return handlers;
-    }
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
+	@Override
+	public HandlerList getHandlers() {
+		return handlers;
+	}
 }

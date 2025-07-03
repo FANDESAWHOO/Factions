@@ -29,77 +29,77 @@ import java.util.Iterator;
 
 public abstract class Provider {
 
-    @Getter
-    private final Board board;//TODO: Ditch getting scoreboard from constructor
+	@Getter
+	private final Board board;//TODO: Ditch getting scoreboard from constructor
 
-    //Force LinkedList
-    ArrayList<Entry> entries = new ArrayList<>();
+	//Force LinkedList
+	ArrayList<Entry> entries = new ArrayList<>();
 
-    public Provider(Board scoreboard){
-        this.board = scoreboard;
-    }
+	public Provider(Board scoreboard) {
+		this.board = scoreboard;
+	}
 
-    public abstract ArrayList<String> provide(Player player);
+	public abstract ArrayList<String> provide(Player player);
 
-    public abstract int getPriority();
+	public abstract int getPriority();
 
-    public void update(){//This will, update existing entries, remove/add to the arraylist but NOT to the scoreboard.
-        if(!isApplicable(board.getPlayer())){
-            remove();
-            return;
-        }
+	public void update() {//This will, update existing entries, remove/add to the arraylist but NOT to the scoreboard.
+		if (!isApplicable(board.getPlayer())) {
+			remove();
+			return;
+		}
 
-        ImmutableList<String> lines = ImmutableList.copyOf(provide(board.getPlayer()));
-        boolean needsBuild = false;
+		ImmutableList<String> lines = ImmutableList.copyOf(provide(board.getPlayer()));
+		boolean needsBuild = false;
 
-        int current = 0;
-        Entry lastEntry;
+		int current = 0;
+		Entry lastEntry;
 
-        for(String line : lines){
-            if (!(current >= entries.size())){
-                lastEntry = entries.get(current);
-                if(!board.entryPriorityMap.containsValue(lastEntry)) {
-                    needsBuild = true;
-                }
+		for (String line : lines) {
+			if (!(current >= entries.size())) {
+				lastEntry = entries.get(current);
+				if (!board.entryPriorityMap.containsValue(lastEntry)) {
+					needsBuild = true;
+				}
 
-                lastEntry.setValue(line);
-                current++;
-                continue;
-            }
+				lastEntry.setValue(line);
+				current++;
+				continue;
+			}
 
-            needsBuild = true;
-            entries.add(new Entry(board, line));
-            current++;
-        }
+			needsBuild = true;
+			entries.add(new Entry(board, line));
+			current++;
+		}
 
-        //TODO Err: Account for line going down a level so ordering!
-        //TODO Make more efficient via looping thru the entries, and then the left over lines
+		//TODO Err: Account for line going down a level so ordering!
+		//TODO Make more efficient via looping thru the entries, and then the left over lines
 
-        Iterator<Entry> entryIterator = entries.iterator();
-        while(entryIterator.hasNext()){
-            Entry next = entryIterator.next();
+		Iterator<Entry> entryIterator = entries.iterator();
+		while (entryIterator.hasNext()) {
+			Entry next = entryIterator.next();
 
-            if(!lines.contains(next.getOriginalValue())){
-                entryIterator.remove();
-                needsBuild = true;
-            }
-        }
+			if (!lines.contains(next.getOriginalValue())) {
+				entryIterator.remove();
+				needsBuild = true;
+			}
+		}
 
-        if(needsBuild){
-            board.build();
-        }
-    }
+		if (needsBuild) {
+			board.build();
+		}
+	}
 
-    /**
-     * This method will ONLY clear the entries, it will not unregister this as a provider.
-     */
-    public void remove(){
-        if(!entries.isEmpty()){
-            entries.clear();
-            board.build();
-        }
-    }
+	/**
+	 * This method will ONLY clear the entries, it will not unregister this as a provider.
+	 */
+	public void remove() {
+		if (!entries.isEmpty()) {
+			entries.clear();
+			board.build();
+		}
+	}
 
-    public abstract boolean isApplicable(Player player);
+	public abstract boolean isApplicable(Player player);
 
 }

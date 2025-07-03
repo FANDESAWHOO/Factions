@@ -15,7 +15,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @Getter
 public class Nametag {
 	private final Player player;
-    private final NametagPacket packet;
+	private final NametagPacket packet;
 	private final Set<String> trackedPlayers;
 	private final MinecraftVersion.V protocolVersion;
 
@@ -24,7 +24,7 @@ public class Nametag {
 		packet = createPacket(player);
 		trackedPlayers = new CopyOnWriteArraySet<>();
 		protocolVersion = MinecraftVersion.getCurrent();
-	//	Tasks.executeLater(getManager(), 5L, () -> protocolVersion = Utils.getProtocolVersion(player));
+		//	Tasks.executeLater(getManager(), 5L, () -> protocolVersion = Utils.getProtocolVersion(player));
 	}
 
 	public void delete() {
@@ -33,7 +33,7 @@ public class Nametag {
 
 	@SneakyThrows
 	public NametagPacket createPacket(Player player) {
-		String path = "me.keano.azurite.modules.nametags.packet.type.NametagPacketV" + MinecraftVersion.getCurrent();
+		String path = "org.hcgames.hcfactions.nametag.versions.NametagPacketV" + MinecraftVersion.getCurrent();
 		return (NametagPacket) Class.forName(path).getConstructor(NametagManager.class, Player.class).newInstance(this, player);
 	}
 }

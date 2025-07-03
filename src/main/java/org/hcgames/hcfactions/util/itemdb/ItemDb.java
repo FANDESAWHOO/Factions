@@ -26,23 +26,23 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 
 public interface ItemDb {
-    void reloadItemDatabase();
+	void reloadItemDatabase();
 
-    ItemStack getPotion(String var1);
+	ItemStack getPotion(String var1);
 
-    ItemStack getPotion(String var1, int var2);
+	ItemStack getPotion(String var1, int var2);
 
-    ItemStack getItem(String var1);
+	ItemStack getItem(String var1);
 
-    ItemStack getItem(String var1, int var2);
+	ItemStack getItem(String var1, int var2);
 
-    String getName(ItemStack var1);
+	String getName(ItemStack var1);
 
-    @Deprecated
-    String getPrimaryName(ItemStack var1);
+	@Deprecated
+	String getPrimaryName(ItemStack var1);
 
-    String getNames(ItemStack var1);
+	String getNames(ItemStack var1);
 
-    List<ItemStack> getMatching(Player var1, String[] var2);
+	List<ItemStack> getMatching(Player var1, String[] var2);
 }
 

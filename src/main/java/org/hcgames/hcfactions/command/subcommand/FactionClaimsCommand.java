@@ -27,7 +27,7 @@ public final class FactionClaimsCommand extends FactionSubCommand {
 		plugin = HCFactions.getInstance();
 	}
 
-    @Override
+	@Override
 	public String getUsage() {
 		return '/' + label + ' ' + getName() + " [factionName]";
 	}
@@ -35,9 +35,10 @@ public final class FactionClaimsCommand extends FactionSubCommand {
 	@Override
 	public void onCommand() {
 		PlayerFaction selfFaction = null;
-		try{
+		try {
 			selfFaction = sender instanceof Player ? plugin.getFactionManager().getPlayerFaction((Player) sender) : null;
-		}catch(NoFactionFoundException ignored){}
+		} catch (NoFactionFoundException ignored) {
+		}
 		ClaimableFaction targetFaction;
 
 		if (args.length < 2) {
@@ -71,7 +72,7 @@ public final class FactionClaimsCommand extends FactionSubCommand {
 		handle(sender, targetFaction, selfFaction);
 	}
 
-	private void handle(CommandSender sender, ClaimableFaction targetFaction, PlayerFaction selfFaction){
+	private void handle(CommandSender sender, ClaimableFaction targetFaction, PlayerFaction selfFaction) {
 		Collection<Claim> claims = targetFaction.getClaims();
 
 		if (claims.isEmpty()) {

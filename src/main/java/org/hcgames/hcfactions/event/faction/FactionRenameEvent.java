@@ -29,36 +29,36 @@ import org.bukkit.event.HandlerList;
 import org.hcgames.hcfactions.event.FactionEvent;
 import org.hcgames.hcfactions.faction.Faction;
 
-@Getter @Setter
-public class FactionRenameEvent extends FactionEvent<Faction> implements Cancellable{
+@Getter
+@Setter
+public class FactionRenameEvent extends FactionEvent<Faction> implements Cancellable {
 
-    private final static HandlerList handlers = new HandlerList();
-    private final CommandSender sender;
+	private final static HandlerList handlers = new HandlerList();
+	private final CommandSender sender;
 
-    private final String oldName;
-    private String newName;
+	private final String oldName;
+	private final boolean displayName;
+	private String newName;
+	private boolean cancelled;
 
-    private final boolean displayName;
-    private boolean cancelled;
+	public FactionRenameEvent(@NonNull CommandSender sender, @NonNull Faction faction, @NonNull String oldName, @NonNull String newName, @NonNull boolean displayName, boolean async) {
+		super(faction);
+		this.sender = sender;
+		this.oldName = oldName;
+		this.newName = newName;
+		this.displayName = displayName;
+	}
 
-    public FactionRenameEvent(@NonNull CommandSender sender, @NonNull Faction faction, @NonNull String oldName, @NonNull String newName, @NonNull boolean displayName, boolean async){
-        super(faction);
-        this.sender = sender;
-        this.oldName = oldName;
-        this.newName = newName;
-        this.displayName = displayName;
-    }
+	public FactionRenameEvent(@NonNull CommandSender sender, @NonNull Faction faction, @NonNull String oldName, @NonNull String newName, @NonNull boolean displayName) {
+		this(sender, faction, oldName, newName, displayName, false);
+	}
 
-    public FactionRenameEvent(@NonNull CommandSender sender, @NonNull Faction faction, @NonNull String oldName, @NonNull String newName, @NonNull boolean displayName){
-        this(sender, faction, oldName, newName, displayName, false);
-    }
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList(){
-        return handlers;
-    }
+	@Override
+	public HandlerList getHandlers() {
+		return handlers;
+	}
 }

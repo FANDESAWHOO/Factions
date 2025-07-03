@@ -35,44 +35,44 @@ import org.hcgames.hcfactions.util.Mongoable;
 import java.util.Map;
 import java.util.UUID;
 
-public class EndPortalFaction extends ClaimableFaction implements ConfigurationSerializable, Mongoable, SystemFaction{
+public class EndPortalFaction extends ClaimableFaction implements ConfigurationSerializable, Mongoable, SystemFaction {
 
-    private final static UUID FACTION_UUID = UUID.fromString("f251b1ae-cc56-4ef0-9154-b1da95cee84e");
+	private final static UUID FACTION_UUID = UUID.fromString("f251b1ae-cc56-4ef0-9154-b1da95cee84e");
 
-    public EndPortalFaction() {
-        super("EndPortal", FACTION_UUID);
-        displayName = "End Portal";
+	public EndPortalFaction() {
+		super("EndPortal", FACTION_UUID);
+		displayName = "End Portal";
 
-        HCFactions plugin = JavaPlugin.getPlugin(HCFactions.class);
+		HCFactions plugin = JavaPlugin.getPlugin(HCFactions.class);
 
-        World overworld = Bukkit.getServer().getWorlds().get(0);
-        int maxHeight = overworld.getMaxHeight();
+		World overworld = Bukkit.getServer().getWorlds().get(0);
+		int maxHeight = overworld.getMaxHeight();
 
-        int min = Configuration.endPortalCenter - Configuration.endPortalRadius;
-        int max = Configuration.endPortalCenter + Configuration.endPortalRadius;
+		int min = Configuration.endPortalCenter - Configuration.endPortalRadius;
+		int max = Configuration.endPortalCenter + Configuration.endPortalRadius;
 
-        // North East (++)
-        addClaim(new Claim(this, new Location(overworld, min, 0, min), new Location(overworld, max, maxHeight, max)));
+		// North East (++)
+		addClaim(new Claim(this, new Location(overworld, min, 0, min), new Location(overworld, max, maxHeight, max)));
 
-        // South West (--)
-        addClaim(new Claim(this, new Location(overworld, -max, maxHeight, -max), new Location(overworld, -min, 0, -min)));
+		// South West (--)
+		addClaim(new Claim(this, new Location(overworld, -max, maxHeight, -max), new Location(overworld, -min, 0, -min)));
 
-        // North West (-+)
-        addClaim(new Claim(this, new Location(overworld, -max, 0, min), new Location(overworld, -min, maxHeight, max)));
+		// North West (-+)
+		addClaim(new Claim(this, new Location(overworld, -max, 0, min), new Location(overworld, -min, maxHeight, max)));
 
-        // South East (+-)
-        addClaim(new Claim(this, new Location(overworld, min, 0, -max), new Location(overworld, max, maxHeight, -min)));
-    }
+		// South East (+-)
+		addClaim(new Claim(this, new Location(overworld, min, 0, -max), new Location(overworld, max, maxHeight, -min)));
+	}
 
-    public EndPortalFaction(Map<String, Object> map) {
-        super(map);
-    }
+	public EndPortalFaction(Map<String, Object> map) {
+		super(map);
+	}
 
-    public EndPortalFaction(Document object){
-        super(object);
-    }
+	public EndPortalFaction(Document object) {
+		super(object);
+	}
 
-    public static UUID getUUID() {
-        return FACTION_UUID;
-    }
+	public static UUID getUUID() {
+		return FACTION_UUID;
+	}
 }

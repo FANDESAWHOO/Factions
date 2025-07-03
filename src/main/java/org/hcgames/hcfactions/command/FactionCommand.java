@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- *  Class to handle the command and tab completion for the faction command.
+ * Class to handle the command and tab completion for the faction command.
  */
 
 @AutoRegister
@@ -29,9 +29,7 @@ public final class FactionCommand extends SimpleCommand {
 	@Getter
 	private final List<FactionSubCommand> commands = new LinkedList<>();
 	private final FactionHelpCommand help;
-    public void addArgument(FactionSubCommand class1){
-		commands.add(class1);
-	}
+
 	private FactionCommand() {
 		super("faction|fac|f");
 		setAutoHandleHelp(false);
@@ -88,8 +86,12 @@ public final class FactionCommand extends SimpleCommand {
 		addArgument(new FactionPastFactionsCommand());
 	}
 
+	public void addArgument(FactionSubCommand class1) {
+		commands.add(class1);
+	}
+
 	public FactionSubCommand getSubCommand(String key) {
-		for(FactionSubCommand subCommand : commands) {
+		for (FactionSubCommand subCommand : commands) {
 			if (subCommand.getName().equalsIgnoreCase(key)) return subCommand;
 			if (subCommand.matches(key)) return subCommand;
 		}

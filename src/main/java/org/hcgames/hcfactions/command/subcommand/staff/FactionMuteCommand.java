@@ -16,54 +16,54 @@ import java.util.UUID;
 
 public final class FactionMuteCommand extends FactionSubCommand {
 
-    private final HCFactions plugin;
+	private final HCFactions plugin;
 
-    public FactionMuteCommand() {
-        super("mute");
-        setDescription( "Mutes every member in this faction.");
-        plugin = HCFactions.getInstance();
-    //    this.permission = "hcf.command.faction.argument." + getName();
-    }
+	public FactionMuteCommand() {
+		super("mute");
+		setDescription("Mutes every member in this faction.");
+		plugin = HCFactions.getInstance();
+		//    this.permission = "hcf.command.faction.argument." + getName();
+	}
 
-    
-    @Override
+
+	@Override
 	public String getUsage() {
-        return '/' + label + ' ' + getName() + " <factionName> <time:(e.g. 1h2s)> <reason>";
-    }
+		return '/' + label + ' ' + getName() + " <factionName> <time:(e.g. 1h2s)> <reason>";
+	}
 
-    @Override
-    public void onCommand() {
-        if (args.length < 3) {
-            tell(ChatColor.RED + "Usage: " + getUsage());
-            return;
-        }
+	@Override
+	public void onCommand() {
+		if (args.length < 3) {
+			tell(ChatColor.RED + "Usage: " + getUsage());
+			return;
+		}
 
-        plugin.getFactionManager().advancedSearch(args[1], PlayerFaction.class, new SearchCallback<org.hcgames.hcfactions.faction.PlayerFaction>() {
+		plugin.getFactionManager().advancedSearch(args[1], PlayerFaction.class, new SearchCallback<org.hcgames.hcfactions.faction.PlayerFaction>() {
 
-            @Override
-            public void onSuccess(org.hcgames.hcfactions.faction.PlayerFaction faction){
-                String extraArgs = HCFactions.SPACE_JOINER.join(Arrays.copyOfRange(args, 2, args.length));
-                ConsoleCommandSender console = Bukkit.getConsoleSender();
-                for (UUID uuid : faction.getMembers().keySet()) {
-                    String commandLine = "mute " + uuid.toString() + " " + extraArgs;
-                    tell(ChatColor.RED + ChatColor.BOLD.toString() + "Executing " + ChatColor.RED + commandLine);
-                    console.getServer().dispatchCommand(sender, commandLine);
-                }
+			@Override
+			public void onSuccess(org.hcgames.hcfactions.faction.PlayerFaction faction) {
+				String extraArgs = HCFactions.SPACE_JOINER.join(Arrays.copyOfRange(args, 2, args.length));
+				ConsoleCommandSender console = Bukkit.getConsoleSender();
+				for (UUID uuid : faction.getMembers().keySet()) {
+					String commandLine = "mute " + uuid.toString() + " " + extraArgs;
+					tell(ChatColor.RED + ChatColor.BOLD.toString() + "Executing " + ChatColor.RED + commandLine);
+					console.getServer().dispatchCommand(sender, commandLine);
+				}
 
-                tell(ChatColor.RED + ChatColor.BOLD.toString() + "Executed mute action on faction " + faction.getName() + ".");
-            }
+				tell(ChatColor.RED + ChatColor.BOLD.toString() + "Executed mute action on faction " + faction.getName() + ".");
+			}
 
-            @Override
-            public void onFail(FailReason reason){
-                tell(Lang.of("Commands.error.faction_not_found", args[1]));
-            }
-        });
+			@Override
+			public void onFail(FailReason reason) {
+				tell(Lang.of("Commands.error.faction_not_found", args[1]));
+			}
+		});
 
-        return;
-    }
+		return;
+	}
 
-    @Override
-    public List<String> tabComplete() {
-        return args.length == 2 ? null : Collections.emptyList();
-    }
+	@Override
+	public List<String> tabComplete() {
+		return args.length == 2 ? null : Collections.emptyList();
+	}
 }

@@ -12,27 +12,29 @@ import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.FactionMember;
 
 
-public class NameCacheListener implements Listener{
+public class NameCacheListener implements Listener {
 
-    private final HCFactions plugin;
-    @Getter
-    private final static NameCacheListener nameCacheListener = new NameCacheListener();
-    private NameCacheListener(){
-        plugin = HCFactions.getInstance();
-    }
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerJoin(PlayerJoinEvent event){
-        Player player = event.getPlayer();
-        PlayerFaction faction;
+	@Getter
+	private final static NameCacheListener nameCacheListener = new NameCacheListener();
+	private final HCFactions plugin;
+
+	private NameCacheListener() {
+		plugin = HCFactions.getInstance();
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerJoin(PlayerJoinEvent event) {
+		Player player = event.getPlayer();
+		PlayerFaction faction;
 
 
-        try{
-            faction = plugin.getFactionManager().getPlayerFaction(player.getUniqueId());
-        }catch(NoFactionFoundException ignored){
-            return;
-        }
+		try {
+			faction = plugin.getFactionManager().getPlayerFaction(player.getUniqueId());
+		} catch (NoFactionFoundException ignored) {
+			return;
+		}
 
-        FactionMember member = faction.getMember(player);
-        member.setCachedName(player.getName());
-    }
+		FactionMember member = faction.getMember(player);
+		member.setCachedName(player.getName());
+	}
 }

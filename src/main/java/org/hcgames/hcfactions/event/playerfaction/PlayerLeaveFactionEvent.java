@@ -32,63 +32,57 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
-public class PlayerLeaveFactionEvent extends PlayerFactionEvent implements Cancellable{
+public class PlayerLeaveFactionEvent extends PlayerFactionEvent implements Cancellable {
 
-    private static final HandlerList handlers = new HandlerList();
+	private static final HandlerList handlers = new HandlerList();
+	@Getter
+	private final CommandSender sender;
+	@Getter
+	private final UUID uniqueID;
+	@Getter
+	private final FactionLeaveCause cause;
+	@Getter
+	private final boolean isKick;
+	@Getter
+	private final boolean force;
+	private boolean cancelled;
+	private Player player;
 
-    private boolean cancelled;
-    private Player player;
+	public PlayerLeaveFactionEvent(@NonNull CommandSender sender, @Nullable Player player, @NonNull UUID playerUUID, @NonNull PlayerFaction faction, @NonNull FactionLeaveCause cause, boolean isKick, boolean force) {
+		super(faction);
 
-    @Getter
-    private final CommandSender sender;
+		this.sender = sender;
+		this.player = player;
+		this.uniqueID = playerUUID;
+		this.cause = cause;
+		this.isKick = isKick;
+		this.force = force;
+	}
 
-    @Getter
-    private final UUID uniqueID;
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 
-    @Getter
-    private final FactionLeaveCause cause;
+	public Optional<Player> getPlayer() {
+		return Optional.ofNullable(player);
+	}
 
-    @Getter
-    private final boolean isKick;
+	@Override
+	public HandlerList getHandlers() {
+		return handlers;
+	}
 
-    @Getter
-    private final boolean force;
+	@Override
+	public boolean isCancelled() {
+		return cancelled;
+	}
 
-    public PlayerLeaveFactionEvent(@NonNull CommandSender sender, @Nullable Player player, @NonNull UUID playerUUID, @NonNull PlayerFaction faction, @NonNull FactionLeaveCause cause, boolean isKick, boolean force){
-        super(faction);
+	@Override
+	public void setCancelled(boolean cancelled) {
+		this.cancelled = cancelled;
+	}
 
-        this.sender = sender;
-        this.player = player;
-        this.uniqueID = playerUUID;
-        this.cause = cause;
-        this.isKick = isKick;
-        this.force = force;
-    }
-
-    public Optional<Player> getPlayer() {
-        return Optional.ofNullable(player);
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    @Override
-    public boolean isCancelled() {
-        return cancelled;
-    }
-
-    @Override
-    public void setCancelled(boolean cancelled) {
-        this.cancelled = cancelled;
-    }
-
-    public enum FactionLeaveCause {
-        KICK, LEAVE, DISBAND
-    }
+	public enum FactionLeaveCause {
+		KICK, LEAVE, DISBAND
+	}
 }

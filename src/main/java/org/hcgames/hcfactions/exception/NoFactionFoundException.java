@@ -20,9 +20,9 @@
 
 package org.hcgames.hcfactions.exception;
 
-public class NoFactionFoundException extends RuntimeException{
+public class NoFactionFoundException extends RuntimeException {
 
-    public NoFactionFoundException(String name){
-        super("No faction found: " + name);
-    }
+	public NoFactionFoundException(String name) {
+		super("No faction found: " + name);
+	}
 }

@@ -11,46 +11,46 @@ import org.hcgames.hcfactions.structure.Relation;
 
 /**
  * BETA
- *
  */
 public final class FactionsAPI {
 
 	public static Faction getFactionAt(Player location) {
 		return HCFactions.getInstance().getFactionManager().getFactionAt(location.getLocation());
 	}
+
 	public static Faction getFactionAt(Location location) {
 		return HCFactions.getInstance().getFactionManager().getFactionAt(location);
 	}
 
-	 public static Faction getFaction(String name) {
-		 return HCFactions.getInstance().getFactionManager().getFaction(name);
-	 }
-	 
-	 public static Claim getClaimAt(Location location) {
-		 return HCFactions.getInstance().getFactionManager().getClaimAt(location);
-	 }
+	public static Faction getFaction(String name) {
+		return HCFactions.getInstance().getFactionManager().getFaction(name);
+	}
 
-	 public static PlayerFaction getPlayerFaction(Player player){
-		 try{
-			 return HCFactions.getInstance().getFactionManager().getPlayerFaction(player.getUniqueId());
-		 }catch (NoFactionFoundException e){
-			 return null;
-		 }
-	 }
+	public static Claim getClaimAt(Location location) {
+		return HCFactions.getInstance().getFactionManager().getClaimAt(location);
+	}
 
-	 public static boolean isDeathban(Faction faction){
-		 return faction.isDeathban();
-	 }
+	public static PlayerFaction getPlayerFaction(Player player) {
+		try {
+			return HCFactions.getInstance().getFactionManager().getPlayerFaction(player.getUniqueId());
+		} catch (NoFactionFoundException e) {
+			return null;
+		}
+	}
 
-	 public static Relation getRelation(Faction faction, Player player){
+	public static boolean isDeathban(Faction faction) {
+		return faction.isDeathban();
+	}
+
+	public static Relation getRelation(Faction faction, Player player) {
 		return faction.getRelation(player);
-	 }
+	}
 
-     public static boolean hasFaction(Player player){
-		 try{
-			 return HCFactions.getInstance().getFactionManager().getFaction(player.getUniqueId()) != null;
-		 }catch (NoFactionFoundException e){
-			 return false;
-		 }
-	 }
+	public static boolean hasFaction(Player player) {
+		try {
+			return HCFactions.getInstance().getFactionManager().getFaction(player.getUniqueId()) != null;
+		} catch (NoFactionFoundException e) {
+			return false;
+		}
+	}
 }

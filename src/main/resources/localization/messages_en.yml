@@ -36,19 +36,19 @@ Commands:
     usage: "Usage: {0}"
   Factions:
   Join:
-   Rotation-Pending: "&cYou cannot join the faction as you are on a 24 hour cooldown period. Please wait {time} to join."
+    Rotation-Pending: "&cYou cannot join the faction as you are on a 24 hour cooldown period. Please wait {time} to join."
   Lives:
-   Usage: "&cUsage: /f lives <deposit|withdraw> <amount>"
+    Usage: "&cUsage: /f lives <deposit|withdraw> <amount>"
   Deposit:
-   Not-Enough: "You don't have {amount} lives to desposit."
-   Broadcast: "{player} has deposited {amount} live{s} into the faction."
+    Not-Enough: "You don't have {amount} lives to desposit."
+    Broadcast: "{player} has deposited {amount} live{s} into the faction."
   Withdraw:
-   Officer-Required: "You must be a officer or higher to withdraw lives."
-   Not-Enough: "You faction doesn't have {amount} live{s}."
-   Withdrew: "You have withdrew a {amount} live{s}."
+    Officer-Required: "You must be a officer or higher to withdraw lives."
+    Not-Enough: "You faction doesn't have {amount} live{s}."
+    Withdrew: "You have withdrew a {amount} live{s}."
   Subcommand:
-   Stuck:
-   SOTW-Paused-Disabled: "&cStuck command is disabled while sotw is paused."
+    Stuck:
+    SOTW-Paused-Disabled: "&cStuck command is disabled while sotw is paused."
   Rename:
     Renamed: "You have renamed {oldFactionName} to {factionName}"
     Revive:
@@ -127,7 +127,7 @@ Commands:
   Debug_Copy_Fail: "&cCopying files failed on file {file} and it was stopped. See console for more information."
   Debug_Zip_Fail: "&cCreating a ZIP of your files failed, see console for more information. Please ZIP debug/ folder and send it to us via ufile.io manually."
   Perms_Description: "List all permissions the plugin has."
-  Perms_Usage: 
+  Perms_Usage:
   Perms_Header: "Listing All Plugin Permissions"
   Perms_Main: "Main"
   Perms_Permissions: "Permissions:"
@@ -150,30 +150,30 @@ Commands:
       executing: "Executing {0}"
       executed: "Executed ban action on faction {0}"
   claimfor:
-      usage: "/{0} {1} <factionName>"
-      worldedit_required: "WorldEdit must be installed to set claim areas."
-      worldedit_selection_required: "You must make a WorldEdit selection to do this."
-      claimed: "Successfully claimed land for {0}."
+    usage: "/{0} {1} <factionName>"
+    worldedit_required: "WorldEdit must be installed to set claim areas."
+    worldedit_selection_required: "You must make a WorldEdit selection to do this."
+    claimed: "Successfully claimed land for {0}."
   clearclaims:
-      usage: "/{0} {1} <playerName|factionName|all>"
-      cleared_faction_broadcast: "Your claims have been forcefully wiped by {0}."
-      cleared: "Claims belonging to {0} have been wiped."
+    usage: "/{0} {1} <playerName|factionName|all>"
+    cleared_faction_broadcast: "Your claims have been forcefully wiped by {0}."
+    cleared: "Claims belonging to {0} have been wiped."
   console_prompt:
-      prompt: "Are you sure you want to do this? All claims will be cleared.\nType yes to confirm or no to deny."
-      cleared: "All claims have been cleared{0}."
-      cancelled: "Cancelled the process of clearing all faction claims."
-      cancelled_unknown: "Unrecognized response. Process of clearing all faction claims cancelled."
+    prompt: "Are you sure you want to do this? All claims will be cleared.\nType yes to confirm or no to deny."
+    cleared: "All claims have been cleared{0}."
+    cancelled: "Cancelled the process of clearing all faction claims."
+    cancelled_unknown: "Unrecognized response. Process of clearing all faction claims cancelled."
   forcedemote:
-      usage: "/{0} {1} <playerName>"
-      leader_demote: "{0} is a leader and cannot be demoted."
-      user_demote: "{0} is already a member and cannot be demoted any more."
-      demote_broadcast: "{0} has been demoted to {1}"
+    usage: "/{0} {1} <playerName>"
+    leader_demote: "{0} is a leader and cannot be demoted."
+    user_demote: "{0} is already a member and cannot be demoted any more."
+    demote_broadcast: "{0} has been demoted to {1}"
   snow:
-      own: "You have {0} snowing in your faction."
-      other: "You have {0} snowing for {1}"
+    own: "You have {0} snowing in your faction."
+    other: "You have {0} snowing for {1}"
   pastfactions:
-      own: "Your past factions: {0}"
-      other: "Past Factions of {0}: {1}"
+    own: "Your past factions: {0}"
+    other: "Past Factions of {0}: {1}"
 # -------------------------------------------------------------------------------------------------
 # Messages related to paginator splitting command help into multiple pages
 # -------------------------------------------------------------------------------------------------
@@ -185,17 +185,17 @@ Pages:
   Go_To_Page: "&7Go to page {page}"
   Go_To_First_Page: "&7Go to the first page"
   Tooltip:
-  - "&7You can also navigate using the"
-  - "&7hidden '/#flp <page> command.'"
-  
+    - "&7You can also navigate using the"
+    - "&7hidden '/#flp <page> command.'"
+
 # -------------------------------------------------------------------------------------------------
 # Messages related to players
 # -------------------------------------------------------------------------------------------------
-Player: 
+Player:
   Not_Online: "&cPlayer {player} &cis not online on this server."
   Not_Played_Before: "&cPlayer {player} &chas not played before or we could not locate his disk data."
   Invalid_UUID: "&cCould not find a player from UUID {uuid}."
-  
+
 # -------------------------------------------------------------------------------------------------
 # Messages related to menus
 # -------------------------------------------------------------------------------------------------
@@ -211,8 +211,8 @@ Menu:
   Tooltip_Info: "&fMenu Information"
   Button_Return_Title: "&4&lReturn"
   Button_Return_Lore:
-  - ""
-  - "Return back."
+    - ""
+    - "Return back."
 
 # -------------------------------------------------------------------------------------------------
 # Messages related to player conversation where server is waiting for his chat input
@@ -269,7 +269,7 @@ Data_Loading: "Database is currently loading data, please wait..."
 # -------------------------------------------------------------------------------------------------
 # Messages shown when player runs a command he lacks permission for
 # -------------------------------------------------------------------------------------------------
-No_Permission: "&cNo permission: {permission}" 
+No_Permission: "&cNo permission: {permission}"
 
 # -------------------------------------------------------------------------------------------------
 # Internal versioning number
@@ -382,9 +382,9 @@ factions:
       item:
         name: "Claim Wand"
         lore:
-        - lalal do something
-        - with this to claim
-        - :)
+          - lalal do something
+          - with this to claim
+          - :)
       cleared: "You have cleared your claim selection."
       need_both_position: "You have not set both positions of this claim selection."
       set: "Set the location of the claim selection {selectionId} to: ({blockX}, {blockZ})"
@@ -537,7 +537,7 @@ Timer-Combat-CannotJoinFactions: '&cYou cannot join factions while you {timerNam
 Timer-Combat-CannotKick: '&cCannot kick {player} as their {timerName} &cis active.'
 Timer-Combat-CannotLeave: '&cYou cannot leave your faction while your {timerName} &cis running.'
 Timer-Combat-CannotEnter: '&eYou cannot enter {areaName} &ewhile your {timerName} is active. &7({timeLeft} remaining)'
-Timer-Combat-InCombat: '&eYou have engaged in &6Combat&e. You cannot enter spawn and other safe-zones for &6&l40s&e.'   
+Timer-Combat-InCombat: '&eYou have engaged in &6Combat&e. You cannot enter spawn and other safe-zones for &6&l40s&e.'
 Timer-Invincibility-LandClaimedTeleported: '&cThe land was claimed - teleported.'
 Timer-Invincibility-TimerStartedRespawn: '&eYou now have {timerName} &etimer.'
 Timer-Invincibility-IgniteBlocksNotAllowed: '&cYou cannot ignite blocks as your {timerName} &cis active &7[{timeLeft}]'
@@ -557,7 +557,7 @@ Timer-Teleport-TookDamage: '&cYou took damage, therefore cancelling your telepor
 Timer-Invincibility-Name: '&bInvincibility'
 Timer-Stuck-Name: '&dStuck'
 Timer-Stuck-SBPrefix: '&6&l'
-Timer-Teleport-Name: '&dTeleport'      
+Timer-Teleport-Name: '&dTeleport'
 Timer-Combat-SBPrefix: '&4&l'
 Timer-Combat-Name: '&cCombat'
 Timer-Invincibility-SBPrefix: '&a&l'

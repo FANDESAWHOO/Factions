@@ -14,11 +14,12 @@ public abstract class TimerSubCommand implements TabCompleter {
 	protected String[] aliases;
 	protected HCFactions instance;
 
-    public TimerSubCommand(String name, String description){
+	public TimerSubCommand(String name, String description) {
 		this.name = name;
 		this.description = description;
 		instance = HCFactions.getInstance();
 	}
+
 	public abstract void onCommand(CommandSender sender, String label, String[] args);
 
 	public abstract String getUsage(String label);

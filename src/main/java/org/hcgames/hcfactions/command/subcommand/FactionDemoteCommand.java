@@ -24,7 +24,7 @@ public final class FactionDemoteCommand extends FactionSubCommand {
 		plugin = HCFactions.getInstance();
 	}
 
-    @Override
+	@Override
 	public String getUsage() {
 		return '/' + label + ' ' + getName() + " <playerName>";
 	}
@@ -62,27 +62,27 @@ public final class FactionDemoteCommand extends FactionSubCommand {
 		Role targetRole = targetMember.getRole();
 
 
-		if(currentRole == Role.MEMBER || currentRole == Role.CAPTAIN && targetRole == Role.CAPTAIN){
+		if (currentRole == Role.MEMBER || currentRole == Role.CAPTAIN && targetRole == Role.CAPTAIN) {
 			tell(Lang.of("Commands-Factions-Demote-LeaderRequired"));
 			return;
 		}
 
-		if(targetRole == Role.MEMBER){
+		if (targetRole == Role.MEMBER) {
 			tell(Lang.of("Commands-Factions-Demote-LowestRank").replace("{player}", targetMember.getCachedName()));
 			return;
 		}
 
-		if(targetRole == Role.LEADER){
+		if (targetRole == Role.LEADER) {
 			tell(Lang.of("Comamnds-Factions-Demote-LeaderDemote"));
 			return;
 		}
 
-		if(!(currentRole == Role.LEADER) && targetRole == Role.COLEADER){
+		if (!(currentRole == Role.LEADER) && targetRole == Role.COLEADER) {
 			tell(Lang.of("Commands-Factions-Demote-LeaderRequired"));
 			return;
 		}
 
-		if(!(currentRole == Role.COLEADER || currentRole == Role.LEADER) && targetRole != Role.CAPTAIN){
+		if (!(currentRole == Role.COLEADER || currentRole == Role.LEADER) && targetRole != Role.CAPTAIN) {
 			tell(Lang.of("Commands-Factions-Demote-CoLeaderRequired"));
 			return;
 		}
@@ -95,25 +95,25 @@ public final class FactionDemoteCommand extends FactionSubCommand {
 	}
 
 	// FIXME: 29/09/2016 (27-5-2025 ¿ Error where ?
-    @Override
-    protected List<String> tabComplete() {
-        if (args.length != 2 || !(sender instanceof Player)) return Collections.emptyList();
+	@Override
+	protected List<String> tabComplete() {
+		if (args.length != 2 || !(sender instanceof Player)) return Collections.emptyList();
 
-        Player player = (Player) sender;
-        PlayerFaction playerFaction = plugin.getFactionManager().getPlayerFaction(player);
-        if (playerFaction == null || (playerFaction.getMember(player.getUniqueId()).getRole() != Role.LEADER))
+		Player player = (Player) sender;
+		PlayerFaction playerFaction = plugin.getFactionManager().getPlayerFaction(player);
+		if (playerFaction == null || (playerFaction.getMember(player.getUniqueId()).getRole() != Role.LEADER))
 			return Collections.emptyList();
 
-        List<String> results = new ArrayList<>();
-        Collection<UUID> keySet = playerFaction.getMembers().keySet();
-        for (UUID entry : keySet) {
-            OfflinePlayer target = Bukkit.getOfflinePlayer(entry);
-            String targetName = target.getName();
-            if (targetName != null && playerFaction.getMember(target.getUniqueId()).getRole() == Role.CAPTAIN)
+		List<String> results = new ArrayList<>();
+		Collection<UUID> keySet = playerFaction.getMembers().keySet();
+		for (UUID entry : keySet) {
+			OfflinePlayer target = Bukkit.getOfflinePlayer(entry);
+			String targetName = target.getName();
+			if (targetName != null && playerFaction.getMember(target.getUniqueId()).getRole() == Role.CAPTAIN)
 				results.add(targetName);
-        }
+		}
 
-        return results;
-    }
+		return results;
+	}
 
 }

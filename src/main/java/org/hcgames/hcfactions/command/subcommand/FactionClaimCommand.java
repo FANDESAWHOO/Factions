@@ -20,11 +20,10 @@ public final class FactionClaimCommand extends FactionSubCommand {
 
 	}
 
-    @Override
+	@Override
 	public String getUsage() {
 		return '/' + label + ' ' + getName();
 	}
-
 
 
 	/**

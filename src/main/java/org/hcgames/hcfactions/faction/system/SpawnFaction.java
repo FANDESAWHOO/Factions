@@ -31,11 +31,11 @@ import java.util.UUID;
 
 public class SpawnFaction extends ClaimableFaction implements ConfigurationSerializable, SystemFaction {
 
-    private final static UUID FACTION_UUID = UUID.fromString("14379e6d-6005-4fe8-9724-32f1f4653ecc");
+	private final static UUID FACTION_UUID = UUID.fromString("14379e6d-6005-4fe8-9724-32f1f4653ecc");
 
-    public SpawnFaction() {
-        super("Spawn", FACTION_UUID);
-        safezone = true;
+	public SpawnFaction() {
+		super("Spawn", FACTION_UUID);
+		safezone = true;
 
         /*int radius;
 
@@ -61,27 +61,27 @@ public class SpawnFaction extends ClaimableFaction implements ConfigurationSeria
                     break;
             }
         }*/
-    }
+	}
 
-    public SpawnFaction(Map<String, Object> map) {
-        super(map);
-    }
+	public SpawnFaction(Map<String, Object> map) {
+		super(map);
+	}
 
-    public SpawnFaction(Document document){
-        super(document);
-    }
+	public SpawnFaction(Document document) {
+		super(document);
+	}
 
-    @Override
-    public boolean isDeathban() {
-        return false;
-    }
+	public static UUID getUUID() {
+		return FACTION_UUID;
+	}
 
-    public static UUID getUUID() {
-        return FACTION_UUID;
-    }
+	@Override
+	public boolean isDeathban() {
+		return false;
+	}
 
-    @Override
-    public String getFormattedName(CommandSender sender) {
-        return Configuration.relationColourSafezone + getName();
-    }
+	@Override
+	public String getFormattedName(CommandSender sender) {
+		return Configuration.relationColourSafezone + getName();
+	}
 }

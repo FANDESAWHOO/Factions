@@ -16,19 +16,18 @@ import org.hcgames.hcfactions.faction.PlayerFaction;
 public class FactionTimerEvent extends Event implements Cancellable {
 
 	private static final HandlerList handlers = new HandlerList();
-	private boolean cancelled;
 	private final Player player;
 	private final PlayerFaction faction;
 	private final TimerTypes timer;
+	private boolean cancelled;
 
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 
 	@Override
 	public boolean isCancelled() {
 		return cancelled;
-	}
-
-	public static HandlerList getHandlerList() {
-		return handlers;
 	}
 
 	@Override

@@ -21,8 +21,9 @@ public final class ClaimWandCommand extends SimpleCommand {
 	 */
 	@Getter
 	private final static ClaimWandCommand instance = new ClaimWandCommand();
-	private final ItemStack wand = ItemCreator.of(CompMaterial.STICK,"&aClaim Selection", "Right click to select first point, Left click to select second point").make();
-	private ClaimWandCommand(){
+	private final ItemStack wand = ItemCreator.of(CompMaterial.STICK, "&aClaim Selection", "Right click to select first point, Left click to select second point").make();
+
+	private ClaimWandCommand() {
 		super("claimwand|cwand");
 	}
 
@@ -30,7 +31,7 @@ public final class ClaimWandCommand extends SimpleCommand {
 	protected void onCommand() {
 		checkConsole();
 		Player player = (Player) sender;
-		PlayerUtil.addItemsOrDrop(player,wand);
+		PlayerUtil.addItemsOrDrop(player, wand);
 
 	}
 }

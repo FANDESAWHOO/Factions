@@ -23,13 +23,13 @@ package org.hcgames.hcfactions.event.playerfaction;
 import org.hcgames.hcfactions.event.FactionEvent;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 
-public abstract class PlayerFactionEvent extends FactionEvent<PlayerFaction>{
+public abstract class PlayerFactionEvent extends FactionEvent<PlayerFaction> {
 
-    public PlayerFactionEvent(PlayerFaction faction) {
-        super(faction);
-    }
+	public PlayerFactionEvent(PlayerFaction faction) {
+		super(faction);
+	}
 
-    public PlayerFactionEvent(PlayerFaction faction, boolean async) {
-        super(faction, async);
-    }
+	public PlayerFactionEvent(PlayerFaction faction, boolean async) {
+		super(faction, async);
+	}
 }

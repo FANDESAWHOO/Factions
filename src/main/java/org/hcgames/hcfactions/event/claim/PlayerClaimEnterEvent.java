@@ -32,51 +32,50 @@ import org.hcgames.hcfactions.faction.Faction;
 @Getter
 public class PlayerClaimEnterEvent extends Event implements Cancellable {
 
-    private static final HandlerList handlers = new HandlerList();
+	private static final HandlerList handlers = new HandlerList();
+	private final Player player;
+	private final Faction fromFaction;
+	private final Faction toFaction;
+	private final Location from;
+	private final Location to;
+	private final EnterCause enterCause;
+	private boolean cancelled;
 
-    private boolean cancelled;
-    private final Player player;
-    private final Faction fromFaction;
-    private final Faction toFaction;
-    private final Location from;
-    private final Location to;
-    private final EnterCause enterCause;
+	public PlayerClaimEnterEvent(@NonNull Player player, @NonNull Location from, @NonNull Location to, @NonNull Faction fromFaction, @NonNull Faction toFaction, @NonNull EnterCause enterCause, boolean async) {
+		super(async);
+		this.player = player;
+		this.from = from;
+		this.to = to;
+		this.fromFaction = fromFaction;
+		this.toFaction = toFaction;
+		this.enterCause = enterCause;
+	}
 
-    public PlayerClaimEnterEvent(@NonNull Player player, @NonNull Location from, @NonNull Location to, @NonNull Faction fromFaction, @NonNull Faction toFaction, @NonNull EnterCause enterCause, boolean async) {
-        super(async);
-        this.player = player;
-        this.from = from;
-        this.to = to;
-        this.fromFaction = fromFaction;
-        this.toFaction = toFaction;
-        this.enterCause = enterCause;
-    }
+	public PlayerClaimEnterEvent(@NonNull Player player, @NonNull Location from, @NonNull Location to, @NonNull Faction fromFaction, @NonNull Faction toFaction, @NonNull EnterCause enterCause) {
+		this(player, from, to, fromFaction, toFaction, enterCause, false);
+	}
 
-    public PlayerClaimEnterEvent(@NonNull Player player, @NonNull Location from, @NonNull Location to, @NonNull Faction fromFaction, @NonNull Faction toFaction, @NonNull EnterCause enterCause) {
-        this(player, from, to, fromFaction, toFaction, enterCause, false);
-    }
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 
-    public enum EnterCause {
-        TELEPORT, MOVEMENT
-    }
+	@Override
+	public boolean isCancelled() {
+		return cancelled;
+	}
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
+	@Override
+	public void setCancelled(boolean cancelled) {
+		this.cancelled = cancelled;
+	}
 
-    @Override
-    public boolean isCancelled() {
-        return cancelled;
-    }
+	@Override
+	public HandlerList getHandlers() {
+		return handlers;
+	}
 
-    @Override
-    public void setCancelled(boolean cancelled) {
-        this.cancelled = cancelled;
-    }
-
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
-    }
+	public enum EnterCause {
+		TELEPORT, MOVEMENT
+	}
 
 }

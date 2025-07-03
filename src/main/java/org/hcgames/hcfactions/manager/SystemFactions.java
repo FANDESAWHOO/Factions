@@ -28,15 +28,16 @@ import java.util.List;
 
 public class SystemFactions {
 
-    private List<Class<? extends SystemFaction>> factions = new ArrayList<>();
+	private List<Class<? extends SystemFaction>> factions = new ArrayList<>();
 
-    SystemFactions(){}
+	SystemFactions() {
+	}
 
-    public void registerSystemFaction(Class<? extends SystemFaction> clazz){
-        factions.add(clazz);
-    }
+	public void registerSystemFaction(Class<? extends SystemFaction> clazz) {
+		factions.add(clazz);
+	}
 
-    public List<Class<? extends SystemFaction>> getSystemFactions(){
-        return ImmutableList.copyOf(factions);
-    }
+	public List<Class<? extends SystemFaction>> getSystemFactions() {
+		return ImmutableList.copyOf(factions);
+	}
 }

@@ -11,90 +11,90 @@ import org.hcgames.hcfactions.timer.event.TimerExpireEvent;
 
 import java.util.UUID;
 
-public class TimerCooldown{
+public class TimerCooldown {
 
-    @Getter
-    private final Timer timer;
-    private final UUID owner;        // the UUID of user that this timer runnable is for
-    private BukkitTask eventNotificationTask;
-    @Getter
-    private long expiryMillis;       // the milliseconds until this expires
+	@Getter
+	private final Timer timer;
+	private final UUID owner;        // the UUID of user that this timer runnable is for
+	private BukkitTask eventNotificationTask;
+	@Getter
+	private long expiryMillis;       // the milliseconds until this expires
 
-    @Getter
-    @Setter(AccessLevel.PROTECTED)
-    private long pauseMillis;        // the milliseconds that were remaining when was paused
+	@Getter
+	@Setter(AccessLevel.PROTECTED)
+	private long pauseMillis;        // the milliseconds that were remaining when was paused
 
-    protected TimerCooldown(Timer timer, long duration){
-        owner = null;
-        this.timer = timer;
-        setRemaining(duration);
-    }
+	protected TimerCooldown(Timer timer, long duration) {
+		owner = null;
+		this.timer = timer;
+		setRemaining(duration);
+	}
 
-    protected TimerCooldown(Timer timer, UUID playerUUID, long duration){
-        this.timer = timer;
-        owner = playerUUID;
-        setRemaining(duration);
-    }
+	protected TimerCooldown(Timer timer, UUID playerUUID, long duration) {
+		this.timer = timer;
+		owner = playerUUID;
+		setRemaining(duration);
+	}
 
-    public long getRemaining(){
-        return getRemaining(false);
-    }
+	public long getRemaining() {
+		return getRemaining(false);
+	}
 
-    protected void setRemaining(long milliseconds) throws IllegalStateException{
-        if(milliseconds <= 0L){
-            cancel();
-            return;
-        }
+	protected void setRemaining(long milliseconds) throws IllegalStateException {
+		if (milliseconds <= 0L) {
+			cancel();
+			return;
+		}
 
-        long expiryMillis = System.currentTimeMillis() + milliseconds;
-        if(expiryMillis != this.expiryMillis){
-            this.expiryMillis = expiryMillis;
+		long expiryMillis = System.currentTimeMillis() + milliseconds;
+		if (expiryMillis != this.expiryMillis) {
+			this.expiryMillis = expiryMillis;
 
-            // Recreate the task manually as Bukkit doesn't allow
-            // you to just reschedule for some reason :(.
-            if(eventNotificationTask != null) eventNotificationTask.cancel();
+			// Recreate the task manually as Bukkit doesn't allow
+			// you to just reschedule for some reason :(.
+			if (eventNotificationTask != null) eventNotificationTask.cancel();
 
-            long ticks = milliseconds / 50L;
-            eventNotificationTask = new BukkitRunnable(){
-                @Override
-                public void run(){
-                    if(timer instanceof PlayerTimer && owner != null)
+			long ticks = milliseconds / 50L;
+			eventNotificationTask = new BukkitRunnable() {
+				@Override
+				public void run() {
+					if (timer instanceof PlayerTimer && owner != null)
 						((PlayerTimer) timer).handleExpiry(Bukkit.getPlayer(owner), owner);
 
-                    Bukkit.getPluginManager().callEvent(new TimerExpireEvent(owner, timer));
-                }
-            }.runTaskLater(HCFactions.getInstance(), ticks);
-        }
-    }
+					Bukkit.getPluginManager().callEvent(new TimerExpireEvent(owner, timer));
+				}
+			}.runTaskLater(HCFactions.getInstance(), ticks);
+		}
+	}
 
-    protected long getRemaining(boolean ignorePaused){
-        if(!ignorePaused && pauseMillis != 0L) return pauseMillis; // If isn't paused, return that.
+	protected long getRemaining(boolean ignorePaused) {
+		if (!ignorePaused && pauseMillis != 0L) return pauseMillis; // If isn't paused, return that.
 		else return expiryMillis - System.currentTimeMillis();
-    }
+	}
 
-    protected boolean isPaused(){
-        return pauseMillis != 0L;
-    }
+	protected boolean isPaused() {
+		return pauseMillis != 0L;
+	}
 
-    public void setPaused(boolean paused){
-        if(paused != isPaused()) if (paused) {
+	public void setPaused(boolean paused) {
+		if (paused != isPaused()) if (paused) {
 			pauseMillis = getRemaining(true);
 			cancel();
 		} else {
 			setRemaining(pauseMillis);
 			pauseMillis = 0L;
 		}
-    }
+	}
 
-    /**
-     * Cancels this runnable for event notification.
-     *
-     * @throws IllegalStateException if was not running
-     */
-    protected void cancel() throws IllegalStateException{
-        if(eventNotificationTask != null){
-            eventNotificationTask.cancel();
-            eventNotificationTask = null;
-        }
-    }
+	/**
+	 * Cancels this runnable for event notification.
+	 *
+	 * @throws IllegalStateException if was not running
+	 */
+	protected void cancel() throws IllegalStateException {
+		if (eventNotificationTask != null) {
+			eventNotificationTask.cancel();
+			eventNotificationTask = null;
+		}
+	}
 }

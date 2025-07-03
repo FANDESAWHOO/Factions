@@ -10,16 +10,15 @@ import org.hcgames.hcfactions.util.JavaUtils;
 import org.mineacademy.fo.settings.Lang;
 
 
-
 public final class FactionCreateSystemCommand extends FactionSubCommand {
-	
+
 	private final HCFactions plugin;
-	
+
 	public FactionCreateSystemCommand() {
-	    super("createsystem");
-	    setDescription("Create a system faction.");
+		super("createsystem");
+		setDescription("Create a system faction.");
 		plugin = HCFactions.getInstance();
-      //  this.permission = "hcf.command.faction.argument." + getName();
+		//  this.permission = "hcf.command.faction.argument." + getName();
 	}
 
 
@@ -31,39 +30,40 @@ public final class FactionCreateSystemCommand extends FactionSubCommand {
 	@Override
 	public void onCommand() {
 		if (args.length < 2) {
-            tell(Lang.of("Command.error.usage", getUsage()));
-            return;
-        }
-	    String name = args[1];
-	    int value = Configuration.factionNameMinCharacters;
-	   
-	    if (name.length() < value) {
-            tell(Lang.of("Commands-Factions-Create-MinimumChars")
-                    .replace("{minChars}", String.valueOf(value)));
-            return;
-        }
+			tell(Lang.of("Command.error.usage", getUsage()));
+			return;
+		}
+		String name = args[1];
+		int value = Configuration.factionNameMinCharacters;
 
-        value = Configuration.factionNameMaxCharacters;
+		if (name.length() < value) {
+			tell(Lang.of("Commands-Factions-Create-MinimumChars")
+					.replace("{minChars}", String.valueOf(value)));
+			return;
+		}
 
-        if (name.length() > value) {
-            tell(Lang.of("Commands-Factions-Create-MaximumChars")
-                    .replace("{maxChars}", String.valueOf(value)));
-            return;
-        }
+		value = Configuration.factionNameMaxCharacters;
 
-        if (!JavaUtils.isAlphanumeric(name)) {
-            tell(Lang.of("Commands-Factions-Create-MustBeAlphanumeric"));
-            return;
-        }
+		if (name.length() > value) {
+			tell(Lang.of("Commands-Factions-Create-MaximumChars")
+					.replace("{maxChars}", String.valueOf(value)));
+			return;
+		}
 
-        try {
-            if(plugin.getFactionManager().getFaction(name) != null){
-                tell(Lang.of("Commands-Factions-Create-NameAlreadyExists")
-                        .replace("{factionName}", name));
-                return;
-            }
-        } catch (NoFactionFoundException e) {}
-        plugin.getFactionManager().createFaction(new SystemTeam(name), sender);
+		if (!JavaUtils.isAlphanumeric(name)) {
+			tell(Lang.of("Commands-Factions-Create-MustBeAlphanumeric"));
+			return;
+		}
+
+		try {
+			if (plugin.getFactionManager().getFaction(name) != null) {
+				tell(Lang.of("Commands-Factions-Create-NameAlreadyExists")
+						.replace("{factionName}", name));
+				return;
+			}
+		} catch (NoFactionFoundException e) {
+		}
+		plugin.getFactionManager().createFaction(new SystemTeam(name), sender);
 		return;
 	}
 

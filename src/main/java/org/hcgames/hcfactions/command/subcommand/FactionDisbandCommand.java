@@ -10,15 +10,16 @@ import org.hcgames.hcfactions.structure.Role;
 import org.mineacademy.fo.settings.Lang;
 
 public final class FactionDisbandCommand extends FactionSubCommand {
-    private final HCFactions plugin;
+	private final HCFactions plugin;
 
-	public FactionDisbandCommand(){
+	public FactionDisbandCommand() {
 		super("disband");
 		setDescription("Disband your faction.");
 		plugin = HCFactions.getInstance();
 
 	}
-    @Override
+
+	@Override
 	public String getUsage() {
 		return '/' + label + ' ' + getName();
 	}

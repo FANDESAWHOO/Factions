@@ -34,86 +34,87 @@ import org.mineacademy.fo.settings.Lang;
 
 public final class FactionForceRenameCommand extends FactionSubCommand {
 
-    private final HCFactions plugin;
+	private final HCFactions plugin;
 
-    public FactionForceRenameCommand() {
-        super("forcename");
-        setDescription( "Forces a rename of a faction.");
-        plugin = HCFactions.getInstance();
-    //    this.permission = "hcf.command.faction.argument." + getName();
-    }
+	public FactionForceRenameCommand() {
+		super("forcename");
+		setDescription("Forces a rename of a faction.");
+		plugin = HCFactions.getInstance();
+		//    this.permission = "hcf.command.faction.argument." + getName();
+	}
 
-    
-    @Override
+
+	@Override
 	public String getUsage() {
-        return '/' + label + ' ' + getName() + " <oldName> <newName>";
-    }
+		return '/' + label + ' ' + getName() + " <oldName> <newName>";
+	}
 
-    @Override
-    public void onCommand() {
-        if (args.length < 2) {
-            tell(ChatColor.RED + "Usage: " + getUsage());
-            return;
-        }
+	@Override
+	public void onCommand() {
+		if (args.length < 2) {
+			tell(ChatColor.RED + "Usage: " + getUsage());
+			return;
+		}
 
-        String newName = args[2];
+		String newName = args[2];
 
-        if (Configuration.factionDisallowedNames.contains(newName)) {
-            //tell(ChatColor.RED + "'" + newName + "' is a blocked faction name.");
-            tell(Lang.of("Commands-Factions-Rename-BlockedName")
-                    .replace("{factionName}", newName));
-            return;
-        }
+		if (Configuration.factionDisallowedNames.contains(newName)) {
+			//tell(ChatColor.RED + "'" + newName + "' is a blocked faction name.");
+			tell(Lang.of("Commands-Factions-Rename-BlockedName")
+					.replace("{factionName}", newName));
+			return;
+		}
 
-        int value = Configuration.factionNameMinCharacters;
+		int value = Configuration.factionNameMinCharacters;
 
-        if (newName.length() < value) {
-            //tell(ChatColor.RED + "Faction names must have at least " + value + " characters.");
-            tell(Lang.of("Commands-Factions-Rename-MinimumChars")
-                    .replace("{minChars}", String.valueOf(value)));
-            return;
-        }
+		if (newName.length() < value) {
+			//tell(ChatColor.RED + "Faction names must have at least " + value + " characters.");
+			tell(Lang.of("Commands-Factions-Rename-MinimumChars")
+					.replace("{minChars}", String.valueOf(value)));
+			return;
+		}
 
-        value = Configuration.factionNameMaxCharacters;
+		value = Configuration.factionNameMaxCharacters;
 
-        if (newName.length() > value) {
-            //tell(ChatColor.RED + "Faction names cannot be longer than " + value + " characters.");
-            tell(Lang.of("Commands-Factions-Rename-MaximumChars")
-                    .replace("{maxChars}", String.valueOf(value)));
-            return;
-        }
+		if (newName.length() > value) {
+			//tell(ChatColor.RED + "Faction names cannot be longer than " + value + " characters.");
+			tell(Lang.of("Commands-Factions-Rename-MaximumChars")
+					.replace("{maxChars}", String.valueOf(value)));
+			return;
+		}
 
-        if (!JavaUtils.isAlphanumeric(newName)) {
-            //tell(ChatColor.RED + "Faction names may only be alphanumeric.");
-            tell(Lang.of("Commands-Factions-Rename-MustBeAlphanumeric"));
-            return;
-        }
+		if (!JavaUtils.isAlphanumeric(newName)) {
+			//tell(ChatColor.RED + "Faction names may only be alphanumeric.");
+			tell(Lang.of("Commands-Factions-Rename-MustBeAlphanumeric"));
+			return;
+		}
 
-        try {
-            if (plugin.getFactionManager().getFaction(newName) != null) {
-                //tell(ChatColor.RED + "Faction " + newName + ChatColor.RED + " already exists.");
-                tell(Lang.of("Commands-Factions-Rename-NameAlreadyExists")
-                        .replace("{factionNewName}", newName));
-                return;
-            }
-        } catch (NoFactionFoundException ignored) {}
+		try {
+			if (plugin.getFactionManager().getFaction(newName) != null) {
+				//tell(ChatColor.RED + "Faction " + newName + ChatColor.RED + " already exists.");
+				tell(Lang.of("Commands-Factions-Rename-NameAlreadyExists")
+						.replace("{factionNewName}", newName));
+				return;
+			}
+		} catch (NoFactionFoundException ignored) {
+		}
 
 
-        plugin.getFactionManager().advancedSearch(args[1], Faction.class, new SearchCallback<Faction>() {
-            @Override
-            public void onSuccess(Faction faction){
-                String oldName = faction.getName();
-                if(faction.setName(newName, sender))
+		plugin.getFactionManager().advancedSearch(args[1], Faction.class, new SearchCallback<Faction>() {
+			@Override
+			public void onSuccess(Faction faction) {
+				String oldName = faction.getName();
+				if (faction.setName(newName, sender))
 					BukkitCommand.broadcastCommandMessage(sender, ChatColor.YELLOW + "Renamed " + oldName + " to " + faction.getName(), true);
-            }
+			}
 
-            @Override
-            public void onFail(FailReason reason) {
-                tell(Lang.of("Commands.error.faction_not_found", args[1]));
-            }
-        });
+			@Override
+			public void onFail(FailReason reason) {
+				tell(Lang.of("Commands.error.faction_not_found", args[1]));
+			}
+		});
 
-        return;
-    }
+		return;
+	}
 
 }

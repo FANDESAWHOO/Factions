@@ -31,44 +31,41 @@ import org.hcgames.hcfactions.structure.Raidable;
 @Getter
 public class FactionDtrChangeEvent extends Event implements Cancellable {
 
-    private static final HandlerList handlers = new HandlerList();
+	private static final HandlerList handlers = new HandlerList();
+	private final DtrUpdateCause cause;
+	private final Raidable raidable;
+	private final double originalDtr;
+	private boolean cancelled;
+	@Setter
+	private double newDtr;
 
-    private boolean cancelled;
+	public FactionDtrChangeEvent(@NonNull DtrUpdateCause cause, @NonNull Raidable raidable, @NonNull double originalDtr, @NonNull double newDtr) {
+		this.cause = cause;
+		this.raidable = raidable;
+		this.originalDtr = originalDtr;
+		this.newDtr = newDtr;
+	}
 
-    private final DtrUpdateCause cause;
-    private final Raidable raidable;
-    private final double originalDtr;
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 
-    @Setter
-    private double newDtr;
+	@Override
+	public boolean isCancelled() {
+		return cancelled || (Math.abs(newDtr - originalDtr) == 0);
+	}
 
-    public FactionDtrChangeEvent(@NonNull DtrUpdateCause cause, @NonNull Raidable raidable, @NonNull double originalDtr, @NonNull double newDtr) {
-        this.cause = cause;
-        this.raidable = raidable;
-        this.originalDtr = originalDtr;
-        this.newDtr = newDtr;
-    }
+	@Override
+	public void setCancelled(boolean cancelled) {
+		this.cancelled = cancelled;
+	}
 
-    @Override
-    public boolean isCancelled() {
-        return cancelled || (Math.abs(newDtr - originalDtr) == 0);
-    }
+	@Override
+	public HandlerList getHandlers() {
+		return handlers;
+	}
 
-    @Override
-    public void setCancelled(boolean cancelled) {
-        this.cancelled = cancelled;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public enum DtrUpdateCause {
-        REGENERATION, MEMBER_DEATH
-    }
+	public enum DtrUpdateCause {
+		REGENERATION, MEMBER_DEATH
+	}
 }

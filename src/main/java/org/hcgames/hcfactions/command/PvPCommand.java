@@ -13,6 +13,7 @@ import org.mineacademy.fo.settings.Lang;
 
 import java.util.Collections;
 import java.util.List;
+
 /**
  * Moved from Core to here.
  * Command used to manage the {@link InvincibilityTimer} of {@link Player}s.
@@ -22,7 +23,7 @@ public final class PvPCommand extends SimpleCommand {
 
 	private static final ImmutableList<String> COMPLETIONS = ImmutableList.of("enable", "time");
 
-	public PvPCommand(){
+	public PvPCommand() {
 		super("pvp");
 	}
 
@@ -31,13 +32,13 @@ public final class PvPCommand extends SimpleCommand {
 		Player player = (Player) sender;
 		InvincibilityTimer pvpTimer = HCFactions.getInstance().getTimerManager().getInvincibilityTimer();
 
-		if(args.length < 1){
+		if (args.length < 1) {
 			printUsage(sender, getLabel(), pvpTimer);
 			return;
 		}
 
-		if(args[0].equalsIgnoreCase("enable") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("off")){
-			if(pvpTimer.getRemaining(player) <= 0L){
+		if (args[0].equalsIgnoreCase("enable") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("off")) {
+			if (pvpTimer.getRemaining(player) <= 0L) {
 				sender.sendMessage(Lang.of("Commands.PvPTimer.Timer.NotActive")
 						.replace("{timerName}", pvpTimer.getName()));
 				return;
@@ -49,9 +50,9 @@ public final class PvPCommand extends SimpleCommand {
 			return;
 		}
 
-		if(args[0].equalsIgnoreCase("remaining") || args[0].equalsIgnoreCase("time") || args[0].equalsIgnoreCase("left") || args[0].equalsIgnoreCase("check")){
+		if (args[0].equalsIgnoreCase("remaining") || args[0].equalsIgnoreCase("time") || args[0].equalsIgnoreCase("left") || args[0].equalsIgnoreCase("check")) {
 			long remaining = pvpTimer.getRemaining(player);
-			if(remaining <= 0L){
+			if (remaining <= 0L) {
 				sender.sendMessage(Lang.of("Commands.PvPTimer.Timer.NotActive")
 						.replace("{timerName}", pvpTimer.getName()));
 				return;
@@ -69,7 +70,7 @@ public final class PvPCommand extends SimpleCommand {
 
 
 	@Override
-	public List<String> tabComplete(){
+	public List<String> tabComplete() {
 		return args.length == 1 ? BukkitUtils.getCompletions(args, COMPLETIONS) : Collections.emptyList();
 	}
 
@@ -79,7 +80,7 @@ public final class PvPCommand extends SimpleCommand {
 	 * @param sender the sender to print for
 	 * @param label  the label used for command
 	 */
-	private void printUsage(CommandSender sender, String label, InvincibilityTimer pvpTimer){
+	private void printUsage(CommandSender sender, String label, InvincibilityTimer pvpTimer) {
 		sender.sendMessage(Lang.of("Commands.PvPTimer.Usage")
 				.replace("{timerName}", pvpTimer.getName())
 				.replace("{commandLabel}", label));

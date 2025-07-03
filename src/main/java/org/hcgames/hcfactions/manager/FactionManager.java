@@ -21,7 +21,6 @@
 package org.hcgames.hcfactions.manager;
 
 import com.google.common.collect.ImmutableList;
-
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -29,8 +28,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.claim.Claim;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.Faction;
@@ -44,101 +41,101 @@ import java.util.concurrent.TimeUnit;
 
 public interface FactionManager {
 
-    long MAX_DTR_REGEN_MILLIS = TimeUnit.HOURS.toMillis(3L);
-    String MAX_DTR_REGEN_WORDS = DurationFormatUtils.formatDurationWords(MAX_DTR_REGEN_MILLIS, true, true);
+	long MAX_DTR_REGEN_MILLIS = TimeUnit.HOURS.toMillis(3L);
+	String MAX_DTR_REGEN_WORDS = DurationFormatUtils.formatDurationWords(MAX_DTR_REGEN_MILLIS, true, true);
 
-    SystemFactions systemFactions = new SystemFactions();
+	SystemFactions systemFactions = new SystemFactions();
 
-    Map<String, ?> getFactionNameMap();
+	static void registerSystemFaction(Class<? extends SystemFaction> clazz) {
+		systemFactions.registerSystemFaction(clazz);
+	}
 
-    ImmutableList<Faction> getFactions();
+	Map<String, ?> getFactionNameMap();
 
-    default Claim getClaimAt(Location location){
-        return getClaimAt(location.getWorld(), location.getBlockX(), location.getBlockZ());
-    }
+	ImmutableList<Faction> getFactions();
 
-    Claim getClaimAt(World world, int x, int z);
+	default Claim getClaimAt(Location location) {
+		return getClaimAt(location.getWorld(), location.getBlockX(), location.getBlockZ());
+	}
 
-    default Faction getFactionAt(Location location){
-        return getFactionAt(location.getWorld(), location.getBlockX(), location.getBlockZ());
-    }
+	Claim getClaimAt(World world, int x, int z);
 
-    default Faction getFactionAt(Block block){
-        return getFactionAt(block.getLocation());
-    }
+	default Faction getFactionAt(Location location) {
+		return getFactionAt(location.getWorld(), location.getBlockX(), location.getBlockZ());
+	}
 
-    Faction getFactionAt(World world, int x, int z);
+	default Faction getFactionAt(Block block) {
+		return getFactionAt(block.getLocation());
+	}
 
-    <T extends Faction> T getFaction(UUID factionUUID, Class<T> clazz) throws NoFactionFoundException, ClassCastException;
+	Faction getFactionAt(World world, int x, int z);
 
-    default Faction getFaction(UUID factionUUID) throws NoFactionFoundException{
-        return getFaction(factionUUID, Faction.class);
-    }
+	<T extends Faction> T getFaction(UUID factionUUID, Class<T> clazz) throws NoFactionFoundException, ClassCastException;
 
-    <T extends Faction> T getFaction(String factionName, Class<T> clazz) throws NoFactionFoundException, ClassCastException;
+	default Faction getFaction(UUID factionUUID) throws NoFactionFoundException {
+		return getFaction(factionUUID, Faction.class);
+	}
 
-    default Faction getFaction(String factionName) throws NoFactionFoundException{
-        return getFaction(factionName, Faction.class);
-    }
+	<T extends Faction> T getFaction(String factionName, Class<T> clazz) throws NoFactionFoundException, ClassCastException;
 
-    PlayerFaction getPlayerFaction(UUID playerUUID) throws NoFactionFoundException;
+	default Faction getFaction(String factionName) throws NoFactionFoundException {
+		return getFaction(factionName, Faction.class);
+	}
 
-    default PlayerFaction getPlayerFaction(Player player) throws NoFactionFoundException{
-        return getPlayerFaction(player.getUniqueId());
-    }
+	PlayerFaction getPlayerFaction(UUID playerUUID) throws NoFactionFoundException;
 
-    default boolean createFaction(Faction faction){
-        return createFaction(faction, Bukkit.getServer().getConsoleSender());
-    }
+	default PlayerFaction getPlayerFaction(Player player) throws NoFactionFoundException {
+		return getPlayerFaction(player.getUniqueId());
+	}
 
-    boolean createFaction(Faction faction, CommandSender sender);
+	default boolean createFaction(Faction faction) {
+		return createFaction(faction, Bukkit.getServer().getConsoleSender());
+	}
 
-    default boolean removeFaction(Faction faction){
-        return createFaction(faction, Bukkit.getServer().getConsoleSender());
-    }
+	boolean createFaction(Faction faction, CommandSender sender);
 
-    boolean removeFaction(Faction faction, CommandSender sender);
+	default boolean removeFaction(Faction faction) {
+		return createFaction(faction, Bukkit.getServer().getConsoleSender());
+	}
 
-    default boolean hasFaction(Player player){
-        try{
-            return getPlayerFaction(player) != null;
-        }catch (NoFactionFoundException e){
-            return false;
-        }
-    }
+	boolean removeFaction(Faction faction, CommandSender sender);
 
-    static void registerSystemFaction(Class<? extends SystemFaction> clazz){
-        systemFactions.registerSystemFaction(clazz);
-    }
+	default boolean hasFaction(Player player) {
+		try {
+			return getPlayerFaction(player) != null;
+		} catch (NoFactionFoundException e) {
+			return false;
+		}
+	}
 
-    /**
-     * This is an advanced method for searching for a faction
-     * it is designed to be called from within a command
-     * and will perform a series of actions as followed before.
-     *
-     * To find a faction it will first attempt to find a one
-     * by the name. When this fails it will return to looking
-     * for a player faction if that is given otherwise it will fail.
-     *
-     * Once it starts it query for a player faction, it will first
-     * try to find a player online with that name to resolve the UUID
-     * however if no player is found it will automatically switch to an
-     * async based search and load the players UUID from Mojang's Web API.
-     *
-     * @param query The search string
-     * @param callback The method to call once finished.
-     */
-    default <T extends Faction> void advancedSearch(String query, Class<T> classType, SearchCallback<T> callback){
-        advancedSearch(query, classType, callback, false);
-    }
+	/**
+	 * This is an advanced method for searching for a faction
+	 * it is designed to be called from within a command
+	 * and will perform a series of actions as followed before.
+	 * <p>
+	 * To find a faction it will first attempt to find a one
+	 * by the name. When this fails it will return to looking
+	 * for a player faction if that is given otherwise it will fail.
+	 * <p>
+	 * Once it starts it query for a player faction, it will first
+	 * try to find a player online with that name to resolve the UUID
+	 * however if no player is found it will automatically switch to an
+	 * async based search and load the players UUID from Mojang's Web API.
+	 *
+	 * @param query    The search string
+	 * @param callback The method to call once finished.
+	 */
+	default <T extends Faction> void advancedSearch(String query, Class<T> classType, SearchCallback<T> callback) {
+		advancedSearch(query, classType, callback, false);
+	}
 
-    <T extends Faction> void advancedSearch(String query, Class<T> classType, SearchCallback<T> callback, boolean forcePlayerSearch);
+	<T extends Faction> void advancedSearch(String query, Class<T> classType, SearchCallback<T> callback, boolean forcePlayerSearch);
 
-    boolean containsFaction(Faction faction);
+	boolean containsFaction(Faction faction);
 
-    FocusHandler getFocusHandler();
+	FocusHandler getFocusHandler();
 
-    void reloadFactionData();
+	void reloadFactionData();
 
-    void saveFactionData();
+	void saveFactionData();
 }

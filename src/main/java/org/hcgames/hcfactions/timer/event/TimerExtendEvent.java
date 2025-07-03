@@ -14,83 +14,83 @@ import java.util.UUID;
 /**
  * Event called when a {@link Timer} is extended.
  */
-public class TimerExtendEvent extends Event implements Cancellable{
+public class TimerExtendEvent extends Event implements Cancellable {
 
-    private static final HandlerList handlers = new HandlerList();
-    private final Optional<Player> player;
-    private final Optional<UUID> userUUID;
-    private final Timer timer;
-    private final long previousDuration;
-    private boolean cancelled;
-    private long newDuration;
+	private static final HandlerList handlers = new HandlerList();
+	private final Optional<Player> player;
+	private final Optional<UUID> userUUID;
+	private final Timer timer;
+	private final long previousDuration;
+	private boolean cancelled;
+	private long newDuration;
 
-    public TimerExtendEvent(Timer timer, long previousDuration, long newDuration){
-        player = Optional.empty();
-        userUUID = Optional.empty();
-        this.timer = timer;
-        this.previousDuration = previousDuration;
-        this.newDuration = newDuration;
-    }
+	public TimerExtendEvent(Timer timer, long previousDuration, long newDuration) {
+		player = Optional.empty();
+		userUUID = Optional.empty();
+		this.timer = timer;
+		this.previousDuration = previousDuration;
+		this.newDuration = newDuration;
+	}
 
-    public TimerExtendEvent(@Nullable Player player, UUID uniqueId, Timer timer, long previousDuration, long newDuration){
-        this.player = Optional.ofNullable(player);
-        userUUID = Optional.ofNullable(uniqueId);
-        this.timer = timer;
-        this.previousDuration = previousDuration;
-        this.newDuration = newDuration;
-    }
+	public TimerExtendEvent(@Nullable Player player, UUID uniqueId, Timer timer, long previousDuration, long newDuration) {
+		this.player = Optional.ofNullable(player);
+		userUUID = Optional.ofNullable(uniqueId);
+		this.timer = timer;
+		this.previousDuration = previousDuration;
+		this.newDuration = newDuration;
+	}
 
-    public static HandlerList getHandlerList(){
-        return handlers;
-    }
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 
-    public Optional<Player> getPlayer(){
-        return player;
-    }
+	public Optional<Player> getPlayer() {
+		return player;
+	}
 
-    /**
-     * Gets the optional UUID of the user this was removed for.
-     * <p>This may return absent if the timer is not of a player type</p>
-     *
-     * @return the removed user UUID or {@link Optional#empty()}}
-     */
-    public Optional<UUID> getUserUUID(){
-        return userUUID;
-    }
+	/**
+	 * Gets the optional UUID of the user this was removed for.
+	 * <p>This may return absent if the timer is not of a player type</p>
+	 *
+	 * @return the removed user UUID or {@link Optional#empty()}}
+	 */
+	public Optional<UUID> getUserUUID() {
+		return userUUID;
+	}
 
-    /**
-     * Gets the {@link Timer} that was expired.
-     *
-     * @return the expiring timer
-     */
-    public Timer getTimer(){
-        return timer;
-    }
+	/**
+	 * Gets the {@link Timer} that was expired.
+	 *
+	 * @return the expiring timer
+	 */
+	public Timer getTimer() {
+		return timer;
+	}
 
-    public long getPreviousDuration(){
-        return previousDuration;
-    }
+	public long getPreviousDuration() {
+		return previousDuration;
+	}
 
-    public long getNewDuration(){
-        return newDuration;
-    }
+	public long getNewDuration() {
+		return newDuration;
+	}
 
-    public void setNewDuration(long newDuration){
-        this.newDuration = newDuration;
-    }
+	public void setNewDuration(long newDuration) {
+		this.newDuration = newDuration;
+	}
 
-    @Override
-    public boolean isCancelled(){
-        return cancelled;
-    }
+	@Override
+	public boolean isCancelled() {
+		return cancelled;
+	}
 
-    @Override
-    public void setCancelled(boolean cancelled){
-        this.cancelled = cancelled;
-    }
+	@Override
+	public void setCancelled(boolean cancelled) {
+		this.cancelled = cancelled;
+	}
 
-    @Override
-    public HandlerList getHandlers(){
-        return handlers;
-    }
+	@Override
+	public HandlerList getHandlers() {
+		return handlers;
+	}
 }

@@ -9,7 +9,7 @@ import java.util.Collections;
 
 public class ScoreboardPacket {
 
-	private static final Field a, b, c, d, e,  g, h, i;
+	private static final Field a, b, c, d, e, g, h, i;
 
 	static {
 		Class<?> clazz = PacketPlayOutScoreboardTeam.class;
@@ -50,7 +50,8 @@ public class ScoreboardPacket {
 		// Create / Update (action = 0 = create, 2 = update)
 		if (action == 0 || action == 2) {
 			if (b != null) b.set(packet, info.getName());
-			if (c != null) c.set(packet, (info.getPrefix().isEmpty() && info.getColor().isEmpty() ? "" : info.getPrefix() + info.getColor()));
+			if (c != null)
+				c.set(packet, (info.getPrefix().isEmpty() && info.getColor().isEmpty() ? "" : info.getPrefix() + info.getColor()));
 			if (d != null) d.set(packet, info.getSuffix());
 			if (i != null) i.set(packet, info.isFriendlyInvis() ? 3 : 0);
 			if (e != null) e.set(packet, info.getVisibility().getName());

@@ -31,49 +31,43 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
-public class PlayerLeftFactionEvent extends PlayerFactionEvent{
+public class PlayerLeftFactionEvent extends PlayerFactionEvent {
 
-    private static final HandlerList handlers = new HandlerList();
+	private static final HandlerList handlers = new HandlerList();
+	@Getter
+	private final UUID uniqueID;
+	@Getter
+	private final PlayerLeaveFactionEvent.FactionLeaveCause cause;
+	@Getter
+	private final CommandSender sender;
+	@Getter
+	private final boolean isKick;
+	@Getter
+	private final boolean force;
+	private Player player;
 
-    private Player player;
+	public PlayerLeftFactionEvent(@NonNull CommandSender sender, @Nullable Player player, @NonNull UUID playerUUID, @NonNull PlayerFaction faction, @NonNull PlayerLeaveFactionEvent.FactionLeaveCause cause, boolean isKick, boolean force) {
+		super(faction);
 
-    @Getter
-    private final UUID uniqueID;
+		this.sender = sender;
+		this.player = player;
+		this.uniqueID = playerUUID;
+		this.cause = cause;
+		this.isKick = isKick;
+		this.force = force;
+	}
 
-    @Getter
-    private final PlayerLeaveFactionEvent.FactionLeaveCause cause;
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 
-    @Getter
-    private final CommandSender sender;
+	public Optional<Player> getPlayer() {
+		return Optional.ofNullable(player);
+	}
 
-    @Getter
-    private final boolean isKick;
-
-    @Getter
-    private final boolean force;
-
-    public PlayerLeftFactionEvent(@NonNull CommandSender sender, @Nullable Player player, @NonNull UUID playerUUID, @NonNull PlayerFaction faction, @NonNull PlayerLeaveFactionEvent.FactionLeaveCause cause, boolean isKick, boolean force) {
-        super(faction);
-
-        this.sender = sender;
-        this.player = player;
-        this.uniqueID = playerUUID;
-        this.cause = cause;
-        this.isKick = isKick;
-        this.force = force;
-    }
-
-    public Optional<Player> getPlayer() {
-        return Optional.ofNullable(player);
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
-    }
+	@Override
+	public HandlerList getHandlers() {
+		return handlers;
+	}
 }
 

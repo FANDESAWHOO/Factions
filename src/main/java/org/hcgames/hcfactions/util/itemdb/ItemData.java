@@ -31,86 +31,86 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ItemData
-implements ConfigurationSerializable {
-    @Getter
+		implements ConfigurationSerializable {
+	@Getter
 	private final Material material;
-    private final short itemData;
+	private final short itemData;
 
-    public ItemData(MaterialData data) {
-        this(data.getItemType(), data.getData());
-    }
+	public ItemData(MaterialData data) {
+		this(data.getItemType(), data.getData());
+	}
 
-    public ItemData(ItemStack stack) {
-        this(stack.getType(), stack.getData().getData());
-    }
-
-    @Deprecated
-    public ItemData(Material material, short itemData) {
-        this.material = material;
-        this.itemData = itemData;
-    }
-
-    public ItemData(Map<String, Object> map) {
-        Object object = map.get("itemType");
-        if (!(object instanceof String)) throw new AssertionError("Incorrectly configurised");
-        material = Material.getMaterial((String)object);
-        object = map.get("itemData");
-        if (!(object instanceof Short)) throw new AssertionError("Incorrectly configurised");
-        itemData = (Short)object;
-    }
-
-    @Override
-	public Map<String, Object> serialize() {
-        LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-        map.put("itemType", material.name());
-        map.put("itemData", itemData);
-        return map;
-    }
+	public ItemData(ItemStack stack) {
+		this(stack.getType(), stack.getData().getData());
+	}
 
 	@Deprecated
-    public short getItemData() {
-        return itemData;
-    }
+	public ItemData(Material material, short itemData) {
+		this.material = material;
+		this.itemData = itemData;
+	}
 
-    public String getItemName() {
-        return HCFactions.getInstance().getItemDb().getName(new ItemStack(material, 1, itemData));
-    }
+	public ItemData(Map<String, Object> map) {
+		Object object = map.get("itemType");
+		if (!(object instanceof String)) throw new AssertionError("Incorrectly configurised");
+		material = Material.getMaterial((String) object);
+		object = map.get("itemData");
+		if (!(object instanceof Short)) throw new AssertionError("Incorrectly configurised");
+		itemData = (Short) object;
+	}
 
-    public static ItemData fromItemName(String string) {
-        ItemStack stack = HCFactions.getInstance().getItemDb().getItem(string);
-        return new ItemData(stack.getType(), stack.getData().getData());
-    }
+	public static ItemData fromItemName(String string) {
+		ItemStack stack = HCFactions.getInstance().getItemDb().getItem(string);
+		return new ItemData(stack.getType(), stack.getData().getData());
+	}
 
-    public static ItemData fromStringValue(String value) {
-        int firstBracketIndex = value.indexOf(40);
-        if (firstBracketIndex == -1) return null;
-        int otherBracketIndex = value.indexOf(41);
-        if (otherBracketIndex == -1) return null;
-        String itemName = value.substring(0, firstBracketIndex);
-        String itemData = value.substring(firstBracketIndex + 1, otherBracketIndex);
-        Material material = Material.getMaterial(itemName);
-        return new ItemData(material, Short.parseShort(itemData));
-    }
+	public static ItemData fromStringValue(String value) {
+		int firstBracketIndex = value.indexOf(40);
+		if (firstBracketIndex == -1) return null;
+		int otherBracketIndex = value.indexOf(41);
+		if (otherBracketIndex == -1) return null;
+		String itemName = value.substring(0, firstBracketIndex);
+		String itemData = value.substring(firstBracketIndex + 1, otherBracketIndex);
+		Material material = Material.getMaterial(itemName);
+		return new ItemData(material, Short.parseShort(itemData));
+	}
 
-    @Override
+	@Override
+	public Map<String, Object> serialize() {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put("itemType", material.name());
+		map.put("itemData", itemData);
+		return map;
+	}
+
+	@Deprecated
+	public short getItemData() {
+		return itemData;
+	}
+
+	public String getItemName() {
+		return HCFactions.getInstance().getItemDb().getName(new ItemStack(material, 1, itemData));
+	}
+
+	@Override
 	public String toString() {
-        return String.valueOf(material.name()) + "(" + String.valueOf(itemData) + ")";
-    }
+		return String.valueOf(material.name()) + "(" + String.valueOf(itemData) + ")";
+	}
 
-    @Override
+	@Override
 	public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ItemData itemData1 = (ItemData)o;
-        if (itemData != itemData1.itemData) return false;
-        return material == itemData1.material;
-    }
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		ItemData itemData1 = (ItemData) o;
+		if (itemData != itemData1.itemData) return false;
+		return material == itemData1.material;
+	}
 
-    @Override
+	@Override
 	public int hashCode() {
-        int result = material != null ? material.hashCode() : 0;
-        result = 31 * result + itemData;
-        return result;
-    }
+		int result = material != null ? material.hashCode() : 0;
+		result = 31 * result + itemData;
+		return result;
+	}
 }
 

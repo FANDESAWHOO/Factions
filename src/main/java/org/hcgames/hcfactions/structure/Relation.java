@@ -14,62 +14,62 @@ import org.hcgames.hcfactions.util.BukkitUtils;
  */
 public enum Relation {
 
-    MEMBER(3), ALLY(2), ENEMY(1);
+	MEMBER(3), ALLY(2), ENEMY(1);
 
-    private final int value;
+	private final int value;
 
-    Relation(final int value) {
-        this.value = value;
-    }
+	Relation(final int value) {
+		this.value = value;
+	}
 
-    public int getValue() {
-        return value;
-    }
+	public int getValue() {
+		return value;
+	}
 
-    public boolean isAtLeast(Relation relation) {
-        return this.value >= relation.value;
-    }
+	public boolean isAtLeast(Relation relation) {
+		return this.value >= relation.value;
+	}
 
-    public boolean isAtMost(Relation relation) {
-        return this.value <= relation.value;
-    }
+	public boolean isAtMost(Relation relation) {
+		return this.value <= relation.value;
+	}
 
-    public boolean isMember() {
-        return this == MEMBER;
-    }
+	public boolean isMember() {
+		return this == MEMBER;
+	}
 
-    public boolean isAlly() {
-        return this == ALLY;
-    }
+	public boolean isAlly() {
+		return this == ALLY;
+	}
 
-    public boolean isEnemy() {
-        return this == ENEMY;
-    }
+	public boolean isEnemy() {
+		return this == ENEMY;
+	}
 
-    public String getDisplayName() {
-        switch (this) {
-            case ALLY:
-                return toChatColour() + "alliance";
-            default:
-                return toChatColour() + name().toLowerCase();
-        }
-    }
+	public String getDisplayName() {
+		switch (this) {
+			case ALLY:
+				return toChatColour() + "alliance";
+			default:
+				return toChatColour() + name().toLowerCase();
+		}
+	}
 
-    public ChatColor toChatColour() {
-        HCFactions plugin = JavaPlugin.getPlugin(HCFactions.class);
+	public ChatColor toChatColour() {
+		HCFactions plugin = JavaPlugin.getPlugin(HCFactions.class);
 
-        switch (this) {
-            case MEMBER:
-                return ChatColor.DARK_GREEN;
-            case ALLY:
-                return ChatColor.BLUE;
-            case ENEMY:
-            default:
-                return ChatColor.RED;
-        }
-    }
+		switch (this) {
+			case MEMBER:
+				return ChatColor.DARK_GREEN;
+			case ALLY:
+				return ChatColor.BLUE;
+			case ENEMY:
+			default:
+				return ChatColor.RED;
+		}
+	}
 
-    public DyeColor toDyeColour() {
-        return BukkitUtils.toDyeColor(toChatColour());
-    }
+	public DyeColor toDyeColour() {
+		return BukkitUtils.toDyeColor(toChatColour());
+	}
 }

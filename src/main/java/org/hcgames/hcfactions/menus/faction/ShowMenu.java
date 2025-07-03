@@ -8,7 +8,7 @@ import org.mineacademy.fo.menu.Menu;
  */
 public class ShowMenu extends Menu {
 
-	public ShowMenu(){
+	public ShowMenu() {
 		setTitle("&cFaction Show Menu");
 		setSize(9 * 5);
 	}

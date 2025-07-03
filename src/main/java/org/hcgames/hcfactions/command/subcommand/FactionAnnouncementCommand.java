@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 public final class FactionAnnouncementCommand extends FactionSubCommand {
+	private static final ImmutableList<String> CLEAR_LIST = ImmutableList.of("clear");
 	private final HCFactions plugin;
 
 	public FactionAnnouncementCommand() {
@@ -24,7 +25,7 @@ public final class FactionAnnouncementCommand extends FactionSubCommand {
 
 	}
 
-    @Override
+	@Override
 	public String getUsage() {
 		return '/' + label + ' ' + getName() + " <newAnnouncement>";
 	}
@@ -91,6 +92,4 @@ public final class FactionAnnouncementCommand extends FactionSubCommand {
 		else if (args.length == 2) return CLEAR_LIST;
 		else return Collections.emptyList();
 	}
-
-	private static final ImmutableList<String> CLEAR_LIST = ImmutableList.of("clear");
 }

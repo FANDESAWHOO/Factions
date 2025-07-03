@@ -26,7 +26,8 @@ public final class FactionInviteCommand extends FactionSubCommand {
 		plugin = HCFactions.getInstance();
 
 	}
-    @Override
+
+	@Override
 	public String getUsage() {
 		return '/' + label + ' ' + getName() + " <playerName>";
 	}
@@ -38,7 +39,7 @@ public final class FactionInviteCommand extends FactionSubCommand {
 			return;
 		}
 
-		if(args[1].length() > 17){
+		if (args[1].length() > 17) {
 			tell(Lang.of("Commands-Factions-Invite-InvalidUsername")
 					.replace("{username}", args[1]));
 			return;
@@ -46,7 +47,7 @@ public final class FactionInviteCommand extends FactionSubCommand {
 
 		Player invitee = plugin.getServer().getPlayer(args[1]);
 
-		if(invitee == null){
+		if (invitee == null) {
 			tell(Lang.of("Commands-Pay-UnknownPlayer").replace("{player}", args[1]));
 			return;
 		}
@@ -89,10 +90,10 @@ public final class FactionInviteCommand extends FactionSubCommand {
 		if (target != null) {
 			name = target.getName(); // fix casing.
 			TextComponent component = Component.text().content(Lang.of("Commands-Factions-Invite-InviteReceived")
-					.replace("{relationColour}", Relation.ENEMY.toChatColour() + "")
-					.replace("{sender}", sender.getName())
-					.replace("{factionName}", playerFaction.getName()))
-					.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND,"/" + getLabel() + " accept " + playerFaction.getName()))
+							.replace("{relationColour}", Relation.ENEMY.toChatColour() + "")
+							.replace("{sender}", sender.getName())
+							.replace("{factionName}", playerFaction.getName()))
+					.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/" + getLabel() + " accept " + playerFaction.getName()))
 					.build();
 		/*FIXED?	FancyMessage message = new FancyMessage(Lang.of("Commands-Factions-Invite-InviteReceived")
 					.replace("{relationColour}", Relation.ENEMY.toChatColour() + "")

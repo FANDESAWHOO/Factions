@@ -23,66 +23,66 @@ import java.util.List;
  */
 public final class FactionForceJoinCommand extends FactionSubCommand {
 
-    private final HCFactions plugin;
+	private final HCFactions plugin;
 
-    public FactionForceJoinCommand() {
-        super("forcejoin");
-        setDescription("Forcefully join a faction.");
-        plugin = HCFactions.getInstance();
-       // this.permission = "hcf.command.faction.argument." + getName();
-    }
+	public FactionForceJoinCommand() {
+		super("forcejoin");
+		setDescription("Forcefully join a faction.");
+		plugin = HCFactions.getInstance();
+		// this.permission = "hcf.command.faction.argument." + getName();
+	}
 
-   
-    @Override
+
+	@Override
 	public String getUsage() {
-        return '/' + label + ' ' + getName() + " <factionName>";
-    }
+		return '/' + label + ' ' + getName() + " <factionName>";
+	}
 
-    @Override
-    public void onCommand() {
-        if (!(sender instanceof Player)) {
-            tell(ChatColor.RED + "Only players can join factions.");
-            return;
-        }
+	@Override
+	public void onCommand() {
+		if (!(sender instanceof Player)) {
+			tell(ChatColor.RED + "Only players can join factions.");
+			return;
+		}
 
-        if (args.length < 2) {
-            tell(ChatColor.RED + "Usage: " + getUsage());
-            return;
-        }
+		if (args.length < 2) {
+			tell(ChatColor.RED + "Usage: " + getUsage());
+			return;
+		}
 
-        Player player = (Player) sender;
+		Player player = (Player) sender;
 
-        try{
-            plugin.getFactionManager().getPlayerFaction(player);
-            tell(ChatColor.RED + "You are already in a faction.");
-        }catch (NoFactionFoundException e){
-            plugin.getFactionManager().advancedSearch(args[1], PlayerFaction.class, new SearchCallback<PlayerFaction>() {
-                @Override
-                public void onSuccess(PlayerFaction faction) {
-                    if (faction.addMember(player, player, player.getUniqueId(), new FactionMember(player, ChatChannel.PUBLIC, Role.MEMBER), true))
+		try {
+			plugin.getFactionManager().getPlayerFaction(player);
+			tell(ChatColor.RED + "You are already in a faction.");
+		} catch (NoFactionFoundException e) {
+			plugin.getFactionManager().advancedSearch(args[1], PlayerFaction.class, new SearchCallback<PlayerFaction>() {
+				@Override
+				public void onSuccess(PlayerFaction faction) {
+					if (faction.addMember(player, player, player.getUniqueId(), new FactionMember(player, ChatChannel.PUBLIC, Role.MEMBER), true))
 						faction.broadcast(ChatColor.GOLD.toString() + ChatColor.BOLD + sender.getName() + " has forcefully joined the faction.");
-                }
+				}
 
-                @Override
-                public void onFail(FailReason reason) {
-                    tell(Lang.of("Commands.error.faction_not_found", args[1]));
-                }
-            });
-        }
-        return;
-    }
+				@Override
+				public void onFail(FailReason reason) {
+					tell(Lang.of("Commands.error.faction_not_found", args[1]));
+				}
+			});
+		}
+		return;
+	}
 
-    @Override
-    public List<String> tabComplete() {
-        if (args.length != 2 || !(sender instanceof Player)) return Collections.emptyList();
+	@Override
+	public List<String> tabComplete() {
+		if (args.length != 2 || !(sender instanceof Player)) return Collections.emptyList();
 		else if (args[1].isEmpty()) return null;
 		else {
-            Player player = (Player) sender;
-            List<String> results = new ArrayList<>(plugin.getFactionManager().getFactionNameMap().keySet());
-            for (Player target : Bukkit.getOnlinePlayers())
+			Player player = (Player) sender;
+			List<String> results = new ArrayList<>(plugin.getFactionManager().getFactionNameMap().keySet());
+			for (Player target : Bukkit.getOnlinePlayers())
 				if (player.canSee(target) && !results.contains(target.getName())) results.add(target.getName());
 
-            return results;
-        }
-    }
+			return results;
+		}
+	}
 }

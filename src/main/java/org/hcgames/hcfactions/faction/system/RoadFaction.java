@@ -14,71 +14,45 @@ import java.util.UUID;
 
 public abstract class RoadFaction extends ClaimableFaction implements ConfigurationSerializable, Mongoable, SystemFaction {
 
-    // The difference the roads will end from the border.
-    //public static final int ROAD_EDGE_DIFF = 0;
+	// The difference the roads will end from the border.
+	//public static final int ROAD_EDGE_DIFF = 0;
 
-    // The minimum and maximum heights for roads.
-    //public static final int ROAD_MIN_HEIGHT = 0; //50 'this allowed people to claim below the roads, temp disabled;
-    //public static final int ROAD_MAX_HEIGHT = 256; //80 'this allowed people to claim above the roads, temp disabled;
+	// The minimum and maximum heights for roads.
+	//public static final int ROAD_MIN_HEIGHT = 0; //50 'this allowed people to claim below the roads, temp disabled;
+	//public static final int ROAD_MAX_HEIGHT = 256; //80 'this allowed people to claim above the roads, temp disabled;
 
-    public RoadFaction(String name, UUID uuid) {
-        super(name, uuid);
-    }
+	public RoadFaction(String name, UUID uuid) {
+		super(name, uuid);
+	}
 
-    public static class NorthRoadFaction extends RoadFaction implements ConfigurationSerializable, Mongoable, SystemFaction {
+	public RoadFaction(Map<String, Object> map) {
+		super(map);
+	}
 
-        private final static UUID FACTION_UUID = UUID.fromString("ab32b857-1f3a-4742-b0e0-b193a992813a");
+	public RoadFaction(Document object) {
+		super(object);
+	}
 
-        public NorthRoadFaction() {
-            super("NorthRoad", FACTION_UUID);
-            displayName = "North Road";
+	@Override
+	public String getFormattedName(CommandSender sender) {
+		return Configuration.relationColourRoad + getDisplayName();
+	}
 
-            /*int roadLength = plugin.getConfiguration().getRoadLength();
-            for (World world : plugin.getServer().getWorlds()) {
-                World.Environment environment = world.getEnvironment();
-                if (environment != World.Environment.THE_END) {
+	@Override
+	public void sendInformation(CommandSender sender) {
+		sender.sendMessage(ChatColor.GOLD + BukkitUtils.STRAIGHT_LINE_DEFAULT);
+		sender.sendMessage(' ' + getFormattedName(sender));
+		sender.sendMessage(ChatColor.YELLOW + "  Location: " + ChatColor.RED + "None");
+		sender.sendMessage(ChatColor.GOLD + BukkitUtils.STRAIGHT_LINE_DEFAULT);
+	}
 
-                    int offset = 0;
-                    switch (environment){
-                        case NORMAL:
-                            offset = plugin.getConfiguration().getSpawnRadiusOverworld();
-                            break;
-                        case NETHER:
-                            offset = plugin.getConfiguration().getSpawnRadiusNether();
-                            break;
-                        default:
-                            break;
-                    }
-                    offset = offset + 1;
+	public static class NorthRoadFaction extends RoadFaction implements ConfigurationSerializable, Mongoable, SystemFaction {
 
-                    addClaim(new Claim(this,
-                            new Location(world, -plugin.getConfiguration().getRoadWidthLeft(), ROAD_MIN_HEIGHT, -offset),
-                            new Location(world, plugin.getConfiguration().getRoadWidthRight(), ROAD_MAX_HEIGHT, -roadLength + ROAD_EDGE_DIFF)));
-                }
-            }*/
-        }
+		private final static UUID FACTION_UUID = UUID.fromString("ab32b857-1f3a-4742-b0e0-b193a992813a");
 
-
-        public NorthRoadFaction(Map<String, Object> map) {
-            super(map);
-        }
-
-        public NorthRoadFaction(Document object){
-            super(object);
-        }
-
-        public static UUID getUUID() {
-            return FACTION_UUID;
-        }
-    }
-
-    public static class EastRoadFaction extends RoadFaction implements ConfigurationSerializable, Mongoable, SystemFaction{
-
-        private final static UUID FACTION_UUID = UUID.fromString("401dc34a-0111-4f25-9c4c-526d77650e21");
-
-        public EastRoadFaction() {
-            super("EastRoad", FACTION_UUID);
-            displayName = "East Road";
+		public NorthRoadFaction() {
+			super("NorthRoad", FACTION_UUID);
+			displayName = "North Road";
 
             /*int roadLength = plugin.getConfiguration().getRoadLength();
             for (World world : plugin.getServer().getWorlds()) {
@@ -103,74 +77,29 @@ public abstract class RoadFaction extends ClaimableFaction implements Configurat
                             new Location(world, plugin.getConfiguration().getRoadWidthRight(), ROAD_MAX_HEIGHT, -roadLength + ROAD_EDGE_DIFF)));
                 }
             }*/
-        }
+		}
 
-        public EastRoadFaction(Map<String, Object> map) {
-            super(map);
-        }
 
-        public EastRoadFaction(Document object){
-            super(object);
-        }
+		public NorthRoadFaction(Map<String, Object> map) {
+			super(map);
+		}
 
-        public static UUID getUUID() {
-            return FACTION_UUID;
-        }
-    }
+		public NorthRoadFaction(Document object) {
+			super(object);
+		}
 
-    public static class SouthRoadFaction extends RoadFaction implements ConfigurationSerializable, Mongoable, SystemFaction{
+		public static UUID getUUID() {
+			return FACTION_UUID;
+		}
+	}
 
-        private final static UUID FACTION_UUID = UUID.fromString("42e61ded-4f50-46c7-82a8-723bdcda4991");
+	public static class EastRoadFaction extends RoadFaction implements ConfigurationSerializable, Mongoable, SystemFaction {
 
-        public SouthRoadFaction() {
-            super("SouthRoad", FACTION_UUID);
-            displayName = "South Road";
+		private final static UUID FACTION_UUID = UUID.fromString("401dc34a-0111-4f25-9c4c-526d77650e21");
 
-            /*int roadLength = plugin.getConfiguration().getRoadLength();
-            for (World world : plugin.getServer().getWorlds()) {
-                World.Environment environment = world.getEnvironment();
-                if (environment != World.Environment.THE_END) {
-
-                    int offset = 0;
-                    switch (environment){
-                        case NORMAL:
-                            offset = plugin.getConfiguration().getSpawnRadiusOverworld();
-                            break;
-                        case NETHER:
-                            offset = plugin.getConfiguration().getSpawnRadiusNether();
-                            break;
-                        default:
-                            break;
-                    }
-                    offset = offset + 1;
-
-                    addClaim(new Claim(this,
-                            new Location(world, -plugin.getConfiguration().getRoadWidthLeft(), ROAD_MIN_HEIGHT, -offset),
-                            new Location(world, plugin.getConfiguration().getRoadWidthRight(), ROAD_MAX_HEIGHT, -roadLength + ROAD_EDGE_DIFF)));
-                }
-            }*/
-        }
-
-        public SouthRoadFaction(Map<String, Object> map) {
-            super(map);
-        }
-
-        public SouthRoadFaction(Document object){
-            super(object);
-        }
-
-        public static UUID getUUID() {
-            return FACTION_UUID;
-        }
-    }
-
-    public static class WestRoadFaction extends RoadFaction implements ConfigurationSerializable, Mongoable {
-
-        private final static UUID FACTION_UUID = UUID.fromString("ea50290c-8225-4222-8664-32f2f5070974");
-
-        public WestRoadFaction() {
-            super("WestRoad", FACTION_UUID);
-            displayName = "West Road";
+		public EastRoadFaction() {
+			super("EastRoad", FACTION_UUID);
+			displayName = "East Road";
 
             /*int roadLength = plugin.getConfiguration().getRoadLength();
             for (World world : plugin.getServer().getWorlds()) {
@@ -195,39 +124,110 @@ public abstract class RoadFaction extends ClaimableFaction implements Configurat
                             new Location(world, plugin.getConfiguration().getRoadWidthRight(), ROAD_MAX_HEIGHT, -roadLength + ROAD_EDGE_DIFF)));
                 }
             }*/
-        }
+		}
 
-        public WestRoadFaction(Map<String, Object> map) {
-            super(map);
-        }
+		public EastRoadFaction(Map<String, Object> map) {
+			super(map);
+		}
 
-        public WestRoadFaction(Document object){
-            super(object);
-        }
+		public EastRoadFaction(Document object) {
+			super(object);
+		}
 
-        public static UUID getUUID() {
-            return FACTION_UUID;
-        }
-    }
+		public static UUID getUUID() {
+			return FACTION_UUID;
+		}
+	}
 
-    public RoadFaction(Map<String, Object> map) {
-        super(map);
-    }
+	public static class SouthRoadFaction extends RoadFaction implements ConfigurationSerializable, Mongoable, SystemFaction {
 
-    public RoadFaction(Document object){
-        super(object);
-    }
+		private final static UUID FACTION_UUID = UUID.fromString("42e61ded-4f50-46c7-82a8-723bdcda4991");
 
-    @Override
-    public String getFormattedName(CommandSender sender) {
-        return Configuration.relationColourRoad + getDisplayName();
-    }
+		public SouthRoadFaction() {
+			super("SouthRoad", FACTION_UUID);
+			displayName = "South Road";
 
-    @Override
-    public void sendInformation(CommandSender sender) {
-        sender.sendMessage(ChatColor.GOLD + BukkitUtils.STRAIGHT_LINE_DEFAULT);
-        sender.sendMessage(' ' + getFormattedName(sender));
-        sender.sendMessage(ChatColor.YELLOW + "  Location: " + ChatColor.RED + "None");
-        sender.sendMessage(ChatColor.GOLD + BukkitUtils.STRAIGHT_LINE_DEFAULT);
-    }
+            /*int roadLength = plugin.getConfiguration().getRoadLength();
+            for (World world : plugin.getServer().getWorlds()) {
+                World.Environment environment = world.getEnvironment();
+                if (environment != World.Environment.THE_END) {
+
+                    int offset = 0;
+                    switch (environment){
+                        case NORMAL:
+                            offset = plugin.getConfiguration().getSpawnRadiusOverworld();
+                            break;
+                        case NETHER:
+                            offset = plugin.getConfiguration().getSpawnRadiusNether();
+                            break;
+                        default:
+                            break;
+                    }
+                    offset = offset + 1;
+
+                    addClaim(new Claim(this,
+                            new Location(world, -plugin.getConfiguration().getRoadWidthLeft(), ROAD_MIN_HEIGHT, -offset),
+                            new Location(world, plugin.getConfiguration().getRoadWidthRight(), ROAD_MAX_HEIGHT, -roadLength + ROAD_EDGE_DIFF)));
+                }
+            }*/
+		}
+
+		public SouthRoadFaction(Map<String, Object> map) {
+			super(map);
+		}
+
+		public SouthRoadFaction(Document object) {
+			super(object);
+		}
+
+		public static UUID getUUID() {
+			return FACTION_UUID;
+		}
+	}
+
+	public static class WestRoadFaction extends RoadFaction implements ConfigurationSerializable, Mongoable {
+
+		private final static UUID FACTION_UUID = UUID.fromString("ea50290c-8225-4222-8664-32f2f5070974");
+
+		public WestRoadFaction() {
+			super("WestRoad", FACTION_UUID);
+			displayName = "West Road";
+
+            /*int roadLength = plugin.getConfiguration().getRoadLength();
+            for (World world : plugin.getServer().getWorlds()) {
+                World.Environment environment = world.getEnvironment();
+                if (environment != World.Environment.THE_END) {
+
+                    int offset = 0;
+                    switch (environment){
+                        case NORMAL:
+                            offset = plugin.getConfiguration().getSpawnRadiusOverworld();
+                            break;
+                        case NETHER:
+                            offset = plugin.getConfiguration().getSpawnRadiusNether();
+                            break;
+                        default:
+                            break;
+                    }
+                    offset = offset + 1;
+
+                    addClaim(new Claim(this,
+                            new Location(world, -plugin.getConfiguration().getRoadWidthLeft(), ROAD_MIN_HEIGHT, -offset),
+                            new Location(world, plugin.getConfiguration().getRoadWidthRight(), ROAD_MAX_HEIGHT, -roadLength + ROAD_EDGE_DIFF)));
+                }
+            }*/
+		}
+
+		public WestRoadFaction(Map<String, Object> map) {
+			super(map);
+		}
+
+		public WestRoadFaction(Document object) {
+			super(object);
+		}
+
+		public static UUID getUUID() {
+			return FACTION_UUID;
+		}
+	}
 }

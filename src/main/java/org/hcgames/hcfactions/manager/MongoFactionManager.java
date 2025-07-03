@@ -38,48 +38,49 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class MongoFactionManager extends FlatFileFactionManager implements FactionManager{
+public class MongoFactionManager extends FlatFileFactionManager implements FactionManager {
 
-    private MongoCollection<Document> collection;
+	private MongoCollection<Document> collection;
 
-    public MongoFactionManager(HCFactions plugin){
-        super(plugin);
-    }
+	public MongoFactionManager(HCFactions plugin) {
+		super(plugin);
+	}
 
-    @Override
-    public void init(){
-        collection = plugin.getMongoManager().getMongoDatabase().getCollection("HCF");
-        config = new Config(plugin, "factions.yml");
-    }
+	@Override
+	public void init() {
+		collection = plugin.getMongoManager().getMongoDatabase().getCollection("HCF");
+		config = new Config(plugin, "factions.yml");
+	}
 
-    @Override
-    public boolean removeFaction(Faction faction, CommandSender sender) {
-        if(super.removeFaction(faction, sender)){
-            plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () ->
-                    collection.deleteOne(new Document("_id", faction.getUniqueID().toString())));
-            return true;
-        }
+	@Override
+	public boolean removeFaction(Faction faction, CommandSender sender) {
+		if (super.removeFaction(faction, sender)) {
+			plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () ->
+					collection.deleteOne(new Document("_id", faction.getUniqueID().toString())));
+			return true;
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    @Override
-    public void reloadFactionData() {
-        factionNameMap.clear();
-        int[] factions = {0};
+	@Override
+	public void reloadFactionData() {
+		factionNameMap.clear();
+		int[] factions = {0};
 
-        collection.find().forEach((com.mongodb.Block<? super Document>) document -> {
-            try{
-                Class<?> clazz = Class.forName(document.getString("=="));
-                Constructor<?> constructor = clazz.getConstructor(Document.class);
-                cacheFaction((Faction) constructor.newInstance(document));
-                factions[0]++;
-            }catch(ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e){
-                e.printStackTrace();
-            }
-        });
+		collection.find().forEach((com.mongodb.Block<? super Document>) document -> {
+			try {
+				Class<?> clazz = Class.forName(document.getString("=="));
+				Constructor<?> constructor = clazz.getConstructor(Document.class);
+				cacheFaction((Faction) constructor.newInstance(document));
+				factions[0]++;
+			} catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
+					 InvocationTargetException | InstantiationException e) {
+				e.printStackTrace();
+			}
+		});
 
-        for(Class<? extends SystemFaction> systemFaction : FactionManager.systemFactions.getSystemFactions())
+		for (Class<? extends SystemFaction> systemFaction : FactionManager.systemFactions.getSystemFactions())
 			try {
 				Method method = systemFaction.getDeclaredMethod("getUUID");
 				UUID result = (UUID) method.invoke(null);
@@ -97,8 +98,8 @@ public class MongoFactionManager extends FlatFileFactionManager implements Facti
 					 InstantiationException e) {
 				e.printStackTrace();
 			}
-        plugin.getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "Loaded " + factions[0] + " factions.");
-        Set<Faction> adding = new HashSet<>();
+		plugin.getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "Loaded " + factions[0] + " factions.");
+		Set<Faction> adding = new HashSet<>();
 		if (!factionNameMap.containsKey("NorthRoad")) { // TODO: more reliable
 			adding.add(new RoadFaction.NorthRoadFaction());
 			adding.add(new RoadFaction.EastRoadFaction());
@@ -113,33 +114,33 @@ public class MongoFactionManager extends FlatFileFactionManager implements Facti
 		// TODO: more reliable
 		if (!factionNameMap.containsKey("EndPortal")) adding.add(new EndPortalFaction());
 		// Now load the Spawn, etc factions.
-        for (Faction added : adding) {
+		for (Faction added : adding) {
 			cacheFaction(added);
 			Bukkit.getConsoleSender().sendMessage(ChatColor.BLUE + "Faction " + added.getName() + " not found, created.");
 		}
-    }
-    
+	}
 
-    void addSysFaction(Class<? extends SystemFaction> clazz){
 
-    }
+	void addSysFaction(Class<? extends SystemFaction> clazz) {
 
-    @Override
-    public void saveFactionData() {
-        for(UUID uuid : factionUUIDMap.keySet()){
-            Faction faction = factionUUIDMap.get(uuid);
+	}
 
-            Document query = new Document();
-            query.put("_id", faction.getUniqueID().toString());
+	@Override
+	public void saveFactionData() {
+		for (UUID uuid : factionUUIDMap.keySet()) {
+			Faction faction = factionUUIDMap.get(uuid);
 
-            Document values = faction.toDocument();
-            values.put("isSystem", faction instanceof SystemTeam);
-            values.put("_id", faction.getUniqueID().toString());
-            values.put("==", faction.getClass().getName());
+			Document query = new Document();
+			query.put("_id", faction.getUniqueID().toString());
 
-            collection.updateOne(query, new Document("$set", values), new UpdateOptions().upsert(true));
-        }
+			Document values = faction.toDocument();
+			values.put("isSystem", faction instanceof SystemTeam);
+			values.put("_id", faction.getUniqueID().toString());
+			values.put("==", faction.getClass().getName());
 
-        super.saveFactionData(); //Also save to flatfile
-    }
+			collection.updateOne(query, new Document("$set", values), new UpdateOptions().upsert(true));
+		}
+
+		super.saveFactionData(); //Also save to flatfile
+	}
 }

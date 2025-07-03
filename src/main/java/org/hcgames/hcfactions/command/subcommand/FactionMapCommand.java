@@ -16,6 +16,14 @@ import java.util.UUID;
 
 public final class FactionMapCommand extends FactionSubCommand {
 
+	private static final List<String> visualTypes;
+
+	static {
+		VisualType[] values = VisualType.values();
+		visualTypes = new ArrayList<>(values.length);
+		for (VisualType visualType : values) visualTypes.add(visualType.name());
+	}
+
 	private final HCFactions plugin;
 
 	public FactionMapCommand() {
@@ -58,19 +66,11 @@ public final class FactionMapCommand extends FactionSubCommand {
 
 	}
 
-	private static final List<String> visualTypes;
-
 	@Override
 	protected List<String> tabComplete() {
 		if (args.length != 2 || !(sender instanceof Player)) return Collections.emptyList();
 
 		return visualTypes;
-	}
-
-	static {
-		VisualType[] values = VisualType.values();
-		visualTypes = new ArrayList<>(values.length);
-		for (VisualType visualType : values) visualTypes.add(visualType.name());
 	}
 
 }

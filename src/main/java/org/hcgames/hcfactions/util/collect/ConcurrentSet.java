@@ -21,8 +21,6 @@
 package org.hcgames.hcfactions.util.collect;
 
 
-
-
 import io.netty.util.internal.PlatformDependent;
 
 import java.io.Serializable;
@@ -31,42 +29,41 @@ import java.util.Iterator;
 import java.util.concurrent.ConcurrentMap;
 
 
-
 //Taken from netty, in 1.7 it's only included in the server implementation and not Bukkit.
 public final class ConcurrentSet<E> extends AbstractSet<E> implements Serializable {
-    private static final long serialVersionUID = -6761513279741915432L;
-    private final ConcurrentMap<E, Boolean> map = PlatformDependent.newConcurrentHashMap();
+	private static final long serialVersionUID = -6761513279741915432L;
+	private final ConcurrentMap<E, Boolean> map = PlatformDependent.newConcurrentHashMap();
 
-    public ConcurrentSet() {
-    }
+	public ConcurrentSet() {
+	}
 
-    @Override
+	@Override
 	public int size() {
-        return map.size();
-    }
+		return map.size();
+	}
 
-    @Override
+	@Override
 	public boolean contains(Object o) {
-        return map.containsKey(o);
-    }
+		return map.containsKey(o);
+	}
 
-    @Override
+	@Override
 	public boolean add(E o) {
-        return map.putIfAbsent(o, Boolean.TRUE) == null;
-    }
+		return map.putIfAbsent(o, Boolean.TRUE) == null;
+	}
 
-    @Override
+	@Override
 	public boolean remove(Object o) {
-        return map.remove(o) != null;
-    }
+		return map.remove(o) != null;
+	}
 
-    @Override
+	@Override
 	public void clear() {
-        map.clear();
-    }
+		map.clear();
+	}
 
-    @Override
+	@Override
 	public Iterator<E> iterator() {
-        return map.keySet().iterator();
-    }
+		return map.keySet().iterator();
+	}
 }

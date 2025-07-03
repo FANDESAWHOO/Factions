@@ -23,7 +23,7 @@ public final class FactionClaimChunkCommand extends FactionSubCommand {
 
 	}
 
-    @Override
+	@Override
 	public String getUsage() {
 		return '/' + label + ' ' + getName();
 	}
@@ -32,9 +32,9 @@ public final class FactionClaimChunkCommand extends FactionSubCommand {
 	public void onCommand() {
 		Player player = (Player) sender;
 		PlayerFaction playerFaction;
-		try{
+		try {
 			playerFaction = plugin.getFactionManager().getPlayerFaction(player);
-		}catch (NoFactionFoundException e){
+		} catch (NoFactionFoundException e) {
 			tell(Lang.of("Commands-Factions-Global-NotInFaction"));
 			return;
 		}

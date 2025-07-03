@@ -30,26 +30,26 @@ import java.util.UUID;
 
 public class WarzoneFaction extends Faction implements SystemFaction {
 
-    private final static UUID FACTION_UUID = UUID.fromString("f067e071-86d0-41c7-8c4b-f1a1cf15867e");
+	private final static UUID FACTION_UUID = UUID.fromString("f067e071-86d0-41c7-8c4b-f1a1cf15867e");
 
-    public WarzoneFaction() {
-        super("Warzone", FACTION_UUID);
-    }
+	public WarzoneFaction() {
+		super("Warzone", FACTION_UUID);
+	}
 
-    public WarzoneFaction(Map<String, Object> map) {
-        super(map);
-    }
+	public WarzoneFaction(Map<String, Object> map) {
+		super(map);
+	}
 
-    public WarzoneFaction(Document document){
-        super(document);
-    }
+	public WarzoneFaction(Document document) {
+		super(document);
+	}
 
-    @Override
-    public String getFormattedName(CommandSender sender) {
-        return Configuration.relationColourWarzone + getName();
-    }
+	public static UUID getUUID() {
+		return FACTION_UUID;
+	}
 
-    public static UUID getUUID() {
-        return FACTION_UUID;
-    }
+	@Override
+	public String getFormattedName(CommandSender sender) {
+		return Configuration.relationColourWarzone + getName();
+	}
 }

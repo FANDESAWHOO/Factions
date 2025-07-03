@@ -21,36 +21,36 @@ import java.util.List;
  */
 public final class FactionSetDtrCommand extends FactionSubCommand {
 
-    private final HCFactions plugin;
+	private final HCFactions plugin;
 
-    public FactionSetDtrCommand() {
-        super("setdtr|dtr");
-        setDescription("Sets the DTR of a faction.");
-        plugin = HCFactions.getInstance();
-    //    this.permission = "hcf.command.faction.argument." + getName();
-    }
+	public FactionSetDtrCommand() {
+		super("setdtr|dtr");
+		setDescription("Sets the DTR of a faction.");
+		plugin = HCFactions.getInstance();
+		//    this.permission = "hcf.command.faction.argument." + getName();
+	}
 
-   
-    @Override
+
+	@Override
 	public String getUsage() {
-        return '/' + label + ' ' + getName() + " <playerName|factionName> <newDtr>";
-    }
+		return '/' + label + ' ' + getName() + " <playerName|factionName> <newDtr>";
+	}
 
-    @Override
-    public void onCommand() {
-        if (args.length < 3) {
-            tell(ChatColor.RED + "Usage: " + getUsage());
-            return;
-        }
+	@Override
+	public void onCommand() {
+		if (args.length < 3) {
+			tell(ChatColor.RED + "Usage: " + getUsage());
+			return;
+		}
 
-        Double[] newDTR = {JavaUtils.tryParseDouble(args[2])};
+		Double[] newDTR = {JavaUtils.tryParseDouble(args[2])};
 
-        if (newDTR[0] == null) {
-            tell(ChatColor.RED + "'" + args[2] + "' is not a valid number.");
-            return;
-        }
+		if (newDTR[0] == null) {
+			tell(ChatColor.RED + "'" + args[2] + "' is not a valid number.");
+			return;
+		}
 
-        if(sender instanceof Player)
+		if (sender instanceof Player)
 			if (newDTR[0] <= 0 && !sender.hasPermission("hcf.command.faction.argument." + getName() + ".raidable")) {
 				tell("You don't have permission to make factions raidable.");
 				return;
@@ -67,36 +67,36 @@ public final class FactionSetDtrCommand extends FactionSubCommand {
             return;
         }*/
 
-        plugin.getFactionManager().advancedSearch(args[1], PlayerFaction.class, new SearchCallback<PlayerFaction>() {
-            @Override
-            public void onSuccess(PlayerFaction faction) {
-                double previousDtr = faction.getDeathsUntilRaidable();
-                newDTR[0] = faction.setDeathsUntilRaidable(newDTR[0]);
+		plugin.getFactionManager().advancedSearch(args[1], PlayerFaction.class, new SearchCallback<PlayerFaction>() {
+			@Override
+			public void onSuccess(PlayerFaction faction) {
+				double previousDtr = faction.getDeathsUntilRaidable();
+				newDTR[0] = faction.setDeathsUntilRaidable(newDTR[0]);
 
-                Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Set DTR of " + faction.getName() + " from " + previousDtr + " to " + newDTR[0] + '.');
-            }
+				Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Set DTR of " + faction.getName() + " from " + previousDtr + " to " + newDTR[0] + '.');
+			}
 
-            @Override
-            public void onFail(FailReason reason) {
-                tell(Lang.of("Commands.error.faction_not_found", args[1]));
-            }
-        });
+			@Override
+			public void onFail(FailReason reason) {
+				tell(Lang.of("Commands.error.faction_not_found", args[1]));
+			}
+		});
 
 
-        return;
-    }
+		return;
+	}
 
-    @Override
-    public List<String> tabComplete() {
-        if (args.length != 2 || !(sender instanceof Player)) return Collections.emptyList();
+	@Override
+	public List<String> tabComplete() {
+		if (args.length != 2 || !(sender instanceof Player)) return Collections.emptyList();
 		else if (args[1].isEmpty()) return null;
 		else {
-            Player player = (Player) sender;
-            List<String> results = new ArrayList<>(plugin.getFactionManager().getFactionNameMap().keySet());
-            for (Player target : Bukkit.getOnlinePlayers())
+			Player player = (Player) sender;
+			List<String> results = new ArrayList<>(plugin.getFactionManager().getFactionNameMap().keySet());
+			for (Player target : Bukkit.getOnlinePlayers())
 				if (player.canSee(target) && !results.contains(target.getName())) results.add(target.getName());
 
-            return results;
-        }
-    }
+			return results;
+		}
+	}
 }

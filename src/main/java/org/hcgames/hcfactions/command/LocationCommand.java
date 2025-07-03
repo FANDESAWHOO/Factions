@@ -36,53 +36,52 @@ import java.util.List;
 @AutoRegister
 public final class LocationCommand extends SimpleCommand {
 
-    private final HCFactions plugin;
+	/**
+	 * The singleton of this class
+	 */
+	@Getter
+	private final static SimpleCommand instance = new LocationCommand();
+	private final HCFactions plugin;
 
-    /**
-     * The singleton of this class
-     */
-    @Getter
-    private final static SimpleCommand instance = new LocationCommand();
+	private LocationCommand() {
+		super("location|loc|whereami");
+		plugin = HCFactions.getInstance();
+	}
 
-    private LocationCommand() {
-        super("location|loc|whereami");
-        plugin = HCFactions.getInstance();
-    }
-
-    /**
-     * Executed when the command is run. You can get the variables sender and args directly,
-     * and use convenience checks in the simple command class.
-     */
-    @Override
-    protected void onCommand() {
-        Player target;
-        if (args.length >= 1) target = plugin.getServer().getPlayer(args[0]);
+	/**
+	 * Executed when the command is run. You can get the variables sender and args directly,
+	 * and use convenience checks in the simple command class.
+	 */
+	@Override
+	protected void onCommand() {
+		Player target;
+		if (args.length >= 1) target = plugin.getServer().getPlayer(args[0]);
 		else if (sender instanceof Player) target = (Player) sender;
 		else {
-                tell(Lang.of("Commands.Location.Usage")
-                      .replace("{commandLabel}", getLabel()));
-            return;
-        }
+			tell(Lang.of("Commands.Location.Usage")
+					.replace("{commandLabel}", getLabel()));
+			return;
+		}
 
-        if (target == null || (sender instanceof Player && !((Player) sender).canSee(target))) {
-            tell(Lang.of("Commands.Location.Output")
-                   .replace("{player}", args[0]));
-            return;
-        }
+		if (target == null || (sender instanceof Player && !((Player) sender).canSee(target))) {
+			tell(Lang.of("Commands.Location.Output")
+					.replace("{player}", args[0]));
+			return;
+		}
 
-        Location location = target.getLocation();
-        Faction factionAt = plugin.getFactionManager().getFactionAt(location);
+		Location location = target.getLocation();
+		Faction factionAt = plugin.getFactionManager().getFactionAt(location);
 
-        tell(Lang.of("Commands.Location.Output")
-                .replace("{player}", target.getName())
-                .replace("{factionName}", factionAt.getFormattedName(sender))
-                .replace("{isDeathBanLocation}", factionAt.isSafezone() ?
-                        Lang.of("Commands.Location.NonDeathban") :
-                        Lang.of("Commands.Location.Deathban")));
-    }
+		tell(Lang.of("Commands.Location.Output")
+				.replace("{player}", target.getName())
+				.replace("{factionName}", factionAt.getFormattedName(sender))
+				.replace("{isDeathBanLocation}", factionAt.isSafezone() ?
+						Lang.of("Commands.Location.NonDeathban") :
+						Lang.of("Commands.Location.Deathban")));
+	}
 
-    @Override
-    protected List<String> tabComplete() {
-        return  args.length == 1 && sender.hasPermission(getPermission()) ? null : Collections.emptyList();
-    }
+	@Override
+	protected List<String> tabComplete() {
+		return args.length == 1 && sender.hasPermission(getPermission()) ? null : Collections.emptyList();
+	}
 }

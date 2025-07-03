@@ -26,9 +26,10 @@ public final class FactionAcceptCommand extends FactionSubCommand {
 		plugin = HCFactions.getInstance();
 
 	}
-    @Override
+
+	@Override
 	public String getUsage() {
-		return '/' + label + " " + getName()  + " <factionName>";
+		return '/' + label + " " + getName() + " <factionName>";
 	}
 
 	@Override
@@ -47,7 +48,8 @@ public final class FactionAcceptCommand extends FactionSubCommand {
 				tell(Lang.of("Commands-Factions-Accept-InFactionAlready"));
 				return;
 			}
-		} catch (NoFactionFoundException e) {}
+		} catch (NoFactionFoundException e) {
+		}
 
 		plugin.getFactionManager().advancedSearch(args[1], PlayerFaction.class, new SearchCallback<PlayerFaction>() {
 			@Override

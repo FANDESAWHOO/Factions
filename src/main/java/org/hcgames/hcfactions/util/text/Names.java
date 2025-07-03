@@ -13,7 +13,7 @@ public class Names {
 			World.Environment.THE_END, "The End"
 	));
 
-	public static String getEnvironmentName(World.Environment environment){
+	public static String getEnvironmentName(World.Environment environment) {
 		return ENVIRONMENT_MAPPINGS.containsKey(environment) ? ENVIRONMENT_MAPPINGS.get(environment) : StringUtils.capitalize(environment.toString());
 	}
 }

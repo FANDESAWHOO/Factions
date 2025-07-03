@@ -34,126 +34,120 @@ import org.hcgames.hcfactions.util.collect.Reversed;
 
 import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 //TODO: All the todos, builder class etc
 public class Board {
-    private final static int MAX_SIDEBAR_ENTRIES = 15;
+	private final static int MAX_SIDEBAR_ENTRIES = 15;
+	final Multimap<Integer, Entry> entryPriorityMap = Multimaps.newListMultimap(new TreeMap<>(Collections.reverseOrder()), Lists::newArrayList);
+	private final Map<Class<? extends Provider>, Provider> providers = new ConcurrentHashMap<>();
+	private final WeakReference<Player> player;
+	private final Scoreboard scoreboard;
+	@Getter
+	private final Objective objective;
+	private final List<String> currentLines = new ArrayList<>();
 
-    private final Map<Class<? extends Provider>, Provider> providers = new ConcurrentHashMap<>();
-    private final WeakReference<Player> player;
+	private Entry header;
+	private Entry footer;
 
-    private final Scoreboard scoreboard;
-    @Getter
-    private final Objective objective;
+	public Board(Plugin plugin, Player player, boolean hook, @Nullable String title, Provider... providers) {
+		this.player = new WeakReference<>(player);
 
-    final Multimap<Integer, Entry> entryPriorityMap = Multimaps.newListMultimap(new TreeMap<>(Collections.reverseOrder()), Lists::newArrayList);
-    private final List<String> currentLines = new ArrayList<>();
+		if (hook && !plugin.getServer().getScoreboardManager().getMainScoreboard().equals(player.getScoreboard())) {
+			scoreboard = player.getScoreboard();
+		} else {
+			scoreboard = plugin.getServer().getScoreboardManager().getNewScoreboard();
+			player.setScoreboard(scoreboard);
+		}
 
-    private Entry header;
-    private Entry footer;
+		Objective localObjective;
+		if ((localObjective = scoreboard.getObjective("CarbonSB")) != null) {
+			localObjective.unregister();
+		}
 
-    public Board(Plugin plugin, Player player, boolean hook, @Nullable String title, Provider... providers){
-        this.player = new WeakReference<>(player);
+		localObjective = scoreboard.registerNewObjective("CarbonSB", "dummy");
+		localObjective.setDisplayName((title == null || title.length() == 0) ? "CarbonSB" : title);
+		localObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-        if(hook && !plugin.getServer().getScoreboardManager().getMainScoreboard().equals(player.getScoreboard())){
-            scoreboard = player.getScoreboard();
-        }else{
-            scoreboard = plugin.getServer().getScoreboardManager().getNewScoreboard();
-            player.setScoreboard(scoreboard);
-        }
+		objective = localObjective;
+		for (Provider provider : providers) {
+			registerProvider(provider);
+			provider.update();
+		}
+		build();
+	}
 
-        Objective localObjective;
-        if((localObjective = scoreboard.getObjective("CarbonSB")) != null){
-            localObjective.unregister();
-        }
+	public void setHeader(String headerStr) {
+		if (header != null) {
+			header.setValue(headerStr);
+		} else {
+			header = new Entry(this, headerStr);
+			build();
+		}
+	}
 
-        localObjective = scoreboard.registerNewObjective("CarbonSB", "dummy");
-        localObjective.setDisplayName((title == null || title.length() == 0) ? "CarbonSB" : title);
-        localObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
+	public void setFooter(String footerStr) {
+		if (footer != null) {
+			footer.setValue(footerStr);
+		} else {
+			footer = new Entry(this, footerStr);
+			build();
+		}
+	}
 
-        objective = localObjective;
-        for(Provider provider : providers){
-            registerProvider(provider);
-            provider.update();
-        }
-        build();
-    }
+	public void removeHeader() {
+		if (header != null) {
+			header = null;
+			build();
+		}
+	}
 
-    public void setHeader(String headerStr){
-        if(header != null){
-            header.setValue(headerStr);
-        }else{
-            header = new Entry(this, headerStr);
-            build();
-        }
-    }
+	public void removeFooter() {
+		if (footer != null) {
+			footer = null;
+			build();
+		}
+	}
 
-    public void setFooter(String footerStr){
-        if(footer != null){
-            footer.setValue(footerStr);
-        }else{
-            footer = new Entry(this, footerStr);
-            build();
-        }
-    }
+	public Provider getProvider(Class<? extends Provider> providerClass) {
+		return providers.get(providerClass);
+	}
 
-    public void removeHeader(){
-        if(header != null){
-            header = null;
-            build();
-        }
-    }
+	/**
+	 * Registers a new provider, throws illegal argument exception if the provider is anonymous
+	 *
+	 * @param provider to provide
+	 * @return false if already registered, true if registers
+	 */
+	public boolean registerProvider(Provider provider) {
+		if (provider.getClass() == Provider.class) {
+			throw new IllegalArgumentException("Class cannot be anonymous");
+		}
 
-    public void removeFooter(){
-        if(footer != null){
-            footer = null;
-            build();
-        }
-    }
+		if (providers.containsKey(provider.getClass())) {
+			return false;
+		}
 
-    public Provider getProvider(Class<? extends Provider> providerClass){
-        return providers.get(providerClass);
-    }
+		providers.put(provider.getClass(), provider);
+		provider.update();
+		return true;
+	}
 
-    /**
-     * Registers a new provider, throws illegal argument exception if the provider is anonymous
-     * @param provider to provide
-     * @return false if already registered, true if registers
-     */
-    public boolean registerProvider(Provider provider){
-        if(provider.getClass() == Provider.class){
-            throw new IllegalArgumentException("Class cannot be anonymous");
-        }
+	public Scoreboard getHandle() {
+		return scoreboard;
+	}
 
-        if(providers.containsKey(provider.getClass())){
-            return false;
-        }
+	public Player getPlayer() {
+		if (player.isEnqueued()) {
+			throw new RuntimeException("Player is offline.");
+		}
 
-        providers.put(provider.getClass(), provider);
-        provider.update();
-        return true;
-    }
+		return player.get();
+	}
 
-    public Scoreboard getHandle(){
-        return scoreboard;
-    }
-
-    public Player getPlayer(){
-        if(player.isEnqueued()){
-            throw new RuntimeException("Player is offline.");
-        }
-
-        return player.get();
-    }
-
-    synchronized void build(){
-        //This method will only be called when adding NEW entries or removing current ones.
+	synchronized void build() {
+		//This method will only be called when adding NEW entries or removing current ones.
 
         /*
         --MY LONG TYPING LEL--
@@ -313,65 +307,65 @@ public class Board {
             this.current.setDisplayName(this.title);
          */
 
-        entryPriorityMap.clear();
-        currentLines.clear();
+		entryPriorityMap.clear();
+		currentLines.clear();
 
-        int checkSize = 0;
-        if(header != null){
-            entryPriorityMap.put(Integer.MAX_VALUE, header);
-            checkSize++;
-        }
+		int checkSize = 0;
+		if (header != null) {
+			entryPriorityMap.put(Integer.MAX_VALUE, header);
+			checkSize++;
+		}
 
-        if(footer != null){
-            entryPriorityMap.put(Integer.MIN_VALUE, footer);
-            checkSize++;
-        }
+		if (footer != null) {
+			entryPriorityMap.put(Integer.MIN_VALUE, footer);
+			checkSize++;
+		}
 
-        for(Provider provider : providers.values()){
-            //TODO: Do in a better way
-            for(Entry entry : Reversed.reversed(provider.entries)){
-                entryPriorityMap.put(provider.getPriority(), entry);
-                if(checkSize >= MAX_SIDEBAR_ENTRIES){
-                  break;
-               }
-            }
-        }
+		for (Provider provider : providers.values()) {
+			//TODO: Do in a better way
+			for (Entry entry : Reversed.reversed(provider.entries)) {
+				entryPriorityMap.put(provider.getPriority(), entry);
+				if (checkSize >= MAX_SIDEBAR_ENTRIES) {
+					break;
+				}
+			}
+		}
 
-        if(entryPriorityMap.size() > checkSize){
-            int score = 1; //TODO: Fix why team is null, it should never be when it enters this stage
-            for(Entry entry : entryPriorityMap.values()){
-                /////////////
-                Team team = scoreboard.registerNewTeam(entry.getValue().getName());
+		if (entryPriorityMap.size() > checkSize) {
+			int score = 1; //TODO: Fix why team is null, it should never be when it enters this stage
+			for (Entry entry : entryPriorityMap.values()) {
+				/////////////
+				Team team = scoreboard.registerNewTeam(entry.getValue().getName());
 
-                team.setPrefix(entry.getValue().hasPrefix() ? entry.getValue().getPrefix() : "");
-                team.setSuffix(entry.getValue().hasSuffix() ? entry.getValue().getSuffix() : "");
+				team.setPrefix(entry.getValue().hasPrefix() ? entry.getValue().getPrefix() : "");
+				team.setSuffix(entry.getValue().hasSuffix() ? entry.getValue().getSuffix() : "");
 
-                if(!team.getEntries().contains(entry.getValue().getName())){
-                    team.addEntry(entry.getValue().getName());
-                }
-                //////////////
+				if (!team.getEntries().contains(entry.getValue().getName())) {
+					team.addEntry(entry.getValue().getName());
+				}
+				//////////////
 
-                objective.getScore(entry.getValue().getName()).setScore(score);
-                entry.setCurrentScore(score);
+				objective.getScore(entry.getValue().getName()).setScore(score);
+				entry.setCurrentScore(score);
 
-                currentLines.add(entry.getValue().getName());
-                score++;
-            }
-        }
+				currentLines.add(entry.getValue().getName());
+				score++;
+			}
+		}
 
-        for(String entry : scoreboard.getEntries()){
-            if(!currentLines.contains(entry)){
-                Team team = scoreboard.getTeam(entry);
+		for (String entry : scoreboard.getEntries()) {
+			if (!currentLines.contains(entry)) {
+				Team team = scoreboard.getTeam(entry);
 
-                if(team != null){
-                    if(team.getEntries().contains(entry)){
-                        team.removeEntry(entry);
-                    }
-                }
+				if (team != null) {
+					if (team.getEntries().contains(entry)) {
+						team.removeEntry(entry);
+					}
+				}
 
-                scoreboard.resetScores(entry);
-            }
-        }
-    }
+				scoreboard.resetScores(entry);
+			}
+		}
+	}
 
 }

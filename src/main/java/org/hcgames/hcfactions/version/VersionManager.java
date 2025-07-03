@@ -12,7 +12,7 @@ public class VersionManager {
 	 */
 	private final String minecraftVersion;
 
-	public VersionManager(){
+	public VersionManager() {
 		minecraftVersion = MinecraftVersion.getFullVersion();
 	}
 }

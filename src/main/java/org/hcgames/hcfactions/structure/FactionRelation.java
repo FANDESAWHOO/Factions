@@ -27,47 +27,47 @@ import org.bson.Document;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.hcgames.hcfactions.util.Mongoable;
 
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@RequiredArgsConstructor @Getter
-public class FactionRelation implements Mongoable, ConfigurationSerializable{
+@RequiredArgsConstructor
+@Getter
+public class FactionRelation implements Mongoable, ConfigurationSerializable {
 
-    private final Relation relation;
-    private final UUID faction;
+	private final Relation relation;
+	private final UUID faction;
 
-    @Getter(AccessLevel.NONE)
-    private String factionCachedName;
+	@Getter(AccessLevel.NONE)
+	private String factionCachedName;
 
-    public FactionRelation(Map<String, Object> map){
-        relation = Relation.valueOf((String) map.get("relation"));
-        faction = UUID.fromString((String) map.get("faction"));
-        factionCachedName = (String) map.get("factionCachedName");
-    }
+	public FactionRelation(Map<String, Object> map) {
+		relation = Relation.valueOf((String) map.get("relation"));
+		faction = UUID.fromString((String) map.get("faction"));
+		factionCachedName = (String) map.get("factionCachedName");
+	}
 
-    public FactionRelation(Document document){
-        relation = Relation.valueOf(document.getString("relation"));
-        faction = UUID.fromString(document.getString("faction"));
-        factionCachedName = document.getString("factionCachedName");
-    }
+	public FactionRelation(Document document) {
+		relation = Relation.valueOf(document.getString("relation"));
+		faction = UUID.fromString(document.getString("faction"));
+		factionCachedName = document.getString("factionCachedName");
+	}
 
-    @Override
-    public Document toDocument(){
-        Document document = new Document();
-        document.put("relation", relation.name());
-        document.put("faction", faction.toString());
-        document.put("factionCachedName", factionCachedName);
-        return document;
-    }
+	@Override
+	public Document toDocument() {
+		Document document = new Document();
+		document.put("relation", relation.name());
+		document.put("faction", faction.toString());
+		document.put("factionCachedName", factionCachedName);
+		return document;
+	}
 
-    @Override
-    public Map<String, Object> serialize(){
-        Map<String, Object> map = new LinkedHashMap<>();
-        map.put("relation", relation.name());
-        map.put("faction", faction.toString());
-        map.put("factionCachedName", factionCachedName);
-        return map;
-    }
+	@Override
+	public Map<String, Object> serialize() {
+		Map<String, Object> map = new LinkedHashMap<>();
+		map.put("relation", relation.name());
+		map.put("faction", faction.toString());
+		map.put("factionCachedName", factionCachedName);
+		return map;
+	}
 }

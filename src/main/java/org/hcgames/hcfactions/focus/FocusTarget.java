@@ -32,34 +32,36 @@ import java.util.UUID;
 @Getter
 public class FocusTarget {
 
-    private final HCFactions plugin;
+	private final HCFactions plugin;
 
-    private final UUID current;
-    @Getter private final UUID target;
+	private final UUID current;
+	@Getter
+	private final UUID target;
+	@Getter
+	private final boolean factionTarget;
+	@Getter
+	private UUID mapKey = UUID.randomUUID();
 
-    @Getter private UUID mapKey = UUID.randomUUID();
-    @Getter private final boolean factionTarget;
+	private FocusTarget(HCFactions plugin, UUID current, UUID target, boolean factionTarget) {
+		this.plugin = plugin;
+		this.current = current;
+		this.target = target;
+		this.factionTarget = factionTarget;
+	}
 
-    private FocusTarget(HCFactions plugin, UUID current, UUID target, boolean factionTarget){
-        this.plugin = plugin;
-        this.current = current;
-        this.target = target;
-        this.factionTarget = factionTarget;
-    }
+	public FocusTarget(HCFactions plugin, PlayerFaction current, PlayerFaction target) {
+		this(plugin, current.getUniqueID(), target.getUniqueID(), true);
+	}
 
-    public FocusTarget(HCFactions plugin, PlayerFaction current, PlayerFaction target){
-        this(plugin, current.getUniqueID(), target.getUniqueID(), true);
-    }
+	public FocusTarget(HCFactions plugin, PlayerFaction current, Player target) {
+		this(plugin, current.getUniqueID(), target.getUniqueId(), false);
+	}
 
-    public FocusTarget(HCFactions plugin, PlayerFaction current, Player target){
-        this(plugin, current.getUniqueID(), target.getUniqueId(), false);
-    }
-
-    public Optional<PlayerFaction> getCurrent(){
-        try {
-            return Optional.of(plugin.getFactionManager().getFaction(current, PlayerFaction.class));
-        } catch (NoFactionFoundException e) {
-            return Optional.empty();
-        }
-    }
+	public Optional<PlayerFaction> getCurrent() {
+		try {
+			return Optional.of(plugin.getFactionManager().getFaction(current, PlayerFaction.class));
+		} catch (NoFactionFoundException e) {
+			return Optional.empty();
+		}
+	}
 }

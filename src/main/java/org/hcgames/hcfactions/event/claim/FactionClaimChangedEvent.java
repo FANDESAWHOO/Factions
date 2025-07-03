@@ -30,22 +30,22 @@ import java.util.Collection;
 
 public class FactionClaimChangedEvent extends ClaimChangeEvent {
 
-    private final static HandlerList handlers = new HandlerList();
+	private final static HandlerList handlers = new HandlerList();
 
-    public FactionClaimChangedEvent(@NonNull CommandSender sender, @NonNull ClaimableFaction faction, @NonNull Collection<Claim> claims, @NonNull ClaimChangeReason reason, boolean async){
-        super(sender, faction, claims, reason, async);
-    }
+	public FactionClaimChangedEvent(@NonNull CommandSender sender, @NonNull ClaimableFaction faction, @NonNull Collection<Claim> claims, @NonNull ClaimChangeReason reason, boolean async) {
+		super(sender, faction, claims, reason, async);
+	}
 
-    public FactionClaimChangedEvent(@NonNull CommandSender sender, @NonNull ClaimableFaction faction, @NonNull Collection<Claim> claims, @NonNull ClaimChangeReason reason){
-        this(sender, faction, claims, reason, false);
-    }
+	public FactionClaimChangedEvent(@NonNull CommandSender sender, @NonNull ClaimableFaction faction, @NonNull Collection<Claim> claims, @NonNull ClaimChangeReason reason) {
+		this(sender, faction, claims, reason, false);
+	}
 
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
-    }
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 
-    public static HandlerList getHandlerList(){
-        return handlers;
-    }
+	@Override
+	public HandlerList getHandlers() {
+		return handlers;
+	}
 }

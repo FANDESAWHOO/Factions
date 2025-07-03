@@ -6,9 +6,9 @@ import org.bukkit.Location;
 
 @Data
 @AllArgsConstructor
-public class VisualBlock{
+public class VisualBlock {
 
-    private final VisualType visualType;
-    private final VisualBlockData blockData;
-    private final Location location;
+	private final VisualType visualType;
+	private final VisualBlockData blockData;
+	private final Location location;
 }

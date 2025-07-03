@@ -17,49 +17,50 @@ import org.mineacademy.fo.remain.Remain;
 
 public class UserListener implements Listener {
 
-    private final HCFactions plugin;
+	@Getter
+	private static final UserListener userListener = new UserListener();
+	private final HCFactions plugin;
 
-    @Getter  private static  final UserListener userListener = new UserListener();
+	private UserListener() {
+		plugin = HCFactions.getInstance();
+	}
 
-    private UserListener(){
-        plugin = HCFactions.getInstance();
-    }
-    public static String getDisplayName(@NonNull ItemStack item){
-        if(item.hasItemMeta() && item.getItemMeta().hasDisplayName()) return item.getItemMeta().getDisplayName();
+	public static String getDisplayName(@NonNull ItemStack item) {
+		if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) return item.getItemMeta().getDisplayName();
 
-        return ((ItemStack)Remain.asNMSCopy(item)).getItemMeta().getDisplayName();
-    }
+		return ((ItemStack) Remain.asNMSCopy(item)).getItemMeta().getDisplayName();
+	}
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-    public void onPlayerStatIncrease(PlayerDeathEvent event){
-        FactionUser dead = plugin.getUserManager().getUser(event.getEntity().getUniqueId());
-        Player killer = event.getEntity().getKiller();
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
+	public void onPlayerStatIncrease(PlayerDeathEvent event) {
+		FactionUser dead = plugin.getUserManager().getUser(event.getEntity().getUniqueId());
+		Player killer = event.getEntity().getKiller();
 
-        if(killer != null){
-            FactionUser killerUser = plugin.getUserManager().getUser(killer.getUniqueId());
-            killerUser.incrementKills();
+		if (killer != null) {
+			FactionUser killerUser = plugin.getUserManager().getUser(killer.getUniqueId());
+			killerUser.incrementKills();
 
-            EntityDamageEvent.DamageCause cause = event.getEntity().getLastDamageCause().getCause();
-            String item = killer.getItemInHand() == null ? "" : getDisplayName(killer.getItemInHand());
+			EntityDamageEvent.DamageCause cause = event.getEntity().getLastDamageCause().getCause();
+			String item = killer.getItemInHand() == null ? "" : getDisplayName(killer.getItemInHand());
 
-            killerUser.addKill(event.getEntity().getName(), event.getEntity().getUniqueId(), item, cause);
-            dead.addDeath(killer.getName(), killer.getUniqueId(), item, cause);
-        }
+			killerUser.addKill(event.getEntity().getName(), event.getEntity().getUniqueId(), item, cause);
+			dead.addDeath(killer.getName(), killer.getUniqueId(), item, cause);
+		}
 
-        dead.incrementDeaths();
-    }
+		dead.incrementDeaths();
+	}
 
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerJoin(PlayerJoinEvent event){
-        FactionUser user = plugin.getUserManager().getUser(event.getPlayer().getUniqueId());
-        user.updateName(event.getPlayer().getName());
-    }
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerJoin(PlayerJoinEvent event) {
+		FactionUser user = plugin.getUserManager().getUser(event.getPlayer().getUniqueId());
+		user.updateName(event.getPlayer().getName());
+	}
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerQuit(PlayerQuitEvent event){
-        FactionUser user = plugin.getUserManager().getUser(event.getPlayer().getUniqueId());
-        user.updateName(event.getPlayer().getName());
-    }
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerQuit(PlayerQuitEvent event) {
+		FactionUser user = plugin.getUserManager().getUser(event.getPlayer().getUniqueId());
+		user.updateName(event.getPlayer().getName());
+	}
 
 }

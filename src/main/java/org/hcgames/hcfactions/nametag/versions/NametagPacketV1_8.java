@@ -14,7 +14,7 @@ import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class NametagPacketV1_8_R3 extends NametagPacket {
+public class NametagPacketV1_8 extends NametagPacket {
 	private static final Field a = ReflectionUtil.getDeclaredField(PacketPlayOutScoreboardTeam.class, "a");
 	private static final Field b = ReflectionUtil.getDeclaredField(PacketPlayOutScoreboardTeam.class, "b");
 	private static final Field c = ReflectionUtil.getDeclaredField(PacketPlayOutScoreboardTeam.class, "c");
@@ -27,13 +27,13 @@ public class NametagPacketV1_8_R3 extends NametagPacket {
 
 	private final Map<String, NameInfo> teams;
 
-	public NametagPacketV1_8_R3(Player player) {
+	public NametagPacketV1_8(Player player) {
 		super(player);
 		teams = new ConcurrentHashMap<>();
 	}
 
 	private void sendPacket(Packet<?> packet) {
-		Remain.sendPacket(player,packet);
+		Remain.sendPacket(player, packet);
 	}
 
 	@Override

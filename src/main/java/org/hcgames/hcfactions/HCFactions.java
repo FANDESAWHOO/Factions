@@ -21,6 +21,7 @@ import org.hcgames.hcfactions.manager.FlatFileFactionManager;
 import org.hcgames.hcfactions.manager.MongoFactionManager;
 import org.hcgames.hcfactions.nametag.NametagManager;
 import org.hcgames.hcfactions.structure.FactionMember;
+import org.hcgames.hcfactions.timer.TimerExecutor;
 import org.hcgames.hcfactions.timer.TimerManager;
 import org.hcgames.hcfactions.user.MongoUserManager;
 import org.hcgames.hcfactions.user.UserListener;
@@ -37,130 +38,132 @@ import org.mineacademy.fo.plugin.SimplePlugin;
 @Getter
 public class HCFactions extends SimplePlugin {
 
-    private ItemDb itemDb;
-    public static final Joiner SPACE_JOINER = Joiner.on(' ');
-    public static final Joiner COMMA_JOINER = Joiner.on(", ");
-    private Economy econ = null;
-    private Permission perms = null;
-    private Chat chat = null;
+	public static final Joiner SPACE_JOINER = Joiner.on(' ');
+	public static final Joiner COMMA_JOINER = Joiner.on(", ");
+	private ItemDb itemDb;
+	private Economy econ = null;
+	private Permission perms = null;
+	private Chat chat = null;
 
-    private MongoManager mongoManager;
-    private WorldEditPlugin worldEdit;
-    private FactionManager factionManager;
-    private ClaimHandler claimHandler;
-    private VisualiseHandler visualiseHandler;
-    private TimerManager timerManager;
-    private UserManager userManager;
-    private NametagManager nametagManager;
+	private MongoManager mongoManager;
+	private WorldEditPlugin worldEdit;
+	private FactionManager factionManager;
+	private ClaimHandler claimHandler;
+	private VisualiseHandler visualiseHandler;
+	private TimerManager timerManager;
+	private UserManager userManager;
+	private NametagManager nametagManager;
 
+	public static HCFactions getInstance() {
+		return (HCFactions) SimplePlugin.getInstance();
+	}
 
-   public void register(){
-       ConfigurationSerialization.registerClass(PersistableLocation.class);
-       ConfigurationSerialization.registerClass(Cuboid.class);
-       ConfigurationSerialization.registerClass(NamedCuboid.class);
-       ConfigurationSerialization.registerClass(Claim.class);
-       ConfigurationSerialization.registerClass(ClaimableFaction.class);
-       ConfigurationSerialization.registerClass(EndPortalFaction.class);
-       ConfigurationSerialization.registerClass(Faction.class);
-       ConfigurationSerialization.registerClass(FactionMember.class);
-       ConfigurationSerialization.registerClass(PlayerFaction.class);
-       ConfigurationSerialization.registerClass(RoadFaction.class);
-       ConfigurationSerialization.registerClass(SpawnFaction.class);
-       ConfigurationSerialization.registerClass(RoadFaction.NorthRoadFaction.class);
-       ConfigurationSerialization.registerClass(RoadFaction.EastRoadFaction.class);
-       ConfigurationSerialization.registerClass(RoadFaction.SouthRoadFaction.class);
-       ConfigurationSerialization.registerClass(RoadFaction.WestRoadFaction.class);
-       ConfigurationSerialization.registerClass(SystemTeam.class);
+	public void register() {
+		ConfigurationSerialization.registerClass(PersistableLocation.class);
+		ConfigurationSerialization.registerClass(Cuboid.class);
+		ConfigurationSerialization.registerClass(NamedCuboid.class);
+		ConfigurationSerialization.registerClass(Claim.class);
+		ConfigurationSerialization.registerClass(ClaimableFaction.class);
+		ConfigurationSerialization.registerClass(EndPortalFaction.class);
+		ConfigurationSerialization.registerClass(Faction.class);
+		ConfigurationSerialization.registerClass(FactionMember.class);
+		ConfigurationSerialization.registerClass(PlayerFaction.class);
+		ConfigurationSerialization.registerClass(RoadFaction.class);
+		ConfigurationSerialization.registerClass(SpawnFaction.class);
+		ConfigurationSerialization.registerClass(RoadFaction.NorthRoadFaction.class);
+		ConfigurationSerialization.registerClass(RoadFaction.EastRoadFaction.class);
+		ConfigurationSerialization.registerClass(RoadFaction.SouthRoadFaction.class);
+		ConfigurationSerialization.registerClass(RoadFaction.WestRoadFaction.class);
+		ConfigurationSerialization.registerClass(SystemTeam.class);
 
-       FactionManager.registerSystemFaction(EndPortalFaction.class);
-       FactionManager.registerSystemFaction(RoadFaction.EastRoadFaction.class);
-       FactionManager.registerSystemFaction(RoadFaction.NorthRoadFaction.class);
-       FactionManager.registerSystemFaction(RoadFaction.SouthRoadFaction.class);
-       FactionManager.registerSystemFaction(RoadFaction.WestRoadFaction.class);
-       FactionManager.registerSystemFaction(SpawnFaction.class);
-       FactionManager.registerSystemFaction(WarzoneFaction.class);
-       FactionManager.registerSystemFaction(WildernessFaction.class);
-   }
-    @Override
-    public void onPluginLoad() {
-    register();
-    }
-   
-    @Override
-    public void onPluginStart() {
-        registerManagers();
-        registerListeners();
-        setupChat();
-        setupEconomy();
-        setupPermissions();
-        getLogger().info("HCFactions has been enabled successfully!");
+		FactionManager.registerSystemFaction(EndPortalFaction.class);
+		FactionManager.registerSystemFaction(RoadFaction.EastRoadFaction.class);
+		FactionManager.registerSystemFaction(RoadFaction.NorthRoadFaction.class);
+		FactionManager.registerSystemFaction(RoadFaction.SouthRoadFaction.class);
+		FactionManager.registerSystemFaction(RoadFaction.WestRoadFaction.class);
+		FactionManager.registerSystemFaction(SpawnFaction.class);
+		FactionManager.registerSystemFaction(WarzoneFaction.class);
+		FactionManager.registerSystemFaction(WildernessFaction.class);
+	}
 
-        getServer().getScheduler().runTaskTimerAsynchronously(this, this::saveData, (60 * 20) * 5, (60 * 20) * 5);
+	@Override
+	public void onPluginLoad() {
+		register();
+	}
 
-    }
-    @Override
-    public void onPluginStop() {
-        saveData();
-        if (mongoManager != null) mongoManager.disconnect();
+	@Override
+	public void onPluginStart() {
+		registerManagers();
+		registerListeners();
+		setupChat();
+		setupEconomy();
+		setupPermissions();
+		getLogger().info("HCFactions has been enabled successfully!");
+
+		getServer().getScheduler().runTaskTimerAsynchronously(this, this::saveData, (60 * 20) * 5, (60 * 20) * 5);
+
+	}
+
+	@Override
+	public void onPluginStop() {
+		saveData();
+		if (mongoManager != null) mongoManager.disconnect();
 		saveConfig();
-    }
+	}
 
+	private void saveData() {
+		factionManager.saveFactionData();
+	}
 
-    private void saveData() {
-        factionManager.saveFactionData();
-    }
+	private void registerListeners() {
+		registerEvents(ClaimWandListener.getClaimWandListener());
+		registerEvents(NameCacheListener.getNameCacheListener());
+		registerEvents(NameCacheListener.getNameCacheListener());
+		registerEvents(ProtectionListener.getProtectionListener());
+		registerEvents(FactionChatListener.getChatListener());
+		if (Configuration.api) {
+			registerEvents(FactionListener.getFactionListener());
+			registerEvents(ChatListener.getChatListener());
+			registerEvents(UserListener.getUserListener());
+		}
+	}
+    private void registerCommands(){
+		if(Configuration.api) registerCommand(TimerExecutor.getInstance());
+	}
+	private void registerManagers() {
 
-    private void registerListeners() {
-        registerEvents(ClaimWandListener.getClaimWandListener());
-        registerEvents(NameCacheListener.getNameCacheListener());
-        registerEvents(NameCacheListener.getNameCacheListener());
-        registerEvents(ProtectionListener.getProtectionListener());
-        registerEvents(FactionChatListener.getChatListener());
-        if(Configuration.api) {
-            registerEvents(FactionListener.getFactionListener());
-            registerEvents(ChatListener.getChatListener());
-            registerEvents(UserListener.getUserListener());
-        }
-    }
+		itemDb = new SimpleItemDb(this);
+		visualiseHandler = new VisualiseHandler();
+		if (Configuration.mongo) {
+			mongoManager = new MongoManager();
+			mongoManager.connect();
+			factionManager = new MongoFactionManager(this);
+		} else factionManager = new FlatFileFactionManager(this);
+		if (Configuration.mongo & Configuration.api)
+			userManager = new MongoUserManager(this);
+		getLogger().info("FactionManager initialized successfully.");
+		if (Configuration.api) timerManager = new TimerManager(this);
+		claimHandler = new ClaimHandler(this);
+		nametagManager = new NametagManager();
+	}
 
-    private void registerManagers() {
+	private boolean setupEconomy() {
+		if (getServer().getPluginManager().getPlugin("Vault") == null) return false;
+		RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+		if (rsp == null) return false;
+		econ = rsp.getProvider();
+		return econ != null;
+	}
 
-        itemDb = new SimpleItemDb(this);
-        visualiseHandler = new VisualiseHandler();
-        if (Configuration.mongo) {
-            mongoManager = new MongoManager();
-            mongoManager.connect();
-            factionManager = new MongoFactionManager(this);
-        } else factionManager = new FlatFileFactionManager(this);
-        if (Configuration.mongo & Configuration.api)
-            userManager = new MongoUserManager(this);
-        getLogger().info("FactionManager initialized successfully.");
-        if(Configuration.api)
-            timerManager = new TimerManager(this);
-        claimHandler = new ClaimHandler(this);
-        nametagManager = new NametagManager();
-    }
+	private boolean setupChat() {
+		RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
+		chat = rsp.getProvider();
+		return chat != null;
+	}
 
-    public static HCFactions getInstance() {
-        return (HCFactions) SimplePlugin.getInstance();
-    }
-    private boolean setupEconomy() {
-        if (getServer().getPluginManager().getPlugin("Vault") == null) return false;
-        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-        if (rsp == null) return false;
-        econ = rsp.getProvider();
-        return econ != null;
-    }
-
-    private boolean setupChat() {
-        RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
-        chat = rsp.getProvider();
-        return chat != null;
-    }
-
-    private boolean setupPermissions() {
-        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
-        perms = rsp.getProvider();
-        return perms != null;
-    }
+	private boolean setupPermissions() {
+		RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+		perms = rsp.getProvider();
+		return perms != null;
+	}
 }

@@ -54,229 +54,230 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class ClaimWandListener implements Listener{
+public class ClaimWandListener implements Listener {
 
-    private final HCFactions plugin;
-    @Getter
-    private static final ClaimWandListener claimWandListener = new ClaimWandListener();
-    private ClaimWandListener() {
-        plugin = HCFactions.getInstance();
-    }
+	@Getter
+	private static final ClaimWandListener claimWandListener = new ClaimWandListener();
+	private final HCFactions plugin;
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onPlayerInteract(PlayerInteractEvent event) {
-        Action action = event.getAction();
+	private ClaimWandListener() {
+		plugin = HCFactions.getInstance();
+	}
 
-        // They didn't use a claiming wand for this action, so ignore.
-        if (action == Action.PHYSICAL || !event.hasItem() || !isClaimingWand(event.getItem())) return;
+	@EventHandler(priority = EventPriority.HIGH)
+	public void onPlayerInteract(PlayerInteractEvent event) {
+		Action action = event.getAction();
 
-        Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
+		// They didn't use a claiming wand for this action, so ignore.
+		if (action == Action.PHYSICAL || !event.hasItem() || !isClaimingWand(event.getItem())) return;
 
-        // Clearing the claim selection of player.
-        if (action == Action.RIGHT_CLICK_AIR) {
-            plugin.getClaimHandler().clearClaimSelection(player);
-            player.setItemInHand(new ItemStack(Material.AIR, 1));
-         player.sendMessage(Lang.of("factions.claiming.wand.cleared"));
-            return;
-        }
+		Player player = event.getPlayer();
+		UUID uuid = player.getUniqueId();
 
-        PlayerFaction playerFaction;
-        try{
-            playerFaction = plugin.getFactionManager().getPlayerFaction(uuid);
-        } catch (NoFactionFoundException e){
-            plugin.getClaimHandler().clearClaimSelection(player);
-            player.setItemInHand(new ItemStack(Material.AIR, 1));
-            return;
-        }
+		// Clearing the claim selection of player.
+		if (action == Action.RIGHT_CLICK_AIR) {
+			plugin.getClaimHandler().clearClaimSelection(player);
+			player.setItemInHand(new ItemStack(Material.AIR, 1));
+			player.sendMessage(Lang.of("factions.claiming.wand.cleared"));
+			return;
+		}
 
-        // Purchasing the claim from the selections.
-        if ((action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK) && player.isSneaking()) {
-            ClaimSelection claimSelection = plugin.getClaimHandler().claimSelectionMap.get(uuid);
-            if (claimSelection == null || !claimSelection.hasBothPositionsSet()) {
-            player.sendMessage(Lang.of("factions.claiming.wand.need_both_position"));
-                return;
-            }
+		PlayerFaction playerFaction;
+		try {
+			playerFaction = plugin.getFactionManager().getPlayerFaction(uuid);
+		} catch (NoFactionFoundException e) {
+			plugin.getClaimHandler().clearClaimSelection(player);
+			player.setItemInHand(new ItemStack(Material.AIR, 1));
+			return;
+		}
 
-            if (plugin.getClaimHandler().tryPurchasing(player, claimSelection.toClaim(playerFaction))) {
-                plugin.getClaimHandler().clearClaimSelection(player);
-                player.setItemInHand(new ItemStack(Material.AIR, 1));
-            }
-            return;
-        }
+		// Purchasing the claim from the selections.
+		if ((action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK) && player.isSneaking()) {
+			ClaimSelection claimSelection = plugin.getClaimHandler().claimSelectionMap.get(uuid);
+			if (claimSelection == null || !claimSelection.hasBothPositionsSet()) {
+				player.sendMessage(Lang.of("factions.claiming.wand.need_both_position"));
+				return;
+			}
 
-        // Setting the positions for the claim selection;
-        if (action == Action.LEFT_CLICK_BLOCK || action == Action.RIGHT_CLICK_BLOCK) {
-            Block block = event.getClickedBlock();
-            Location blockLocation = block.getLocation();
+			if (plugin.getClaimHandler().tryPurchasing(player, claimSelection.toClaim(playerFaction))) {
+				plugin.getClaimHandler().clearClaimSelection(player);
+				player.setItemInHand(new ItemStack(Material.AIR, 1));
+			}
+			return;
+		}
 
-            // Don't hoe the soil block.
-            if (action == Action.RIGHT_CLICK_BLOCK) event.setCancelled(true);
+		// Setting the positions for the claim selection;
+		if (action == Action.LEFT_CLICK_BLOCK || action == Action.RIGHT_CLICK_BLOCK) {
+			Block block = event.getClickedBlock();
+			Location blockLocation = block.getLocation();
 
-            if (plugin.getClaimHandler().canClaimHere(player, blockLocation)) {
-                ClaimSelection revert;
-                ClaimSelection claimSelection = plugin.getClaimHandler().claimSelectionMap.putIfAbsent(uuid, revert = new ClaimSelection(blockLocation.getWorld()));
-                if (claimSelection == null) claimSelection = revert;
+			// Don't hoe the soil block.
+			if (action == Action.RIGHT_CLICK_BLOCK) event.setCancelled(true);
 
-                Location oldPosition;
-                Location opposite;
-                int selectionId;
-                switch (action) {
-                    case LEFT_CLICK_BLOCK:
-                        oldPosition = claimSelection.getPos1();
-                        opposite = claimSelection.getPos2();
-                        selectionId = 1;
-                        break;
-                    case RIGHT_CLICK_BLOCK:
-                        oldPosition = claimSelection.getPos2();
-                        opposite = claimSelection.getPos1();
-                        selectionId = 2;
-                        break;
-                    default:
-                        return; // This should never happen.
-                }
+			if (plugin.getClaimHandler().canClaimHere(player, blockLocation)) {
+				ClaimSelection revert;
+				ClaimSelection claimSelection = plugin.getClaimHandler().claimSelectionMap.putIfAbsent(uuid, revert = new ClaimSelection(blockLocation.getWorld()));
+				if (claimSelection == null) claimSelection = revert;
 
-                // Prevent players clicking in the same spot twice.
-                int blockX = blockLocation.getBlockX();
-                int blockZ = blockLocation.getBlockZ();
-                if (oldPosition != null && blockX == oldPosition.getBlockX() && blockZ == oldPosition.getBlockZ())
+				Location oldPosition;
+				Location opposite;
+				int selectionId;
+				switch (action) {
+					case LEFT_CLICK_BLOCK:
+						oldPosition = claimSelection.getPos1();
+						opposite = claimSelection.getPos2();
+						selectionId = 1;
+						break;
+					case RIGHT_CLICK_BLOCK:
+						oldPosition = claimSelection.getPos2();
+						opposite = claimSelection.getPos1();
+						selectionId = 2;
+						break;
+					default:
+						return; // This should never happen.
+				}
+
+				// Prevent players clicking in the same spot twice.
+				int blockX = blockLocation.getBlockX();
+				int blockZ = blockLocation.getBlockZ();
+				if (oldPosition != null && blockX == oldPosition.getBlockX() && blockZ == oldPosition.getBlockZ())
 					return;
 
-                // Allow at least 1 tick before players can update one of the positions to prevent lag/visual glitches with delayed task below.
-                if ((System.currentTimeMillis() - claimSelection.getLastUpdateMillis()) <= ClaimHandler.PILLAR_BUFFER_DELAY_MILLIS)
+				// Allow at least 1 tick before players can update one of the positions to prevent lag/visual glitches with delayed task below.
+				if ((System.currentTimeMillis() - claimSelection.getLastUpdateMillis()) <= ClaimHandler.PILLAR_BUFFER_DELAY_MILLIS)
 					return;
 
-                if (opposite != null) {
-                    int xDiff = Math.abs(opposite.getBlockX() - blockX) + 1; // Add one as it gets a weird offset
-                    int zDiff = Math.abs(opposite.getBlockZ() - blockZ) + 1; // Add one as it gets a weird offset
-                    if (xDiff < ClaimHandler.MIN_CLAIM_RADIUS || zDiff < ClaimHandler.MIN_CLAIM_RADIUS) {
-                        player.sendMessage(Lang.of("factions.claiming.not_wide_enough")
-                                .replace("{minClaimRadius}", String.valueOf(ClaimHandler.MIN_CLAIM_RADIUS))
-                                .replace("{maxClaimRadius}", String.valueOf(ClaimHandler.MIN_CLAIM_RADIUS)));
-                        return;
-                    }
-                }
+				if (opposite != null) {
+					int xDiff = Math.abs(opposite.getBlockX() - blockX) + 1; // Add one as it gets a weird offset
+					int zDiff = Math.abs(opposite.getBlockZ() - blockZ) + 1; // Add one as it gets a weird offset
+					if (xDiff < ClaimHandler.MIN_CLAIM_RADIUS || zDiff < ClaimHandler.MIN_CLAIM_RADIUS) {
+						player.sendMessage(Lang.of("factions.claiming.not_wide_enough")
+								.replace("{minClaimRadius}", String.valueOf(ClaimHandler.MIN_CLAIM_RADIUS))
+								.replace("{maxClaimRadius}", String.valueOf(ClaimHandler.MIN_CLAIM_RADIUS)));
+						return;
+					}
+				}
 
-                if (oldPosition != null)
+				if (oldPosition != null)
 					HCFactions.getInstance().getVisualiseHandler().clearVisualBlocks(player, VisualType.CREATE_CLAIM_SELECTION, visualBlock -> {
 						Location location = visualBlock.getLocation();
 						return location.getBlockX() == oldPosition.getBlockX() && location.getBlockZ() == oldPosition.getBlockZ();
 					});
 
-                if (selectionId == 1) claimSelection.setPos1(blockLocation);
-                if (selectionId == 2) claimSelection.setPos2(blockLocation);
+				if (selectionId == 1) claimSelection.setPos1(blockLocation);
+				if (selectionId == 2) claimSelection.setPos2(blockLocation);
 
-                player.sendMessage(Lang.of("factions.claiming.wand.set")
-                        .replace("{selectionId}", String.valueOf(selectionId))
-                        .replace("{blockX}", String.valueOf(blockX))
-                        .replace("{blockZ}", String.valueOf(blockZ)));
+				player.sendMessage(Lang.of("factions.claiming.wand.set")
+						.replace("{selectionId}", String.valueOf(selectionId))
+						.replace("{blockX}", String.valueOf(blockX))
+						.replace("{blockZ}", String.valueOf(blockZ)));
 
-                if (claimSelection.hasBothPositionsSet()) {
-                    Claim claim = claimSelection.toClaim(playerFaction);
-                    int selectionPrice = claimSelection.getPrice(playerFaction, false);
-                    player.sendMessage(Lang.of("factions.claiming.wand.selection_cost")
-                            .replace("{canAffordColour}", (selectionPrice > playerFaction.getBalance() ? ChatColor.RED.toString() : ChatColor.GREEN.toString()))
-                            .replace("{selectionPrice}", String.valueOf(selectionPrice))
-                            .replace("{claimWidth}", String.valueOf(claim.getWidth()))
-                            .replace("{claimLength}", String.valueOf(claim.getLength()))
-                            .replace("{claimArea}", String.valueOf(claim.getArea())));
-                }
+				if (claimSelection.hasBothPositionsSet()) {
+					Claim claim = claimSelection.toClaim(playerFaction);
+					int selectionPrice = claimSelection.getPrice(playerFaction, false);
+					player.sendMessage(Lang.of("factions.claiming.wand.selection_cost")
+							.replace("{canAffordColour}", (selectionPrice > playerFaction.getBalance() ? ChatColor.RED.toString() : ChatColor.GREEN.toString()))
+							.replace("{selectionPrice}", String.valueOf(selectionPrice))
+							.replace("{claimWidth}", String.valueOf(claim.getWidth()))
+							.replace("{claimLength}", String.valueOf(claim.getLength()))
+							.replace("{claimArea}", String.valueOf(claim.getArea())));
+				}
 
-                int blockY = block.getY();
-                int maxHeight = player.getWorld().getMaxHeight();
-                List<Location> locations = new ArrayList<>(maxHeight);
-                for (int i = blockY; i < maxHeight; i++) {
-                    Location other = blockLocation.clone();
-                    other.setY(i);
-                    locations.add(other);
-                }
+				int blockY = block.getY();
+				int maxHeight = player.getWorld().getMaxHeight();
+				List<Location> locations = new ArrayList<>(maxHeight);
+				for (int i = blockY; i < maxHeight; i++) {
+					Location other = blockLocation.clone();
+					other.setY(i);
+					locations.add(other);
+				}
 
-                // Generate the new claiming pillar a tick later as right clicking using this
-                // event doesn't update the bottom block clicked occasionally.
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                 //   	.generate(player, locations, VisualType.CREATE_CLAIM_SELECTION, true);
-                    	locations.forEach(loc -> {
-                    		HCFactions.getInstance().getVisualiseHandler().generate(player, new Cuboid(loc), VisualType.CREATE_CLAIM_SELECTION, true);
-                    	});
-                        
-                    }
-                }.runTask(plugin);
-            }
-        }
-    }
+				// Generate the new claiming pillar a tick later as right clicking using this
+				// event doesn't update the bottom block clicked occasionally.
+				new BukkitRunnable() {
+					@Override
+					public void run() {
+						//   	.generate(player, locations, VisualType.CREATE_CLAIM_SELECTION, true);
+						locations.forEach(loc -> {
+							HCFactions.getInstance().getVisualiseHandler().generate(player, new Cuboid(loc), VisualType.CREATE_CLAIM_SELECTION, true);
+						});
 
-    @EventHandler
-    public void onBlockBreak(BlockBreakEvent event) {
-        if (isClaimingWand(event.getPlayer().getItemInHand())) event.setCancelled(true);
-    }
+					}
+				}.runTask(plugin);
+			}
+		}
+	}
 
-    @EventHandler
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (event.getDamager() instanceof Player) {
-            Player player = (Player) event.getDamager();
-            if (isClaimingWand(player.getItemInHand())) {
-                player.setItemInHand(new ItemStack(Material.AIR, 1));
-                plugin.getClaimHandler().clearClaimSelection(player);
-            }
-        }
-    }
+	@EventHandler
+	public void onBlockBreak(BlockBreakEvent event) {
+		if (isClaimingWand(event.getPlayer().getItemInHand())) event.setCancelled(true);
+	}
 
-    @EventHandler
-    public void onPlayerKick(PlayerKickEvent event) {
-        event.getPlayer().getInventory().remove(plugin.getClaimHandler().getClaimWand());
-    }
+	@EventHandler
+	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+		if (event.getDamager() instanceof Player) {
+			Player player = (Player) event.getDamager();
+			if (isClaimingWand(player.getItemInHand())) {
+				player.setItemInHand(new ItemStack(Material.AIR, 1));
+				plugin.getClaimHandler().clearClaimSelection(player);
+			}
+		}
+	}
 
-    @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event) {
-        event.getPlayer().getInventory().remove(plugin.getClaimHandler().getClaimWand());
-    }
+	@EventHandler
+	public void onPlayerKick(PlayerKickEvent event) {
+		event.getPlayer().getInventory().remove(plugin.getClaimHandler().getClaimWand());
+	}
 
-    @EventHandler
-    public void onPlayerDrop(PlayerDropItemEvent event) {
-        Item item = event.getItemDrop();
-        if (isClaimingWand(item.getItemStack())) {
-            item.remove();
-            plugin.getClaimHandler().clearClaimSelection(event.getPlayer());
-        }
-    }
+	@EventHandler
+	public void onPlayerQuit(PlayerQuitEvent event) {
+		event.getPlayer().getInventory().remove(plugin.getClaimHandler().getClaimWand());
+	}
 
-    @EventHandler
-    public void onPlayerPickup(PlayerPickupItemEvent event) {
-        Item item = event.getItem();
-        if (isClaimingWand(item.getItemStack())) {
-            item.remove();
-            plugin.getClaimHandler().clearClaimSelection(event.getPlayer());
-        }
-    }
+	@EventHandler
+	public void onPlayerDrop(PlayerDropItemEvent event) {
+		Item item = event.getItemDrop();
+		if (isClaimingWand(item.getItemStack())) {
+			item.remove();
+			plugin.getClaimHandler().clearClaimSelection(event.getPlayer());
+		}
+	}
 
-    // Prevents dropping Claiming Wands on death.
-    @EventHandler
-    public void onPlayerDeath(PlayerDeathEvent event) {
-        if (event.getDrops().remove(plugin.getClaimHandler().getClaimWand()))
+	@EventHandler
+	public void onPlayerPickup(PlayerPickupItemEvent event) {
+		Item item = event.getItem();
+		if (isClaimingWand(item.getItemStack())) {
+			item.remove();
+			plugin.getClaimHandler().clearClaimSelection(event.getPlayer());
+		}
+	}
+
+	// Prevents dropping Claiming Wands on death.
+	@EventHandler
+	public void onPlayerDeath(PlayerDeathEvent event) {
+		if (event.getDrops().remove(plugin.getClaimHandler().getClaimWand()))
 			plugin.getClaimHandler().clearClaimSelection(event.getEntity());
-    }
+	}
 
-    // Doesn't get called when opening own inventory.
-    @EventHandler
-    public void onInventoryOpen(InventoryOpenEvent event) {
-        HumanEntity humanEntity = event.getPlayer();
-        if (humanEntity instanceof Player) {
-            Player player = (Player) humanEntity;
-            player.getInventory().remove(plugin.getClaimHandler().getClaimWand());
-                plugin.getClaimHandler().clearClaimSelection(player);
-            
-        }
-    }
+	// Doesn't get called when opening own inventory.
+	@EventHandler
+	public void onInventoryOpen(InventoryOpenEvent event) {
+		HumanEntity humanEntity = event.getPlayer();
+		if (humanEntity instanceof Player) {
+			Player player = (Player) humanEntity;
+			player.getInventory().remove(plugin.getClaimHandler().getClaimWand());
+			plugin.getClaimHandler().clearClaimSelection(player);
 
-    /**
-     * Checks if an {@link ItemStack} is a Claiming Wand.
-     *
-     * @param stack the {@link ItemStack} to check
-     * @return true if the {@link ItemStack} is a claiming wand
-     */
-    public boolean isClaimingWand(ItemStack stack) {
-        return stack != null && stack.isSimilar(plugin.getClaimHandler().getClaimWand());
-    }
+		}
+	}
+
+	/**
+	 * Checks if an {@link ItemStack} is a Claiming Wand.
+	 *
+	 * @param stack the {@link ItemStack} to check
+	 * @return true if the {@link ItemStack} is a claiming wand
+	 */
+	public boolean isClaimingWand(ItemStack stack) {
+		return stack != null && stack.isSimilar(plugin.getClaimHandler().getClaimWand());
+	}
 }

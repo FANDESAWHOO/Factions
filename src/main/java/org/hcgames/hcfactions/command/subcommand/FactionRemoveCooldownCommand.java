@@ -10,59 +10,59 @@ import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.mineacademy.fo.settings.Lang;
 
 public final class FactionRemoveCooldownCommand extends FactionSubCommand {
-	
-	 private final HCFactions plugin;
 
-	    public FactionRemoveCooldownCommand(){
-	        super("removecooldown");
-	        setDescription("Removes a faction cool down for a player.");
-	        plugin = HCFactions.getInstance();
+	private final HCFactions plugin;
 
-	    }
+	public FactionRemoveCooldownCommand() {
+		super("removecooldown");
+		setDescription("Removes a faction cool down for a player.");
+		plugin = HCFactions.getInstance();
 
-	 
-	    @Override
-		public String getUsage() {
-	        return Lang.of("Commands.Factions.RemoveCooldown.Usage");
-	    }
+	}
 
-	    @Override
-	    public void onCommand(){
-	        if(args.length < 3){
-	            tell(getUsage());
-	            return;
-	        }
 
-	        Player player = plugin.getServer().getPlayer(args[1]);
+	@Override
+	public String getUsage() {
+		return Lang.of("Commands.Factions.RemoveCooldown.Usage");
+	}
 
-	        if(player == null){
-	            tell(Lang.of("Error-Messages.InvalidPlayer").replace("{player}", args[1]));
-	            return;
-	        }
+	@Override
+	public void onCommand() {
+		if (args.length < 3) {
+			tell(getUsage());
+			return;
+		}
 
-	        Faction faction;
-	        try {
-	            faction = plugin.getFactionManager().getFaction(args[2]);
-	        } catch (NoFactionFoundException e) {
-	            tell(Lang.of("Error-Messages.InvalidFaction").replace("{faction}", args[2]));
-	            return;
-	        }
+		Player player = plugin.getServer().getPlayer(args[1]);
 
-	        if(!(faction instanceof PlayerFaction)){
-	            tell(Lang.of("Commands.Factions.RemoveCooldown.InvalidFactionType").replace("{faction}", faction.getName()));
-	            return;
-	        }
+		if (player == null) {
+			tell(Lang.of("Error-Messages.InvalidPlayer").replace("{player}", args[1]));
+			return;
+		}
 
-	        PlayerFaction pFaction = (PlayerFaction) faction;
+		Faction faction;
+		try {
+			faction = plugin.getFactionManager().getFaction(args[2]);
+		} catch (NoFactionFoundException e) {
+			tell(Lang.of("Error-Messages.InvalidFaction").replace("{faction}", args[2]));
+			return;
+		}
 
-	        if(!pFaction.hasCooldown(player.getUniqueId())){
-	            tell(Lang.of("Commands.Factions.RemoveCooldown.NotOnCooldown").replace("{player}", player.getName()));
-	            return;
-	        }
+		if (!(faction instanceof PlayerFaction)) {
+			tell(Lang.of("Commands.Factions.RemoveCooldown.InvalidFactionType").replace("{faction}", faction.getName()));
+			return;
+		}
 
-	        pFaction.removeCooldown(player.getUniqueId());
-	        tell(Lang.of("Commands.Factions.RemoveCooldown.CooldownRemoved").replace("{player}", player.getName()).replace("{faction}", faction.getName()));
+		PlayerFaction pFaction = (PlayerFaction) faction;
 
-	    }
+		if (!pFaction.hasCooldown(player.getUniqueId())) {
+			tell(Lang.of("Commands.Factions.RemoveCooldown.NotOnCooldown").replace("{player}", player.getName()));
+			return;
+		}
+
+		pFaction.removeCooldown(player.getUniqueId());
+		tell(Lang.of("Commands.Factions.RemoveCooldown.CooldownRemoved").replace("{player}", player.getName()).replace("{faction}", faction.getName()));
+
+	}
 
 }

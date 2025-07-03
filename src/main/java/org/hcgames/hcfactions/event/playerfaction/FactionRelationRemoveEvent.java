@@ -33,47 +33,46 @@ import org.hcgames.hcfactions.structure.Relation;
  */
 public class FactionRelationRemoveEvent extends PlayerFactionEvent implements Cancellable {
 
-    private static final HandlerList handlers = new HandlerList();
+	private static final HandlerList handlers = new HandlerList();
+	private final PlayerFaction targetFaction;
+	private final Relation relation;
+	private boolean cancelled;
 
-    private boolean cancelled;
-    private final PlayerFaction targetFaction;
-    private final Relation relation;
+	public FactionRelationRemoveEvent(PlayerFaction senderFaction, PlayerFaction targetFaction, Relation relation) {
+		super(senderFaction, !Bukkit.isPrimaryThread());
+		this.targetFaction = targetFaction;
+		this.relation = relation;
+	}
 
-    public FactionRelationRemoveEvent(PlayerFaction senderFaction, PlayerFaction targetFaction, Relation relation) {
-        super(senderFaction, !Bukkit.isPrimaryThread());
-        this.targetFaction = targetFaction;
-        this.relation = relation;
-    }
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 
-    /**
-     * Gets the {@link Faction} asked to accept request.
-     *
-     * @return the targeted {@link Faction}
-     */
-    public PlayerFaction getTargetFaction() {
-        return targetFaction;
-    }
+	/**
+	 * Gets the {@link Faction} asked to accept request.
+	 *
+	 * @return the targeted {@link Faction}
+	 */
+	public PlayerFaction getTargetFaction() {
+		return targetFaction;
+	}
 
-    public Relation getRelation() {
-        return relation;
-    }
+	public Relation getRelation() {
+		return relation;
+	}
 
-    @Override
-    public boolean isCancelled() {
-        return cancelled;
-    }
+	@Override
+	public boolean isCancelled() {
+		return cancelled;
+	}
 
-    @Override
-    public void setCancelled(boolean cancel) {
-        cancelled = cancel;
-    }
+	@Override
+	public void setCancelled(boolean cancel) {
+		cancelled = cancel;
+	}
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
-    }
+	@Override
+	public HandlerList getHandlers() {
+		return handlers;
+	}
 }

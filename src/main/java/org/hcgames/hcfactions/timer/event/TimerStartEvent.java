@@ -13,62 +13,62 @@ import java.util.UUID;
 /**
  * Event called when a {@link Timer} starts.
  */
-public class TimerStartEvent extends Event{
+public class TimerStartEvent extends Event {
 
-    private static final HandlerList handlers = new HandlerList();
+	private static final HandlerList handlers = new HandlerList();
 
-    private final Optional<Player> player;
-    private final Optional<UUID> userUUID;
-    private final Timer timer;
-    private final long duration;
+	private final Optional<Player> player;
+	private final Optional<UUID> userUUID;
+	private final Timer timer;
+	private final long duration;
 
-    public TimerStartEvent(Timer timer, long duration){
-        player = Optional.empty();
-        userUUID = Optional.empty();
-        this.timer = timer;
-        this.duration = duration;
-    }
+	public TimerStartEvent(Timer timer, long duration) {
+		player = Optional.empty();
+		userUUID = Optional.empty();
+		this.timer = timer;
+		this.duration = duration;
+	}
 
-    public TimerStartEvent(@Nullable Player player, UUID uniqueId, Timer timer, long duration){
-        this.player = Optional.ofNullable(player);
-        userUUID = Optional.ofNullable(uniqueId);
-        this.timer = timer;
-        this.duration = duration;
-    }
+	public TimerStartEvent(@Nullable Player player, UUID uniqueId, Timer timer, long duration) {
+		this.player = Optional.ofNullable(player);
+		userUUID = Optional.ofNullable(uniqueId);
+		this.timer = timer;
+		this.duration = duration;
+	}
 
-    public static HandlerList getHandlerList(){
-        return handlers;
-    }
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 
-    public Optional<Player> getPlayer(){
-        return player;
-    }
+	public Optional<Player> getPlayer() {
+		return player;
+	}
 
-    /**
-     * Gets the optional UUID of the user this has expired for.
-     * <p>This may return absent if the timer is not of a player type</p>
-     *
-     * @return the expiring user UUID or {@link Optional#empty()}
-     */
-    public Optional<UUID> getUserUUID(){
-        return userUUID;
-    }
+	/**
+	 * Gets the optional UUID of the user this has expired for.
+	 * <p>This may return absent if the timer is not of a player type</p>
+	 *
+	 * @return the expiring user UUID or {@link Optional#empty()}
+	 */
+	public Optional<UUID> getUserUUID() {
+		return userUUID;
+	}
 
-    /**
-     * Gets the {@link Timer} that was expired.
-     *
-     * @return the expiring timer
-     */
-    public Timer getTimer(){
-        return timer;
-    }
+	/**
+	 * Gets the {@link Timer} that was expired.
+	 *
+	 * @return the expiring timer
+	 */
+	public Timer getTimer() {
+		return timer;
+	}
 
-    public long getDuration(){
-        return duration;
-    }
+	public long getDuration() {
+		return duration;
+	}
 
-    @Override
-    public HandlerList getHandlers(){
-        return handlers;
-    }
+	@Override
+	public HandlerList getHandlers() {
+		return handlers;
+	}
 }

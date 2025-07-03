@@ -17,72 +17,73 @@ import java.util.Set;
 
 public class VisualiseUtil {
 
-    public static void handleBlockChanges(Player player, Map<Location, MaterialData> input) throws IOException {
-        if (input.isEmpty()) return;
+	public static void handleBlockChanges(Player player, Map<Location, MaterialData> input) throws IOException {
+		if (input.isEmpty()) return;
 
-        if (input.size() == 1) {
-            Map.Entry<Location, MaterialData> entry = input.entrySet().iterator().next();
-            MaterialData materialData = entry.getValue();
-            player.sendBlockChange(entry.getKey(), materialData.getItemType(), materialData.getData());
-            return;
-        }
+		if (input.size() == 1) {
+			Map.Entry<Location, MaterialData> entry = input.entrySet().iterator().next();
+			MaterialData materialData = entry.getValue();
+			player.sendBlockChange(entry.getKey(), materialData.getItemType(), materialData.getData());
+			return;
+		}
 
-        Table<Chunk, Location, MaterialData> table = HashBasedTable.create();
-        for (Map.Entry<Location, MaterialData> entry : input.entrySet()) {
-            Location location = entry.getKey();
-            if (location.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4))
+		Table<Chunk, Location, MaterialData> table = HashBasedTable.create();
+		for (Map.Entry<Location, MaterialData> entry : input.entrySet()) {
+			Location location = entry.getKey();
+			if (location.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4))
 				table.row(entry.getKey().getChunk()).put(location, entry.getValue());
-        }
+		}
 
-        for (Map.Entry<Chunk, Map<Location, MaterialData>> entry : table.rowMap().entrySet())
+		for (Map.Entry<Chunk, Map<Location, MaterialData>> entry : table.rowMap().entrySet())
 			VisualiseUtil.sendBulk(player, entry.getKey(), entry.getValue());
-    }
+	}
 
-    public static void handleBlockChanges(Player player, Set<Location> input, MaterialData materialData) throws IOException {
-        if (input.isEmpty()) return;
+	public static void handleBlockChanges(Player player, Set<Location> input, MaterialData materialData) throws IOException {
+		if (input.isEmpty()) return;
 
-        if (input.size() == 1) {
-            player.sendBlockChange(input.iterator().next(), materialData.getItemType(), materialData.getData());
-            return;
-        }
+		if (input.size() == 1) {
+			player.sendBlockChange(input.iterator().next(), materialData.getItemType(), materialData.getData());
+			return;
+		}
 
-        Table<Chunk, Location, MaterialData> table = HashBasedTable.create();
-        input.stream().filter(location -> location.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4)).forEach(location -> {
-            table.row(location.getChunk()).put(location, materialData);
-        });
+		Table<Chunk, Location, MaterialData> table = HashBasedTable.create();
+		input.stream().filter(location -> location.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4)).forEach(location -> {
+			table.row(location.getChunk()).put(location, materialData);
+		});
 
-        for (Map.Entry<Chunk, Map<Location, MaterialData>> entry : table.rowMap().entrySet())
+		for (Map.Entry<Chunk, Map<Location, MaterialData>> entry : table.rowMap().entrySet())
 			VisualiseUtil.sendBulk(player, entry.getKey(), entry.getValue());
-    }
-    public static void sendBulk(Player player, Chunk chunk, Map<Location, MaterialData> input) {
-        Objects.requireNonNull(chunk, "Chunk cannot be null");
+	}
 
-        Object connection = Remain.getPlayerConnection(player);
+	public static void sendBulk(Player player, Chunk chunk, Map<Location, MaterialData> input) {
+		Objects.requireNonNull(chunk, "Chunk cannot be null");
 
-        int size = input.size();
+		Object connection = Remain.getPlayerConnection(player);
 
-        short[] positions = new short[size];
-        int index = 0;
+		int size = input.size();
 
-        for (Map.Entry<Location, MaterialData> entry : input.entrySet()) {
-            Location location = entry.getKey();
-            MaterialData materialData = entry.getValue();
+		short[] positions = new short[size];
+		int index = 0;
 
-            short relativePosition = (short) ((location.getBlockX() & 15) << 12 | (location.getBlockZ() & 15) << 8 | location.getBlockY());
+		for (Map.Entry<Location, MaterialData> entry : input.entrySet()) {
+			Location location = entry.getKey();
+			MaterialData materialData = entry.getValue();
+
+			short relativePosition = (short) ((location.getBlockX() & 15) << 12 | (location.getBlockZ() & 15) << 8 | location.getBlockY());
 
 
-            positions[index++] = relativePosition;
+			positions[index++] = relativePosition;
 
-            Block block = location.getBlock();
-            block.setType(materialData.getItemType());
-            NMSU.sendBlockChange0(player,location, block);
-        }
+			Block block = location.getBlock();
+			block.setType(materialData.getItemType());
+			NMSU.sendBlockChange0(player, location, block);
+		}
 
       /*  PacketUtil
         PacketPlayOutMultiBlockChange packet = new PacketPlayOutMultiBlockChange(size, positions, ((CraftChunk) chunk).getHandle());
         Remain.sendBlockChange(0,player,chunk.);
         // Enviamos el paquete al jugador
         connection.sendPacket(packet);*/
-    }
+	}
 
 }

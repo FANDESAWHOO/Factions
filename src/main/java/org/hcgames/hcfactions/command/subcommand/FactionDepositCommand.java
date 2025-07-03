@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 public final class FactionDepositCommand extends FactionSubCommand {
+	private static final ImmutableList<String> COMPLETIONS = ImmutableList.of("all");
 	private final HCFactions plugin;
 
 	public FactionDepositCommand() {
@@ -22,7 +23,7 @@ public final class FactionDepositCommand extends FactionSubCommand {
 		plugin = HCFactions.getInstance();
 	}
 
-    @Override
+	@Override
 	public String getUsage() {
 		return '/' + label + ' ' + getName() + " <all|amount>";
 	}
@@ -62,7 +63,7 @@ public final class FactionDepositCommand extends FactionSubCommand {
 		if (playerBalance < amount) {
 			tell(Lang.of("Commands-Factions-Deposit-NotEnoughFunds")
 					.replace("{requiredAmount}", "$" + JavaUtils.format(amount))
-					.replace("{currentAmount}",  "$" + JavaUtils.format(playerBalance)));
+					.replace("{currentAmount}", "$" + JavaUtils.format(playerBalance)));
 
 			return;
 		}
@@ -81,6 +82,4 @@ public final class FactionDepositCommand extends FactionSubCommand {
 	public List<String> tabComplete() {
 		return args.length == 2 ? COMPLETIONS : Collections.<String>emptyList();
 	}
-
-	private static final ImmutableList<String> COMPLETIONS = ImmutableList.of("all");
 }

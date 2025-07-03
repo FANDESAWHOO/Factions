@@ -12,44 +12,44 @@ import org.mineacademy.fo.settings.Lang;
 
 
 public final class FactionOpenCommand extends FactionSubCommand {
-	   private final HCFactions plugin;
+	private final HCFactions plugin;
 
-	    public FactionOpenCommand() {
-	        super("open");
-	        setDescription("Opens the faction to the public.");
-	        plugin = HCFactions.getInstance();
-	    }
+	public FactionOpenCommand() {
+		super("open");
+		setDescription("Opens the faction to the public.");
+		plugin = HCFactions.getInstance();
+	}
 
 
-	    @Override
-		public String getUsage() {
-	        return '/' + label + ' ' + getName();
-	    }
+	@Override
+	public String getUsage() {
+		return '/' + label + ' ' + getName();
+	}
 
-	    @Override
-	    public void onCommand() {
-	        Player player = (Player) sender;
-	        PlayerFaction playerFaction = null;
-	        try {
-	            playerFaction = plugin.getFactionManager().getPlayerFaction(player);
-	        } catch (NoFactionFoundException e) {
-	            tell(Lang.of("Commands-Factions-Global-NotInFaction"));
-	            return;
-	        }
+	@Override
+	public void onCommand() {
+		Player player = (Player) sender;
+		PlayerFaction playerFaction = null;
+		try {
+			playerFaction = plugin.getFactionManager().getPlayerFaction(player);
+		} catch (NoFactionFoundException e) {
+			tell(Lang.of("Commands-Factions-Global-NotInFaction"));
+			return;
+		}
 
-	        FactionMember factionMember = playerFaction.getMember(player.getUniqueId());
+		FactionMember factionMember = playerFaction.getMember(player.getUniqueId());
 
-	        if (factionMember.getRole() != Role.LEADER) {
-	            tell(Lang.of("Commands-Factions-Open-LeaderRequired"));
-	            return;
-	        }
+		if (factionMember.getRole() != Role.LEADER) {
+			tell(Lang.of("Commands-Factions-Open-LeaderRequired"));
+			return;
+		}
 
-	        boolean newOpen = !playerFaction.isOpen();
-	        playerFaction.setOpen(newOpen);
-	        playerFaction.broadcast(Lang.of("Commands-Factions-Open-Broadcast")
-	                .replace("{player}", sender.getName())
-	                .replace("{state}", (newOpen ? Lang.of("Commands-Factions-Open-OpenedText") : Lang.of("Commands-Factions-Open-ClosedText"))));
-	        //playerFaction.broadcast(ChatColor.YELLOW + sender.getName() + " has " + (newOpen ? ChatColor.GREEN + "opened" : ChatColor.RED + "closed") + ChatColor.YELLOW + " the faction to public.");
-	        
-	    }
+		boolean newOpen = !playerFaction.isOpen();
+		playerFaction.setOpen(newOpen);
+		playerFaction.broadcast(Lang.of("Commands-Factions-Open-Broadcast")
+				.replace("{player}", sender.getName())
+				.replace("{state}", (newOpen ? Lang.of("Commands-Factions-Open-OpenedText") : Lang.of("Commands-Factions-Open-ClosedText"))));
+		//playerFaction.broadcast(ChatColor.YELLOW + sender.getName() + " has " + (newOpen ? ChatColor.GREEN + "opened" : ChatColor.RED + "closed") + ChatColor.YELLOW + " the faction to public.");
+
+	}
 }

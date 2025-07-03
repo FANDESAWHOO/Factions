@@ -31,46 +31,43 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
-public class PlayerJoinedFactionEvent extends PlayerFactionEvent{
+public class PlayerJoinedFactionEvent extends PlayerFactionEvent {
 
-    private static final HandlerList handlers = new HandlerList();
+	private static final HandlerList handlers = new HandlerList();
+	@Getter
+	private final CommandSender sender;
+	@Getter
+	private final UUID playerUUID;
+	private Player player; // lazy-load
 
-    private Player player; // lazy-load
+	public PlayerJoinedFactionEvent(@NonNull CommandSender sender, @Nullable Player player, @NonNull UUID playerUUID, @NonNull PlayerFaction faction) {
+		super(faction);
 
-    @Getter
-    private final CommandSender sender;
+		this.sender = sender;
+		this.player = player;
+		this.playerUUID = playerUUID;
+	}
 
-    @Getter
-    private final UUID playerUUID;
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 
-    public PlayerJoinedFactionEvent(@NonNull CommandSender sender, @Nullable Player player, @NonNull UUID playerUUID, @NonNull PlayerFaction faction) {
-        super(faction);
+	/**
+	 * Gets the optional {@link Player} joining, this will load lazily.
+	 *
+	 * @return the {@link Player} or {@link Optional#empty()} ()} or if offline
+	 */
+	public Optional<Player> getPlayer() {
+		return Optional.ofNullable(player);
+	}
 
-        this.sender = sender;
-        this.player = player;
-        this.playerUUID = playerUUID;
-    }
+	@Override
+	public HandlerList getHandlers() {
+		return handlers;
+	}
 
-    /**
-     * Gets the optional {@link Player} joining, this will load lazily.
-     *
-     * @return the {@link Player} or {@link Optional#empty()} ()} or if offline
-     */
-    public Optional<Player> getPlayer() {
-        return Optional.ofNullable(player);
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    @Override
-    public PlayerFaction getFaction() {
-        return (PlayerFaction) super.getFaction();
-    }
+	@Override
+	public PlayerFaction getFaction() {
+		return (PlayerFaction) super.getFaction();
+	}
 }

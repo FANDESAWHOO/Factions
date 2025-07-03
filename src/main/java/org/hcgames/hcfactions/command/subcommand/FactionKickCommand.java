@@ -23,7 +23,7 @@ public final class FactionKickCommand extends FactionSubCommand {
 		plugin = HCFactions.getInstance();
 	}
 
-    @Override
+	@Override
 	public String getUsage() {
 		return '/' + label + ' ' + getName() + " <playerName>";
 	}
@@ -81,7 +81,7 @@ public final class FactionKickCommand extends FactionSubCommand {
 			return;
 		}
 
-		if(targetRole == Role.COLEADER && selfRole == Role.COLEADER){
+		if (targetRole == Role.COLEADER && selfRole == Role.COLEADER) {
 			tell(Lang.of("Commands-Factions-Kick-LeaderRequired"));
 			return;
 		}
@@ -89,8 +89,9 @@ public final class FactionKickCommand extends FactionSubCommand {
 		Optional<Player> onlineTarget = targetMember.toOnlinePlayer();
 		if (playerFaction.removeMember(sender, onlineTarget.orElse(null), targetMember.getUniqueId(), true, true)) {
 			//onlineTarget.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD + "You were kicked from the faction by " + sender.getName() + '.');
-			if (onlineTarget.isPresent()) onlineTarget.get().sendMessage(CC.translate(Lang.of("Commands-Factions-Kick-Kicked")
-					.replace("{sender}", sender.getName())));
+			if (onlineTarget.isPresent())
+				onlineTarget.get().sendMessage(CC.translate(Lang.of("Commands-Factions-Kick-Kicked")
+						.replace("{sender}", sender.getName())));
 
 			playerFaction.broadcast(Lang.of("Commands-Factions-Kick-KickedBroadcast")
 					.replace("{player}", targetMember.getCachedName())

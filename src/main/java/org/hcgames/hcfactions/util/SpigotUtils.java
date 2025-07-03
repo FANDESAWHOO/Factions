@@ -8,13 +8,13 @@ import java.util.List;
 import java.util.function.Function;
 
 @Deprecated
-public class SpigotUtils{
+public class SpigotUtils {
 
 	@Deprecated
-	public static void broadcastMessage(Function<CommandSender, String> function){
+	public static void broadcastMessage(Function<CommandSender, String> function) {
 		List<CommandSender> recipients = new ArrayList<>(Bukkit.getOnlinePlayers());
 		recipients.add(Bukkit.getConsoleSender());
-		for(CommandSender recipient : recipients) recipient.sendMessage(function.apply(recipient));
+		for (CommandSender recipient : recipients) recipient.sendMessage(function.apply(recipient));
 	}
 
 }

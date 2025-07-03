@@ -12,39 +12,39 @@ import java.util.Arrays;
 
 public final class FactionMessageCommand extends FactionSubCommand {
 
-    private final HCFactions plugin;
+	private final HCFactions plugin;
 
-    public FactionMessageCommand() {
-        super("message|msg");
-        setDescription("Sends a message to your faction.");
-        plugin = HCFactions.getInstance();
-    }
+	public FactionMessageCommand() {
+		super("message|msg");
+		setDescription("Sends a message to your faction.");
+		plugin = HCFactions.getInstance();
+	}
 
- 
-    @Override
+
+	@Override
 	public String getUsage() {
-        return '/' + label + ' ' + getName() + " <message>";
-    }
+		return '/' + label + ' ' + getName() + " <message>";
+	}
 
-    @Override
-    public void onCommand() {
-        if (args.length < 2) {
-            tell(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
-            return;
-        }
+	@Override
+	public void onCommand() {
+		if (args.length < 2) {
+			tell(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
+			return;
+		}
 
-        Player player = (Player) sender;
-        PlayerFaction playerFaction;
-        try {
-            playerFaction = plugin.getFactionManager().getPlayerFaction(player);
-        } catch (NoFactionFoundException e) {
-            tell(Lang.of("Commands-Factions-Global-NotInFaction"));
-            return;
-        }
+		Player player = (Player) sender;
+		PlayerFaction playerFaction;
+		try {
+			playerFaction = plugin.getFactionManager().getPlayerFaction(player);
+		} catch (NoFactionFoundException e) {
+			tell(Lang.of("Commands-Factions-Global-NotInFaction"));
+			return;
+		}
 
-        String format = String.format(ChatChannel.FACTION.getRawFormat(player), "", HCFactions.SPACE_JOINER.join(Arrays.copyOfRange(args, 1, args.length)));
-        for (Player target : playerFaction.getOnlinePlayers()) target.sendMessage(format);
+		String format = String.format(ChatChannel.FACTION.getRawFormat(player), "", HCFactions.SPACE_JOINER.join(Arrays.copyOfRange(args, 1, args.length)));
+		for (Player target : playerFaction.getOnlinePlayers()) target.sendMessage(format);
 
-        return;
-    }
+		return;
+	}
 }

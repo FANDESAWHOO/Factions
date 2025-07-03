@@ -26,39 +26,39 @@ import org.bukkit.event.HandlerList;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.focus.FocusTarget;
 
-public class PlayerFactionFocusEvent extends PlayerFactionEvent implements Cancellable{
+public class PlayerFactionFocusEvent extends PlayerFactionEvent implements Cancellable {
 
-    private final static HandlerList handlers = new HandlerList();
+	private final static HandlerList handlers = new HandlerList();
 
-    @Getter
-    private final FocusTarget target;
-    private boolean cancelled;
+	@Getter
+	private final FocusTarget target;
+	private boolean cancelled;
 
-    public PlayerFactionFocusEvent(PlayerFaction faction, FocusTarget target, boolean async){
-        super(faction, async);
-        this.target = target;
-    }
+	public PlayerFactionFocusEvent(PlayerFaction faction, FocusTarget target, boolean async) {
+		super(faction, async);
+		this.target = target;
+	}
 
-    public PlayerFactionFocusEvent(PlayerFaction faction, FocusTarget target){
-        this(faction, target, false);
-    }
+	public PlayerFactionFocusEvent(PlayerFaction faction, FocusTarget target) {
+		this(faction, target, false);
+	}
 
-    @Override
-    public void setCancelled(boolean cancelled){
-        this.cancelled = cancelled;
-    }
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 
-    @Override
-    public boolean isCancelled(){
-        return cancelled;
-    }
+	@Override
+	public boolean isCancelled() {
+		return cancelled;
+	}
 
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
-    }
+	@Override
+	public void setCancelled(boolean cancelled) {
+		this.cancelled = cancelled;
+	}
 
-    public static HandlerList getHandlerList(){
-        return handlers;
-    }
+	@Override
+	public HandlerList getHandlers() {
+		return handlers;
+	}
 }

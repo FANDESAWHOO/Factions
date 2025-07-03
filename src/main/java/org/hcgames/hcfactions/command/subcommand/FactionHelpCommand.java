@@ -21,7 +21,8 @@ public final class FactionHelpCommand extends FactionSubCommand {
 		super("help");
 		setDescription("View help on how to use factions.");
 	}
-    @Override
+
+	@Override
 	public String getUsage() {
 		return '/' + label + ' ' + getName();
 	}

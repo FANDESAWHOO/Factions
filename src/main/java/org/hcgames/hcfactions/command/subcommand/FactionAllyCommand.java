@@ -30,8 +30,8 @@ public final class FactionAllyCommand extends FactionSubCommand {
 
 	}
 
-    @Override
- 	public String getUsage() {
+	@Override
+	public String getUsage() {
 		return '/' + label + ' ' + getName() + " <factionName>";
 	}
 
@@ -165,7 +165,6 @@ public final class FactionAllyCommand extends FactionSubCommand {
 
 		return results;
 	}
-
 
 
 }

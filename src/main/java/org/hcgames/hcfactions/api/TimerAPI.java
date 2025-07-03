@@ -28,76 +28,76 @@ public final class TimerAPI {
 
 	private static final boolean useEvents = !Configuration.api;
 	private static final HCFactions plugin = HCFactions.getInstance();
-    private static void tell(Player player, String s) {
+
+	private static void tell(Player player, String s) {
 		player.sendMessage(CC.translate(s));
 	}
 
-	public static void callStuck(Player player, PlayerFaction faction, String label){
-		if(useEvents)
-			Common.callEvent(new FactionTimerEvent(false,player,faction,TimerTypes.STUCK));
+	public static void callStuck(Player player, PlayerFaction faction, String label) {
+		if (useEvents)
+			Common.callEvent(new FactionTimerEvent(false, player, faction, TimerTypes.STUCK));
 		else {
 			StuckTimer stuckTimer = HCFactions.getInstance().getTimerManager().getStuckTimer();
 
 			if (!stuckTimer.setCooldown(player, player.getUniqueId())) {
-				tell(player,Lang.of("Commands-Factions-Stuck-TimerRunning")
+				tell(player, Lang.of("Commands-Factions-Stuck-TimerRunning")
 						.replace("{timerName}", stuckTimer.getDisplayName()));
 				return;
 			}
-			tell(player,Lang.of("Commands-Factions-Stuck-Teleporting")
+			tell(player, Lang.of("Commands-Factions-Stuck-Teleporting")
 					.replace("{time}", DurationFormatter.getRemaining(stuckTimer.getRemaining(player), true, false))
 					.replace("{maxBlocksDistance}", String.valueOf(StuckTimer.MAX_MOVE_DISTANCE)));
 		}
 	}
 
-	public static void callHome(Player player, PlayerFaction faction, String label){
-      if (useEvents)
-		  Common.callEvent(new FactionTimerEvent(false,player,faction, TimerTypes.TELEPORT));
-	  else {
-		  Faction factionAt = plugin.getFactionManager().getFactionAt(player.getLocation());
-		  Optional<Location> home = faction.getHome();
-		  if (factionAt != faction && factionAt instanceof PlayerFaction && Configuration.allowTeleportingInEnemyTerritory) {
-			  tell(player,Lang.of("Commands-Factions-Home-InEnemyClaim")
-					  .replace("{commandLabel}", label));
-			  return;
-		  }
+	public static void callHome(Player player, PlayerFaction faction, String label) {
+		if (useEvents)
+			Common.callEvent(new FactionTimerEvent(false, player, faction, TimerTypes.TELEPORT));
+		else {
+			Faction factionAt = plugin.getFactionManager().getFactionAt(player.getLocation());
+			Optional<Location> home = faction.getHome();
+			if (factionAt != faction && factionAt instanceof PlayerFaction && Configuration.allowTeleportingInEnemyTerritory) {
+				tell(player, Lang.of("Commands-Factions-Home-InEnemyClaim")
+						.replace("{commandLabel}", label));
+				return;
+			}
 
-		  long millis;
-		  if (factionAt.isSafezone()) millis = 0L;
-		  else {
-			  String name;
-			  switch (player.getWorld().getEnvironment()) {
-				  case THE_END:
-					  name = "End";
-					  millis = Configuration.factionHomeTeleportDelayEnd;
-					  break;
-				  case NETHER:
-					  name = "Nether";
-					  millis = Configuration.factionHomeTeleportDelayNether;
-					  break;
-				  case NORMAL:
-					  name = "Overworld";
-					  millis = Configuration.factionHomeTeleportDelayNormal;
-					  break;
-				  default:
-					  throw new IllegalArgumentException("Unrecognised environment");
-			  }
+			long millis;
+			if (factionAt.isSafezone()) millis = 0L;
+			else {
+				String name;
+				switch (player.getWorld().getEnvironment()) {
+					case THE_END:
+						name = "End";
+						millis = Configuration.factionHomeTeleportDelayEnd;
+						break;
+					case NETHER:
+						name = "Nether";
+						millis = Configuration.factionHomeTeleportDelayNether;
+						break;
+					case NORMAL:
+						name = "Overworld";
+						millis = Configuration.factionHomeTeleportDelayNormal;
+						break;
+					default:
+						throw new IllegalArgumentException("Unrecognised environment");
+				}
 
-			  if (millis == -1L) {
-				  tell(player, Lang.of("Commands-Factions-Home-DisabledInWorld")
-						  .replace("{worldName}", name));
-				  return;
-			  }
-		  }
+				if (millis == -1L) {
+					tell(player, Lang.of("Commands-Factions-Home-DisabledInWorld")
+							.replace("{worldName}", name));
+					return;
+				}
+			}
 
-		  if (factionAt != faction && factionAt instanceof PlayerFaction) millis *= 2L;
+			if (factionAt != faction && factionAt instanceof PlayerFaction) millis *= 2L;
 
-		  plugin.getTimerManager().getTeleportTimer().teleport(player, home.get(), millis,
-				  Lang.of("Commands-Factions-Home-Teleporting")
-						  .replace("{time}", DurationFormatter.getRemaining(millis, true, false)),
-				  PlayerTeleportEvent.TeleportCause.COMMAND);
-	  }
+			plugin.getTimerManager().getTeleportTimer().teleport(player, home.get(), millis,
+					Lang.of("Commands-Factions-Home-Teleporting")
+							.replace("{time}", DurationFormatter.getRemaining(millis, true, false)),
+					PlayerTeleportEvent.TeleportCause.COMMAND);
+		}
 	}
-
 
 
 }

@@ -30,7 +30,6 @@ import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.util.GuavaCompat;
 import org.hcgames.hcfactions.util.Mongoable;
 
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -41,132 +40,127 @@ import java.util.UUID;
  */
 public class FactionMember implements ConfigurationSerializable, Mongoable {
 
-    private final UUID uniqueID;
-    private String cachedName;
+	private final UUID uniqueID;
+	private String cachedName;
 
-    private ChatChannel chatChannel;
-    private Role role;
+	private ChatChannel chatChannel;
+	private Role role;
 
-    public FactionMember(Player player, ChatChannel chatChannel, Role role) {
-        this.uniqueID = player.getUniqueId();
-        this.cachedName = player.getName();
-        this.chatChannel = chatChannel;
-        this.role = role;
-    }
+	public FactionMember(Player player, ChatChannel chatChannel, Role role) {
+		uniqueID = player.getUniqueId();
+		cachedName = player.getName();
+		this.chatChannel = chatChannel;
+		this.role = role;
+	}
 
-    /**
-     * Constructs a new {@link FactionMember} from a map.
-     *
-     * @param map the map to construct from
-     */
-    public FactionMember(Map<String, Object> map) {
-        this.uniqueID = UUID.fromString((String) map.get("uniqueID"));
-        this.chatChannel = GuavaCompat.getIfPresent(ChatChannel.class, (String) map.get("chatChannel")).orElse(ChatChannel.PUBLIC);
-        this.role = GuavaCompat.getIfPresent(Role.class, (String) map.get("role")).orElse(Role.MEMBER);
+	/**
+	 * Constructs a new {@link FactionMember} from a map.
+	 *
+	 * @param map the map to construct from
+	 */
+	public FactionMember(Map<String, Object> map) {
+		uniqueID = UUID.fromString((String) map.get("uniqueID"));
+		chatChannel = GuavaCompat.getIfPresent(ChatChannel.class, (String) map.get("chatChannel")).orElse(ChatChannel.PUBLIC);
+		role = GuavaCompat.getIfPresent(Role.class, (String) map.get("role")).orElse(Role.MEMBER);
 
-        if(map.containsKey("cachedName")){
-            cachedName = (String) map.get("cachedName");
-        }
-    }
+		if (map.containsKey("cachedName")) cachedName = (String) map.get("cachedName");
+	}
 
-    public FactionMember(Document document){
-        this.uniqueID = UUID.fromString(document.getString("uniqueID"));
-        this.chatChannel = GuavaCompat.getIfPresent(ChatChannel.class, document.getString("chatChannel")).orElse(ChatChannel.PUBLIC);
-        this.role = GuavaCompat.getIfPresent(Role.class, document.getString("role")).orElse(Role.MEMBER);
+	public FactionMember(Document document) {
+		uniqueID = UUID.fromString(document.getString("uniqueID"));
+		chatChannel = GuavaCompat.getIfPresent(ChatChannel.class, document.getString("chatChannel")).orElse(ChatChannel.PUBLIC);
+		role = GuavaCompat.getIfPresent(Role.class, document.getString("role")).orElse(Role.MEMBER);
 
-        if(document.containsKey("cachedName")){
-            cachedName = document.getString("cachedName");
-        }
-    }
+		if (document.containsKey("cachedName")) cachedName = document.getString("cachedName");
+	}
 
-    @Override
-    public Map<String, Object> serialize() {
-        Map<String, Object> map = new LinkedHashMap<>();
-        map.put("uniqueID", uniqueID.toString());
-        map.put("chatChannel", chatChannel.name());
-        map.put("role", role.name());
-        map.put("cachedName", cachedName);
-        return map;
-    }
+	@Override
+	public Map<String, Object> serialize() {
+		Map<String, Object> map = new LinkedHashMap<>();
+		map.put("uniqueID", uniqueID.toString());
+		map.put("chatChannel", chatChannel.name());
+		map.put("role", role.name());
+		map.put("cachedName", cachedName);
+		return map;
+	}
 
-    @Override
-    public Document toDocument(){
-        Document document = new Document();
-        document.put("uniqueID", uniqueID.toString());
-        document.put("chatChannel", chatChannel.name());
-        document.put("role", role.name());
-        document.put("cachedName", cachedName);
-        return document;
-    }
+	@Override
+	public Document toDocument() {
+		Document document = new Document();
+		document.put("uniqueID", uniqueID.toString());
+		document.put("chatChannel", chatChannel.name());
+		document.put("role", role.name());
+		document.put("cachedName", cachedName);
+		return document;
+	}
 
-    /**
-     * Gets the cached name of this {@link FactionMember}.
-     * This name is updated whenever they person joins however it can be wrong if the user changes there name and it is not updated.
-     *
-     * @return the cached name of this {@link FactionMember}
-     */
-    public String getCachedName() {
-        if(cachedName == null){ //TODO: Remove for next map
-            cachedName = Bukkit.getOfflinePlayer(uniqueID).getName();
-        }
-        return cachedName;
-    }
+	/**
+	 * Gets the cached name of this {@link FactionMember}.
+	 * This name is updated whenever they person joins however it can be wrong if the user changes there name and it is not updated.
+	 *
+	 * @return the cached name of this {@link FactionMember}
+	 */
+	public String getCachedName() {
+		//TODO: Remove for next map
+		if (cachedName == null) cachedName = Bukkit.getOfflinePlayer(uniqueID).getName();
+		return cachedName;
+	}
 
-    /**
-     * Gets the {@link UUID} of this {@link FactionMember}.
-     *
-     * @return the {@link UUID}
-     */
-    public UUID getUniqueId() {
-        return uniqueID;
-    }
+	public void setCachedName(@NonNull String name) {
+		cachedName = name;
+	}
 
-    /**
-     * Gets the {@link ChatChannel} of this {@link FactionMember}.
-     *
-     * @return the {@link ChatChannel}
-     */
-    public ChatChannel getChatChannel() {
-        return chatChannel;
-    }
+	/**
+	 * Gets the {@link UUID} of this {@link FactionMember}.
+	 *
+	 * @return the {@link UUID}
+	 */
+	public UUID getUniqueId() {
+		return uniqueID;
+	}
 
-    /**
-     * Sets the {@link ChatChannel} of this {@link FactionMember}.
-     *
-     * @param chatChannel the {@link ChatChannel} to set
-     */
-    public void setChatChannel(@NonNull ChatChannel chatChannel){
-        this.chatChannel = chatChannel;
-    }
+	/**
+	 * Gets the {@link ChatChannel} of this {@link FactionMember}.
+	 *
+	 * @return the {@link ChatChannel}
+	 */
+	public ChatChannel getChatChannel() {
+		return chatChannel;
+	}
 
-    /**
-     * Gets the {@link Role} of this {@link FactionMember}.
-     *
-     * @return the {@link Role}
-     */
-    public Role getRole() {
-        return role;
-    }
+	/**
+	 * Sets the {@link ChatChannel} of this {@link FactionMember}.
+	 *
+	 * @param chatChannel the {@link ChatChannel} to set
+	 */
+	public void setChatChannel(@NonNull ChatChannel chatChannel) {
+		this.chatChannel = chatChannel;
+	}
 
-    /**
-     * Sets the {@link Role} of this {@link FactionMember}.
-     *
-     * @param role the {@link Role} to set
-     */
-    public void setRole(Role role) {
-        this.role = role;
-    }
+	/**
+	 * Gets the {@link Role} of this {@link FactionMember}.
+	 *
+	 * @return the {@link Role}
+	 */
+	public Role getRole() {
+		return role;
+	}
 
-    /**
-     * Converts this {@link Player} to a {@link Player}.
-     *
-     * @return an optional instance containing a {@link Player}
-     */
-    public Optional<Player> toOnlinePlayer() {
-        return Optional.ofNullable(Bukkit.getServer().getPlayer(uniqueID));
-    }
+	/**
+	 * Sets the {@link Role} of this {@link FactionMember}.
+	 *
+	 * @param role the {@link Role} to set
+	 */
+	public void setRole(Role role) {
+		this.role = role;
+	}
 
-    public void setCachedName(@NonNull String name){
-        this.cachedName = name;
-    }
+	/**
+	 * Converts this {@link Player} to a {@link Player}.
+	 *
+	 * @return an optional instance containing a {@link Player}
+	 */
+	public Optional<Player> toOnlinePlayer() {
+		return Optional.ofNullable(Bukkit.getServer().getPlayer(uniqueID));
+	}
 }

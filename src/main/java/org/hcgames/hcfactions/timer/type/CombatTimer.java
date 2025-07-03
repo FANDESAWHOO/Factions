@@ -33,138 +33,138 @@ import java.util.function.Predicate;
 /**
  * Timer used to tag {@link Player}s in combat to prevent entering safe-zones.
  */
-public class CombatTimer extends PlayerTimer implements Listener{
+public class CombatTimer extends PlayerTimer implements Listener {
 
-    private final HCFactions plugin;
+	private final HCFactions plugin;
 
-    private String scoreboardPrefix = null;
+	private String scoreboardPrefix = null;
 
-    public CombatTimer(HCFactions plugin){
-        super("Combat", TimeUnit.SECONDS.toMillis(45L));
-        this.plugin = plugin;
+	public CombatTimer(HCFactions plugin) {
+		super("Combat", TimeUnit.SECONDS.toMillis(45L));
+		this.plugin = plugin;
 
-        scoreboardPrefix = Lang.of("Timer-" + name.replace(" ", "") + "-SBPrefix");
+		scoreboardPrefix = Lang.of("Timer-" + name.replace(" ", "") + "-SBPrefix");
 
-        if(scoreboardPrefix == null || scoreboardPrefix.isEmpty() || scoreboardPrefix.equals("Error! Please contact an administrator"))
+		if (scoreboardPrefix == null || scoreboardPrefix.isEmpty() || scoreboardPrefix.equals("Error! Please contact an administrator"))
 			scoreboardPrefix = null;
-    }
+	}
 
-    @Override
-    public String getScoreboardPrefix(){
-        if(!(scoreboardPrefix == null)) return scoreboardPrefix;
+	@Override
+	public String getScoreboardPrefix() {
+		if (!(scoreboardPrefix == null)) return scoreboardPrefix;
 
-        return ChatColor.DARK_RED.toString() + ChatColor.BOLD;
-    }
+		return ChatColor.DARK_RED.toString() + ChatColor.BOLD;
+	}
 
-    @Override
-    public TimerCooldown clearCooldown(@Nullable Player player, UUID playerUUID){
-        TimerCooldown cooldown = super.clearCooldown(player, playerUUID);
-        if(cooldown != null && player != null)
+	@Override
+	public TimerCooldown clearCooldown(@Nullable Player player, UUID playerUUID) {
+		TimerCooldown cooldown = super.clearCooldown(player, playerUUID);
+		if (cooldown != null && player != null)
 			plugin.getVisualiseHandler().clearVisualBlocks(player, VisualType.SPAWN_BORDER, null);
 
-        return cooldown;
-    }
+		return cooldown;
+	}
 
-    @Override
-    public void handleExpiry(@Nullable Player player, UUID playerUUID){
-        super.handleExpiry(player, playerUUID);
-        if(player != null) plugin.getVisualiseHandler().clearVisualBlocks(player, VisualType.SPAWN_BORDER, null);
-    }
+	@Override
+	public void handleExpiry(@Nullable Player player, UUID playerUUID) {
+		super.handleExpiry(player, playerUUID);
+		if (player != null) plugin.getVisualiseHandler().clearVisualBlocks(player, VisualType.SPAWN_BORDER, null);
+	}
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
-    public void onFactionJoin(PlayerJoinFactionEvent event){
-        Optional<Player> optional = event.getPlayer();
-        if(optional.isPresent()){
-            Player player = optional.get();
-            long remaining = getRemaining(player);
-            if(remaining > 0L){
-                event.setCancelled(true);
-                player.sendMessage(CC.translate(Lang.of("Timer-Combat-CannotJoinFactions")
-                        .replace("{timerName}", getDisplayName())
-                        .replace("{timeLeft}", DurationFormatter.getRemaining(getRemaining(player), true, false))));
-            }
-        }
-    }
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+	public void onFactionJoin(PlayerJoinFactionEvent event) {
+		Optional<Player> optional = event.getPlayer();
+		if (optional.isPresent()) {
+			Player player = optional.get();
+			long remaining = getRemaining(player);
+			if (remaining > 0L) {
+				event.setCancelled(true);
+				player.sendMessage(CC.translate(Lang.of("Timer-Combat-CannotJoinFactions")
+						.replace("{timerName}", getDisplayName())
+						.replace("{timeLeft}", DurationFormatter.getRemaining(getRemaining(player), true, false))));
+			}
+		}
+	}
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
-    public void onFactionLeave(PlayerLeaveFactionEvent event){
-        if(event.isForce()) return;
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+	public void onFactionLeave(PlayerLeaveFactionEvent event) {
+		if (event.isForce()) return;
 
-        Optional<Player> optional = event.getPlayer();
-        if(optional.isPresent()){
-            Player player = optional.get();
-            long remaining = getRemaining(player);
-            if(remaining > 0L){
-                event.setCancelled(true);
+		Optional<Player> optional = event.getPlayer();
+		if (optional.isPresent()) {
+			Player player = optional.get();
+			long remaining = getRemaining(player);
+			if (remaining > 0L) {
+				event.setCancelled(true);
 
-                CommandSender sender = event.getSender();
-                if(sender == player) sender.sendMessage(CC.translate(Lang.of("Timer-Combat-CannotKick")
-                        .replace("{player}", player.getName())
-                        .replace("{timerName}", getDisplayName())
-                        .replace("{timeLeft}", DurationFormatter.getRemaining(remaining, true, false))));
-				else{
-                    sender.sendMessage(CC.translate(Lang.of("Timer-Combat-CannotLeave")
-                            .replace("{timerName}", getDisplayName())
-                            .replace("{timeLeft}", DurationFormatter.getRemaining(remaining, true, false))));
-                    sender.sendMessage(CC.translate("You cannot leave factions whilst your " + getDisplayName() + ChatColor.RED + " timer is active [" +
-                            ChatColor.BOLD + DurationFormatter.getRemaining(remaining, true, false) + ChatColor.RED + " remaining]"));
-                }
-            }
-        }
-    }
+				CommandSender sender = event.getSender();
+				if (sender == player) sender.sendMessage(CC.translate(Lang.of("Timer-Combat-CannotKick")
+						.replace("{player}", player.getName())
+						.replace("{timerName}", getDisplayName())
+						.replace("{timeLeft}", DurationFormatter.getRemaining(remaining, true, false))));
+				else {
+					sender.sendMessage(CC.translate(Lang.of("Timer-Combat-CannotLeave")
+							.replace("{timerName}", getDisplayName())
+							.replace("{timeLeft}", DurationFormatter.getRemaining(remaining, true, false))));
+					sender.sendMessage(CC.translate("You cannot leave factions whilst your " + getDisplayName() + ChatColor.RED + " timer is active [" +
+							ChatColor.BOLD + DurationFormatter.getRemaining(remaining, true, false) + ChatColor.RED + " remaining]"));
+				}
+			}
+		}
+	}
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
-    public void onPreventClaimEnter(PlayerClaimEnterEvent event){
-        if(event.getEnterCause() == PlayerClaimEnterEvent.EnterCause.TELEPORT) return;
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+	public void onPreventClaimEnter(PlayerClaimEnterEvent event) {
+		if (event.getEnterCause() == PlayerClaimEnterEvent.EnterCause.TELEPORT) return;
 
-        // Prevent entering spawn if the player is spawn tagged.
-        Player player = event.getPlayer();
-        if(!event.getFromFaction().isSafezone() && event.getToFaction().isSafezone() && getRemaining(player) > 0L){
-            event.setCancelled(true);
-            player.sendMessage(CC.translate(Lang.of("Timer-Combat-CannotEnter")
-                    .replace("{areaName}", event.getToFaction().getFormattedName(player))
-                    .replace("{timerName}", getDisplayName())
-                    .replace("{timeLeft}", DurationFormatter.getRemaining(getRemaining(player), true, false))));
-        }
-    }
+		// Prevent entering spawn if the player is spawn tagged.
+		Player player = event.getPlayer();
+		if (!event.getFromFaction().isSafezone() && event.getToFaction().isSafezone() && getRemaining(player) > 0L) {
+			event.setCancelled(true);
+			player.sendMessage(CC.translate(Lang.of("Timer-Combat-CannotEnter")
+					.replace("{areaName}", event.getToFaction().getFormattedName(player))
+					.replace("{timerName}", getDisplayName())
+					.replace("{timeLeft}", DurationFormatter.getRemaining(getRemaining(player), true, false))));
+		}
+	}
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent event){
-        Player attacker = BukkitUtils.getFinalAttacker(event, true);
-        Entity entity;
-        if(attacker != null && (entity = event.getEntity()) instanceof Player){
-            Player attacked = (Player) entity;
-            setCooldown(attacker, attacker.getUniqueId(), defaultCooldown, false);
-            setCooldown(attacked, attacked.getUniqueId(), defaultCooldown, false);
-        }
-    }
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+		Player attacker = BukkitUtils.getFinalAttacker(event, true);
+		Entity entity;
+		if (attacker != null && (entity = event.getEntity()) instanceof Player) {
+			Player attacked = (Player) entity;
+			setCooldown(attacker, attacker.getUniqueId(), defaultCooldown, false);
+			setCooldown(attacked, attacked.getUniqueId(), defaultCooldown, false);
+		}
+	}
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onTimerStart(TimerStartEvent event){
-        if(event.getTimer() == this){
-            Optional<Player> optional = event.getPlayer();
-            if(optional.isPresent()){
-                Player player = optional.get();
-                player.sendMessage(Lang.of("Timer-Combat-InCombat"));
-            }
-        }
-    }
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+	public void onTimerStart(TimerStartEvent event) {
+		if (event.getTimer() == this) {
+			Optional<Player> optional = event.getPlayer();
+			if (optional.isPresent()) {
+				Player player = optional.get();
+				player.sendMessage(Lang.of("Timer-Combat-InCombat"));
+			}
+		}
+	}
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onPlayerRespawn(PlayerRespawnEvent event){
-        clearCooldown(event.getPlayer(), event.getPlayer().getUniqueId());
-    }
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+	public void onPlayerRespawn(PlayerRespawnEvent event) {
+		clearCooldown(event.getPlayer(), event.getPlayer().getUniqueId());
+	}
 
-    @Override
-    public boolean setCooldown(@Nullable Player player, UUID playerUUID, long duration, boolean overwrite, @Nullable Predicate<Long> currentCooldownPredicate){
-        if(player != null && FactionsAPI.getFactionAt(player.getLocation()).isSafezone())
+	@Override
+	public boolean setCooldown(@Nullable Player player, UUID playerUUID, long duration, boolean overwrite, @Nullable Predicate<Long> currentCooldownPredicate) {
+		if (player != null && FactionsAPI.getFactionAt(player.getLocation()).isSafezone())
 			return false;
-        return super.setCooldown(player, playerUUID, duration, overwrite, currentCooldownPredicate);
-    }
+		return super.setCooldown(player, playerUUID, duration, overwrite, currentCooldownPredicate);
+	}
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onPreventClaimEnterMonitor(PlayerClaimEnterEvent event){
-        if(event.getEnterCause() == PlayerClaimEnterEvent.EnterCause.TELEPORT && (!event.getFromFaction().isSafezone() && event.getToFaction().isSafezone()))
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+	public void onPreventClaimEnterMonitor(PlayerClaimEnterEvent event) {
+		if (event.getEnterCause() == PlayerClaimEnterEvent.EnterCause.TELEPORT && (!event.getFromFaction().isSafezone() && event.getToFaction().isSafezone()))
 			clearCooldown(event.getPlayer(), event.getPlayer().getUniqueId());
-    }
+	}
 }

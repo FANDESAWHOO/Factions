@@ -25,51 +25,54 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class WandManager extends Tool {
 
-	private final Map<Player, Map<String, Cuboid>> selectionMap = new ConcurrentHashMap<>();
-
 	/**
 	 * Singleton of the class
 	 */
 	@Getter
 	private final static WandManager wandManager = new WandManager();
+	private final Map<Player, Map<String, Cuboid>> selectionMap = new ConcurrentHashMap<>();
 
-	private WandManager(){
+	private WandManager() {
 
 	}
-	public Map<String, Cuboid> getSelection(Player player){
+
+	public Map<String, Cuboid> getSelection(Player player) {
 		return selectionMap.get(player);
 	}
-    public Cuboid getSelection(Player player, String position) {
+
+	public Cuboid getSelection(Player player, String position) {
 		return selectionMap.get(player).get(position);
 	}
+
 	@Override
 	public ItemStack getItem() {
-		return ItemCreator.of(CompMaterial.STICK,"&aClaim Selection", "Right click to select first point, Left click to select second point").make();
+		return ItemCreator.of(CompMaterial.STICK, "&aClaim Selection", "Right click to select first point, Left click to select second point").make();
 	}
 
 	/**
 	 * With this event we gonna put
 	 * The selection players!
+	 *
 	 * @param event the event
 	 */
 	@Override
 	protected void onBlockClick(PlayerInteractEvent event) {
-		if(event.getPlayer().hasPermission("tools.use")){
+		if (event.getPlayer().hasPermission("tools.use")) {
 			Action action = event.getAction();
 			Player player = event.getPlayer();
 			Block block = event.getClickedBlock();
-			Map<String, Cuboid> locs = selectionMap.containsKey(player) ? selectionMap.get(player) : selectionMap.putIfAbsent(player,null);
-			if(action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.LEFT_CLICK_AIR))
+			Map<String, Cuboid> locs = selectionMap.computeIfAbsent(player, k -> new ConcurrentHashMap<>());
+			if (action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.LEFT_CLICK_AIR))
 				player.sendMessage(ChatColor.RED + "You must select a block and not Air.");
 
-			if(action.equals((Action.RIGHT_CLICK_BLOCK))) {
+			if (action.equals((Action.RIGHT_CLICK_BLOCK))) {
 				locs.put("1", new Cuboid(block.getLocation()));
-				selectionMap.put(player,locs);
-				player.sendMessage(ChatColor.GREEN + "You selected the first point at: "+block.getX() + ", "+block.getY()+", "+block.getZ());
+				selectionMap.put(player, locs);
+				player.sendMessage(ChatColor.GREEN + "You selected the first point at: " + block.getX() + ", " + block.getY() + ", " + block.getZ());
 			} else if (action.equals(Action.LEFT_CLICK_BLOCK)) {
 				locs.put("2", new Cuboid(block.getLocation()));
-				selectionMap.put(player,locs);
-				player.sendMessage(ChatColor.GREEN + "You selected the second point at: "+block.getX() + ", "+block.getY()+", "+block.getZ());
+				selectionMap.put(player, locs);
+				player.sendMessage(ChatColor.GREEN + "You selected the second point at: " + block.getX() + ", " + block.getY() + ", " + block.getZ());
 			}
 			event.setCancelled(true);
 		}

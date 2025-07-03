@@ -34,50 +34,47 @@ import java.util.UUID;
 
 public class PlayerJoinFactionEvent extends PlayerFactionEvent implements Cancellable {
 
-    private static final HandlerList handlers = new HandlerList();
+	private static final HandlerList handlers = new HandlerList();
+	@Getter
+	private final CommandSender sender;
+	@Getter
+	private final UUID playerUUID;
+	private boolean cancelled;
+	private Player player; // lazy-load
 
-    private boolean cancelled;
-    private Player player; // lazy-load
+	public PlayerJoinFactionEvent(@NonNull CommandSender sender, @Nullable Player player, @NonNull UUID playerUUID, @NonNull PlayerFaction faction) {
+		super(faction);
 
-    @Getter
-    private final CommandSender sender;
+		this.sender = sender;
+		this.player = player;
+		this.playerUUID = playerUUID;
+	}
 
-    @Getter
-    private final UUID playerUUID;
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 
-    public PlayerJoinFactionEvent(@NonNull CommandSender sender, @Nullable Player player, @NonNull UUID playerUUID, @NonNull PlayerFaction faction) {
-        super(faction);
+	public Optional<Player> getPlayer() {
+		return Optional.ofNullable(player);
+	}
 
-        this.sender = sender;
-        this.player = player;
-        this.playerUUID = playerUUID;
-    }
+	@Override
+	public boolean isCancelled() {
+		return cancelled;
+	}
 
-    public Optional<Player> getPlayer() {
-        return Optional.ofNullable(player);
-    }
+	@Override
+	public void setCancelled(boolean cancelled) {
+		this.cancelled = cancelled;
+	}
 
-    @Override
-    public boolean isCancelled() {
-        return cancelled;
-    }
-
-    @Override
-    public void setCancelled(boolean cancelled) {
-        this.cancelled = cancelled;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
-    }
+	@Override
+	public HandlerList getHandlers() {
+		return handlers;
+	}
 
 
-    public PlayerFaction getFaction() {
-        return (PlayerFaction) super.getFaction();
-    }
+	public PlayerFaction getFaction() {
+		return (PlayerFaction) super.getFaction();
+	}
 }

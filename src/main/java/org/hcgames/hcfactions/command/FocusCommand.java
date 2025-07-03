@@ -14,7 +14,7 @@ public final class FocusCommand extends SimpleCommand {
 	@Getter
 	private final static SimpleCommand instance = new FocusCommand();
 
-	private FocusCommand(){
+	private FocusCommand() {
 		super("focus");
 	}
 

@@ -1,6 +1,8 @@
 # HCFactions
+
 Factions is a lightweight fork of DoctorDark’s well-known iHCF core, focused exclusively on the core factions system.
-Designed for flexibility, it works out of the box on Spigot servers and is suitable for all types of gameplay — from HCF to Survival and Semi-HCF setups.
+Designed for flexibility, it works out of the box on Spigot servers and is suitable for all types of gameplay — from HCF
+to Survival and Semi-HCF setups.
 
 This project does not include the full iHCF core. Instead, it offers the essential factions features, such as:
 

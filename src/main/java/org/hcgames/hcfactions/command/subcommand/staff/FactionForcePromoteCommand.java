@@ -14,63 +14,63 @@ import java.util.List;
 
 public final class FactionForcePromoteCommand extends FactionSubCommand {
 
-    private final HCFactions plugin;
+	private final HCFactions plugin;
 
-    public FactionForcePromoteCommand() {
-        super("forcepromote");
-        setDescription("Forces the promotion status of a player.");
-        plugin = HCFactions.getInstance();
-       // this.permission = "hcf.command.faction.argument." + getName();
-    }
+	public FactionForcePromoteCommand() {
+		super("forcepromote");
+		setDescription("Forces the promotion status of a player.");
+		plugin = HCFactions.getInstance();
+		// this.permission = "hcf.command.faction.argument." + getName();
+	}
 
-  
-    @Override
+
+	@Override
 	public String getUsage() {
-        return '/' + label + ' ' + getName() + " <playerName>";
-    }
+		return '/' + label + ' ' + getName() + " <playerName>";
+	}
 
-    @Override
-    public void onCommand() {
-        if (args.length < 2) {
-            tell(ChatColor.RED + "Usage: " + getUsage());
-            return;
-        }
+	@Override
+	public void onCommand() {
+		if (args.length < 2) {
+			tell(ChatColor.RED + "Usage: " + getUsage());
+			return;
+		}
 
-        plugin.getFactionManager().advancedSearch(args[1], PlayerFaction.class, new SearchCallback<PlayerFaction>() {
-            @Override
-            public void onSuccess(PlayerFaction faction) {
-                FactionMember member = null;
+		plugin.getFactionManager().advancedSearch(args[1], PlayerFaction.class, new SearchCallback<PlayerFaction>() {
+			@Override
+			public void onSuccess(PlayerFaction faction) {
+				FactionMember member = null;
 
-                for(FactionMember search : faction.getMembers().values())
+				for (FactionMember search : faction.getMembers().values())
 					if (search.getCachedName().equalsIgnoreCase(args[1])) {
 						member = search;
 						break;
 					}
 
-                if (member == null) {
-                    tell(ChatColor.RED + "Faction containing member with IGN or UUID " + args[1] + " not found.");
-                    return;
-                }
+				if (member == null) {
+					tell(ChatColor.RED + "Faction containing member with IGN or UUID " + args[1] + " not found.");
+					return;
+				}
 
-                if (member.getRole() != Role.MEMBER) {
-                    tell(ChatColor.RED + member.getCachedName() + " is already a " + member.getRole().getName() + '.');
-                    return;
-                }
+				if (member.getRole() != Role.MEMBER) {
+					tell(ChatColor.RED + member.getCachedName() + " is already a " + member.getRole().getName() + '.');
+					return;
+				}
 
-                member.setRole(Role.CAPTAIN);
-                faction.broadcast(ChatColor.GOLD.toString() + ChatColor.BOLD + sender.getName() + " has been forcefully assigned as a captain.");
-            }
+				member.setRole(Role.CAPTAIN);
+				faction.broadcast(ChatColor.GOLD.toString() + ChatColor.BOLD + sender.getName() + " has been forcefully assigned as a captain.");
+			}
 
-            @Override
-            public void onFail(FailReason reason) {
-                tell(Lang.of("Commands.error.faction_not_found", args[1]));
-            }
-        });
-        return;
-    }
+			@Override
+			public void onFail(FailReason reason) {
+				tell(Lang.of("Commands.error.faction_not_found", args[1]));
+			}
+		});
+		return;
+	}
 
-    @Override
-    public List<String> tabComplete() {
-        return args.length == 2 ? null : Collections.emptyList();
-    }
+	@Override
+	public List<String> tabComplete() {
+		return args.length == 2 ? null : Collections.emptyList();
+	}
 }

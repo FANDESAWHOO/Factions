@@ -13,13 +13,13 @@ import org.hcgames.hcfactions.faction.PlayerFaction;
 public class FocusListener implements Listener {
 
 	@EventHandler
-	public void onFocus(PlayerFactionFocusEvent event){
+	public void onFocus(PlayerFactionFocusEvent event) {
 		PlayerFaction faction = event.getFaction();
 		FocusTarget focused = event.getTarget();
 	}
 
 	@EventHandler
-	public void onUnFocus(PlayerFactionUnfocusEvent event){
+	public void onUnFocus(PlayerFactionUnfocusEvent event) {
 		PlayerFaction faction = event.getFaction();
 		FocusTarget focused = event.getTarget();
 	}
