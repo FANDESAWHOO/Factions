@@ -25,7 +25,7 @@ public final class EconomyAPI {
 	public static void subtractBalance(Player id, int amount) {
 		if (!API) {
 			if (customEvents) {
-				Common.callEvent(new EconomyEvent(false, id, amount, EconomyTypes.subtract));
+				Common.callEvent(new EconomyEvent(id,amount,  EconomyTypes.subtract, false));
 				return;
 			}
 			if (economy != null) economy.subtractBalance(id.getUniqueId(), amount);
@@ -35,7 +35,7 @@ public final class EconomyAPI {
 	public static void addBalance(Player id, int amount) {
 		if (!API) {
 			if (customEvents) {
-				Common.callEvent(new EconomyEvent(false, id, amount, EconomyTypes.deposit));
+				Common.callEvent(new EconomyEvent(id,amount, EconomyTypes.deposit,false));
 				return;
 			}
 			if (economy != null) economy.addBalance(id.getUniqueId(), amount);
@@ -45,7 +45,7 @@ public final class EconomyAPI {
 
 	public static Double getBalance(Player player) {
 		if (!API) {
-			if (customEvents) Common.callEvent(new EconomyEvent(false, player, 0, EconomyTypes.balance));
+			if (customEvents) Common.callEvent(new EconomyEvent(player,0, EconomyTypes.balance,false));
 			if (economy != null) return economy.getBalance(player.getUniqueId());
 		}
 		return HCFactions.getInstance().getEcon().getBalance(player);

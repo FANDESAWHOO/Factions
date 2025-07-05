@@ -10,17 +10,17 @@ import java.util.concurrent.TimeUnit;
 @Getter
 public final class Configuration extends SimpleSettings {
 
-	public static Byte factionNameMinCharacters;
-	public static Byte factionNameMaxCharacters;
-	public static Byte factionMaxMembers;
-	public static Byte factionMaxClaims;
-	public static Byte factionMaxAllies;
+	public static Integer factionNameMinCharacters;
+	public static Integer factionNameMaxCharacters;
+	public static Integer factionMaxMembers;
+	public static Integer factionMaxClaims;
+	public static Integer factionMaxAllies;
 
-	public static Byte factionDtrRegenFreezeBaseMinutes;
+	public static Integer factionDtrRegenFreezeBaseMinutes;
 	public static Long factionDtrRegenFreezeBaseMilliseconds;
 	public static Byte factionDtrRegenFreezeMinutesPerMember;
 	public static Long factionDtrRegenFreezeMillisecondsPerMember;
-	public static Byte factionMinimumDtr;
+	public static Integer factionMinimumDtr;
 	public static Float factionMaximumDtr;
 	public static Integer factionDtrUpdateMillis;
 	public static Float factionDtrUpdateIncrement;
@@ -33,19 +33,19 @@ public final class Configuration extends SimpleSettings {
 	public static ChatColor relationColourRoad;
 	public static ChatColor relationColourSafezone;
 
-	public static Byte antiRotationDelay;
+	public static Integer antiRotationDelay;
 	public static Boolean antiRotationEnabled;
 
 	public static Boolean factionEndPortalEnabled;
-	public static Short endPortalCenter;
+	public static Integer endPortalCenter;
 
-	public static Short spawnRadiusOverworld;
-	public static Short spawnRadiusNether;
+	public static Integer spawnRadiusOverworld;
+	public static Integer spawnRadiusNether;
 
-	public static Short roadWidthLeft;
-	public static Short roadWidthRight;
-	public static Short roadLength;
-	public static Short endPortalRadius;
+	public static Integer roadWidthLeft;
+	public static Integer roadWidthRight;
+	public static Integer roadLength;
+	public static Integer endPortalRadius;
 	public static Boolean allowClaimsBesidesRoads;
 
 	public static Short warzoneRadiusOverworld;
@@ -53,9 +53,9 @@ public final class Configuration extends SimpleSettings {
 
 	public static List<String> factionDisallowedNames;
 
-	public static Byte factionHomeTeleportDelayNormal;
-	public static Byte factionHomeTeleportDelayNether;
-	public static Byte factionHomeTeleportDelayEnd;
+	public static Integer factionHomeTeleportDelayNormal;
+	public static Integer factionHomeTeleportDelayNether;
+	public static Integer factionHomeTeleportDelayEnd;
 	public static Boolean allowTeleportingInEnemyTerritory;
 	public static Short maxHeightFactionHome;
 
@@ -85,11 +85,12 @@ public final class Configuration extends SimpleSettings {
 		username = getString("mongo.username");
 		password = getString("mongo.password");
 
-		factionNameMinCharacters = get("factions.NameMinCharacters", Byte.class);
-		factionNameMaxCharacters = get("factions.NameMaxCharacters", Byte.class);
-		factionMaxMembers = get("factions.maxMembers", Byte.class);
-		factionMaxClaims = get("factions.maxClaims", Byte.class);
-		factionMaxAllies = get("factions.maxAllies", Byte.class);
+		factionNameMinCharacters = getInteger("factions.NameMinCharacters");
+		factionNameMaxCharacters = getInteger("factions.NameMaxCharacters");
+		factionMaxMembers = getInteger("factions.maxMembers");
+		factionMaxClaims = getInteger("factions.maxClaims");
+		factionMaxAllies = getInteger("factions.maxAllies");
+		factionDtrRegenFreezeBaseMinutes = getInteger("factions.dtr.RegenFreezeBaseMinutes");
 
 		factionDtrRegenFreezeBaseMinutes = get("factions.dtr.RegenFreezeBaseMinutes", Byte.class);
 		factionDtrRegenFreezeBaseMilliseconds = TimeUnit.MINUTES.toMillis(factionDtrRegenFreezeBaseMinutes);

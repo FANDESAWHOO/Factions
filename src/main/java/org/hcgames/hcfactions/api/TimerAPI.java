@@ -35,7 +35,7 @@ public final class TimerAPI {
 
 	public static void callStuck(Player player, PlayerFaction faction, String label) {
 		if (useEvents)
-			Common.callEvent(new FactionTimerEvent(false, player, faction, TimerTypes.STUCK));
+			Common.callEvent(new FactionTimerEvent(player,  faction, TimerTypes.STUCK, false));
 		else {
 			StuckTimer stuckTimer = HCFactions.getInstance().getTimerManager().getStuckTimer();
 
@@ -52,7 +52,7 @@ public final class TimerAPI {
 
 	public static void callHome(Player player, PlayerFaction faction, String label) {
 		if (useEvents)
-			Common.callEvent(new FactionTimerEvent(false, player, faction, TimerTypes.TELEPORT));
+			Common.callEvent(new FactionTimerEvent( player, faction, TimerTypes.TELEPORT,false));
 		else {
 			Faction factionAt = plugin.getFactionManager().getFactionAt(player.getLocation());
 			Optional<Location> home = faction.getHome();
