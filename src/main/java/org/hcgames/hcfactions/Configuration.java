@@ -1,5 +1,6 @@
 package org.hcgames.hcfactions;
 
+
 import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.mineacademy.fo.settings.SimpleSettings;
@@ -18,7 +19,7 @@ public final class Configuration extends SimpleSettings {
 
 	public static Integer factionDtrRegenFreezeBaseMinutes;
 	public static Long factionDtrRegenFreezeBaseMilliseconds;
-	public static Byte factionDtrRegenFreezeMinutesPerMember;
+	public static Integer factionDtrRegenFreezeMinutesPerMember;
 	public static Long factionDtrRegenFreezeMillisecondsPerMember;
 	public static Integer factionMinimumDtr;
 	public static Float factionMaximumDtr;
@@ -48,8 +49,8 @@ public final class Configuration extends SimpleSettings {
 	public static Integer endPortalRadius;
 	public static Boolean allowClaimsBesidesRoads;
 
-	public static Short warzoneRadiusOverworld;
-	public static Short warzoneRadiusNether;
+	public static Integer warzoneRadiusOverworld;
+	public static Integer warzoneRadiusNether;
 
 	public static List<String> factionDisallowedNames;
 
@@ -57,7 +58,7 @@ public final class Configuration extends SimpleSettings {
 	public static Integer factionHomeTeleportDelayNether;
 	public static Integer factionHomeTeleportDelayEnd;
 	public static Boolean allowTeleportingInEnemyTerritory;
-	public static Short maxHeightFactionHome;
+	public static Integer maxHeightFactionHome;
 
 	public static Boolean subclaimSignPrivate;
 	public static Boolean subclaimSignCaptain;
@@ -66,12 +67,12 @@ public final class Configuration extends SimpleSettings {
 	public static Boolean kitMap;
 	public static Boolean preventAllyAttackDamage;
 	public static Boolean messageDebug;
-
+	// Host
 	public static String host;
 	public static String database;
 	public static String username;
 	public static String password;
-
+	// API
 	public static Boolean api;
 	public static Boolean customEvents;
 
@@ -91,16 +92,13 @@ public final class Configuration extends SimpleSettings {
 		factionMaxClaims = getInteger("factions.maxClaims");
 		factionMaxAllies = getInteger("factions.maxAllies");
 		factionDtrRegenFreezeBaseMinutes = getInteger("factions.dtr.RegenFreezeBaseMinutes");
-
-		factionDtrRegenFreezeBaseMinutes = get("factions.dtr.RegenFreezeBaseMinutes", Byte.class);
 		factionDtrRegenFreezeBaseMilliseconds = TimeUnit.MINUTES.toMillis(factionDtrRegenFreezeBaseMinutes);
-		factionDtrRegenFreezeMinutesPerMember = get("factions.dtr.minutesPerMember", Byte.class);
+		factionDtrRegenFreezeMinutesPerMember = getInteger("factions.dtr.minutesPerMember");
 		factionDtrRegenFreezeMillisecondsPerMember = TimeUnit.MINUTES.toMillis(factionDtrRegenFreezeMinutesPerMember);
-
-		factionMinimumDtr = get("factions.dtr.minimum", Byte.class);
-		factionMaximumDtr = get("factions.dtr.maximum", Float.class);
+		factionMinimumDtr = getInteger("factions.dtr.minimum");
+		factionMaximumDtr = (float) getDouble("factions.dtr.maximum");
 		factionDtrUpdateMillis = getInteger("factions.dtr.millisecondsBetweenUpdates");
-		factionDtrUpdateIncrement = get("factions.dtr.incrementBetweenUpdates", Float.class);
+		factionDtrUpdateIncrement = (float) getDouble("factions.dtr.incrementBetweenUpdates");
 
 		relationColourWarzone = ChatColor.valueOf(getString("factions.relationColours.warzone"));
 		relationColourWilderness = ChatColor.valueOf(getString("factions.relationColours.wilderness"));
@@ -110,31 +108,31 @@ public final class Configuration extends SimpleSettings {
 		relationColourRoad = ChatColor.valueOf(getString("factions.relationColours.road"));
 		relationColourSafezone = ChatColor.valueOf(getString("factions.relationColours.safezone"));
 
-		antiRotationDelay = get("factions.antirotation.delay", Byte.class);
+		antiRotationDelay = getInteger("factions.antirotation.delay");
 		antiRotationEnabled = getBoolean("factions.antirotation.enabled");
 
 		factionEndPortalEnabled = getBoolean("factions.endportal.enabled");
-		endPortalCenter = get("factions.endportal.center", Short.class);
-		endPortalRadius = get("factions.endportal.radius", Short.class);
+		endPortalCenter = getInteger("factions.endportal.center");
+		endPortalRadius = getInteger("factions.endportal.radius");
 
-		spawnRadiusOverworld = get("factions.spawn.radiusOverworld", Short.class);
-		spawnRadiusNether = get("factions.spawn.radiusNether", Short.class);
+		spawnRadiusOverworld = getInteger("factions.spawn.radiusOverworld");
+		spawnRadiusNether = getInteger("factions.spawn.radiusNether");
 
-		roadWidthLeft = get("factions.roads.widthLeft", Short.class);
-		roadWidthRight = get("factions.roads.widthRight", Short.class);
-		roadLength = get("factions.roads.length", Short.class);
+		roadWidthLeft = getInteger("factions.roads.widthLeft");
+		roadWidthRight = getInteger("factions.roads.widthRight");
+		roadLength = getInteger("factions.roads.length");
 		allowClaimsBesidesRoads = getBoolean("factions.roads.allowClaimsBesides");
 
-		warzoneRadiusOverworld = get("factions.warzone.radiusOverworld", Short.class);
-		warzoneRadiusNether = get("factions.warzone.radiusNether", Short.class);
+		warzoneRadiusOverworld = getInteger("factions.warzone.radiusOverworld");
+		warzoneRadiusNether = getInteger("factions.warzone.radiusNether");
 
 		factionDisallowedNames = getStringList("factions.disallowednames");
 
-		factionHomeTeleportDelayNormal = get("factions.home.teleportdelay.normal", Byte.class);
-		factionHomeTeleportDelayNether = get("factions.home.teleportdelay.nether", Byte.class);
-		factionHomeTeleportDelayEnd = get("factions.home.teleportdelay.end", Byte.class);
+		factionHomeTeleportDelayNormal = getInteger("factions.home.teleportdelay.normal");
+		factionHomeTeleportDelayNether = getInteger("factions.home.teleportdelay.nether");
+		factionHomeTeleportDelayEnd = getInteger("factions.home.teleportdelay.end");
 		allowTeleportingInEnemyTerritory = getBoolean("factions.home.teleportdelay.allowTeleportingInEnemyTerritory");
-		maxHeightFactionHome = get("factions.home.teleportdelay.maxHeight", Short.class);
+		maxHeightFactionHome = getInteger("factions.home.teleportdelay.maxHeight");
 
 		subclaimSignPrivate = getBoolean("subclaimsigns.private");
 		subclaimSignCaptain = getBoolean("subclaimsigns.Captain");
@@ -142,9 +140,10 @@ public final class Configuration extends SimpleSettings {
 		subclaimHopperCheck = getBoolean("subclaimsigns.hoppercheck");
 
 		kitMap = getBoolean("kit-map");
-		preventAllyAttackDamage = getBoolean("preventAllyAttackDamage");
-		messageDebug = getBoolean("messageDebug");
 
+		preventAllyAttackDamage = getBoolean("preventA" +
+				"llyAttackDamage");
+		messageDebug = getBoolean("messageDebug");
 		api = getBoolean("API.our");
 		customEvents = getBoolean("API.events");
 	}

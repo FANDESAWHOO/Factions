@@ -34,6 +34,6 @@ public class Nametag {
 	@SneakyThrows
 	public NametagPacket createPacket(Player player) {
 		String path = "org.hcgames.hcfactions.nametag.versions.NametagPacketV" + MinecraftVersion.getCurrent();
-		return (NametagPacket) Class.forName(path).getConstructor(NametagManager.class, Player.class).newInstance(this, player);
+		return (NametagPacket) Class.forName(path.replace("1.","1_")).getConstructor(NametagManager.class, Player.class).newInstance(this, player);
 	}
 }
