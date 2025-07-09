@@ -26,6 +26,11 @@ public final class Configuration extends SimpleSettings {
 	public static Integer factionDtrUpdateMillis;
 	public static Float factionDtrUpdateIncrement;
 
+	public static String NAMETAGS_NORMAL;
+	public static List<String> NAMETAG_MOD_MODE;
+	public static List<String> NAMETAG_IN_TEAM;
+	public static List<String> NAMETAG_NO_TEAM;
+
 	public static ChatColor relationColourWarzone;
 	public static ChatColor relationColourWilderness;
 	public static ChatColor relationColourTeammate;
@@ -100,6 +105,11 @@ public final class Configuration extends SimpleSettings {
 		factionDtrUpdateMillis = getInteger("factions.dtr.millisecondsBetweenUpdates");
 		factionDtrUpdateIncrement = (float) getDouble("factions.dtr.incrementBetweenUpdates");
 
+		NAMETAGS_NORMAL = getString("NAMETAGS.NORMAL");
+		NAMETAG_MOD_MODE = getStringList("NAMETAGS.FORMAT.MOD_MODE");
+		NAMETAG_IN_TEAM = getStringList("NAMETAGS.FORMAT.IN_TEAM");
+		NAMETAG_NO_TEAM = getStringList("NAMETAGS.FORMAT.NO_TEAM");
+
 		relationColourWarzone = ChatColor.valueOf(getString("factions.relationColours.warzone"));
 		relationColourWilderness = ChatColor.valueOf(getString("factions.relationColours.wilderness"));
 		relationColourTeammate = ChatColor.valueOf(getString("factions.relationColours.teammate"));
@@ -141,8 +151,7 @@ public final class Configuration extends SimpleSettings {
 
 		kitMap = getBoolean("kit-map");
 
-		preventAllyAttackDamage = getBoolean("preventA" +
-				"llyAttackDamage");
+		preventAllyAttackDamage = getBoolean("preventAllyAttackDamage");
 		messageDebug = getBoolean("messageDebug");
 		api = getBoolean("API.our");
 		customEvents = getBoolean("API.events");

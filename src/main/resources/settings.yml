@@ -90,6 +90,21 @@ mongo:
   password: "rmpqalpSJnlVDhf0LfLW"
 # IMPORTANT FOR FACTION THINGS.
 kit-map: false
+# nametag things, KEANO API.
+NAMETAGS:
+  NORMAL: '&6[%name% %dtr-color%%dtr%&6]'
+  TEAM_TOP: '&6[%pos% %pos-color%%name% %dtr-color%%dtr%&6]'
+  VANISHED_SYMBOL: '&b*'
+  FORMAT: # Placeholder Supports.
+    MOD_MODE:
+      - '&3[Mod Mode]'
+      - '%name%'
+    IN_TEAM:
+      - '%teamtag%'
+      - '%name%'
+    NO_TEAM:
+      - '%name%'
+
 # SHOULD USE OUR SYSTEMS (LISTENERS & TIMERS & OTHERS)
 API:
   our: true # FALSE MEANS USE EVENTS OR INTERFACES || AND FOR COMMANDS LIKE TIMER

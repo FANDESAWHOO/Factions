@@ -2,13 +2,13 @@ package org.hcgames.hcfactions;
 
 
 import com.google.common.base.Joiner;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import lombok.Getter;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.RegisteredServiceProvider;
+import org.hcgames.hcfactions.api.ClientAPI;
 import org.hcgames.hcfactions.claim.Claim;
 import org.hcgames.hcfactions.claim.ClaimHandler;
 import org.hcgames.hcfactions.faction.ClaimableFaction;
@@ -46,13 +46,13 @@ public class HCFactions extends SimplePlugin {
 	private Chat chat = null;
 
 	private MongoManager mongoManager;
-	private WorldEditPlugin worldEdit;
 	private FactionManager factionManager;
 	private ClaimHandler claimHandler;
 	private VisualiseHandler visualiseHandler;
 	private TimerManager timerManager;
 	private UserManager userManager;
 	private NametagManager nametagManager;
+	private ClientAPI clientAPI;
 
 	public static HCFactions getInstance() {
 		return (HCFactions) SimplePlugin.getInstance();
@@ -144,6 +144,7 @@ public class HCFactions extends SimplePlugin {
 		getLogger().info("FactionManager initialized successfully.");
 		if (Configuration.api) timerManager = new TimerManager(this);
 		claimHandler = new ClaimHandler(this);
+		clientAPI = new ClientAPI();
 		nametagManager = new NametagManager();
 	}
 
