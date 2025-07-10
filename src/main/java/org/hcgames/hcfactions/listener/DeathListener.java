@@ -1,5 +1,6 @@
 package org.hcgames.hcfactions.listener;
 
+import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
@@ -22,7 +23,7 @@ import org.mineacademy.fo.remain.NmsEntity;
 public final class DeathListener implements Listener {
 
 	private final HCFactions plugin;
-	private static final DeathListener instance = new DeathListener();
+	@Getter private static final DeathListener instance = new DeathListener();
 
 	private DeathListener(){
 		plugin = HCFactions.getInstance();

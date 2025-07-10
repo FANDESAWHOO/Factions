@@ -125,6 +125,7 @@ public class HCFactions extends SimplePlugin {
 			registerEvents(FactionListener.getFactionListener());
 			registerEvents(ChatListener.getChatListener());
 			registerEvents(UserListener.getUserListener());
+			registerEvents(DeathListener.getInstance());
 		}
 	}
     private void registerCommands(){
