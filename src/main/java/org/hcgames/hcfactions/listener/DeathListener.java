@@ -1,11 +1,7 @@
 package org.hcgames.hcfactions.listener;
 
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Sound;
-import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -20,13 +16,17 @@ import org.bukkit.inventory.ItemStack;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.user.FactionUser;
 import org.mineacademy.fo.remain.CompEntityType;
-import org.mineacademy.fo.remain.CompSound;
 import org.mineacademy.fo.remain.NmsEntity;
 
-@RequiredArgsConstructor
-public class DeathListener implements Listener {
+
+public final class DeathListener implements Listener {
 
 	private final HCFactions plugin;
+	private static final DeathListener instance = new DeathListener();
+
+	private DeathListener(){
+		plugin = HCFactions.getInstance();
+	}
 
 	public static String getDisplayName(@NonNull ItemStack item) {
 		if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) return item.getItemMeta().getDisplayName();
@@ -57,14 +57,15 @@ public class DeathListener implements Listener {
 
 		dead.incrementDeaths();
 	}
-
+	//TODO: Move death message to factions (moved)
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onPlayerDeath(PlayerDeathEvent event) {
 		Player player = event.getEntity();
 
-		if (plugin.getServer().spigot().getTPS()[0] > 15) {
+		if (plugin.getServer().spigot().getTPS()[0] > 15) { // Prevent unnecessary lag during prime times.
 			Location location = player.getLocation();
-			World world = location.getWorld();
+			spawnLightning(location); // I think this gonna work.
+		/*	World world = location.getWorld();
 
 
 			NmsEntity lightningEntity = new NmsEntity(
@@ -73,31 +74,42 @@ public class DeathListener implements Listener {
 			);
 
 
-			Entity spawnedLightning = lightningEntity.addEntity(CreatureSpawnEvent.SpawnReason.LIGHTNING);
 
-			// 3. Reproducir sonido para todos los jugadores
+
 			Sound thunderSound = CompSound.ENTITY_LIGHTNING_BOLT_THUNDER.getSound();
 
 			for (Player target : Bukkit.getOnlinePlayers())
-				target.playSound(target.getLocation(), thunderSound, 1.0F, 1.0F);
+				target.playSound(target.getLocation(), thunderSound, 1.0F, 1.0F);*/
 		}
 	}
-/*	//TODO: Move death message to factions
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-	public void onPlayerDeath(PlayerDeathEvent event) {
-		Player player = event.getEntity();
 
-		if (plugin.getServer().spigot().getTPS()[0] > 15) { // Prevent unnecessary lag during prime times.
-			Location location = player.getLocation();
-			WorldServer worldServer = ((CraftWorld) location.getWorld()).getHandle();
-			EntityLightning entityLightning = new EntityLightning(worldServer, location.getX(), location.getY(), location.getZ(), false);
-			PacketPlayOutSpawnEntityWeather packet = new PacketPlayOutSpawnEntityWeather(entityLightning);
-			Bukkit.getOnlinePlayers().forEach(target -> {
-				((CraftPlayer) target).getHandle().playerConnection.sendPacket(packet);
-				target.playSound(target.getLocation(), CompSound.ENTITY_LIGHTNING_BOLT_THUNDER.getSound(), 1.0F, 1.0F);
-			});
-		}
-	}*/
+
+	private void spawnLightning(Location location){
+		NmsEntity entity = new NmsEntity(location,CompEntityType.LIGHTNING_BOLT.getEntityClass());
+		entity.addEntity(CreatureSpawnEvent.SpawnReason.CUSTOM);
+		/*try{ //TODO USE NMSEntity
+			if(MinecraftVersion.equals(MinecraftVersion.V.v1_7)){
+				WorldServer worldServer = ((CraftWorld) location.getWorld()).getHandle();
+				EntityLightning entityLightning = new EntityLightning(worldServer, location.getX(), location.getY(), location.getZ(), false);
+				PacketPlayOutSpawnEntityWeather packet = new PacketPlayOutSpawnEntityWeather(entityLightning);
+				Bukkit.getOnlinePlayers().forEach(target -> {
+					Remain.sendPacket(target, packet);
+					target.playSound(target.getLocation(), CompSound.ENTITY_LIGHTNING_BOLT_THUNDER.getSound(), 1.0F, 1.0F); // TODO custom method to get the volume of the lightning depending on the location.
+				});
+			} else {
+				net.minecraft.server.v1_8_R3.WorldServer worldServer = ((org.bukkit.craftbukkit.v1_8_R3.CraftWorld) location.getWorld()).getHandle();
+				net.minecraft.server.v1_8_R3.EntityLightning entityLightning = new net.minecraft.server.v1_8_R3.EntityLightning(worldServer, location.getX(), location.getY(), location.getZ(), false);
+				net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityWeather packet = new net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityWeather(entityLightning);
+				Bukkit.getOnlinePlayers().forEach(target -> {
+					Remain.sendPacket(target, packet);
+					target.playSound(target.getLocation(), CompSound.ENTITY_LIGHTNING_BOLT_THUNDER.getSound(), 1.0F, 1.0F); // TODO custom method to get the volume of the lightning depending on the location.
+				});
+			}
+		}catch(Exception e){//TODO need to check how to send the lightning in newer versions.
+             NmsEntity entity = new NmsEntity(location,CompEntityType.LIGHTNING_BOLT.getEntityClass());
+			 entity.addEntity(CreatureSpawnEvent.SpawnReason.CUSTOM);
+		}*/
+	}
 
 	private Entity getKiller(Player player) {//TODO Account for time difference & look into getKiller from DeathMessageListener
 		if (player.getKiller() != null) return player.getKiller();
