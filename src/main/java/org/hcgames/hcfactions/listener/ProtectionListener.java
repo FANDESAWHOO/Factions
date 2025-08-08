@@ -80,14 +80,12 @@ public class ProtectionListener implements Listener {
 	// List of materials a player can not right click in enemy territory.
 	private static final ImmutableSet<Material> BLOCK_RIGHT_CLICK_DENY = Sets.immutableEnumSet(
 			CompMaterial.RED_BED.getMaterial(),
-			CompMaterial.RED_BED.getMaterial(),
 			CompMaterial.BEACON.getMaterial(),
 			CompMaterial.OAK_FENCE_GATE.getMaterial(),
 			CompMaterial.IRON_DOOR.getMaterial(),
 			CompMaterial.OAK_TRAPDOOR.getMaterial(),
 			CompMaterial.OAK_DOOR.getMaterial(),
 			CompMaterial.DARK_OAK_DOOR.getMaterial(),
-			CompMaterial.IRON_DOOR.getMaterial(),
 			CompMaterial.CHEST.getMaterial(),
 			CompMaterial.TRAPPED_CHEST.getMaterial(),
 			CompMaterial.FURNACE.getMaterial(),

@@ -9,6 +9,7 @@ import org.hcgames.hcfactions.claim.Claim;
 import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.faction.ClaimableFaction;
 import org.hcgames.hcfactions.manager.SearchCallback;
+import org.hcgames.hcfactions.util.cuboid.Cuboid;
 import org.hcgames.hcfactions.wand.WandManager;
 import org.mineacademy.fo.settings.Lang;
 
@@ -54,14 +55,16 @@ public final class FactionClaimForCommand extends FactionSubCommand {
 			@Override
 			public void onSuccess(ClaimableFaction faction) {
 				Player player = (Player) sender;
-				Location selection = WandManager.getWandManager().getSelection(player, "1").getMinimumPoint();
-				Location selection2 = WandManager.getWandManager().getSelection(player, "2").getMaximumPoint();
+				Cuboid pos1 = WandManager.getWandManager().getSelection(player, "1");
+				Cuboid pos2 = WandManager.getWandManager().getSelection(player, "2");
 
-
-				if (selection == null || selection2 == null) {
-					tell(ChatColor.RED + "You need to select 2 positions with the claim wand. You can get it with /claimwand");
+				if (pos1 == null || pos2 == null) {
+					tell(ChatColor.RED + "You need to select 2 positions with the claim wand. Use /claimwand and right/left click with the stick.");
 					return;
 				}
+
+				Location selection = pos1.getMinimumPoint();
+				Location selection2 = pos2.getMaximumPoint();
 
 				if (faction.addClaim(new Claim(faction, selection, selection2), sender))
 					tell(Lang.of("Commands.claimfor.claimed", faction.getName()));
