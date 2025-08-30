@@ -158,6 +158,7 @@ Commands:
     usage: "/{0} {1} <playerName|factionName|all>"
     cleared_faction_broadcast: "Your claims have been forcefully wiped by {0}."
     cleared: "Claims belonging to {0} have been wiped."
+    claimed: "Successfully claimed land for {0}."
   console_prompt:
     prompt: "Are you sure you want to do this? All claims will be cleared.\nType yes to confirm or no to deny."
     cleared: "All claims have been cleared{0}."

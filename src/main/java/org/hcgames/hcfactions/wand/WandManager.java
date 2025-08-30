@@ -2,6 +2,7 @@ package org.hcgames.hcfactions.wand;
 
 import lombok.Getter;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
@@ -31,6 +32,7 @@ public final class WandManager extends Tool {
 	@Getter
 	private final static WandManager wandManager = new WandManager();
 	private final Map<Player, Map<String, Cuboid>> selectionMap = new ConcurrentHashMap<>();
+	private final Map<Player, Map<String, Location>> locationMap = new ConcurrentHashMap<>();
 
 	private WandManager() {
 
@@ -62,15 +64,18 @@ public final class WandManager extends Tool {
 			Player player = event.getPlayer();
 			Block block = event.getClickedBlock();
 			Map<String, Cuboid> locs = selectionMap.computeIfAbsent(player, k -> new ConcurrentHashMap<>());
+			Map<String, Location> loc = locationMap.computeIfAbsent(player, k -> new ConcurrentHashMap<>());
 			if (action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.LEFT_CLICK_AIR))
 				player.sendMessage(ChatColor.RED + "You must select a block and not Air.");
 
 			if (action.equals((Action.RIGHT_CLICK_BLOCK))) {
 				locs.put("1", new Cuboid(block.getLocation()));
+				loc.put("1", block.getLocation());
 				selectionMap.put(player, locs);
 				player.sendMessage(ChatColor.GREEN + "You selected the first point at: " + block.getX() + ", " + block.getY() + ", " + block.getZ());
 			} else if (action.equals(Action.LEFT_CLICK_BLOCK)) {
 				locs.put("2", new Cuboid(block.getLocation()));
+				loc.put("2", block.getLocation());
 				selectionMap.put(player, locs);
 				player.sendMessage(ChatColor.GREEN + "You selected the second point at: " + block.getX() + ", " + block.getY() + ", " + block.getZ());
 			}
