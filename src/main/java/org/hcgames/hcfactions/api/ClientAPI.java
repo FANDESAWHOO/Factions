@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  * Useful things for NameTags API
  * That will be implemented soon
  */
-public final class ClientAPI {
+public final class ClientAPI { // TODO, WE CAN USE EVENTS AND IS MORE EASY.
 
 	public static ClientTypes getClientType(Player player) {
 		if (isUsingLunar(player))

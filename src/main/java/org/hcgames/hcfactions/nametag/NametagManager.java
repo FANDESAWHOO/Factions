@@ -38,7 +38,7 @@ public class NametagManager {
 		instance = HCFactions.getInstance();
 		placeHolder = Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null;
 
-		Bukkit.getPluginManager().registerEvents(new NametagListener(), HCFactions.getInstance());
+	//	Bukkit.getPluginManager().registerEvents(new NametagListener(), HCFactions.getInstance()); REMOVED BECAUSE ERROR.
 	}
 
 

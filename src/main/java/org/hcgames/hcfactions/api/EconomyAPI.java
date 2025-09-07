@@ -14,8 +14,8 @@ import org.mineacademy.fo.Common;
  * CHANGED REFLECTION METHOD
  * TO IEconomy INTERFACE
  * :)
- */
-public final class EconomyAPI {
+ */ 
+public final class EconomyAPI { // TODO, WE CAN USE EVENTS AND IS MORE EASY.
 	public static final String ECONOMY_SYMBOL = "$";
 	private static final boolean API = Configuration.api;
 	private static final boolean customEvents = Configuration.customEvents;

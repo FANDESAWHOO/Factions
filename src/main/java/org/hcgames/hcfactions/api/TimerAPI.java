@@ -24,7 +24,7 @@ import java.util.Optional;
  * Or call Event to let
  * Other Plugins works.
  */
-public final class TimerAPI {
+public final class TimerAPI { // TODO, WE CAN USE EVENTS AND IS MORE EASY.
 
 	private static final boolean useEvents = !Configuration.api;
 	private static final HCFactions plugin = HCFactions.getInstance();

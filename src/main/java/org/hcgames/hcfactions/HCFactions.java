@@ -128,7 +128,8 @@ public class HCFactions extends SimplePlugin {
 			registerEvents(DeathListener.getInstance());
 		}
 	}
-    private void registerCommands(){
+    @SuppressWarnings("unused")
+	private void registerCommands(){
 		if(Configuration.api) registerCommand(TimerExecutor.getInstance());
 	}
 	private void registerManagers() {
