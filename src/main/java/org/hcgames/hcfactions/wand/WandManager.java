@@ -116,9 +116,9 @@ public final class WandManager extends Tool {
 
 		private Cuboid cuboId;
 
-		/*public Cuboid getCuboId(){
+		public Cuboid getCuboId(){
 			return new Cuboid(location1, location2);
-		}*/
+		}
 
 		public ZoneClaim(Location loc1, Location loc2){
 			location1 = loc1;
