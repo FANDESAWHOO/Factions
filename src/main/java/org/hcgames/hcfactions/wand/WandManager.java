@@ -1,6 +1,8 @@
 package org.hcgames.hcfactions.wand;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -13,8 +15,9 @@ import org.mineacademy.fo.menu.model.ItemCreator;
 import org.mineacademy.fo.menu.tool.Tool;
 import org.mineacademy.fo.remain.CompMaterial;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.UUID;
 
 /**
  * Originally we used WorldEdit to
@@ -31,25 +34,29 @@ public final class WandManager extends Tool {
 	 */
 	@Getter
 	private final static WandManager wandManager = new WandManager();
-	private final Map<Player, Map<String, Cuboid>> selectionMap = new ConcurrentHashMap<>();
-	private final Map<Player, Map<String, Location>> locationMap = new ConcurrentHashMap<>();
+	@Getter private final Map<UUID, ZoneClaim> claimCache = new HashMap<>();
+
 
 	private WandManager() {
 
 	}
 
-	public Map<String, Cuboid> getSelection(Player player) {
-		return selectionMap.get(player);
-	}
-
-	public Cuboid getSelection(Player player, String position) {
-		return selectionMap.get(player).get(position);
-	}
 
 	@Override
 	public ItemStack getItem() {
-		return ItemCreator.of(CompMaterial.STICK, "&aClaim Selection", "Right click to select first point, Left click to select second point").make();
+		return ItemCreator.of(CompMaterial.STICK, "&aClaim Selection", "Right click block = First point", "Left click block = Second point", "Shift + Left click = Confirm region", "Right click air = Cancel selection").make();
 	}
+
+	/*
+	protected Cuboid crossVersion(Player player) {
+		Cuboid region = null;
+		LocalSession session = WorldEdit.getInstance().getSessionManager().get((SessionOwner) player);
+		Selection selection = session.getSelection();
+		region = new Cuboid(selection.getMinimumPoint(), selection.getMaximumPoint()); // CROSSVERSION 1.13+
+		
+		return region;
+	} soon.*/
+
 
 	/**
 	 * With this event we gonna put
@@ -59,27 +66,67 @@ public final class WandManager extends Tool {
 	 */
 	@Override
 	protected void onBlockClick(PlayerInteractEvent event) {
-		if (event.getPlayer().hasPermission("tools.use")) {
-			Action action = event.getAction();
-			Player player = event.getPlayer();
-			Block block = event.getClickedBlock();
-			Map<String, Cuboid> locs = selectionMap.computeIfAbsent(player, k -> new ConcurrentHashMap<>());
-			Map<String, Location> loc = locationMap.computeIfAbsent(player, k -> new ConcurrentHashMap<>());
-			if (action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.LEFT_CLICK_AIR))
-				player.sendMessage(ChatColor.RED + "You must select a block and not Air.");
-
-			if (action.equals((Action.RIGHT_CLICK_BLOCK))) {
-				locs.put("1", new Cuboid(block.getLocation()));
-				loc.put("1", block.getLocation());
-				selectionMap.put(player, locs);
-				player.sendMessage(ChatColor.GREEN + "You selected the first point at: " + block.getX() + ", " + block.getY() + ", " + block.getZ());
-			} else if (action.equals(Action.LEFT_CLICK_BLOCK)) {
-				locs.put("2", new Cuboid(block.getLocation()));
-				loc.put("2", block.getLocation());
-				selectionMap.put(player, locs);
-				player.sendMessage(ChatColor.GREEN + "You selected the second point at: " + block.getX() + ", " + block.getY() + ", " + block.getZ());
+		Player player = event.getPlayer();
+		if (!player.hasPermission("tools.use")) return;
+		Action action = event.getAction();
+		Block block = event.getClickedBlock();
+		UUID uuid = player.getUniqueId();
+		ZoneClaim claim = claimCache.computeIfAbsent(uuid, u -> new ZoneClaim(null, null)); // Cancelar selección 
+		if (action == Action.RIGHT_CLICK_AIR) {
+			claimCache.remove(uuid);
+			player.getInventory().setItemInHand(null);
+			player.sendMessage(ChatColor.RED + "Selection cancelled.");
+			event.setCancelled(true);
+			return;
+		} // Confirmar selección
+		if ((action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK) && player.isSneaking()) {
+			if (claim.getLocation1() == null || claim.getLocation2() == null)
+				player.sendMessage(ChatColor.RED + "You must select both points first.");
+			else {
+				Cuboid cuboid = new Cuboid(claim.getLocation1(), claim.getLocation2()); // TODO: acá va la lógica de guardar zona/KOTH/etc.
+				claim.setCuboId(cuboid);
+				player.sendMessage(ChatColor.GREEN + "Region selected: " + cuboid.toString());
 			}
+			claimCache.remove(uuid);
+			player.getInventory().setItemInHand(null);
+			event.setCancelled(true);
+			return;
+		} // Punto 1
+		if (action == Action.RIGHT_CLICK_BLOCK && block != null) {
+			Location clicked = block.getLocation();
+			claim.setLocation1(clicked);
+			player.sendMessage(ChatColor.GREEN + "First point set at " + clicked.getBlockX() + ", " + clicked.getBlockY() + ", " + clicked.getBlockZ());
+			event.setCancelled(true);
+			return;
+		} // Punto 2
+		if (action == Action.LEFT_CLICK_BLOCK && block != null) {
+			Location clicked = block.getLocation();
+			claim.setLocation2(clicked);
+			player.sendMessage(ChatColor.GREEN + "Second point set at " + clicked.getBlockX() + ", " + clicked.getBlockY() + ", " + clicked.getBlockZ());
 			event.setCancelled(true);
 		}
 	}
+
+	@Setter @Getter @AllArgsConstructor
+	public static class ZoneClaim {
+
+		private Location location1;
+
+		private Location location2;
+
+		private Cuboid cuboId;
+
+		/*public Cuboid getCuboId(){
+			return new Cuboid(location1, location2);
+		}*/
+
+		public ZoneClaim(Location loc1, Location loc2){
+			location1 = loc1;
+			location2 = loc2;
+		}
+	}
 }
+
+
+
+

@@ -21,7 +21,7 @@ public final class ClaimWandCommand extends SimpleCommand {
 	 */
 	@Getter
 	private final static ClaimWandCommand instance = new ClaimWandCommand();
-	private final ItemStack wand = ItemCreator.of(CompMaterial.STICK, "&aClaim Selection", "Right click to select first point, Left click to select second point").make();
+	private final ItemStack wand = ItemCreator.of(CompMaterial.STICK, "&aClaim Selection", "Right click block = First point", "Left click block = Second point", "Shift + Left click = Confirm region", "Right click air = Cancel selection").make();
 
 	private ClaimWandCommand() {
 		super("claimwand|cwand");

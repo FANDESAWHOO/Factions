@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
+@SuppressWarnings("unchecked")
 public class FactionUser implements Mongoable {
 
 	private final ReadWriteLock lock = new ReentrantReadWriteLock();
@@ -182,6 +182,7 @@ public class FactionUser implements Mongoable {
 			lock.readLock().unlock();
 		}
 	}
+
 
 	public List<Material> getFilteredBlocks() {
 		lock.readLock().lock();
