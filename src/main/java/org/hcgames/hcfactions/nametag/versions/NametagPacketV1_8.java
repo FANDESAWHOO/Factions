@@ -1,4 +1,4 @@
-package org.hcgames.hcfactions.nametag.versions;
+/*package org.hcgames.hcfactions.nametag.versions;
 
 import lombok.SneakyThrows;
 import net.minecraft.server.v1_8_R3.Packet;
@@ -108,4 +108,4 @@ public class NametagPacketV1_8 extends NametagPacket {
 			return packet;
 		}
 	}
-}
+}*/

@@ -20,10 +20,10 @@ public class NametagTask implements Runnable {
 				HCFactions.getInstance().getNametagManager().handleUpdate(viewer, viewer);
 
 				// When in staff tracked players are empty because you are hidden
-				for (Player staff : viewer.spigot().getHiddenPlayers()) {
+				/*for (Player staff : viewer.spigot().getHiddenPlayers()) {
 					if (staff == viewer) continue;
 					HCFactions.getInstance().getNametagManager().handleUpdate(staff, viewer);
-				}
+				}*/
 
 				/*for (Player target : version.getTrackedPlayers(viewer)) {
 					if (viewer == target) continue;

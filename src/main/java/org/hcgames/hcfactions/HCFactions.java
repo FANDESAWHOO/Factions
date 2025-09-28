@@ -147,7 +147,7 @@ public class HCFactions extends SimplePlugin {
 		if (Configuration.api) timerManager = new TimerManager(this);
 		claimHandler = new ClaimHandler(this);
 		clientAPI = new ClientAPI();
-		nametagManager = new NametagManager();
+		//nametagManager = new NametagManager();
 	}
 
 	private boolean setupEconomy() {

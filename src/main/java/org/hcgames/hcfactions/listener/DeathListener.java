@@ -3,7 +3,7 @@ package org.hcgames.hcfactions.listener;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
+
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,10 +14,13 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.user.FactionUser;
+import org.mineacademy.fo.ItemUtil;
 import org.mineacademy.fo.remain.CompEntityType;
 import org.mineacademy.fo.remain.NmsEntity;
+import org.mineacademy.fo.remain.Remain;
 
 
 public final class DeathListener implements Listener {
@@ -29,15 +32,22 @@ public final class DeathListener implements Listener {
 		plugin = HCFactions.getInstance();
 	}
 
-	public static String getDisplayName(@NonNull ItemStack item) {
-		if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) return item.getItemMeta().getDisplayName();
+	public static String getDisplayName(ItemStack item) {
+	    if (item == null || !item.getType().isSolid()) {
+	        return "Air";
+	    }
 
-		if (item instanceof CraftItemStack) {
-			CraftItemStack craftItemStack = (CraftItemStack) item;
+	    ItemMeta meta = item.getItemMeta();
+	    if (meta != null && meta.hasDisplayName()) {
+	        return meta.getDisplayName();
+	    }
 
-		}
+	    try {
 
-		return CraftItemStack.asNMSCopy(item).getName();
+	        return item.getItemMeta().getLocalizedName();
+	    } catch (Exception e) {
+	        return ItemUtil.bountifyCapitalized(item.getType());
+	    }
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
@@ -63,7 +73,7 @@ public final class DeathListener implements Listener {
 	public void onPlayerDeath(PlayerDeathEvent event) {
 		Player player = event.getEntity();
 
-		if (plugin.getServer().spigot().getTPS()[0] > 15) { // Prevent unnecessary lag during prime times.
+		if (Remain.getTPS() > 15) { // Prevent unnecessary lag during prime times.
 			Location location = player.getLocation();
 			spawnLightning(location); // I think this gonna work.
 		/*	World world = location.getWorld();
