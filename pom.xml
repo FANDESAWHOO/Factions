@@ -13,12 +13,14 @@
     <name>HCFactions</name>
 
     <!-- Change to the appropriate plugin's version, starting at 1.0.0. -->
-    <version>1.1.0</version>
+    <version>1.1.1</version>
 
     <!-- DO NOT EDIT. -->
     <packaging>jar</packaging>
 
     <properties>
+        <spigot-systemPath>C:\Users\Andreita\Documents\HCG\HCFactions/libs/1.7.10.jar</spigot-systemPath>
+        <spigot-api-systemPath>C:\Users\Andreita\Documents\HCG\HCFactions/libs/wspigot.jar</spigot-api-systemPath>
 
         <!-- Change to your name or the main project author. -->
         <author>doctordark</author>
@@ -121,14 +123,14 @@
             <artifactId>spigot</artifactId>
             <version>1.7.10-R0.1-SNAPSHOT</version>
             <scope>system</scope>
-            <systemPath>C:\Users\Andreita\Documents\HCG\HCFactions/libs/1.7.10.jar</systemPath>
+            <systemPath>${spigot-systemPath}</systemPath>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
             <version>1.8.8-R0.1-SNAPSHOT</version>
             <scope>system</scope>
-            <systemPath>C:\Users\Andreita\Documents\HCG\HCFactions/libs/wspigot.jar</systemPath>
+            <systemPath>${spigot-api-systemPath}</systemPath>
         </dependency>
         <dependency>
             <groupId>net.sf.trove4j</groupId>
