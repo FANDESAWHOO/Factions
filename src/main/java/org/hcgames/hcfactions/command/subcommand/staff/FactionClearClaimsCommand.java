@@ -47,11 +47,11 @@ public final class FactionClearClaimsCommand extends FactionSubCommand {
 
 	@Override
 	public void onCommand() {
+		checkPerm();
 		if (args.length < 2) {
 			tell(Lang.of("command.error.usage", getUsage()));
 			return;
 		}
-
 		if (args[1].equalsIgnoreCase("all")) {
 			if (!(sender instanceof ConsoleCommandSender)) {
 				tell(Lang.of("Commands.error.console_only"));

@@ -51,6 +51,7 @@ public final class FactionForceRenameCommand extends FactionSubCommand {
 
 	@Override
 	public void onCommand() {
+		checkPerm();
 		if (args.length < 2) {
 			tell(ChatColor.RED + "Usage: " + getUsage());
 			return;

@@ -44,7 +44,7 @@ public final class FactionForceJoinCommand extends FactionSubCommand {
 			tell(ChatColor.RED + "Only players can join factions.");
 			return;
 		}
-
+		checkPerm();
 		if (args.length < 2) {
 			tell(ChatColor.RED + "Usage: " + getUsage());
 			return;

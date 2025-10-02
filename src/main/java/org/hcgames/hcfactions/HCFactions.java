@@ -119,13 +119,13 @@ public class HCFactions extends SimplePlugin {
 		registerEvents(ClaimWandListener.getClaimWandListener());
 		registerEvents(NameCacheListener.getNameCacheListener());
 		registerEvents(NameCacheListener.getNameCacheListener());
-		registerEvents(ProtectionListener.getProtectionListener());
 		registerEvents(FactionChatListener.getChatListener());
 		if (Configuration.api) {
 			registerEvents(FactionListener.getFactionListener());
 			registerEvents(ChatListener.getChatListener());
 			registerEvents(UserListener.getUserListener());
 			registerEvents(DeathListener.getInstance());
+			registerEvents(ProtectionListener.getProtectionListener());
 		}
 	}
     @SuppressWarnings("unused")
@@ -141,8 +141,8 @@ public class HCFactions extends SimplePlugin {
 			mongoManager.connect();
 			factionManager = new MongoFactionManager(this);
 		} else factionManager = new FlatFileFactionManager(this);
-		if (Configuration.mongo & Configuration.api)
-			userManager = new MongoUserManager(this);
+		//if (Configuration.mongo & Configuration.api)
+		userManager = new MongoUserManager(this);
 		getLogger().info("FactionManager initialized successfully.");
 		if (Configuration.api) timerManager = new TimerManager(this);
 		claimHandler = new ClaimHandler(this);

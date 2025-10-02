@@ -29,6 +29,7 @@ public final class FactionCreateSystemCommand extends FactionSubCommand {
 
 	@Override
 	public void onCommand() {
+		checkPerm();
 		if (args.length < 2) {
 			tell(Lang.of("Command.error.usage", getUsage()));
 			return;

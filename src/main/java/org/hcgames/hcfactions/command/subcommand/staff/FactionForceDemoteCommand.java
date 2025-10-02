@@ -31,11 +31,11 @@ public final class FactionForceDemoteCommand extends FactionSubCommand {
 
 	@Override
 	public void onCommand() {
+		checkPerm();
 		if (args.length < 2) {
 			Lang.of("Commands.error.usage", getUsage());
 			return;
 		}
-
 		plugin.getFactionManager().advancedSearch(args[1], PlayerFaction.class, new SearchCallback<PlayerFaction>() {
 			@Override
 			public void onSuccess(PlayerFaction faction) {

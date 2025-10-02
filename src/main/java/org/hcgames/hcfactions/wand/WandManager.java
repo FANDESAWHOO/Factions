@@ -19,14 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-/**
- * Originally we used WorldEdit to
- * Handle claim selection but
- * WorldEdit change the API
- * On determinate versions
- * And im lazy to manage that xd
- * UPDATE: CHANGED THIS TO USE CUBOID :)
- */
+
 public final class WandManager extends Tool {
 
 	/**

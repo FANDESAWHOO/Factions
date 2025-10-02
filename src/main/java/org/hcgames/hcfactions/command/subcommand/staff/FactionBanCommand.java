@@ -32,6 +32,7 @@ public final class FactionBanCommand extends FactionSubCommand {
 
 	@Override
 	public void onCommand() {
+ 	checkPerm();
 		if (args.length < 3) {
 			tell(Lang.of("Commands.error.usage", getUsage()));
 			return;

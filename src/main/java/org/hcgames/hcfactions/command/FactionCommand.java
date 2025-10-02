@@ -108,7 +108,7 @@ public final class FactionCommand extends SimpleCommand {
 
 	@Override
 	protected void onCommand() {
-		checkPerm(getPermission());
+	//	checkPerm(getPermission());
 
 		if (args.length == 0) {
 			help.execute(sender, getLabel(), args);

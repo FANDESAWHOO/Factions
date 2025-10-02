@@ -44,7 +44,7 @@ public final class FactionClaimForCommand extends FactionSubCommand {
 			tell(Lang.of("Commands.error.player_only"));
 			return;
 		}
-
+		checkPerm();
 		if (args.length < 2) {
 			tell(Lang.of("Commands.error.usage", getUsage()));
 			return;
