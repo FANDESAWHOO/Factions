@@ -117,7 +117,7 @@ public final class FactionCommand extends SimpleCommand {
 
 		FactionSubCommand sub = getSubCommand(args[0]);
 		if (sub == null) {
-			// Mensaje de error mejorado
+
 			tell(Lang.of("Commands-Unknown-Subcommand")
 					.replace("{subCommand}", args[0])
 					.replace("{commandLabel}", getLabel()));

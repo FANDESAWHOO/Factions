@@ -54,6 +54,7 @@ import org.hcgames.hcfactions.faction.system.WarzoneFaction;
 import org.hcgames.hcfactions.structure.Raidable;
 import org.hcgames.hcfactions.structure.Role;
 import org.hcgames.hcfactions.util.BukkitUtils;
+import org.hcgames.hcfactions.util.text.CC;
 import org.mineacademy.fo.remain.CompMaterial;
 import org.mineacademy.fo.settings.Lang;
 
@@ -356,7 +357,7 @@ public class ProtectionListener implements Listener {
 			if (fromFac.isSafezone()) { // teleport player to spawn point of target if came from safe-zone.
 				event.setTo(to.getWorld().getSpawnLocation().add(0.5, 0, 0.5));
 				event.useTravelAgent(false);
-				player.sendMessage(Lang.of("factions.protection.teleport_spawn_safezone"));
+				player.sendMessage(CC.translate(Lang.of("factions.protection.teleport_spawn_safezone")));
 				return;
 			}
 
@@ -379,8 +380,8 @@ public class ProtectionListener implements Listener {
 					}
 
 					if (shouldCancel) {
-						player.sendMessage(Lang.of("factions.protection.portal_creation_cancelled")
-								.replace("{faction}", factionAt.getFormattedName(player)));
+						player.sendMessage(CC.translate(Lang.of("factions.protection.portal_creation_cancelled")
+								.replace("{faction}", factionAt.getFormattedName(player))));
 						event.setCancelled(true);
 					}
 				}
@@ -430,11 +431,11 @@ public class ProtectionListener implements Listener {
 				Faction attackerFactionAt = plugin.getFactionManager().getFactionAt(attacker.getLocation());
 				if (attackerFactionAt.isSafezone()) {
 					event.setCancelled(true);
-					attacker.sendMessage(Lang.of("factions.protection.cannot_attack_in_safezone"));
+					attacker.sendMessage(CC.translate(Lang.of("factions.protection.cannot_attack_in_safezone")));
 					return;
 				} else if (playerFactionAt.isSafezone()) {
 					// it's already cancelled above.
-					attacker.sendMessage(Lang.of("factions.protection.cannot_attack_players_in_safezone"));
+					attacker.sendMessage(CC.translate(Lang.of("factions.protection.cannot_attack_in_safezone")));
 					return;
 				}
 
@@ -445,21 +446,21 @@ public class ProtectionListener implements Listener {
 					Role role = playerFaction.getMember(player).getRole();
 					String hiddenAstrixedName = role.getAstrix() + (player.hasPotionEffect(PotionEffectType.INVISIBILITY) ? "???" : player.getName());
 					if (attackerFaction == playerFaction) {
-						attacker.sendMessage(Lang.of("factions.protection.attack_faction_member")
+						attacker.sendMessage(CC.translate(Lang.of("factions.protection.attack_faction_member")
 								.replace("{teammateColour}", Configuration.relationColourTeammate.toString())
-								.replace("{player}", hiddenAstrixedName));
+								.replace("{player}", hiddenAstrixedName)));
 						if (!playerFaction.isFriendly_fire()) event.setCancelled(true);
 					} else if (attackerFaction.getAllied().contains(playerFaction.getUniqueID())) {
 						ChatColor color = Configuration.relationColourAlly;
 						if (Configuration.preventAllyAttackDamage) {
 							event.setCancelled(true);
-							attacker.sendMessage(Lang.of("factions.protection.attack_ally_cancelled")
+							attacker.sendMessage(CC.translate(Lang.of("factions.protection.attack_ally_cancelled")
 									.replace("{allyColour}", color.toString())
-									.replace("{player}", hiddenAstrixedName));
+									.replace("{player}", hiddenAstrixedName)));
 							attacker.sendMessage(color + hiddenAstrixedName + ChatColor.YELLOW + " is an ally.");
-						} else attacker.sendMessage(Lang.of("factions.protection.attack_ally")
+						} else attacker.sendMessage(CC.translate(Lang.of("factions.protection.attack_ally")
 								.replace("{allyColour}", color.toString())
-								.replace("{player}", hiddenAstrixedName));
+								.replace("{player}", hiddenAstrixedName)));
 					}
 				} catch (NoFactionFoundException ignored) {
 				}
@@ -596,25 +597,25 @@ public class ProtectionListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
 	public void onBlockBreak(BlockBreakEvent event) {
-		if (!attemptBuild(event.getPlayer(), event.getBlock().getLocation(), Lang.of("factions.protection.cannot_build")))
+		if (!attemptBuild(event.getPlayer(), event.getBlock().getLocation(), CC.translate(Lang.of("factions.protection.cannot_build"))))
 			event.setCancelled(true);
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
 	public void onBlockPlace(BlockPlaceEvent event) {
-		if (!attemptBuild(event.getPlayer(), event.getBlockPlaced().getLocation(), Lang.of("factions.protection.cannot_build"), false, true))
+		if (!attemptBuild(event.getPlayer(), event.getBlockPlaced().getLocation(), CC.translate(Lang.of("factions.protection.cannot_build")), false, true))
 			event.setCancelled(true);
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
 	public void onBucketFill(PlayerBucketFillEvent event) {
-		if (!attemptBuild(event.getPlayer(), event.getBlockClicked().getLocation(), Lang.of("factions.protection.cannot_build")))
+		if (!attemptBuild(event.getPlayer(), event.getBlockClicked().getLocation(), CC.translate(Lang.of("factions.protection.cannot_build"))))
 			event.setCancelled(true);
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
 	public void onBucketEmpty(PlayerBucketEmptyEvent event) {
-		if (!attemptBuild(event.getPlayer(), event.getBlockClicked().getLocation(), Lang.of("factions.protection.cannot_build")))
+		if (!attemptBuild(event.getPlayer(), event.getBlockClicked().getLocation(), CC.translate(Lang.of("factions.protection.cannot_build"))))
 			event.setCancelled(true);
 	}
 
@@ -622,13 +623,13 @@ public class ProtectionListener implements Listener {
 	public void onHangingBreakByEntity(HangingBreakByEntityEvent event) {
 		Entity remover = event.getRemover();
 		if (remover instanceof Player)
-			if (!attemptBuild(remover, event.getEntity().getLocation(), Lang.of("factions.protection.cannot_build")))
+			if (!attemptBuild(remover, event.getEntity().getLocation(), CC.translate(Lang.of("factions.protection.cannot_build"))))
 				event.setCancelled(true);
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
 	public void onHangingPlace(HangingPlaceEvent event) {
-		if (!attemptBuild(event.getPlayer(), event.getEntity().getLocation(), Lang.of("factions.protection.cannot_build")))
+		if (!attemptBuild(event.getPlayer(), event.getEntity().getLocation(), CC.translate(Lang.of("factions.protection.cannot_build"))))
 			event.setCancelled(true);
 	}
 
@@ -641,7 +642,7 @@ public class ProtectionListener implements Listener {
 			//Allow entering minecarts in other people's claims
 			if (vehicle instanceof Minecart) return;
 
-			if (!attemptBuild(event.getEntered(), vehicle.getLocation(), Lang.of("factions.protection.cannot_enter_vehicle"))) {
+			if (!attemptBuild(event.getEntered(), vehicle.getLocation(), CC.translate(Lang.of("factions.protection.cannot_build")))) {
 				event.setCancelled(true);
 				return;
 			}
@@ -668,7 +669,7 @@ public class ProtectionListener implements Listener {
 			if (shooter instanceof Player) damager = (Player) shooter;
 		}
 
-		if (damager != null && !attemptBuild(attacker, damager.getLocation(), Lang.of("factions.protection.cannot_build")))
+		if (damager != null && !attemptBuild(attacker, damager.getLocation(), CC.translate(Lang.of("factions.protection.cannot_build"))))
 			event.setCancelled(true);
 	}
 
@@ -678,7 +679,7 @@ public class ProtectionListener implements Listener {
 		Entity entity = event.getEntity();
 		if (entity instanceof Hanging) {
 			Player attacker = BukkitUtils.getFinalAttacker(event, false);
-			if (attacker != null && !attemptBuild(attacker, entity.getLocation(), Lang.of("factions.protection.cannot_build")))
+			if (attacker != null && !attemptBuild(attacker, entity.getLocation(), CC.translate(Lang.of("factions.protection.cannot_build"))))
 				event.setCancelled(true);
 		}
 	}
@@ -688,7 +689,7 @@ public class ProtectionListener implements Listener {
 	public void onHangingInteractByPlayer(PlayerInteractEntityEvent event) {
 		Entity entity = event.getRightClicked();
 		if (entity instanceof Hanging)
-			if (!attemptBuild(event.getPlayer(), entity.getLocation(), Lang.of("factions.protection.cannot_build")))
+			if (!attemptBuild(event.getPlayer(), entity.getLocation(), CC.translate(Lang.of("factions.protection.cannot_build"))))
 				event.setCancelled(true);
 	}
 }

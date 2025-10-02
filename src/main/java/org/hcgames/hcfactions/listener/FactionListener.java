@@ -150,27 +150,32 @@ public class FactionListener implements Listener {
 		return remaining;
 	}
 
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-	private void onPlayerClaimEnter(PlayerClaimEnterEvent event) {
-		Faction toFaction = event.getToFaction();
-		Player player = event.getPlayer();
 
-		if (toFaction.isSafezone()) {
-			player.setHealth(player.getMaxHealth());
-			player.setFoodLevel(20);
-			player.setFireTicks(0);
-			player.setSaturation(4.0F);
-		}
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    private void onPlayerClaimEnter(PlayerClaimEnterEvent event){
+        Faction toFaction = event.getToFaction();
+        Player player = event.getPlayer();
 
-		if (toFaction instanceof ClaimableFaction && ((ClaimableFaction) toFaction).isSnowfall())
-			player.setPlayerWeather(WeatherType.DOWNFALL);
-		else player.resetPlayerWeather();
+        if(toFaction.isSafezone()){
+            player.setHealth(player.getMaxHealth());
+            player.setFoodLevel(20);
+            player.setFireTicks(0);
+            player.setSaturation(4.0F);
+        }
 
-		// delay before re-messaging.
-		if (getLastLandChangedMeta(player) <= 0L) player.sendMessage(CC.translate(Lang.of("Messages-Factions-EnterLand")
-				.replace("{factionName}", event.getToFaction().getFormattedName(player))
-				.replace("{factionLeft}", (event.getFromFaction() == null ? "" : event.getFromFaction().getFormattedName(player)))));
-	}
+        if(toFaction instanceof ClaimableFaction && ((ClaimableFaction)toFaction).isSnowfall()){
+            player.setPlayerWeather(WeatherType.DOWNFALL);
+        }else{
+            player.resetPlayerWeather();
+        }
+
+        if(this.getLastLandChangedMeta(player) <= 0L){ // delay before re-messaging.
+            player.sendMessage(CC.translate(Lang.of("Messages-Factions-EnterLand")
+                    .replace("{factionName}", event.getToFaction().getFormattedName(player))
+                    .replace("{factionLeft}", (event.getFromFaction() == null ? "" : event.getFromFaction().getFormattedName(player)))));
+        }
+    }
+
 /*
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onPlayerLeftFaction(PlayerLeftFactionEvent event){

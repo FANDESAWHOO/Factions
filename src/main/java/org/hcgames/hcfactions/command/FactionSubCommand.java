@@ -128,10 +128,10 @@ public abstract class FactionSubCommand implements TabCompleter {
 			sender.sendMessage(Lang.of("Commands.No_Console"));
 			return;
 		}
-		if (!sender.hasPermission(permission)) {
+		/*if (!sender.hasPermission(permission)) {
 			sender.sendMessage(Lang.of("No_Permission"));
 			return;
-		}
+		}*/ 
 
 		onCommand();
 	}
