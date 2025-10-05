@@ -104,7 +104,17 @@ NAMETAGS:
       - '%name%'
     NO_TEAM:
       - '%name%'
-
+playerfaction-show:
+  - "&6&m----------&7[{faction}&7]&6&m----------" #home-coords will just become "None" if they do not have a home set
+  - "&6DTR: &e{dtr} &6/ &e{max-dtr} &e{deaths-dtr}" #You can set the default colors in the config.yml, default is red = raidable, green = not raidable
+  - "&6DTR Freeze: &e{time}" #This will only be displayed if the faction is frozen.
+  - "&6Faction Home: &e{home-coords}"
+  - "&6Allies: &e{allies}"
+  - "&6Points: &e{faction-points}"
+  - "&6Balance: &e${balance}"
+  - "&6Members: &e{total} / {total-max}"
+  - "&6Members online({members-on-count}): {members-online}"
+  - "&6Members offline({members-of-count}): {members-offline}" 
 # SHOULD USE OUR SYSTEMS (LISTENERS & TIMERS & OTHERS)
 API:
   our: true # FALSE MEANS USE EVENTS OR INTERFACES || AND FOR COMMANDS LIKE TIMER

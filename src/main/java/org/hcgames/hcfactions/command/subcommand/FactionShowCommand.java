@@ -74,7 +74,7 @@ public final class FactionShowCommand extends FactionSubCommand {
 				@Override
 				public void onFail(FailReason reason) {
 					if (finalNamedFaction == null)
-						tell(Lang.of("commands.error.faction_not_found", args[1]));
+						tell(Lang.of("Commands.error.faction_not_found", args[1]));
 				}
 			}, true);
 

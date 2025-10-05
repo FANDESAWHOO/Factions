@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 @Getter
 public final class Configuration extends SimpleSettings {
-
+    // SYSTEM
 	public static Integer factionNameMinCharacters;
 	public static Integer factionNameMaxCharacters;
 	public static Integer factionMaxMembers;
@@ -25,7 +25,9 @@ public final class Configuration extends SimpleSettings {
 	public static Float factionMaximumDtr;
 	public static Integer factionDtrUpdateMillis;
 	public static Float factionDtrUpdateIncrement;
-
+    public static List<String> factionShow;
+	
+	
 	public static String NAMETAGS_NORMAL;
 	public static List<String> NAMETAG_MOD_MODE;
 	public static List<String> NAMETAG_IN_TEAM;
@@ -104,7 +106,7 @@ public final class Configuration extends SimpleSettings {
 		factionMaximumDtr = (float) getDouble("factions.dtr.maximum");
 		factionDtrUpdateMillis = getInteger("factions.dtr.millisecondsBetweenUpdates");
 		factionDtrUpdateIncrement = (float) getDouble("factions.dtr.incrementBetweenUpdates");
-
+        factionShow = getStringList("playerfaction-show");
 		NAMETAGS_NORMAL = getString("NAMETAGS.NORMAL");
 		NAMETAG_MOD_MODE = getStringList("NAMETAGS.FORMAT.MOD_MODE");
 		NAMETAG_IN_TEAM = getStringList("NAMETAGS.FORMAT.IN_TEAM");

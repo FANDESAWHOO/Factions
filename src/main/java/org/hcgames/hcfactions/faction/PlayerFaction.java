@@ -70,6 +70,7 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
 	private final Set<String> invitedPlayers = new ConcurrentSet<>();
 	private final Map<UUID, FocusTarget> focusTargets = new ConcurrentHashMap<>();
 	private final Map<UUID, Long> previousMembers = new ConcurrentHashMap<>();
+	private final List<UUID> bannedPlayers = new ArrayList<>(); // hook to deathban core !
 	private PersistableLocation home;
 	private String announcement;
 	@Setter
@@ -621,13 +622,143 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
 		else return RegenStatus.FULL;
 	}
 
-	/*
-	 * Soon can be configurable
-	 * Like DTRShock configuration file
-	 * Especially thanks to DoctorDark
-	 * For let me do this.
-	 * And will be using PlaceHolder!
-	 */
+
+    public List<String> getFormattedNames(CommandSender sender) {
+    	List<String> names = new ArrayList();
+		int combinedKills = 0;
+		String leaderName = null;
+		Set<String> memberNames = new HashSet<>();
+		Set<String> captainNames = new HashSet<>();
+    	for (Map.Entry<UUID, FactionMember> entry : members.entrySet()) {
+			FactionMember factionMember = entry.getValue();
+			Optional<Player> target = factionMember.toOnlinePlayer();
+
+			FactionUser user = HCFactions.getInstance().getUserManager().getUser(entry.getKey());
+			int kills = user.getKills();
+			combinedKills += kills;
+
+			ChatColor color;
+			if (bannedPlayers.contains(entry.getKey())) {
+				color = ChatColor.RED;
+			} else if (!target.isPresent() || (sender instanceof Player && !((Player) sender).canSee(target.get()))) {
+	            color = ChatColor.GRAY;
+	        } else {
+	        	color = ChatColor.GREEN;
+	        }
+			 String role = null; 
+			 switch (factionMember.getRole()) {
+				case LEADER:
+					role = "**";
+					break;
+				case CAPTAIN:
+					role = "*";
+					break;
+				case MEMBER:
+					role = "";
+					break;
+			}
+			 String memberName = color + role + factionMember.getCachedName() + ChatColor.GRAY + " [" + ChatColor.RED + kills + ChatColor.GRAY + "]";
+				
+				names.add(memberName);
+		}
+    	if (!names.isEmpty()) return names;
+    	return null;
+    }
+    public List<String> getOfflineFormattedNames(CommandSender sender) {
+    	List<String> names = new ArrayList();
+		int combinedKills = 0;
+		String leaderName = null;
+		Set<String> memberNames = new HashSet<>();
+		Set<String> captainNames = new HashSet<>();
+    	for (Map.Entry<UUID, FactionMember> entry : getOfflineMembers(sender).entrySet()) {
+			FactionMember factionMember = entry.getValue();
+			Optional<Player> target = factionMember.toOnlinePlayer();
+
+			FactionUser user = HCFactions.getInstance().getUserManager().getUser(entry.getKey());
+			int kills = user.getKills();
+			combinedKills += kills;
+
+			ChatColor color;
+			if (bannedPlayers.contains(entry.getKey())) {
+				color = ChatColor.RED;
+			} else if (!target.isPresent() || (sender instanceof Player && !((Player) sender).canSee(target.get()))) {
+	            color = ChatColor.GRAY;
+	        } else {
+	        	color = ChatColor.DARK_GREEN;
+	        }
+			 String role = null; 
+			 switch (factionMember.getRole()) {
+				case LEADER:
+					role = "**";
+					break;
+				case CAPTAIN:
+					role = "*";
+					break;
+				case MEMBER:
+					role = "";
+					break;
+			}
+			 String memberName =  color + role + factionMember.getCachedName() + ChatColor.GRAY + " [" + ChatColor.RED + kills + ChatColor.GRAY + "]";
+				
+				names.add(memberName);
+		}
+    	if (!names.isEmpty()) return names;
+    	return null;
+    }
+    @Override
+	public void sendInformation(CommandSender sender) {
+	    Map<String, String> placeholders = new HashMap<>();
+	    Set<String> allyNames = new HashSet<>();
+		for (Map.Entry<UUID, FactionRelation> entry : relations.entrySet()) {
+			Faction faction = HCFactions.getInstance().getFactionManager().getFaction(entry.getKey());
+			if (faction instanceof PlayerFaction) {
+				PlayerFaction ally = (PlayerFaction) faction;
+				allyNames.add(ally.getFormattedName(ally) + ChatColor.GOLD +
+						" [" + ChatColor.WHITE + ally.getOnlinePlayers(sender).size() + ChatColor.GRAY + '/' + ChatColor.WHITE + ally.members.size() + ChatColor.GOLD + "]");
+			}
+		}
+	
+	    placeholders.put("{faction}", getFormattedName(sender));
+	    placeholders.put("{dtr}", JavaUtils.format(getDeathsUntilRaidable(false)));
+	    placeholders.put("{max-dtr}", JavaUtils.format(getMaximumDeathsUntilRaidable()));
+	    placeholders.put("{deaths-dtr}", String.valueOf(getDeathsUntilRaidable(false)));
+	    placeholders.put("{balance}", String.valueOf(balance));	
+	    placeholders.put("{allies}", allyNames.isEmpty() ? null : String.join(ChatColor.GRAY + ", " + "&c", allyNames));
+	    placeholders.put("{time}", getRemainingRegenerationTime() > 0L
+	            ? DurationFormatUtils.formatDurationWords(getRemainingRegenerationTime(), true, true)
+	            : null);
+
+	    placeholders.put("{home-coords}", home == null
+	            ? null
+	            : home.getLocation().getBlockX() + " " + home.getLocation().getBlockZ());
+
+	    placeholders.put("{allies}", allyNames.isEmpty()
+	            ? null
+	            : String.join(ChatColor.GRAY + ", " + ChatColor.RED, allyNames));
+
+	  //  placeholders.put("{faction-points}", String.valueOf(getPoints())); 
+
+	    placeholders.put("{total}", String.valueOf(getOnlinePlayers(sender).size()));
+	    placeholders.put("{total-max}", String.valueOf(members.size()));
+
+	    placeholders.put("{members-on-count}", String.valueOf(getOnlinePlayers(sender).size()));
+	    if (!getOnlinePlayers().isEmpty()) placeholders.put("{members-online}", String.join(getColorRelation(sender) + ", ", getFormattedNames(sender)));
+
+	    placeholders.put("{members-of-count}", String.valueOf(getOfflinePlayers(sender).size()));
+	   if (!getOfflinePlayers().isEmpty()) placeholders.put("{members-offline}", String.join(getColorRelation(sender) + ", ", getOfflineFormattedNames(sender)));
+
+	    for (String raw : Configuration.factionShow) {
+	        String line = raw;
+	        for (Map.Entry<String, String> entry : placeholders.entrySet()) {
+	        	 if (entry.getValue() == null || entry.getKey() == null) continue;
+	            line = line.replace(entry.getKey(), entry.getValue());
+	        }
+	       if (!line.isEmpty() && !line.contains("{") && line != null) sender.sendMessage(CC.translate(line));
+	    }
+	  
+	}
+
+/*	
 	@Override
 	public void sendInformation(CommandSender sender) {
 		String leaderName = null;
@@ -655,6 +786,13 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
 			combinedKills += kills;
 
 			ChatColor color;
+			if (bannedPlayers.contains(entry.getKey())) {
+				color = ChatColor.RED;
+			} else if (!target.isPresent() || (sender instanceof Player && !((Player) sender).canSee(target.get()))) {
+	            color = ChatColor.GRAY;
+	        } else {
+	        	color = ChatColor.GREEN;
+	        }
            /* Deathban deathban = user.getDeathban();
             if (deathban != null && deathban.isActive()) {
                 color = ChatColor.RED;
@@ -662,9 +800,9 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
                 color = ChatColor.GRAY;
             } else {
                 color = ChatColor.GREEN;
-            }*/
-			String memberName = factionMember.getCachedName() + ChatColor.GRAY + " [" + ChatColor.RED + kills + ChatColor.GRAY + "]";
-			//  String memberName = color + factionMember.getCachedName() + ChatColor.GRAY + " [" + ChatColor.RED + kills + ChatColor.GRAY + "]";
+            }
+			//String memberName = factionMember.getCachedName() + ChatColor.GRAY + " [" + ChatColor.RED + kills + ChatColor.GRAY + "]";
+			 String memberName = color + factionMember.getCachedName() + ChatColor.GRAY + " [" + ChatColor.RED + kills + ChatColor.GRAY + "]";
 			switch (factionMember.getRole()) {
 				case LEADER:
 					leaderName = memberName;
@@ -708,7 +846,7 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
 
         if (!memberNames.isEmpty()) {
             sender.sendMessage(ChatColor.YELLOW + "Members: " + ChatColor.RED + String.join(ChatColor.GRAY + ", " + ChatColor.RED, memberNames));
-        }*/
+        }
 
 
 		sender.sendMessage(ChatColor.GOLD + "Total Kills: " + ChatColor.RED + combinedKills);
@@ -721,148 +859,7 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
 			sender.sendMessage(ChatColor.GOLD + "Time Until Regen: " + ChatColor.RED + DurationFormatUtils.formatDurationWords(dtrRegenRemaining, true, true));
 
 		//   sender.sendMessage(ChatColor.GRAY + BukkitUtils.STRAIGHT_LINE_DEFAULT);
-	}
-   /* @Override
-    public void sendInformation(CommandSender sender) {
-        HCFactions plugin = JavaPlugin.getPlugin(HCFactions.class);
-        Set<String> allyNames = new HashSet<>();
-        String leaderName = null;
-
-        List<UUID> deadRelations = new ArrayList<>();
-        for (Map.Entry<UUID, FactionRelation> entry : relations.entrySet()) {//TODO: Implement name based caching
-            Faction faction;
-            try {
-                faction = plugin.getFactionManager().getFaction(entry.getKey());
-                if (faction instanceof PlayerFaction) {
-                    PlayerFaction ally = (PlayerFaction) faction;
-                    allyNames.add(plugin.getMessages().getString("factions.show.playerfaction.parts.ally_format")
-                            .replace("{allyName}", ally.getFormattedName(sender))
-                            .replace("{allyMembersOnline}", String.valueOf(ally.getOnlinePlayers(sender).size()))
-                            .replace("{allyMembersTotal}", String.valueOf(ally.members.size())));
-                }
-            } catch (NoFactionFoundException e){
-                deadRelations.add(entry.getKey());
-            }
-        }
-
-        if(!deadRelations.isEmpty()){
-            deadRelations.forEach(relations::remove);
-            deadRelations.clear();
-        }
-
-        int combinedKills = 0;
-        Set<String> memberNames = new HashSet<>();
-        Set<String> captainNames = new HashSet<>();
-        Set<String> coleaders = new HashSet<>();
-        for (Map.Entry<UUID, FactionMember> entry : members.entrySet()) {
-            FactionMember factionMember = entry.getValue();
-            Optional<Player> target = factionMember.toOnlinePlayer();
-
-            int kills = plugin.getStats().getKills(factionMember.getUniqueId());
-            combinedKills += kills;
-
-          FactionUser coreMember = plugin.getServer().isPrimaryThread() ? HCF.getPlugin().getUserManager().getUser(factionMember.getUniqueId()) : HCF.getPlugin().getUserManager().getUserAsync(factionMember.getUniqueId());
-          Deathban deathban = coreMember.getDeathban();
-
-           ChatColor colour;
-            if (deathban != null && deathban.isActive()) {
-                colour = ChatColor.RED;
-            } else if (!target.isPresent() || (sender instanceof Player && !((Player) sender).canSee(target.get()))) {
-                colour = ChatColor.GRAY;
-            } else {
-                colour = ChatColor.GREEN;
-            }
-
-
-            String memberName = plugin.getMessages().getString("factions.show.playerfaction.parts.member_format")
-               .replace("{player}", colour + factionMember.getCachedName())
-                    .replace("{playerKills}", String.valueOf(kills));
-            switch (factionMember.getRole()) {
-                case LEADER:
-                    leaderName = memberName;
-                    break;
-                case COLEADER:
-                    coleaders.add(memberName);
-                    break;
-                case CAPTAIN:
-                    captainNames.add(memberName);
-                    break;
-                case MEMBER:
-                    memberNames.add(memberName);
-                    break;
-            }
-        }
-
-        sender.sendMessage(ChatColor.GOLD + BukkitUtils.STRAIGHT_LINE_DEFAULT);
-
-        // Show the banner with the Home location.
-        sender.sendMessage(plugin.getMessages().getString("factions.show.playerfaction.top")
-                .replace("{factionName}", getFormattedName(sender))
-                .replace("{factionMembersOnline}", String.valueOf(getOnlinePlayers(sender).size()))
-                .replace("{factionMembersTotal}", String.valueOf(members.size()))
-                .replace("{home}", (home == null ?
-                        plugin.getMessages().getString("factions.show.playerfaction.parts.home_format.none") :
-                        plugin.getMessages().getString("factions.show.playerfaction.parts.home_format.set")
-                                .replace("{factionHomeX}", String.valueOf(home.getLocation().getBlockX()))
-                                .replace("{factionHomeZ}", String.valueOf(home.getLocation().getBlockZ()))))
-                .replace("{factionOpenStatus}", (open ?
-                        plugin.getMessages().getString("factions.show.playerfaction.parts.openstatus.open") :
-                        plugin.getMessages().getString("factions.show.playerfaction.parts.openstatus.closed"))));
-
-        if (!allyNames.isEmpty()) {
-            sender.sendMessage(plugin.getMessages().getString("factions.show.playerfaction.allies")
-                    .replace("{allies}", INFO_JOINER.join(allyNames)));
-        }
-
-        if (leaderName != null) {
-            sender.sendMessage(plugin.getMessages().getString("factions.show.playerfaction.leader")
-                    .replace("{leader}", leaderName));
-        }
-
-        if(!coleaders.isEmpty()){
-            //Commands-Factions-Show-CoLeadersListFormat: "  Co-Leaders: {coLeadersList}"
-            sender.sendMessage(plugin.getMessages().getString("factions.show.playerfaction.coleaders")
-                    .replace("{coleaders}", INFO_JOINER.join(coleaders)));
-        }
-
-        if (!captainNames.isEmpty()) {
-            sender.sendMessage(plugin.getMessages().getString("factions.show.playerfaction.captains")
-                    .replace("{captains}", INFO_JOINER.join(captainNames)));
-        }
-
-        if (!memberNames.isEmpty()) {
-            sender.sendMessage(plugin.getMessages().getString("factions.show.playerfaction.members")
-                    .replace("{members}", INFO_JOINER.join(memberNames)));
-        }
-
-        // Show announcement if the sender is in this faction.
-        if (sender instanceof Player) {
-            try{
-                Faction playerFaction = plugin.getFactionManager().getPlayerFaction((Player) sender);
-                if (playerFaction != null && playerFaction.equals(this)) {
-                    if(announcement != null){
-                        sender.sendMessage(plugin.getMessages().getString("factions.show.playerfaction.announcement").replace("{announcement}", announcement));
-                    }
-                    sender.sendMessage(plugin.getMessages().getString("factions.show.playerfaction.lives").replace("{lives}", String.valueOf(lives)));
-                }
-            }catch (NoFactionFoundException ignored){}
-        }
-
-        sender.sendMessage(plugin.getMessages().getString("factions.show.playerfaction.bottom")
-                .replace("{balance}", String.valueOf( EconomyManager.ECONOMY_SYMBOL + balance))
-                .replace("{kills}", String.valueOf(combinedKills))
-                .replace("{founded}", DateTimeFormats.DAY_MTH_YR_HR_MIN_AMPM.format(creationMillis))
-                .replace("{factionDeathsUntilRaidable}", getRegenStatus().getSymbol() + getDtrColour() + JavaUtils.format(getDeathsUntilRaidable(false)))
-                .replace("{maximumDeathsUntilRaidable}", JavaUtils.format(getMaximumDeathsUntilRaidable())));
-
-        long dtrRegenRemaining = getRemainingRegenerationTime();
-        if (dtrRegenRemaining > 0L) {
-            sender.sendMessage(plugin.getMessages().getString("factions.show.playerfaction.regen")
-                    .replace("{factionRegenTime}", String.valueOf(DurationFormatUtils.formatDurationWords(dtrRegenRemaining, true, true))));
-        }
-
-        sender.sendMessage(ChatColor.GOLD + BukkitUtils.STRAIGHT_LINE_DEFAULT);
-    }*/
+	}*/
 
 	private String formatPlayers(Collection<?> players) {
 		return players.stream()

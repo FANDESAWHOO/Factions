@@ -133,7 +133,6 @@ public class HCFactions extends SimplePlugin {
 		if(Configuration.api) registerCommand(TimerExecutor.getInstance());
 	}
 	private void registerManagers() {
-
 		itemDb = new SimpleItemDb(this);
 		visualiseHandler = new VisualiseHandler();
 		if (Configuration.mongo) {
@@ -141,7 +140,6 @@ public class HCFactions extends SimplePlugin {
 			mongoManager.connect();
 			factionManager = new MongoFactionManager(this);
 		} else factionManager = new FlatFileFactionManager(this);
-		//if (Configuration.mongo & Configuration.api)
 		userManager = new MongoUserManager(this);
 		getLogger().info("FactionManager initialized successfully.");
 		if (Configuration.api) timerManager = new TimerManager(this);

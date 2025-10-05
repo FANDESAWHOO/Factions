@@ -48,7 +48,7 @@ public class MongoFactionManager extends FlatFileFactionManager implements Facti
 
 	@Override
 	public void init() {
-		collection = plugin.getMongoManager().getMongoDatabase().getCollection("HCF");
+		collection = plugin.getMongoManager().getMongoDatabase().getCollection("Factions");
 		config = new Config(plugin, "factions.yml");
 	}
 
@@ -74,6 +74,7 @@ public class MongoFactionManager extends FlatFileFactionManager implements Facti
 				Constructor<?> constructor = clazz.getConstructor(Document.class);
 				cacheFaction((Faction) constructor.newInstance(document));
 				factions[0]++;
+		
 			} catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
 					 InvocationTargetException | InstantiationException e) {
 				e.printStackTrace();
