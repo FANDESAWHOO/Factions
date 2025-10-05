@@ -45,7 +45,7 @@ factions:
     teammate: "GREEN"
     ally: "GOLD"
     enemy: "RED"
-    road: "YELLOW"
+    road: "BLUE"
     safezone: "AQUA"
   antirotation:
     delay: 6
@@ -117,5 +117,5 @@ playerfaction-show:
   - "&6Members offline({members-of-count}): {members-offline}" 
 # SHOULD USE OUR SYSTEMS (LISTENERS & TIMERS & OTHERS)
 API:
-  our: true # FALSE MEANS USE EVENTS OR INTERFACES || AND FOR COMMANDS LIKE TIMER
+  our: false # FALSE MEANS USE EVENTS OR INTERFACES || AND FOR COMMANDS LIKE TIMER
   events: false # TRUE MEANS INTERFACES | FALSE MEANS EVENTS

@@ -55,8 +55,7 @@ public final class FactionClaimForCommand extends FactionSubCommand {
 			@Override
 			public void onSuccess(ClaimableFaction faction) {
 				Player player = (Player) sender;
-				WandManager.ZoneClaim sel = WandManager.getWandManager().getClaimCache().get(player.getUniqueId());
-				Cuboid pos = sel.getCuboId();
+				Cuboid pos = HCFactions.getInstance().getWandManager().getSelection(player);
 
 				if (pos == null) {
 					tell(ChatColor.RED + "You need to select 2 positions with the claim wand. Use /claimwand and right/left click with the stick.");

@@ -164,6 +164,13 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>crossversion.worldeditx</groupId>
+            <artifactId>worldeditx</artifactId>
+            <version>1.0.0</version>
+            <scope>system</scope>
+            <systemPath>C:\Users\Andreita\Documents\HCG\HCFactions/libs/WorldEditX-1.0.0.jar</systemPath>
+        </dependency>
+        <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
             <version>3.12.14</version>

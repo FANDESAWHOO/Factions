@@ -1,11 +1,12 @@
 package org.hcgames.hcfactions.wand;
 
-import lombok.AllArgsConstructor;
+
 import lombok.Getter;
 import lombok.Setter;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
@@ -15,15 +16,10 @@ import org.hcgames.hcfactions.util.cuboid.Cuboid;
 import org.mineacademy.fo.menu.model.ItemCreator;
 import org.mineacademy.fo.menu.tool.Tool;
 import org.mineacademy.fo.remain.CompMaterial;
+import org.mineacademy.fo.remain.Remain;
 
-import com.sk89q.worldedit.IncompleteRegionException;
-import com.sk89q.worldedit.LocalSession;
-import com.sk89q.worldedit.WorldEdit;
-import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.regions.Region;
-import com.sk89q.worldedit.session.SessionOwner;
+import crossversion.worldeditx.CrossVersion;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -49,52 +45,14 @@ public final class WandManager extends Tool {
 		return ItemCreator.of(CompMaterial.STICK, "&aClaim Selection", "Right click block = First point", "Left click block = Second point", "Shift + Left click = Confirm region", "Right click air = Cancel selection").make();
 	}
 
-	// 1.13+
-	protected Cuboid crossVersion(Player player) {
-		Cuboid region = null;
-		try {
-		region = newApi(player); // 1.13+
-		} catch (Exception e) { // OLD API
-			
-		}
-		return region;
-	} 
-	
-	protected Cuboid newApi(Player player) {
-		Cuboid region = null;
-		LocalSession session = WorldEdit.getInstance().getSessionManager().get((SessionOwner) player);
-		Region selection;
-		try {
-			selection = session.getSelection();
-			region = new Cuboid(fromVectorToLocation(player, selection.getMinimumPoint()),fromVectorToLocation(player,selection.getMaximumPoint())); // CROSSVERSION 1.13+
-		} catch (IncompleteRegionException e) {
-			e.printStackTrace();
-		}
-		return region;
-	}
-	
-	public Location fromVectorToLocation(Player player, BlockVector3 block) {
-		Location location = new Location(player.getWorld(), block.getBlockX(), block.getBlockY(), block.getBlockZ());
-		return location;
-	}
-	
-	private Cuboid getRegionOld(Player player) {
-	    try {
-	        Class<?> bukkitUtilClass = Class.forName("com.sk89q.worldedit.bukkit.BukkitUtil");
-	        Method localWorldMethod = bukkitUtilClass.getMethod("getLocalWorld", World.class);
-	        Object localWorld = localWorldMethod.invoke(null, player.getWorld());
-
-	        Class<?> weClass = Class.forName("com.sk89q.worldedit.WorldEdit");
-	        Method getSelection = weClass.getMethod("getSelection");
-	        Object selection = getSelection.invoke(this, player);
-
-
-
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-	    return null;
-	}
+    public Cuboid getSelection(Player player) {
+    	Cuboid region = null;
+    	if (Bukkit.getPluginManager().isPluginEnabled("WorldEditX"))
+    		region = CrossVersion.getInstance().worldEditManager.getSelection(player);
+    	else 
+    		region = claimCache.get(player.getUniqueId()).getCuboId();
+    	return region;
+    }
 
 	/**
 	 * With this event we gonna put
@@ -112,31 +70,30 @@ public final class WandManager extends Tool {
 		ZoneClaim claim = claimCache.computeIfAbsent(uuid, u -> new ZoneClaim(null, null)); 
 		if (action == Action.RIGHT_CLICK_AIR) {
 			claimCache.remove(uuid);
-			player.getInventory().setItemInHand(null);
+			player.getInventory().setItemInHand(null); // TODO: we need to check if this give error in 1.9+
 			player.sendMessage(ChatColor.RED + "Selection cancelled.");
 			event.setCancelled(true);
 			return;
-		} // Confirmar selección
+		}
 		if ((action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK) && player.isSneaking()) {
 			if (claim.getLocation1() == null || claim.getLocation2() == null)
 				player.sendMessage(ChatColor.RED + "You must select both points first.");
 			else {
 				Cuboid cuboid = new Cuboid(claim.getLocation1(), claim.getLocation2()); 
-				claim.setCuboId(cuboid);
 				player.sendMessage(ChatColor.GREEN + "Region selected: " + cuboid.toString());
 			}
 			claimCache.remove(uuid);
 			player.getInventory().setItemInHand(null);
 			event.setCancelled(true);
 			return;
-		} // Punto 1
+		}
 		if (action == Action.RIGHT_CLICK_BLOCK && block != null) {
 			Location clicked = block.getLocation();
 			claim.setLocation1(clicked);
 			player.sendMessage(ChatColor.GREEN + "First point set at " + clicked.getBlockX() + ", " + clicked.getBlockY() + ", " + clicked.getBlockZ());
 			event.setCancelled(true);
 			return;
-		} // Punto 2
+		} 
 		if (action == Action.LEFT_CLICK_BLOCK && block != null) {
 			Location clicked = block.getLocation();
 			claim.setLocation2(clicked);
@@ -145,14 +102,12 @@ public final class WandManager extends Tool {
 		}
 	}
 
-	@Setter @Getter @AllArgsConstructor
+	@Setter @Getter
 	public static class ZoneClaim {
 
 		private Location location1;
 
 		private Location location2;
-
-		private Cuboid cuboId;
 
 		public Cuboid getCuboId(){
 			return new Cuboid(location1, location2);

@@ -32,6 +32,7 @@ import org.hcgames.hcfactions.util.cuboid.NamedCuboid;
 import org.hcgames.hcfactions.util.itemdb.ItemDb;
 import org.hcgames.hcfactions.util.itemdb.SimpleItemDb;
 import org.hcgames.hcfactions.visualise.VisualiseHandler;
+import org.hcgames.hcfactions.wand.WandManager;
 import org.mineacademy.fo.plugin.SimplePlugin;
 
 
@@ -53,6 +54,7 @@ public class HCFactions extends SimplePlugin {
 	private UserManager userManager;
 	private NametagManager nametagManager;
 	private ClientAPI clientAPI;
+	private WandManager wandManager;
 
 	public static HCFactions getInstance() {
 		return (HCFactions) SimplePlugin.getInstance();
@@ -145,6 +147,7 @@ public class HCFactions extends SimplePlugin {
 		if (Configuration.api) timerManager = new TimerManager(this);
 		claimHandler = new ClaimHandler(this);
 		clientAPI = new ClientAPI();
+		wandManager = WandManager.getWandManager();
 		//nametagManager = new NametagManager();
 	}
 
