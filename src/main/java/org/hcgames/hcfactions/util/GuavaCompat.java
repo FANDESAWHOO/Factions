@@ -1,9 +1,12 @@
 package org.hcgames.hcfactions.util;
 
+
 import com.google.common.base.Preconditions;
 
-import javax.annotation.Nullable;
 import java.util.Optional;
+
+import javax.annotation.Nullable;
+
 
 public class GuavaCompat {
 

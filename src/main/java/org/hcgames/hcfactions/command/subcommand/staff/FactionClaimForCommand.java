@@ -34,18 +34,18 @@ public final class FactionClaimForCommand extends FactionSubCommand {
 
 	@Override
 	public String getUsage() {
-		return Lang.of("Commands.staff.claimfor.usage", label, getName());
+		return Lang.of("commands.staff.claimfor.usage", label, getName());
 	}
 
 	@Override
 	public void onCommand() {
 		if (!(sender instanceof Player)) {
-			tell(Lang.of("Commands.error.player_only"));
+			tell(Lang.of("commands.error.player_only"));
 			return;
 		}
 		checkPerm();
 		if (args.length < 2) {
-			tell(Lang.of("Commands.error.usage", getUsage()));
+			tell(Lang.of("commands.error.usage", getUsage()));
 			return;
 		}
 
@@ -72,7 +72,7 @@ public final class FactionClaimForCommand extends FactionSubCommand {
 
 			@Override
 			public void onFail(FailReason reason) {
-				tell(Lang.of("Commands.error.faction_not_found", args[1]));
+				tell(Lang.of("commands.error.faction_not_found", args[1]));
 			}
 		});
 

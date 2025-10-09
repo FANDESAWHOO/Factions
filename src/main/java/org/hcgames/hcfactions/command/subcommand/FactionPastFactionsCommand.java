@@ -47,7 +47,7 @@ public class FactionPastFactionsCommand extends FactionSubCommand {
 				UUID user = UUIDHandler.getUUID(args[1]);
 
 				if (user == null || !HCFactions.getInstance().getUserManager().userExists(user)) {
-					sender.sendMessage(Lang.of("Commands-Pay-UnknownPlayer").replace("{player}", args[1]));
+					sender.sendMessage(Lang.of("commands-Pay-UnknownPlayer").replace("{player}", args[1]));
 					return;
 				}
 
