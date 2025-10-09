@@ -63,85 +63,63 @@ public class MongoFactionManager extends FlatFileFactionManager implements Facti
 		return false;
 	}
 
-	@Override
-	public void reloadFactionData() {
-		factionNameMap.clear();
-		int[] factions = {0};
+    @Override
+    public void reloadFactionData() {
+        this.factionNameMap.clear();
+        final int[] factions = {0};
 
-		collection.find().forEach((com.mongodb.Block<? super Document>) document -> {
-			try {
-				Class<?> clazz = Class.forName(document.getString("=="));
-				Constructor<?> constructor = clazz.getConstructor(Document.class);
-				cacheFaction((Faction) constructor.newInstance(document));
-				factions[0]++;
-		
-			} catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
-					 InvocationTargetException | InstantiationException e) {
-				e.printStackTrace();
-			}
-		});
+        collection.find().forEach((com.mongodb.Block<? super Document>) document -> {
+            try{
+                Class<?> clazz = Class.forName(document.getString("=="));
+                Constructor<?> constructor = clazz.getConstructor(Document.class);
+                cacheFaction((Faction) constructor.newInstance(document));
+                factions[0]++;
+            }catch(ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e){
+                e.printStackTrace();
+            }
+        });
 
-		for (Class<? extends SystemFaction> systemFaction : FactionManager.systemFactions.getSystemFactions())
-			try {
-				Method method = systemFaction.getDeclaredMethod("getUUID");
-				UUID result = (UUID) method.invoke(null);
+        for(Class<? extends SystemFaction> systemFaction : FactionManager.systemFactions.getSystemFactions()){
+            try{
+                Method method = systemFaction.getDeclaredMethod("getUUID");
+                UUID result = (UUID) method.invoke(null);
 
-				if (!factionUUIDMap.containsKey(result)) {
-					Constructor<?> constructor = systemFaction.getConstructor();
+                if(!factionUUIDMap.containsKey(result)){
+                    Constructor<?> constructor = systemFaction.getConstructor();
 
-					Faction faction = (Faction) constructor.newInstance();
-					cacheFaction(faction);
+                    Faction faction = (Faction) constructor.newInstance();
+                    cacheFaction(faction);
 
-					factions[0]++;
-					plugin.getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "Faction " + faction.getName() + " not found, created.");
-				}
-			} catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException |
-					 InstantiationException e) {
-				e.printStackTrace();
-			}
-		plugin.getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "Loaded " + factions[0] + " factions.");
-		Set<Faction> adding = new HashSet<>();
-		if (!factionNameMap.containsKey("NorthRoad")) { // TODO: more reliable
-			adding.add(new RoadFaction.NorthRoadFaction());
-			adding.add(new RoadFaction.EastRoadFaction());
-			adding.add(new RoadFaction.SouthRoadFaction());
-			adding.add(new RoadFaction.WestRoadFaction());
-		}
+                    factions[0]++;
+                    plugin.getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "Faction " + faction.getName() + " not found, created.");
+                }
+            }catch(NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e){
+                e.printStackTrace();
+            }
+        }
+        plugin.getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "Loaded " + factions[0] + " factions.");
+    }
 
-		// TODO: more reliable
-		if (!factionNameMap.containsKey("Spawn")) adding.add(new SpawnFaction());
-
-
-		// TODO: more reliable
-		if (!factionNameMap.containsKey("EndPortal")) adding.add(new EndPortalFaction());
-		// Now load the Spawn, etc factions.
-		for (Faction added : adding) {
-			cacheFaction(added);
-			Bukkit.getConsoleSender().sendMessage(ChatColor.BLUE + "Faction " + added.getName() + " not found, created.");
-		}
-	}
 
 
 	void addSysFaction(Class<? extends SystemFaction> clazz) {
 
 	}
+	 @Override
+	    public void saveFactionData() {
+	        for(UUID uuid : factionUUIDMap.keySet()){
+	            Faction faction = factionUUIDMap.get(uuid);
 
-	@Override
-	public void saveFactionData() {
-		for (UUID uuid : factionUUIDMap.keySet()) {
-			Faction faction = factionUUIDMap.get(uuid);
+	            Document query = new Document();
+	            query.put("_id", faction.getUniqueID().toString());
 
-			Document query = new Document();
-			query.put("_id", faction.getUniqueID().toString());
+	            Document values = faction.toDocument();
+	            values.put("_id", faction.getUniqueID().toString());
+	            values.put("==", faction.getClass().getName());
 
-			Document values = faction.toDocument();
-			values.put("isSystem", faction instanceof SystemTeam);
-			values.put("_id", faction.getUniqueID().toString());
-			values.put("==", faction.getClass().getName());
+	            collection.updateOne(query, new Document("$set", values), new UpdateOptions().upsert(true));
+	        }
 
-			collection.updateOne(query, new Document("$set", values), new UpdateOptions().upsert(true));
-		}
-
-		super.saveFactionData(); //Also save to flatfile
-	}
+	        super.saveFactionData(); //Also save to flatfile
+	    }
 }
