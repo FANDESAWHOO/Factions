@@ -67,7 +67,7 @@ public final class FactionClaimForCommand extends FactionSubCommand {
 					return;
                 }
 				if (faction.addClaim(new Claim(faction, selection, selection2), sender))
-					tell(Lang.of("Commands.claimfor.claimed", faction.getName()));
+					tell(Lang.of("Commands.staff.claimfor.claimed", faction.getName()));
 			}
 
 			@Override

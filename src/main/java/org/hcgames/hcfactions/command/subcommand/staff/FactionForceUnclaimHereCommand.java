@@ -29,7 +29,7 @@ public final class FactionForceUnclaimHereCommand extends FactionSubCommand {
 
 	@Override
 	public void onCommand() {
-		if (args.length < 2) {
+		if (args.length < 1) {
 			tell(ChatColor.RED + "Usage: " + getUsage());
 			return;
 		}

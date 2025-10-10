@@ -76,6 +76,9 @@ public final class FactionCommand extends SimpleCommand {
 		addArgument(new FactionUnallyArgument());
 		addArgument(new FactionUninviteCommand());
 		addArgument(new FactionWithdrawCommand());
+		addArgument(new FactionInviteCommand());
+		addArgument(new FactionInvitesCommand());
+		addArgument(new FactionFriendlyFireCommand());
 		//addArgument(new FactionLivesCommand());
 		addArgument(new FactionFocusCommand());
 		addArgument(new FactionRemoveCooldownCommand());

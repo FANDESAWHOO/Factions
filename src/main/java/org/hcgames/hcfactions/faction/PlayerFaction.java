@@ -70,6 +70,7 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
 	private final Set<String> invitedPlayers = new ConcurrentSet<>();
 	private final Map<UUID, FocusTarget> focusTargets = new ConcurrentHashMap<>();
 	private final Map<UUID, Long> previousMembers = new ConcurrentHashMap<>();
+	@Getter
 	private final List<UUID> bannedPlayers = new ArrayList<>(); // hook to deathban core !
 	private PersistableLocation home;
 	private String announcement;
@@ -623,88 +624,117 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
 	}
 
 
-    public List<String> getFormattedNames(CommandSender sender) {
-    	List<String> names = new ArrayList();
-		int combinedKills = 0;
-		String leaderName = null;
-		Set<String> memberNames = new HashSet<>();
-		Set<String> captainNames = new HashSet<>();
-    	for (Map.Entry<UUID, FactionMember> entry : members.entrySet()) {
-			FactionMember factionMember = entry.getValue();
-			Optional<Player> target = factionMember.toOnlinePlayer();
+	public List<String> getFormattedNames(CommandSender sender) {
+	    List<String> names = new ArrayList<>();
+	    int combinedKills = 0;
 
-			FactionUser user = HCFactions.getInstance().getUserManager().getUser(entry.getKey());
-			int kills = user.getKills();
-			combinedKills += kills;
+	 
+	    List<Map.Entry<UUID, FactionMember>> sortedMembers = new ArrayList<>(members.entrySet());
+	    sortedMembers.sort((a, b) -> {
+	        Role roleA = a.getValue().getRole();
+	        Role roleB = b.getValue().getRole();
+	        return Integer.compare(rolePriority(roleA), rolePriority(roleB));
+	    });
 
-			ChatColor color;
-			if (bannedPlayers.contains(entry.getKey())) {
-				color = ChatColor.RED;
-			} else if (!target.isPresent() || (sender instanceof Player && !((Player) sender).canSee(target.get()))) {
+	    for (Map.Entry<UUID, FactionMember> entry : sortedMembers) {
+	        FactionMember factionMember = entry.getValue();
+	        Optional<Player> target = factionMember.toOnlinePlayer();
+
+	        FactionUser user = HCFactions.getInstance().getUserManager().getUser(entry.getKey());
+	        int kills = user.getKills();
+	        combinedKills += kills;
+
+	        ChatColor color;
+	        if (bannedPlayers.contains(entry.getKey())) {
+	            color = ChatColor.RED;
+	        } else if (!target.isPresent() || (sender instanceof Player && !((Player) sender).canSee(target.get()))) {
 	            color = ChatColor.GRAY;
 	        } else {
-	        	color = ChatColor.GREEN;
+	            color = ChatColor.GREEN;
 	        }
-			 String role = null; 
-			 switch (factionMember.getRole()) {
-				case LEADER:
-					role = "**";
-					break;
-				case CAPTAIN:
-					role = "*";
-					break;
-				case MEMBER:
-					role = "";
-					break;
-			}
-			 String memberName = color + role + factionMember.getCachedName() + ChatColor.GRAY + " [" + ChatColor.RED + kills + ChatColor.GRAY + "]";
-				
-				names.add(memberName);
-		}
-    	if (!names.isEmpty()) return names;
-    	return null;
-    }
-    public List<String> getOfflineFormattedNames(CommandSender sender) {
-    	List<String> names = new ArrayList();
-		int combinedKills = 0;
-		String leaderName = null;
-		Set<String> memberNames = new HashSet<>();
-		Set<String> captainNames = new HashSet<>();
-    	for (Map.Entry<UUID, FactionMember> entry : getOfflineMembers(sender).entrySet()) {
-			FactionMember factionMember = entry.getValue();
-			Optional<Player> target = factionMember.toOnlinePlayer();
 
-			FactionUser user = HCFactions.getInstance().getUserManager().getUser(entry.getKey());
-			int kills = user.getKills();
-			combinedKills += kills;
+	        String rolePrefix;
+	        switch (factionMember.getRole()) {
+	            case LEADER:
+	                rolePrefix = "**";
+	                break;
+	            case CAPTAIN:
+	                rolePrefix = "*";
+	                break;
+	            default:
+	                rolePrefix = "";
+	                break;
+	        }
 
-			ChatColor color;
-			if (bannedPlayers.contains(entry.getKey())) {
-				color = ChatColor.RED;
-			} else if (!target.isPresent() || (sender instanceof Player && !((Player) sender).canSee(target.get()))) {
+	        String memberName = color + rolePrefix + factionMember.getCachedName() +
+	                ChatColor.GRAY + " [" + ChatColor.RED + kills + ChatColor.GRAY + "]";
+
+	        if (Bukkit.getPlayer(entry.getKey()) != null)
+	            names.add(memberName);
+	    }
+
+	    return names.isEmpty() ? null : names;
+	}
+
+	public List<String> getOfflineFormattedNames(CommandSender sender) {
+	    List<String> names = new ArrayList<>();
+	    int combinedKills = 0;
+
+	    List<Map.Entry<UUID, FactionMember>> sortedMembers = new ArrayList<>(getOfflineMembers(sender).entrySet());
+	    sortedMembers.sort((a, b) -> {
+	        Role roleA = a.getValue().getRole();
+	        Role roleB = b.getValue().getRole();
+	        return Integer.compare(rolePriority(roleA), rolePriority(roleB));
+	    });
+
+	    for (Map.Entry<UUID, FactionMember> entry : sortedMembers) {
+	        FactionMember factionMember = entry.getValue();
+	        Optional<Player> target = factionMember.toOnlinePlayer();
+
+	        FactionUser user = HCFactions.getInstance().getUserManager().getUser(entry.getKey());
+	        int kills = user.getKills();
+	        combinedKills += kills;
+
+	        ChatColor color;
+	        if (bannedPlayers.contains(entry.getKey())) {
+	            color = ChatColor.RED;
+	        } else if (!target.isPresent() || (sender instanceof Player && !((Player) sender).canSee(target.get()))) {
 	            color = ChatColor.GRAY;
 	        } else {
-	        	color = ChatColor.DARK_GREEN;
+	            color = ChatColor.DARK_GREEN;
 	        }
-			 String role = null; 
-			 switch (factionMember.getRole()) {
-				case LEADER:
-					role = "**";
-					break;
-				case CAPTAIN:
-					role = "*";
-					break;
-				case MEMBER:
-					role = "";
-					break;
-			}
-			 String memberName =  color + role + factionMember.getCachedName() + ChatColor.GRAY + " [" + ChatColor.RED + kills + ChatColor.GRAY + "]";
-				
-				names.add(memberName);
-		}
-    	if (!names.isEmpty()) return names;
-    	return null;
-    }
+
+	        String rolePrefix;
+	        switch (factionMember.getRole()) {
+	            case LEADER:
+	                rolePrefix = "**";
+	                break;
+	            case CAPTAIN:
+	                rolePrefix = "*";
+	                break;
+	            default:
+	                rolePrefix = "";
+	                break;
+	        }
+
+	        String memberName = color + rolePrefix + factionMember.getCachedName() +
+	                ChatColor.GRAY + " [" + ChatColor.RED + kills + ChatColor.GRAY + "]";
+	        names.add(memberName);
+	    }
+
+	    return names.isEmpty() ? null : names;
+	}
+	private int rolePriority(Role role) {
+	    switch (role) {
+	        case LEADER:
+	            return 0;
+	        case CAPTAIN:
+	            return 1;
+	        default:
+	            return 2;
+	    }
+	}
+
     @Override
 	public void sendInformation(CommandSender sender) {
 	    Map<String, String> placeholders = new HashMap<>();
