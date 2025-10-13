@@ -1,18 +1,45 @@
+/*
+ *   COPYRIGHT NOTICE
+ *
+ *   Copyright (C) 2016, SystemUpdate, <admin@systemupdate.io>.
+ *
+ *   All rights reserved.
+ *
+ *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF THIRD PARTY RIGHTS. IN
+ *   NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ *   DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+ *   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+ *   OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *   Except as contained in this notice, the name of a copyright holder shall not
+ *   be used in advertising or otherwise to promote the sale, use or other dealings
+ *   in this Software without prior written authorization of the copyright holder.
+ */
+
 package org.hcgames.hcfactions.manager;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.UpdateOptions;
 import org.bson.Document;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.faction.Faction;
+import org.hcgames.hcfactions.faction.system.EndPortalFaction;
+import org.hcgames.hcfactions.faction.system.RoadFaction;
+import org.hcgames.hcfactions.faction.system.SpawnFaction;
 import org.hcgames.hcfactions.faction.system.SystemFaction;
+import org.hcgames.hcfactions.faction.system.SystemTeam;
 import org.hcgames.hcfactions.util.configuration.Config;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public class MongoFactionManager extends FlatFileFactionManager implements FactionManager{
@@ -25,7 +52,7 @@ public class MongoFactionManager extends FlatFileFactionManager implements Facti
 
     @Override
     public void init(){
-        collection = plugin.getMongoManager().getMongoCollection("factions");
+        collection = plugin.getMongoManager().getMongoDatabase().getCollection("Hardcore");
         config = new Config(plugin, "factions.yml");
     }
 
@@ -75,7 +102,29 @@ public class MongoFactionManager extends FlatFileFactionManager implements Facti
             }
         }
         plugin.getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "Loaded " + factions[0] + " factions.");
+        Set<Faction> adding = new HashSet<>();
+		if (!factionNameMap.containsKey("NorthRoad")) { // TODO: more reliable
+			adding.add(new RoadFaction.NorthRoadFaction());
+			adding.add(new RoadFaction.EastRoadFaction());
+			adding.add(new RoadFaction.SouthRoadFaction());
+			adding.add(new RoadFaction.WestRoadFaction());
+		}
+
+		if (!factionNameMap.containsKey("Spawn")) { // TODO: more reliable
+			adding.add(new SpawnFaction());
+		}
+
+
+		if (!this.factionNameMap.containsKey("EndPortal")) { // TODO: more reliable
+			adding.add(new EndPortalFaction());
+		}
+		// Now load the Spawn, etc factions.
+				for (Faction added : adding) {
+					this.cacheFaction(added);
+					Bukkit.getConsoleSender().sendMessage(ChatColor.BLUE + "Faction " + added.getName() + " not found, created.");
+				}
     }
+    
 
     void addSysFaction(Class<? extends SystemFaction> clazz){
 

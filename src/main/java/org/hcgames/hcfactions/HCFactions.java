@@ -8,7 +8,6 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import org.hcgames.hcfactions.api.ClientAPI;
 import org.hcgames.hcfactions.claim.Claim;
 import org.hcgames.hcfactions.claim.ClaimHandler;
 import org.hcgames.hcfactions.faction.ClaimableFaction;
@@ -19,7 +18,6 @@ import org.hcgames.hcfactions.listener.*;
 import org.hcgames.hcfactions.manager.FactionManager;
 import org.hcgames.hcfactions.manager.FlatFileFactionManager;
 import org.hcgames.hcfactions.manager.MongoFactionManager;
-import org.hcgames.hcfactions.nametag.NametagManager;
 import org.hcgames.hcfactions.structure.FactionMember;
 import org.hcgames.hcfactions.timer.TimerExecutor;
 import org.hcgames.hcfactions.timer.TimerManager;
@@ -52,8 +50,6 @@ public class HCFactions extends SimplePlugin {
 	private VisualiseHandler visualiseHandler;
 	private TimerManager timerManager;
 	private UserManager userManager;
-	private NametagManager nametagManager;
-	private ClientAPI clientAPI;
 	private WandManager wandManager;
 
 	public static HCFactions getInstance() {
@@ -76,7 +72,7 @@ public class HCFactions extends SimplePlugin {
 		ConfigurationSerialization.registerClass(RoadFaction.EastRoadFaction.class);
 		ConfigurationSerialization.registerClass(RoadFaction.SouthRoadFaction.class);
 		ConfigurationSerialization.registerClass(RoadFaction.WestRoadFaction.class);
-		ConfigurationSerialization.registerClass(SystemTeam.class);
+
 
 		FactionManager.registerSystemFaction(EndPortalFaction.class);
 		FactionManager.registerSystemFaction(RoadFaction.EastRoadFaction.class);
@@ -146,9 +142,7 @@ public class HCFactions extends SimplePlugin {
 		getLogger().info("FactionManager initialized successfully.");
 		if (Configuration.api) timerManager = new TimerManager(this);
 		claimHandler = new ClaimHandler(this);
-		clientAPI = new ClientAPI();
 		wandManager = WandManager.getWandManager();
-		//nametagManager = new NametagManager();
 	}
 
 	private boolean setupEconomy() {

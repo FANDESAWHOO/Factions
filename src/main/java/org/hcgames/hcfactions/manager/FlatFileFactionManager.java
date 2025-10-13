@@ -414,6 +414,11 @@ public class FlatFileFactionManager implements FactionManager, Listener{
         Objects.requireNonNull(cause !=  ClaimChangeEvent.ClaimChangeReason.RESIZE, "Cannot cache claims of resize type");
 
         World world = claim.getWorld();
+        // FILTRO SEGURIDAD
+        if (claim.getWorldName() == null) {
+            plugin.getLogger().warning("Skipping invalid claim " + claim.getClaimUniqueID());
+            return;
+        }
         if (world == null) {
             return; // safe-guard if Nether or End is disabled for example
         }

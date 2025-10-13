@@ -27,8 +27,9 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	    Integer x2 = (Integer) map.get("x2");
 	    Integer y2 = (Integer) map.get("y2");
 	    Integer z2 = (Integer) map.get("z2");
+	    String worldNamm = (String) map.get("worldName");
 
-	    if (x1 == null || y1 == null || z1 == null || x2 == null || y2 == null || z2 == null) {
+	    if (x1 == null || y1 == null || z1 == null || x2 == null || y2 == null || z2 == null  || worldNamm == null) {
 	        throw new IllegalArgumentException("Invalid Cuboid data: missing coordinates " + map);
 	    }
 
@@ -38,6 +39,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	    this.x2 = x2;
 	    this.y2 = y2;
 	    this.z2 = z2;
+	    this.worldName = worldNamm;
 	}
 
 	public Cuboid(World world, int x1, int y1, int z1, int x2, int y2, int z2) {
