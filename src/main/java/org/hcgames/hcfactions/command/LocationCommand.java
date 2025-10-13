@@ -55,7 +55,7 @@ public final class LocationCommand extends SimpleCommand {
 	@Override
 	protected void onCommand() {
 		Player target;
-		if (args.length >= 1) target = plugin.getServer().getPlayer(args[0]);
+		if (args.length >= 1) target = findPlayer(args[0]);
 		else if (sender instanceof Player) target = (Player) sender;
 		else {
 			tell(Lang.of("Commands.Location.Usage")

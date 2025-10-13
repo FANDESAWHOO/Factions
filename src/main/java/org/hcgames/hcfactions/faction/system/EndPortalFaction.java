@@ -1,23 +1,3 @@
-/*
- *   COPYRIGHT NOTICE
- *
- *   Copyright (C) 2016, SystemUpdate, <admin@systemupdate.io>.
- *
- *   All rights reserved.
- *
- *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF THIRD PARTY RIGHTS. IN
- *   NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- *   DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
- *   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
- *   OR OTHER DEALINGS IN THE SOFTWARE.
- *
- *   Except as contained in this notice, the name of a copyright holder shall not
- *   be used in advertising or otherwise to promote the sale, use or other dealings
- *   in this Software without prior written authorization of the copyright holder.
- */
-
 package org.hcgames.hcfactions.faction.system;
 
 import org.bson.Document;
@@ -25,9 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.hcgames.hcfactions.Configuration;
-import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.claim.Claim;
 import org.hcgames.hcfactions.faction.ClaimableFaction;
 import org.hcgames.hcfactions.util.Mongoable;
@@ -43,7 +21,6 @@ public class EndPortalFaction extends ClaimableFaction implements ConfigurationS
 		super("EndPortal", FACTION_UUID);
 		displayName = "End Portal";
 
-		HCFactions plugin = JavaPlugin.getPlugin(HCFactions.class);
 
 		World overworld = Bukkit.getServer().getWorlds().get(0);
 		int maxHeight = overworld.getMaxHeight();

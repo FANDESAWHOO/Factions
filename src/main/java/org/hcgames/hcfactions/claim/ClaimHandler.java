@@ -37,6 +37,7 @@ import org.hcgames.hcfactions.manager.FactionManager;
 import org.hcgames.hcfactions.structure.Role;
 import org.hcgames.hcfactions.util.cuboid.Cuboid;
 import org.hcgames.hcfactions.util.cuboid.CuboidDirection;
+import org.hcgames.hcfactions.util.text.CC;
 import org.mineacademy.fo.menu.model.ItemCreator;
 import org.mineacademy.fo.remain.CompMaterial;
 import org.mineacademy.fo.settings.Lang;
@@ -69,7 +70,7 @@ public class ClaimHandler {
 		this.plugin = plugin;
 		claimSelectionMap = new HashMap<>();
 
-		claimWand = ItemCreator.of(CompMaterial.DIAMOND_HOE).name(Lang.of("factions.claiming.wand.item.name"))
+		claimWand = ItemCreator.of(CompMaterial.DIAMOND_HOE).name(CC.translate(Lang.of("factions.claiming.wand.item.name")))
 				.lore(Lang.of("factions.claiming.wand.item.lore")).make();
 	}
 
@@ -122,14 +123,14 @@ public class ClaimHandler {
 		World world = location.getWorld();
 
 		if (world.getEnvironment() != World.Environment.NORMAL) {
-			player.sendMessage(Lang.of("factions.claiming.overworld_only"));
+			player.sendMessage(CC.translate(Lang.of("factions.claiming.overworld_only")));
 			return false;
 		}
 
 		if (!(plugin.getFactionManager().getFactionAt(location) instanceof WildernessFaction)) {
-			player.sendMessage(Lang.of("factions.claiming.wilderness_only")
+			player.sendMessage(CC.translate(Lang.of("factions.claiming.wilderness_only")
 					.replace("{wildernessColour}", Configuration.relationColourWilderness.toString())
-					.replace("{warzoneRadius}", String.valueOf(Configuration.warzoneRadiusOverworld)));
+					.replace("{warzoneRadius}", String.valueOf(Configuration.warzoneRadiusOverworld))));
 			return false;
 		}
 
@@ -137,18 +138,18 @@ public class ClaimHandler {
 		try {
 			playerFaction = plugin.getFactionManager().getPlayerFaction(player);
 		} catch (NoFactionFoundException e) {
-			player.sendMessage(Lang.of("factions.claiming.faction_required"));
+			player.sendMessage(CC.translate(Lang.of("factions.claiming.faction_required")));
 			return false;
 		}
 
 		if (playerFaction.getMember(player.getUniqueId()).getRole() == Role.MEMBER) {
-			player.sendMessage(Lang.of("factions.claiming.officer_required"));
+			player.sendMessage(CC.translate(Lang.of("factions.claiming.officer_required")));
 			return false;
 		}
 
 		if (playerFaction.getClaims().size() >= Configuration.factionMaxClaims) {
-			player.sendMessage(Lang.of("factions.claiming.max_claims_reached")
-					.replace("{maxClaims}", String.valueOf(Configuration.factionMaxClaims)));
+			player.sendMessage(CC.translate(Lang.of("factions.claiming.max_claims_reached")
+					.replace("{maxClaims}", String.valueOf(Configuration.factionMaxClaims))));
 			return false;
 		}
 
@@ -164,8 +165,8 @@ public class ClaimHandler {
 				if (factionAtNew instanceof ClaimableFaction && playerFaction != factionAtNew) {
 					if (factionAtNew instanceof RoadFaction && flag) continue;
 
-					player.sendMessage(Lang.of("factions.claiming.enemy_claims_nearby")
-							.replace("{radius}", String.valueOf(CLAIM_BUFFER_RADIUS)));
+					player.sendMessage(CC.translate(Lang.of("factions.claiming.enemy_claims_nearby")
+							.replace("{radius}", String.valueOf(CLAIM_BUFFER_RADIUS))));
 					return false;
 				}
 			}
@@ -185,7 +186,7 @@ public class ClaimHandler {
 		World world = claim.getWorld();
 
 		if (world.getEnvironment() != World.Environment.NORMAL) {
-			player.sendMessage(Lang.of("factions.claiming.overworld_only"));
+			player.sendMessage(CC.translate(Lang.of("factions.claiming.overworld_only")));
 			return false;
 		}
 
@@ -193,18 +194,18 @@ public class ClaimHandler {
 		try {
 			playerFaction = plugin.getFactionManager().getPlayerFaction(player);
 		} catch (NoFactionFoundException e) {
-			player.sendMessage(Lang.of("factions.claiming.faction_required"));
+			player.sendMessage(CC.translate(Lang.of("factions.claiming.faction_required")));
 			return false;
 		}
 
 		if (playerFaction.getMember(player.getUniqueId()).getRole() == Role.MEMBER) {
-			player.sendMessage(Lang.of("factions.claiming.officer_required"));
+			player.sendMessage(CC.translate(Lang.of("factions.claiming.officer_required")));
 			return false;
 		}
 
 		if (playerFaction.getClaims().size() >= Configuration.factionMaxClaims) {
-			player.sendMessage(Lang.of("factions.claiming.max_claims_reached")
-					.replace("{maxClaims}", String.valueOf(Configuration.factionMaxClaims)));
+			player.sendMessage(CC.translate(Lang.of("factions.claiming.max_claims_reached")
+					.replace("{maxClaims}", String.valueOf(Configuration.factionMaxClaims))));
 			return false;
 		}
 
@@ -212,23 +213,23 @@ public class ClaimHandler {
 		int claimPrice = calculatePrice(claim, playerFaction.getClaims().size(), false);
 
 		if (claimPrice > factionBalance) {
-			player.sendMessage(Lang.of("factions.claiming.insufficient_funds")
+			player.sendMessage(CC.translate(Lang.of("factions.claiming.insufficient_funds")
 					.replace("{factionBalance}", String.valueOf(factionBalance))
-					.replace("{claimPrice}", String.valueOf(claimPrice)));
+					.replace("{claimPrice}", String.valueOf(claimPrice))));
 			return false;
 		}
 
 		if (claim.getChunks().size() > MAX_CHUNKS_PER_LIMIT && !player.hasPermission("hcf.bypass.max_claim_size")) {
-			player.sendMessage(Lang.of("factions.claiming.too_many_chunks")
-					.replace("{maxChunks}", String.valueOf(MAX_CHUNKS_PER_LIMIT)));
+			player.sendMessage(CC.translate(Lang.of("factions.claiming.too_many_chunks")
+					.replace("{maxChunks}", String.valueOf(MAX_CHUNKS_PER_LIMIT))));
 			return false;
 		}
 
 		// Is not enough blocks wide.
 		if (claim.getWidth() < MIN_CLAIM_RADIUS || claim.getLength() < MIN_CLAIM_RADIUS) {
-			player.sendMessage(Lang.of("factions.claiming.not_wide_enough")
+			player.sendMessage(CC.translate(Lang.of("factions.claiming.not_wide_enough")
 					.replace("{minClaimRadius}", String.valueOf(MIN_CLAIM_RADIUS))
-					.replace("{maxClaimRadius}", String.valueOf(MIN_CLAIM_RADIUS)));
+					.replace("{maxClaimRadius}", String.valueOf(MIN_CLAIM_RADIUS))));
 			return false;
 		}
 
@@ -242,7 +243,7 @@ public class ClaimHandler {
 			for (int z = minimumZ; z < maximumZ; z++) {
 				Faction factionAt = factionManager.getFactionAt(world, x, z);
 				if (factionAt != null && !(factionAt instanceof WildernessFaction)) {
-					player.sendMessage(Lang.of("factions.claiming.claim_part_in_wilderness"));
+					player.sendMessage(CC.translate(Lang.of("factions.claiming.claim_part_in_wilderness")));
 					return false;
 				}
 			}
@@ -254,8 +255,8 @@ public class ClaimHandler {
 				if (factionAtNew instanceof ClaimableFaction && playerFaction != factionAtNew) {
 					if (factionAtNew instanceof RoadFaction && flag) continue;
 
-					player.sendMessage(Lang.of("factions.claiming.enemy_claims_nearby")
-							.replace("{radius}", String.valueOf(CLAIM_BUFFER_RADIUS)));
+					player.sendMessage(CC.translate(Lang.of("factions.claiming.enemy_claims_nearby")
+							.replace("{radius}", String.valueOf(CLAIM_BUFFER_RADIUS))));
 					return false;
 				}
 			}
@@ -275,7 +276,7 @@ public class ClaimHandler {
 			}
 
 			if (!conjoined) {
-				player.sendMessage(Lang.of("factions.claiming.claims_must_be_conjoined"));
+				player.sendMessage(CC.translate(Lang.of("factions.claiming.claims_must_be_conjoined")));
 				return false;
 			}
 		}
@@ -286,13 +287,13 @@ public class ClaimHandler {
 
 		if (playerFaction.addClaim(claim, player)) {
 			Location center = claim.getCenter();
-			player.sendMessage(Lang.of("factions.claiming.purchased")
-					.replace("{claimPrice}", String.valueOf(claimPrice)));
+			player.sendMessage(CC.translate(Lang.of("factions.claiming.purchased")
+					.replace("{claimPrice}", String.valueOf(claimPrice))));
 			playerFaction.setBalance(factionBalance - claimPrice);
-			playerFaction.broadcast(Lang.of("factions.claiming.purchased_broadcast")
+			playerFaction.broadcast(CC.translate(Lang.of("factions.claiming.purchased_broadcast")
 							.replace("{player}", player.getName())
 							.replace("{claimX}", String.valueOf(center.getBlockX()))
-							.replace("{claimZ}", String.valueOf(center.getBlockZ())),
+							.replace("{claimZ}", String.valueOf(center.getBlockZ()))),
 					player.getUniqueId());
 			return true;
 		}

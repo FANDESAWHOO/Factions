@@ -3,8 +3,6 @@ package org.hcgames.hcfactions.structure;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.util.BukkitUtils;
 
@@ -56,7 +54,6 @@ public enum Relation {
 	}
 
 	public ChatColor toChatColour() {
-		HCFactions plugin = JavaPlugin.getPlugin(HCFactions.class);
 
 		switch (this) {
 			case MEMBER:

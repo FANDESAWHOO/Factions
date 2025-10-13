@@ -21,13 +21,23 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	protected int z2;
 
 	public Cuboid(Map<String, Object> map) {
-		this.worldName = (String) map.get("worldName");
-		this.x1 = (int) map.get("x1");
-		this.y1 = (int) map.get("y1");
-		this.z1 = (int) map.get("z1");
-		this.x2 = (int) map.get("x2");
-		this.y2 = (int) map.get("y2");
-		this.z2 = (int) map.get("z2");
+	    Integer x1 = (Integer) map.get("x1");
+	    Integer y1 = (Integer) map.get("y1");
+	    Integer z1 = (Integer) map.get("z1");
+	    Integer x2 = (Integer) map.get("x2");
+	    Integer y2 = (Integer) map.get("y2");
+	    Integer z2 = (Integer) map.get("z2");
+
+	    if (x1 == null || y1 == null || z1 == null || x2 == null || y2 == null || z2 == null) {
+	        throw new IllegalArgumentException("Invalid Cuboid data: missing coordinates " + map);
+	    }
+
+	    this.x1 = x1;
+	    this.y1 = y1;
+	    this.z1 = z1;
+	    this.x2 = x2;
+	    this.y2 = y2;
+	    this.z2 = z2;
 	}
 
 	public Cuboid(World world, int x1, int y1, int z1, int x2, int y2, int z2) {

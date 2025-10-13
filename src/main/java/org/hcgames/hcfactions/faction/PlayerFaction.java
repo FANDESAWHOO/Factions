@@ -244,7 +244,6 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
 	public boolean addMember(CommandSender sender, @Nullable Player player, UUID playerUUID, FactionMember factionMember, boolean force) {
 		if (members.containsKey(playerUUID)) return false;
 
-		HCFactions factions = JavaPlugin.getPlugin(HCFactions.class);
 		if (previousMembers.containsKey(playerUUID) && !force && Configuration.antiRotationEnabled) {
 			Long lastRemovedWithDelay = previousMembers.get(playerUUID) + Configuration.antiRotationDelay;
 			if (lastRemovedWithDelay > System.currentTimeMillis()) {
@@ -749,24 +748,22 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
 		}
 	
 	    placeholders.put("{faction}", getFormattedName(sender));
-	    placeholders.put("{dtr}", JavaUtils.format(getDeathsUntilRaidable(false)));
+	    placeholders.put("{dtr}", JavaUtils.format(Double.valueOf(getDeathsUntilRaidable(false))));
 	    placeholders.put("{max-dtr}", JavaUtils.format(getMaximumDeathsUntilRaidable()));
-	    placeholders.put("{deaths-dtr}", String.valueOf(getDeathsUntilRaidable(false)));
+	    placeholders.put("{deaths-dtr}", getRegenStatus().getSymbol() + String.valueOf(getDtrColour()) + JavaUtils.format(Double.valueOf(getDeathsUntilRaidable(false))));
 	    placeholders.put("{balance}", String.valueOf(balance));	
-	    placeholders.put("{allies}", allyNames.isEmpty() ? null : String.join(ChatColor.GRAY + ", " + "&c", allyNames));
 	    placeholders.put("{time}", getRemainingRegenerationTime() > 0L
 	            ? DurationFormatUtils.formatDurationWords(getRemainingRegenerationTime(), true, true)
 	            : null);
 
 	    placeholders.put("{home-coords}", home == null
-	            ? null
+	            ? "None"
 	            : home.getLocation().getBlockX() + " " + home.getLocation().getBlockZ());
 
 	    placeholders.put("{allies}", allyNames.isEmpty()
-	            ? null
+	            ? "None"
 	            : String.join(ChatColor.GRAY + ", " + ChatColor.RED, allyNames));
 
-	  //  placeholders.put("{faction-points}", String.valueOf(getPoints())); 
 
 	    placeholders.put("{total}", String.valueOf(getOnlinePlayers(sender).size()));
 	    placeholders.put("{total-max}", String.valueOf(members.size()));
@@ -839,7 +836,7 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
 	}
 
 	/**
-	 * This method should only be used internally. If you wish to utilise focus, use the focus handler from the faction manager
+	 * This method should only be used internally. If you wish to utilize focus, use the focus handler from the faction manager
 	 */
 	@Deprecated
 	public void af(FocusTarget target) {
@@ -847,7 +844,7 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
 	}
 
 	/**
-	 * This method should only be used internally. If you wish to utilise focus, use the focus handler from the faction manager
+	 * This method should only be used internally. If you wish to utilize focus, use the focus handler from the faction manager
 	 */
 	@Deprecated
 	public void fr(FocusTarget target) {
@@ -855,7 +852,7 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
 	}
 
 	/**
-	 * This method should only be used internally. If you wish to utilise focus, use the focus handler from the faction manager
+	 * This method should only be used internally. If you wish to utilize focus, use the focus handler from the faction manager
 	 */
 	@Deprecated
 	public UUID fmk(UUID target) {

@@ -1,5 +1,6 @@
 package org.hcgames.hcfactions.util.configuration;
 
+import lombok.Getter;
 import lombok.SneakyThrows;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.configuration.MemorySection;
@@ -13,7 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Getter
 public class Messages {
 
 	private final static Object[] EMPTY_OBJECT_ARRAY = new Object[0];

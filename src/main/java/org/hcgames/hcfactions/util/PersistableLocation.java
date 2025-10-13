@@ -125,16 +125,8 @@ public class PersistableLocation implements ConfigurationSerializable, Cloneable
 		return this.worldName;
 	}
 
-	private void setWorldName(String worldName) {
-		this.worldName = worldName;
-	}
-
 	public UUID getWorldUID() {
 		return this.worldUID;
-	}
-
-	private void setWorldUID(UUID worldUID) {
-		this.worldUID = worldUID;
 	}
 
 	public World getWorld() {

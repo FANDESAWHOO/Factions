@@ -91,8 +91,6 @@ public class ClaimableFaction extends Faction {
 
 	@Override
 	public void sendInformation(CommandSender sender) {
-		HCFactions plugin = JavaPlugin.getPlugin(HCFactions.class);
-
 		sender.sendMessage(ChatColor.GOLD + BukkitUtils.STRAIGHT_LINE_DEFAULT);
 		sender.sendMessage(Lang.of("factions.show.claimable.top").replace("{factionName}", getFormattedName(sender)));
 		for (Claim claim : claims) {

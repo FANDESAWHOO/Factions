@@ -2,9 +2,7 @@ package org.hcgames.hcfactions.structure;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.hcgames.hcfactions.Configuration;
-import org.hcgames.hcfactions.HCFactions;
 import org.mineacademy.fo.settings.Lang;
 
 import java.util.Locale;
@@ -71,7 +69,6 @@ public enum ChatChannel {
 	}
 
 	public final String getDisplayName() {
-		HCFactions plugin = JavaPlugin.getPlugin(HCFactions.class);
 		String prefix;
 
 		switch (this) {
@@ -112,7 +109,6 @@ public enum ChatChannel {
 	}
 
 	public final String getRawFormat(Player player) {
-		HCFactions plugin = JavaPlugin.getPlugin(HCFactions.class);
 		ChatColor relationColour;
 
 		switch (this) {
