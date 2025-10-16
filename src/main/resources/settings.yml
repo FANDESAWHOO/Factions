@@ -106,7 +106,7 @@ NAMETAGS:
       - '%name%'
 playerfaction-show:
   - "&6&m----------&7[{faction}&7]&6&m----------" #home-coords will just become "None" if they do not have a home set
-  - "&6DTR: &e{dtr} &6/ &e{max-dtr} &e{deaths-dtr}" #You can set the default colors in the config.yml, default is red = raidable, green = not raidable
+  - "&6DTR: &e{deaths-dtr}&6/ &e{max-dtr}" #You can set the default colors in the config.yml, default is red = raidable, green = not raidable
   - "&6DTR Freeze: &e{time}" #This will only be displayed if the faction is frozen.
   - "&6Faction Home: &e{home-coords}"
   - "&6Allies: &e{allies}"

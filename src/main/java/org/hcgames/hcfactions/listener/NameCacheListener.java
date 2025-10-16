@@ -37,4 +37,5 @@ public class NameCacheListener implements Listener {
 		FactionMember member = faction.getMember(player);
 		member.setCachedName(player.getName());
 	}
+
 }

@@ -158,10 +158,9 @@ public class ClaimableFaction extends Faction {
 
 			Optional<Location> home = playerFaction.getHome();
 			Optional<FactionMember> leader = playerFaction.getLeader();
-			UUID leaderUUID;
 
 			if (!leader.isPresent()) throw new RuntimeException("Leader is not present for faction " + playerFaction);
-			else leaderUUID = leader.get().getUniqueId();
+
 
 			int refund = 0;
 			for (Claim claim : toRemove) {

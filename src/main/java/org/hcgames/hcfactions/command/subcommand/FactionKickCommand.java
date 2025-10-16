@@ -93,9 +93,9 @@ public final class FactionKickCommand extends FactionSubCommand {
 				onlineTarget.get().sendMessage(CC.translate(Lang.of("Commands-Factions-Kick-Kicked")
 						.replace("{sender}", sender.getName())));
 
-			playerFaction.broadcast(Lang.of("Commands-Factions-Kick-KickedBroadcast")
+			playerFaction.broadcast(CC.translate(Lang.of("Commands-Factions-Kick-KickedBroadcast")
 					.replace("{player}", targetMember.getCachedName())
-					.replace("{sender}", playerFaction.getMember(player).getRole().getAstrix() + sender.getName()));
+					.replace("{sender}", playerFaction.getMember(player).getRole().getAstrix() + sender.getName())));
 			//playerFaction.broadcast(plugin.getConfiguration().getRelationColourEnemy() + targetMember.getName() + ChatColor.YELLOW + " has been kicked by " +
 			//        plugin.getConfiguration().getRelationColourTeammate() + playerFaction.getMember(player).getRole().getAstrix() + sender.getName() + ChatColor.YELLOW + '.');
 		}

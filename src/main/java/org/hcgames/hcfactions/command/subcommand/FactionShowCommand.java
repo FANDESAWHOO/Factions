@@ -34,7 +34,6 @@ public final class FactionShowCommand extends FactionSubCommand {
 
 	@Override
 	public void onCommand() {
-		Faction playerFaction = null;
 		Faction namedFaction = null;
 
 		if (args.length < 2) {

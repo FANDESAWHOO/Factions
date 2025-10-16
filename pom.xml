@@ -132,6 +132,12 @@
             <scope>system</scope>
             <systemPath>${spigot-api-systemPath}</systemPath>
         </dependency> -->
+	    <dependency>
+	       <groupId>com.github.ThatKawaiiSam</groupId>
+	       <artifactId>Ostentus</artifactId>
+	       <version>345453f354</version>
+	       <scope>compile</scope>
+	    </dependency>        
         <dependency>
             <groupId>net.sf.trove4j</groupId>
             <artifactId>trove4j</artifactId>
@@ -256,6 +262,8 @@
                             <include>net.sf.trove4j:trove4j</include>
                             <include>${foundation.path}:Foundation*</include>
                             <include>org.apache.commons:commons-collections4</include>
+                            <include>com.github.ThatKawaiiSam:Ostentus</include>
+                            <include>org.mongodb:mongo-java-driver</include>
                         </includes>
                     </artifactSet>
                     <relocations>

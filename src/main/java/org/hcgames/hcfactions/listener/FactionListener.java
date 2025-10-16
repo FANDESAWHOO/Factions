@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.WeatherType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -21,6 +22,7 @@ import org.hcgames.hcfactions.event.claim.PlayerClaimEnterEvent;
 import org.hcgames.hcfactions.event.faction.FactionCreateEvent;
 import org.hcgames.hcfactions.event.faction.FactionRemoveEvent;
 import org.hcgames.hcfactions.event.faction.FactionRenameEvent;
+import org.hcgames.hcfactions.event.playerfaction.PlayerFactionHomeSetEvent;
 import org.hcgames.hcfactions.event.playerfaction.PlayerJoinFactionEvent;
 import org.hcgames.hcfactions.event.playerfaction.PlayerLeaveFactionEvent;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
@@ -29,20 +31,15 @@ import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.FactionMember;
 import org.hcgames.hcfactions.structure.RegenStatus;
+import org.hcgames.hcfactions.timer.type.TeleportTimer;
 import org.hcgames.hcfactions.util.SpigotUtils;
 import org.hcgames.hcfactions.util.text.CC;
 import org.mineacademy.fo.settings.Lang;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-//TODO: Move to factions
-
-/**
- * Moved to factions from Core.
- * Removed things because we don't have
- * FactionUser today.
- */
 public class FactionListener implements Listener {
 
 	private static final long FACTION_JOIN_WAIT_MILLIS = TimeUnit.SECONDS.toMillis(30L);
@@ -68,45 +65,39 @@ public class FactionListener implements Listener {
 						.replace("{factionName}", (target == null ? faction.getName() : faction.getFormattedName(target)))
 						.replace("{player}", (sender instanceof Player ? ((Player) sender).getDisplayName() : sender.getName())));
 
-                /*return ChatColor.YELLOW + "Faction " + ChatColor.WHITE + (target == null ? faction.getName() : faction.getDisplayName(target)) + ChatColor.YELLOW + " has been " +
-                        ChatColor.GREEN + "created" + ChatColor.YELLOW + " by " +
-                        ChatColor.WHITE + (sender instanceof Player ? ((Player) sender).getDisplayName() : sender.getName()) + ChatColor.YELLOW + '.';*/
 			});
-
-		/*	if(event.getSender() instanceof Player){
+			if(event.getSender() instanceof Player)
 				plugin.getUserManager().getUser(((Player) event.getSender()).getUniqueId()).addPastFaction(event.getFaction().getName());
-			}*/
 		}
 	}
-/*
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-	public void onPlayerJoinedFaction(PlayerJoinedFactionEvent event){
-		plugin.getUserManager().getUser(event.getPlayerUUID()).addPastFaction(event.getFaction().getName());
-	}*/
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPlayerHome(PlayerFactionHomeSetEvent event) {
+        Optional<Location> newHome = event.getNewHome();
+        Optional<Location> oldHome = event.getOldHome();
 
+        if (!newHome.isPresent() && oldHome.isPresent()) {
+            TeleportTimer timer = HCFactions.getInstance().getTimerManager().getTeleportTimer();
+            for (Player player : event.getFaction().getOnlinePlayers()) {
+                Location destination = timer.getDestination(player);
+                if (Objects.equals(destination, oldHome.get())) {
+                    timer.clearCooldown(player);
+                    player.sendMessage(ChatColor.RED + "Your home was unset, so your " + timer.getName() + ChatColor.RED + " timer has been cancelled");
+                }
+            }
+        }
+    }
+    
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onFactionRemove(FactionRemoveEvent event) {
 		Faction faction = event.getFaction();
 		if (faction instanceof PlayerFaction) {
 			CommandSender sender = event.getSender();
-
 			for (FactionMember i : ((PlayerFaction) faction).getOnlineMembers().values()) {
 				Player player = Bukkit.getServer().getPlayer(i.getUniqueId());
-
 				player.sendMessage(CC.translate(Lang.of("Broadcasts.Faction.Disband")
 						.replace("{factionName}", faction.getFormattedName(player))
 						.replace("{player}", (sender instanceof Player ? ((Player) sender).getDisplayName() : sender.getName()))));
 			}
-
-            /*Bukkit.broadcastMessage(new Function<CommandSender, String>() {
-                @Nullable
-                @Override
-                public String apply(@Nullable CommandSender target) {
-                    return ChatColor.YELLOW + "Faction " + ChatColor.WHITE + (target == null ? faction.getName() : faction.getDisplayName(target)) + ChatColor.YELLOW + " has been " +
-                            ChatColor.RED + "disbanded" + ChatColor.YELLOW + " by " +
-                            ChatColor.WHITE + (sender instanceof Player ? ((Player) sender).getDisplayName() : sender.getName()) + ChatColor.YELLOW + '.';
-                }
-            });*/
 		}
 	}
 
@@ -114,29 +105,11 @@ public class FactionListener implements Listener {
 	public void onFactionRename(FactionRenameEvent event) {
 		Faction faction = event.getFaction();
 
-		/*	for(FactionMember member : ((PlayerFaction)event.getFaction()).getMembers().values()){
-				FactionUser user = plugin.getUserManager().getUser(member.getUniqueId());
-				user.removePastFaction(event.getOldName());
-				user.addPastFaction(event.getNewName());
-			}*/
 		if (faction instanceof PlayerFaction)
 			event.getSender().sendMessage(CC.translate(Lang.of("Commands.Factions.Subcommand.Rename.Renamed")
 					.replace("{oldFactionName}", event.getOldName())
 					.replace("{factionName}", event.getNewName())));
 
-        /*Faction faction = event.getFaction();
-        if (faction instanceof PlayerFaction) {
-            Bukkit.broadcastMessage(new Function<CommandSender, String>() {
-                @Nullable
-                @Override
-                public String apply(@Nullable CommandSender target) {
-                    Relation relation = faction.getRelation(target);
-                    return ChatColor.YELLOW + "Faction " + relation.toChatColour() + event.getOriginalName() + ChatColor.YELLOW + " has been " +
-                            ChatColor.AQUA + "renamed" + ChatColor.YELLOW + " to " +
-                            relation.toChatColour() + event.getNewName() + ChatColor.YELLOW + '.';
-                }
-            });
-        }*/
 	}
 
 	private long getLastLandChangedMeta(Player player) {
@@ -163,25 +136,16 @@ public class FactionListener implements Listener {
             player.setSaturation(4.0F);
         }
 
-        if(toFaction instanceof ClaimableFaction && ((ClaimableFaction)toFaction).isSnowfall()){
-            player.setPlayerWeather(WeatherType.DOWNFALL);
-        }else{
-            player.resetPlayerWeather();
-        }
+        if(toFaction instanceof ClaimableFaction && ((ClaimableFaction)toFaction).isSnowfall())
+			player.setPlayerWeather(WeatherType.DOWNFALL);
+		else player.resetPlayerWeather();
 
-        if(this.getLastLandChangedMeta(player) <= 0L){ // delay before re-messaging.
-            player.sendMessage(CC.translate(Lang.of("Messages-Factions-EnterLand")
-                    .replace("{factionName}", event.getToFaction().getFormattedName(player))
-                    .replace("{factionLeft}", (event.getFromFaction() == null ? "" : event.getFromFaction().getFormattedName(player)))));
-        }
+		// delay before re-messaging.
+		if(getLastLandChangedMeta(player) <= 0L) player.sendMessage(CC.translate(Lang.of("Messages-Factions-EnterLand")
+				.replace("{factionName}", event.getToFaction().getFormattedName(player))
+				.replace("{factionLeft}", (event.getFromFaction() == null ? "" : event.getFromFaction().getFormattedName(player)))));
     }
 
-/*
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-	public void onPlayerLeftFaction(PlayerLeftFactionEvent event){
-		Optional<Player> optionalPlayer = event.getPlayer();
-		optionalPlayer.ifPresent(player -> plugin.getUserManager().getUser(player.getUniqueId()).setLastFactionLeaveMillis(System.currentTimeMillis()));
-	}*/
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
 	public void onPlayerPreFactionJoin(PlayerJoinFactionEvent event) {
@@ -195,13 +159,6 @@ public class FactionListener implements Listener {
 				player.sendMessage(ChatColor.RED + "You cannot join factions that are not regenerating DTR.");
 				return;
 			}
-
-		/*	long difference = (plugin.getUserManager().getUser(player.getUniqueId()).getLastFactionLeaveMillis() - System.currentTimeMillis()) + FACTION_JOIN_WAIT_MILLIS;
-			if(difference > 0L && !player.hasPermission("hcf.faction.argument.staff.forcejoin")){
-				event.setCancelled(true);
-				player.sendMessage(ChatColor.RED + "You cannot join factions after just leaving within " + FACTION_JOIN_WAIT_WORDS + ". " +
-						"You gotta wait another " + DurationFormatUtils.formatDurationWords(difference, true, true) + '.');
-			}*/
 		}
 	}
 

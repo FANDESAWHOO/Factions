@@ -7,6 +7,7 @@ import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.faction.PlayerFaction;
+import org.hcgames.hcfactions.lib.PlayerUtil;
 import org.mineacademy.fo.settings.Lang;
 
 public final class FactionRemoveCooldownCommand extends FactionSubCommand {
@@ -33,7 +34,7 @@ public final class FactionRemoveCooldownCommand extends FactionSubCommand {
 			return;
 		}
 
-		Player player = plugin.getServer().getPlayer(args[1]);
+		Player player = PlayerUtil.getPlayerByNick(args[1], false);
 
 		if (player == null) {
 			tell(Lang.of("Error-Messages.InvalidPlayer").replace("{player}", args[1]));

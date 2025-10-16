@@ -4,7 +4,6 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.command.FactionCommand;
 import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.util.JavaUtils;
@@ -48,7 +47,6 @@ public final class FactionHelpCommand extends FactionSubCommand {
 	private void showPage(CommandSender sender, String label, int pageNumber) {
 		// Create the multimap.
 		if (pages == null) {
-			boolean isPlayer = sender instanceof Player;
 			int val = 1;
 			int count = 0;
 			Multimap<Integer, String> pages = ArrayListMultimap.create();

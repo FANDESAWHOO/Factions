@@ -2,7 +2,10 @@ package org.hcgames.hcfactions;
 
 
 import com.google.common.base.Joiner;
+
+import io.github.thatkawaiisam.ostentus.Ostentus;
 import lombok.Getter;
+import me.clip.placeholderapi.libs.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -18,6 +21,7 @@ import org.hcgames.hcfactions.listener.*;
 import org.hcgames.hcfactions.manager.FactionManager;
 import org.hcgames.hcfactions.manager.FlatFileFactionManager;
 import org.hcgames.hcfactions.manager.MongoFactionManager;
+import org.hcgames.hcfactions.manager.NametagManager;
 import org.hcgames.hcfactions.structure.FactionMember;
 import org.hcgames.hcfactions.timer.TimerExecutor;
 import org.hcgames.hcfactions.timer.TimerManager;
@@ -51,7 +55,8 @@ public class HCFactions extends SimplePlugin {
 	private TimerManager timerManager;
 	private UserManager userManager;
 	private WandManager wandManager;
-
+	private NametagManager nametagManager;
+	private final BukkitAudiences adventure = BukkitAudiences.create(this);
 	public static HCFactions getInstance() {
 		return (HCFactions) SimplePlugin.getInstance();
 	}
@@ -107,6 +112,7 @@ public class HCFactions extends SimplePlugin {
 		saveData();
 		if (mongoManager != null) mongoManager.disconnect();
 		saveConfig();
+		if (adventure != null) adventure.close();
 	}
 
 	private void saveData() {
@@ -139,6 +145,8 @@ public class HCFactions extends SimplePlugin {
 			factionManager = new MongoFactionManager(this);
 		} else factionManager = new FlatFileFactionManager(this);
 		userManager = new MongoUserManager(this);
+		nametagManager = new NametagManager();
+		new Ostentus(this, nametagManager);
 		getLogger().info("FactionManager initialized successfully.");
 		if (Configuration.api) timerManager = new TimerManager(this);
 		claimHandler = new ClaimHandler(this);

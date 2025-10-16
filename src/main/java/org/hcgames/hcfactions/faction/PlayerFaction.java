@@ -56,7 +56,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-//TODO: Optionals
+
 public class PlayerFaction extends ClaimableFaction implements Raidable {
 
 	private static final Joiner INFO_JOINER = Joiner.on(ChatColor.GRAY + ", ");
@@ -90,7 +90,7 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
 	private boolean friendly_fire = false;
 	@Getter
 	private long lastDtrUpdateTimestamp;
-
+	private transient FactionMember cachedLeader;
 	public PlayerFaction(String name) {
 		super(name);
 	}
@@ -100,7 +100,6 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
 
 		GenericUtils.castMap(map.get("members"), String.class, FactionMember.class).entrySet().stream().filter(entry
 				-> entry.getValue() != null).forEach(entry -> members.put(UUID.fromString(entry.getKey()), entry.getValue()));
-		//invitedPlayers.addAll(GenericUtils.createList(map.get("invitedPlayers"), String.class).stream().map(UUID::fromString).collect(Collectors.toList()));
 		invitedPlayers.addAll(GenericUtils.createList(map.get("invitedPlayerNames"), String.class));
 
 		if (map.containsKey("home")) home = (PersistableLocation) map.get("home");
@@ -303,8 +302,24 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
 	 *
 	 * @return mutable list of {@link PlayerFaction}s
 	 */
+	public List<PlayerFaction> getAlliedFactions() {
+	    HCFactions factions = JavaPlugin.getPlugin(HCFactions.class);
+	    List<PlayerFaction> results = new ArrayList<>();
 
-	//TODO: Cache
+	    for (UUID uuid : getAllied()) {
+	        try {
+	            Faction faction = factions.getFactionManager().getFaction(uuid);
+	            Optional<PlayerFaction> pf = faction instanceof PlayerFaction ? Optional.of((PlayerFaction) faction) : Optional.<PlayerFaction>empty();
+	            if (pf.isPresent()) results.add(pf.get());
+	        } catch (NoFactionFoundException e) {
+	           e.fillInStackTrace();
+	        }
+	    }
+
+	    return results;
+	}
+
+/*
 	public List<PlayerFaction> getAlliedFactions() {
 		Collection<UUID> allied = getAllied();
 		Iterator<UUID> iterator = allied.iterator();
@@ -326,7 +341,7 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
 		}
 
 		return results;
-	}
+	}*/
 
 	public void removeRequestedRelation(UUID uuid) {
 		requestedRelations.remove(uuid);
@@ -346,6 +361,7 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
 	public Map<UUID, FactionMember> getMembers() {
 		return ImmutableMap.copyOf(members);
 	}
+	
 
 	/**
 	 * Gets the online {@link Player}s in this {@link Faction}.
@@ -438,13 +454,19 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
 	 *
 	 * @return the leading {@link FactionMember}
 	 */
-	public Optional<FactionMember> getLeader() {//TODO: Cache
-		Map<UUID, FactionMember> members = this.members;
-		for (Map.Entry<UUID, FactionMember> entry : members.entrySet())
-			if (entry.getValue().getRole() == Role.LEADER) return Optional.of(entry.getValue());
+	public Optional<FactionMember> getLeader() {
+		if (cachedLeader != null && cachedLeader.getRole() == Role.LEADER)
+			return Optional.of(cachedLeader);
 
+		for (FactionMember member : members.values()) {
+			if (member.getRole() == Role.LEADER) {
+				cachedLeader = member;
+				return Optional.of(member);
+			}
+		}
 		return Optional.empty();
 	}
+
 
 	/**
 	 * Gets the {@link FactionMember} of a {@link Player}.
@@ -487,18 +509,6 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
 	}
 
 	public void setHome(@Nullable Location home) {
-		//TODO: Account for in the CORE !!!!!!!!!!!!!!!!!!!!
-        /*if (home == null && this.home != null) {
-            TeleportTimer timer = HCF.getPlugin().getTimerManager().getTeleportTimer();
-            for (Player player : getOnlinePlayers()) {
-                Location destination = timer.getDestination(player);
-                if (Objects.equals(destination, this.home.getLocation())) {
-                    timer.clearCooldown(player);
-                    player.sendMessage(ChatColor.RED + "Your home was unset, so your " + timer.getName() + ChatColor.RED + " timer has been cancelled");
-                }
-            }
-        }*/
-
 		PlayerFactionHomeSetEvent event = new PlayerFactionHomeSetEvent(this, this.home == null ? null : this.home.getLocation(), home, !Bukkit.isPrimaryThread());
 		Bukkit.getServer().getPluginManager().callEvent(event);
 

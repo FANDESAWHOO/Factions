@@ -1,9 +1,9 @@
 package org.hcgames.hcfactions.listener;
 
 import lombok.Getter;
-import lombok.NonNull;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
-
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,32 +15,35 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.faction.Faction;
+import org.hcgames.hcfactions.faction.PlayerFaction;
+import org.hcgames.hcfactions.structure.Role;
 import org.hcgames.hcfactions.user.FactionUser;
+import org.hcgames.hcfactions.util.JavaUtils;
 import org.mineacademy.fo.ItemUtil;
 import org.mineacademy.fo.remain.CompEntityType;
 import org.mineacademy.fo.remain.NmsEntity;
 import org.mineacademy.fo.remain.Remain;
+
+import java.util.concurrent.TimeUnit;
 
 
 public final class DeathListener implements Listener {
 
 	private final HCFactions plugin;
 	@Getter private static final DeathListener instance = new DeathListener();
-
+	private static final long BASE_REGEN_DELAY = TimeUnit.MINUTES.toMillis(40L); // TODO: Make this configurable.
 	private DeathListener(){
 		plugin = HCFactions.getInstance();
 	}
 
 	public static String getDisplayName(ItemStack item) {
-	    if (item == null || !item.getType().isSolid()) {
-	        return "Air";
-	    }
+	    if (item == null || !item.getType().isSolid()) return "Air";
 
 	    ItemMeta meta = item.getItemMeta();
-	    if (meta != null && meta.hasDisplayName()) {
-	        return meta.getDisplayName();
-	    }
+	    if (meta != null && meta.hasDisplayName()) return meta.getDisplayName();
 
 	    try {
 
@@ -68,29 +71,29 @@ public final class DeathListener implements Listener {
 
 		dead.incrementDeaths();
 	}
-	//TODO: Move death message to factions (moved)
+
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onPlayerDeath(PlayerDeathEvent event) {
 		Player player = event.getEntity();
+		World.Environment environment = player.getLocation().getWorld().getEnvironment();
+
+		player.getInventory().setArmorContents(new ItemStack[4]);
+		player.getInventory().setContents(new ItemStack[36]);
+		player.saveData();
+		PlayerFaction playerFaction = HCFactions.getInstance().getFactionManager().getPlayerFaction(player);
+		if (playerFaction != null) {
+			Faction factionAt = plugin.getFactionManager().getFactionAt(player.getLocation());
+			double dtrLoss = (environment == World.Environment.NETHER || environment == World.Environment.THE_END) ? 0.5 : (1.0D * factionAt.getDtrLossMultiplier());
+			double newDtr = playerFaction.setDeathsUntilRaidable(playerFaction.getDeathsUntilRaidable() - dtrLoss);
+
+			Role role = playerFaction.getMember(player.getUniqueId()).getRole();
+			playerFaction.setRemainingRegenerationTime(BASE_REGEN_DELAY + (playerFaction.getOnlinePlayers().size() * TimeUnit.MINUTES.toMillis(2L)));
+			playerFaction.broadcast(ChatColor.GOLD + "Member Death: " + Configuration.relationColourTeammate + role.getAstrix() + player.getName() + ChatColor.GOLD + ". " + "DTR: (" + ChatColor.WHITE + JavaUtils.format(newDtr, 2) + '/' + JavaUtils.format(playerFaction.getMaximumDeathsUntilRaidable(), 2) + ChatColor.GOLD + ").");
+		}
 
 		if (Remain.getTPS() > 15) { // Prevent unnecessary lag during prime times.
 			Location location = player.getLocation();
-			spawnLightning(location); // I think this gonna work.
-		/*	World world = location.getWorld();
-
-
-			NmsEntity lightningEntity = new NmsEntity(
-					location,
-					CompEntityType.LIGHTNING_BOLT.getEntityClass()
-			);
-
-
-
-
-			Sound thunderSound = CompSound.ENTITY_LIGHTNING_BOLT_THUNDER.getSound();
-
-			for (Player target : Bukkit.getOnlinePlayers())
-				target.playSound(target.getLocation(), thunderSound, 1.0F, 1.0F);*/
+			spawnLightning(location);
 		}
 	}
 
@@ -98,38 +101,7 @@ public final class DeathListener implements Listener {
 	private void spawnLightning(Location location){
 		NmsEntity entity = new NmsEntity(location,CompEntityType.LIGHTNING_BOLT.getEntityClass());
 		entity.addEntity(CreatureSpawnEvent.SpawnReason.CUSTOM);
-		/*try{ //TODO USE NMSEntity
-			if(MinecraftVersion.equals(MinecraftVersion.V.v1_7)){
-				WorldServer worldServer = ((CraftWorld) location.getWorld()).getHandle();
-				EntityLightning entityLightning = new EntityLightning(worldServer, location.getX(), location.getY(), location.getZ(), false);
-				PacketPlayOutSpawnEntityWeather packet = new PacketPlayOutSpawnEntityWeather(entityLightning);
-				Bukkit.getOnlinePlayers().forEach(target -> {
-					Remain.sendPacket(target, packet);
-					target.playSound(target.getLocation(), CompSound.ENTITY_LIGHTNING_BOLT_THUNDER.getSound(), 1.0F, 1.0F); // TODO custom method to get the volume of the lightning depending on the location.
-				});
-			} else {
-				net.minecraft.server.v1_8_R3.WorldServer worldServer = ((org.bukkit.craftbukkit.v1_8_R3.CraftWorld) location.getWorld()).getHandle();
-				net.minecraft.server.v1_8_R3.EntityLightning entityLightning = new net.minecraft.server.v1_8_R3.EntityLightning(worldServer, location.getX(), location.getY(), location.getZ(), false);
-				net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityWeather packet = new net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityWeather(entityLightning);
-				Bukkit.getOnlinePlayers().forEach(target -> {
-					Remain.sendPacket(target, packet);
-					target.playSound(target.getLocation(), CompSound.ENTITY_LIGHTNING_BOLT_THUNDER.getSound(), 1.0F, 1.0F); // TODO custom method to get the volume of the lightning depending on the location.
-				});
-			}
-		}catch(Exception e){//TODO need to check how to send the lightning in newer versions.
-             NmsEntity entity = new NmsEntity(location,CompEntityType.LIGHTNING_BOLT.getEntityClass());
-			 entity.addEntity(CreatureSpawnEvent.SpawnReason.CUSTOM);
-		}*/
 	}
 
-	private Entity getKiller(Player player) {//TODO Account for time difference & look into getKiller from DeathMessageListener
-		if (player.getKiller() != null) return player.getKiller();
 
-		if (player.getLastDamageCause() instanceof EntityDamageByEntityEvent) {
-			EntityDamageByEntityEvent event = (EntityDamageByEntityEvent) player.getLastDamageCause();
-			return event.getDamager();
-		}
-
-		return null;
-	}
 }

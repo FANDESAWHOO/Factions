@@ -8,6 +8,7 @@ import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.focus.FocusTarget;
+import org.mineacademy.fo.PlayerUtil;
 import org.mineacademy.fo.settings.Lang;
 
 public final class FactionFocusCommand extends FactionSubCommand {
@@ -44,7 +45,7 @@ public final class FactionFocusCommand extends FactionSubCommand {
 
 		String name = args[1];
 
-		Player targetPlayer = plugin.getServer().getPlayer(name);
+		Player targetPlayer = PlayerUtil.getPlayerByNick(name, false);
 		Faction targetFaction;
 
 		if (targetPlayer == null) {

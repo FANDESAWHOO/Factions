@@ -203,10 +203,6 @@ public class SignSubclaimListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
 	public void onBlockBreak(BlockBreakEvent event) {
-       /* if (HCF.getPlugin().getEotwHandler().isEndOfTheWorld()) {//TODO: Use "CoreHook"
-            return;
-        }*/
-
 		Player player = event.getPlayer();
 		//TODO: Use org.hcgames.listener.protectionlistener
 		if (player.getGameMode() == GameMode.CREATIVE && player.hasPermission(ProtectionListener.PROTECTION_BYPASS_PERMISSION))
@@ -266,7 +262,6 @@ public class SignSubclaimListener implements Listener {
 			if (player.getGameMode() == GameMode.CREATIVE && player.hasPermission(ProtectionListener.PROTECTION_BYPASS_PERMISSION))
 				return;
 
-			//TODO: Core hook
 			if (Configuration.kitMap) return;
 
 			Block block = event.getClickedBlock();

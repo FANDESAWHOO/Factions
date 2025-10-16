@@ -24,6 +24,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
+import org.mineacademy.fo.PlayerUtil;
+import org.mineacademy.fo.remain.Remain;
 
 import java.util.List;
 import java.util.UUID;
@@ -127,7 +129,7 @@ public class BukkitUtils {
 		if (string == null) {
 			return null;
 		}
-		return JavaUtils.isUUID(string) ? Bukkit.getPlayer(UUID.fromString(string)) : Bukkit.getPlayer(string);
+		return JavaUtils.isUUID(string) ? Bukkit.getPlayer(UUID.fromString(string)) : PlayerUtil.getPlayerByNick(string, true);
 	}
 
 	@Deprecated
@@ -135,7 +137,7 @@ public class BukkitUtils {
 		if (string == null) {
 			return null;
 		}
-		return JavaUtils.isUUID(string) ? Bukkit.getOfflinePlayer(UUID.fromString(string)) : Bukkit.getOfflinePlayer(string);
+		return JavaUtils.isUUID(string) ? Remain.getOfflinePlayerByUUID(UUID.fromString(string)) : Bukkit.getOfflinePlayer(string);
 	}
 
 	public static boolean isWithinX(Location location, Location other, double distance) {

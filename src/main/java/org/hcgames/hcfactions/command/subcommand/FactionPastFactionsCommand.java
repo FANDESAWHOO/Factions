@@ -5,15 +5,12 @@ import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.util.uuid.UUIDHandler;
+import org.mineacademy.fo.PlayerUtil;
 import org.mineacademy.fo.settings.Lang;
 
 import java.util.List;
 import java.util.UUID;
 
-/**
- * HCGAMES
- * COMMAND
- */
 public class FactionPastFactionsCommand extends FactionSubCommand {
 	private final HCFactions plugin;
 
@@ -41,7 +38,7 @@ public class FactionPastFactionsCommand extends FactionSubCommand {
 			List<String> pastFactions = HCFactions.getInstance().getUserManager().getUser(((Player) sender).getUniqueId()).getPastFactions();
 			sender.sendMessage(Lang.of("commands.pastfactions.own", pastFactions.isEmpty() ? "None" : HCFactions.COMMA_JOINER.join(pastFactions)));
 		} else {
-			Player player = plugin.getServer().getPlayer(args[1]);
+			Player player = PlayerUtil.getPlayerByNick(args[1],false);
 
 			if (player == null) plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
 				UUID user = UUIDHandler.getUUID(args[1]);

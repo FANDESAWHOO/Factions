@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.hcgames.hcfactions.lib.remain.Remain;
 import org.hcgames.hcfactions.util.cuboid.Cuboid;
 import org.mineacademy.fo.menu.model.ItemCreator;
 import org.mineacademy.fo.menu.tool.Tool;
@@ -70,7 +71,7 @@ public final class WandManager extends Tool {
 		ZoneClaim claim = claimCache.computeIfAbsent(uuid, u -> new ZoneClaim(null, null)); 
 		if (action == Action.RIGHT_CLICK_AIR) {
 			claimCache.remove(uuid);
-			player.getInventory().setItemInHand(null); // TODO: we need to check if this give error in 1.9+
+			Remain.takeHandItem(player);
 			player.sendMessage(ChatColor.RED + "Selection cancelled.");
 			event.setCancelled(true);
 			return;
@@ -83,7 +84,7 @@ public final class WandManager extends Tool {
 				player.sendMessage(ChatColor.GREEN + "Region selected: " + cuboid.toString());
 			}
 			claimCache.remove(uuid);
-			player.getInventory().setItemInHand(null);
+			Remain.takeHandItem(player);
 			event.setCancelled(true);
 			return;
 		}

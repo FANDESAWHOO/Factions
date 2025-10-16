@@ -12,7 +12,7 @@ import org.hcgames.hcfactions.visualise.VisualType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
+
 
 public final class FactionMapCommand extends FactionSubCommand {
 
@@ -41,15 +41,13 @@ public final class FactionMapCommand extends FactionSubCommand {
 	@Override
 	public void onCommand() {
 		Player player = (Player) sender;
-		UUID uuid = player.getUniqueId();
 
-//		final FactionUser factionUser = HCF.getPlugin().getUserManager().getUser(uuid);
+
 		VisualType visualType;
 		if (args.length < 2) visualType = VisualType.CLAIM_MAP;
 		else if ((visualType = GuavaCompat.getIfPresent(VisualType.class, args[1]).orElse(VisualType.NONE)) == VisualType.NONE) {
 			player.sendMessage(ChatColor.RED + "Visual type " + args[1] + " not found.");
-			// player.sendMessage(HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Map-VisualTypeNotFound")
-			//       .replace("{visualType}", args[1]));
+
 			return;
 		}
 
@@ -58,7 +56,6 @@ public final class FactionMapCommand extends FactionSubCommand {
 			if (!LandMap.updateMap(player, plugin, visualType, true)) return;
 		} else {
 			HCFactions.getInstance().getVisualiseHandler().clearVisualBlocks(player, visualType, null);
-			//     tell(HCF.getPlugin().getMessagesOld().getString("Commands-Factions-Map-DisabledClaimPillars"));
 			tell(ChatColor.RED + "Claim pillars are no longer shown.");
 		}
 

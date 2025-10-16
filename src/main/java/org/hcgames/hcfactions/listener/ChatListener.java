@@ -15,14 +15,10 @@ import org.hcgames.hcfactions.api.FactionsAPI;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.ChatChannel;
 
-import java.util.regex.Pattern;
 
 public class ChatListener implements Listener {
 
-	private static final Pattern
-			FACTION_TAG_REPLACER = Pattern.compile("\\{FACTION}", Pattern.LITERAL),
-			DISPLAY_NAME_REPLACER = Pattern.compile("\\{DISPLAYNAME}", Pattern.LITERAL),
-			MESSAGE_REPLACER = Pattern.compile("\\{MESSAGE}", Pattern.LITERAL);
+
 	@Getter
 	private static final ChatListener chatListener = new ChatListener();
 	private final boolean placeholder;

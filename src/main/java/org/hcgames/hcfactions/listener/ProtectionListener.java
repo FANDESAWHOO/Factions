@@ -1,25 +1,4 @@
-/*
- *   COPYRIGHT NOTICE
- *
- *   Copyright (C) 2016, SystemUpdate, <admin@systemupdate.io>.
- *
- *   All rights reserved.
- *
- *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF THIRD PARTY RIGHTS. IN
- *   NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- *   DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
- *   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
- *   OR OTHER DEALINGS IN THE SOFTWARE.
- *
- *   Except as contained in this notice, the name of a copyright holder shall not
- *   be used in advertising or otherwise to promote the sale, use or other dealings
- *   in this Software without prior written authorization of the copyright holder.
- */
-
 package org.hcgames.hcfactions.listener;
-
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
@@ -60,11 +39,7 @@ import org.mineacademy.fo.settings.Lang;
 
 import javax.annotation.Nullable;
 
-/**
- * This need to be reformed to use
- * CompMaterial or other CrossVersion
- * Class Utility!
- */
+// Removed all of the stuff from Core, Core has an version useful for the mode.
 public class ProtectionListener implements Listener {
 
 	public static final String PROTECTION_BYPASS_PERMISSION = "hcf.faction.protection.bypass";
@@ -210,54 +185,10 @@ public class ProtectionListener implements Listener {
 		Faction toFaction = plugin.getFactionManager().getFactionAt(to);
 
 		if (fromFaction != toFaction) {
-           /* if(enterCause.equals(PlayerClaimEnterEvent.EnterCause.TELEPORT) && fromFaction instanceof CapturableFaction){
-                CapturableFaction capturableFaction = (CapturableFaction) fromFaction;
-                for (CaptureZone captureZone : capturableFaction.getCaptureZones()) {
-                    Cuboid cuboid = captureZone.getCuboid();
-                    if (cuboid == null) {
-                        continue;
-                    }
-
-                    if (cuboid.contains(from)) {
-                        if (!cuboid.contains(to)) {
-                            CaptureZoneLeaveEvent calledEvent = new CaptureZoneLeaveEvent(player, capturableFaction, captureZone);
-                            Bukkit.getPluginManager().callEvent(calledEvent);
-                            cancelled = calledEvent.isCancelled();
-                            break;
-                        }
-                    }
-                }
-            }*/
-
 			PlayerClaimEnterEvent calledEvent = new PlayerClaimEnterEvent(player, from, to, fromFaction, toFaction, enterCause);
 			Bukkit.getPluginManager().callEvent(calledEvent);
 			cancelled = calledEvent.isCancelled();
-		} /*else if (toFaction instanceof CapturableFaction) {
-            CapturableFaction capturableFaction = (CapturableFaction) toFaction;
-            for (CaptureZone captureZone : capturableFaction.getCaptureZones()) {
-                Cuboid cuboid = captureZone.getCuboid();
-                if (cuboid == null) {
-                    continue;
-                }
-
-                if (cuboid.contains(from)) {
-                    if (!cuboid.contains(to)) {
-                        CaptureZoneLeaveEvent calledEvent = new CaptureZoneLeaveEvent(player, capturableFaction, captureZone);
-                        Bukkit.getPluginManager().callEvent(calledEvent);
-                        cancelled = calledEvent.isCancelled();
-                        break;
-                    }
-                } else {
-                    if (cuboid.contains(to)) {
-                        CaptureZoneEnterEvent calledEvent = new CaptureZoneEnterEvent(player, capturableFaction, captureZone);
-                        Bukkit.getPluginManager().callEvent(calledEvent);
-                        cancelled = calledEvent.isCancelled();
-                        break;
-                    }
-                }
-            }
-        }*/
-
+		}
 		if (cancelled) if (enterCause == PlayerClaimEnterEvent.EnterCause.TELEPORT) event.setCancelled(true);
 		else {
 			from.setX(from.getBlockX() + 0.5);
@@ -276,19 +207,6 @@ public class ProtectionListener implements Listener {
 		handleMove(event, PlayerClaimEnterEvent.EnterCause.TELEPORT);
 	}
 
-   /* This need to be in other plugin!
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
-    public void onPlayerTeleport(PlayerTeleportEvent event) {
-        if (event.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL) {
-            Faction toFactionAt = plugin.getFactionManager().getFactionAt(event.getTo());
-            if (toFactionAt.isSafezone() && !plugin.getFactionManager().getFactionAt(event.getFrom()).isSafezone()) {
-                Player player = event.getPlayer();
-                player.sendMessage(ChatColor.RED + "You cannot Enderpearl into safe-zones, used Enderpearl has been refunded.");
-                HCFactions.getInstance().getTimerManager().getEnderPearlTimer().refund(player);
-                event.setCancelled(true);
-            }
-        }
-    }*/
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
 	public void onBlockIgnite(BlockIgniteEvent event) {
@@ -501,14 +419,6 @@ public class ProtectionListener implements Listener {
 				}
 		}
 	}
-
-    /*@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
-    public void onBlockSpread(BlockSpreadEvent event) {
-        Faction factionAt = plugin.getFactionManager().getFactionAt(event.getBlock().getLocation());
-        if (factionAt instanceof ClaimableFaction && !(factionAt instanceof PlayerFaction)) {
-            event.setCancelled(true);
-        }
-    }*/
 
 	// Prevent monsters targeting players in safe-zones or their own claims.
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
