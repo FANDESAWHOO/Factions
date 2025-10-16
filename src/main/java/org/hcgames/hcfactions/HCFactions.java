@@ -56,7 +56,7 @@ public class HCFactions extends SimplePlugin {
 	private UserManager userManager;
 	private WandManager wandManager;
 	private NametagManager nametagManager;
-	private final BukkitAudiences adventure = BukkitAudiences.create(this);
+	 private BukkitAudiences adventure;
 	public static HCFactions getInstance() {
 		return (HCFactions) SimplePlugin.getInstance();
 	}
@@ -102,7 +102,7 @@ public class HCFactions extends SimplePlugin {
 		setupEconomy();
 		setupPermissions();
 		getLogger().info("HCFactions has been enabled successfully!");
-
+		this.adventure = BukkitAudiences.create(this);
 		getServer().getScheduler().runTaskTimerAsynchronously(this, this::saveData, (60 * 20) * 5, (60 * 20) * 5);
 
 	}
@@ -112,7 +112,10 @@ public class HCFactions extends SimplePlugin {
 		saveData();
 		if (mongoManager != null) mongoManager.disconnect();
 		saveConfig();
-		if (adventure != null) adventure.close();
+		if (this.adventure != null) {
+            this.adventure.close();
+            this.adventure = null;
+        }
 	}
 
 	private void saveData() {
