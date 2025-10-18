@@ -53,7 +53,9 @@ public interface FactionManager {
 	Map<String, ?> getFactionNameMap();
 
 	ImmutableList<Faction> getFactions();
-
+	default PlayerFaction getPlayerFactionIfPresent(UUID playerUUID) {
+        return null;
+    }
 	default Claim getClaimAt(Location location) {
 		return getClaimAt(location.getWorld(), location.getBlockX(), location.getBlockZ());
 	}
