@@ -1,59 +1,84 @@
-/*
- *   COPYRIGHT NOTICE
- *
- *   Copyright (C) 2016, SystemUpdate, <admin@systemupdate.io>.
- *
- *   All rights reserved.
- *
- *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF THIRD PARTY RIGHTS. IN
- *   NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- *   DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
- *   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
- *   OR OTHER DEALINGS IN THE SOFTWARE.
- *
- *   Except as contained in this notice, the name of a copyright holder shall not
- *   be used in advertising or otherwise to promote the sale, use or other dealings
- *   in this Software without prior written authorization of the copyright holder.
- */
-
 package org.hcgames.hcfactions.manager;
 
 import org.hcgames.hcfactions.faction.Faction;
 
 /**
- * This is the result of calling a advancedSearch method from the FactionManager
- * Only one of the methods will be called when the method completes
- * However I suggest you input code into both and handle all possible outcomes
+ * Represents a callback used for advanced faction search operations.
+ * 
+ * <p>Only one of the methods will be called when the search completes —
+ * either {@link #onSuccess(Faction)} or {@link #onFail(FailReason)}.
+ * 
+ * <p>Optionally, this callback can be flagged to execute asynchronously.
  *
- * @param <T>
+ * @param <T> the Faction type being searched
  */
-
-//TODO: A, boolean with isAsync & second, a way to forceAsync
-//TODO: Add more fail reasons as there is more possibilities
 public interface SearchCallback<T extends Faction> {
 
-	void onSuccess(T t);
+	/**
+	 * Called when the search completes successfully.
+	 *
+	 * @param result the faction found
+	 */
+	void onSuccess(T result);
 
+	/**
+	 * Called when the search fails.
+	 *
+	 * @param reason the reason for failure
+	 */
 	void onFail(FailReason reason);
 
+	/**
+	 * Indicates whether this callback should run asynchronously.
+	 *
+	 * @return true if the callback is asynchronous
+	 */
+	default boolean isAsync() {
+		return false;
+	}
+
+	/**
+	 * Forces this callback to run asynchronously, overriding manager defaults.
+	 *
+	 * @return true if asynchronous execution is forced
+	 */
+	default boolean forceAsync() {
+		return false;
+	}
+
+	/**
+	 * Represents reasons for search failure.
+	 */
 	enum FailReason {
 
 		/**
-		 * When the search fails to find a faction
+		 * When the search fails to find a faction.
 		 */
 		NOT_FOUND,
 
 		/**
-		 * When the search succeeds however the faction found does not cast to the one provided.
+		 * When the search succeeds, but the faction found does not match the expected class.
 		 */
 		CLASS_CAST,
 
 		/**
-		 * When the cause of it failing is unknown
+		 * When the search operation times out.
 		 */
-		UNKNOWN,
-	}
+		TIMEOUT,
 
+		/**
+		 * When the search fails due to a database or data source issue.
+		 */
+		DATA_ERROR,
+
+		/**
+		 * When the search operation is cancelled before completion.
+		 */
+		CANCELLED,
+
+		/**
+		 * When the cause of failure is unknown.
+		 */
+		UNKNOWN
+	}
 }

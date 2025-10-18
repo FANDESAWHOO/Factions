@@ -41,7 +41,6 @@ public final class DeathListener implements Listener {
 
 	public static String getDisplayName(ItemStack item) {
 	    if (item == null || !item.getType().isSolid()) return "Air";
-
 	    ItemMeta meta = item.getItemMeta();
 	    if (meta != null && meta.hasDisplayName()) return meta.getDisplayName();
 

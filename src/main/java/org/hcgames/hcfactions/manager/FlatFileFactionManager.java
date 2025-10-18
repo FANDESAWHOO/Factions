@@ -200,7 +200,20 @@ public class FlatFileFactionManager implements FactionManager, Listener{
 
         return (PlayerFaction) faction;
     }
+    
+    public PlayerFaction getPlayerFactionIfPresent(UUID playerUUID) {
+        UUID factionUUID = factionPlayerUuidMap.get(playerUUID);
+        if (factionUUID == null)
+            return null;
 
+        Faction faction = factionUUIDMap.get(factionUUID);
+        if (faction instanceof PlayerFaction)
+            return (PlayerFaction) faction;
+
+        return null;
+    }
+
+    
     @Override
     public boolean containsFaction(Faction faction) {
         return factionNameMap.containsKey(faction.getName());
@@ -281,106 +294,85 @@ public class FlatFileFactionManager implements FactionManager, Listener{
         return true;
     }
 
-    @Override //TODO: Clean up
+    @Override
     public <T extends Faction> void advancedSearch(String query, Class<T> classType, SearchCallback<T> callback, boolean forcePlayer) {
-        if(factionNameMap.containsKey(query) && !forcePlayer){
-            UUID foundUUID = factionNameMap.get(query);
+        // Paso 1: Buscar por nombre de facción si no se fuerza búsqueda por jugador
+        if (!forcePlayer && factionNameMap.containsKey(query)) {
+            UUID factionUUID = factionNameMap.get(query);
+            Faction faction = factionUUIDMap.get(factionUUID);
 
-            if(factionUUIDMap.containsKey(foundUUID)){
-                Faction found = factionUUIDMap.get(foundUUID);
-
-                if(found == null){
-                    callback.onFail(SearchCallback.FailReason.NOT_FOUND);
-                    return;
-                }
-
-                T result;
-
-                try{
-                    result = classType.cast(found);
-                }catch (ClassCastException e){
-                    callback.onFail(SearchCallback.FailReason.CLASS_CAST);
-                    return;
-                }
-
-                callback.onSuccess(result);
-                return;
-            }else{
+            if (faction == null) {
                 callback.onFail(SearchCallback.FailReason.NOT_FOUND);
                 return;
             }
-        }
 
-        if(classType.isAssignableFrom(PlayerFaction.class)){
-            Player player = PlayerUtil.getPlayerByNick(query, true); 
-
-            if(player != null){
-                UUID foundUUID = player.getUniqueId();
-
-                if(factionPlayerUuidMap.containsKey(foundUUID)){
-                    UUID factionUUID = factionPlayerUuidMap.get(foundUUID);
-
-                    if(factionUUIDMap.containsKey(factionUUID)){
-                        Faction found = factionUUIDMap.get(factionUUID);
-
-                        if(found == null){
-                            callback.onFail(SearchCallback.FailReason.NOT_FOUND);
-                            return;
-                        }
-
-                        if(found.getClass() != classType){
-                            callback.onFail(SearchCallback.FailReason.CLASS_CAST);
-                            return;
-                        }
-
-                        callback.onSuccess(classType.cast(found));
-                    }else{
-                        callback.onFail(SearchCallback.FailReason.NOT_FOUND);
-                    }
-                }else{
-                    callback.onFail(SearchCallback.FailReason.NOT_FOUND);
-                }
-            }else{
-                Runnable call = () -> {
-                    UUID uuid = UUIDHandler.getUUID(query);
-
-                    if(uuid == null){
-                        callback.onFail(SearchCallback.FailReason.NOT_FOUND);
-                    }else if(factionPlayerUuidMap.containsKey(uuid)){
-                            UUID factionUUID = factionPlayerUuidMap.get(uuid);
-
-                            if(factionUUIDMap.containsKey(factionUUID)){
-                                Faction found = factionUUIDMap.get(factionUUID);
-
-                                if(found == null){
-                                    callback.onFail(SearchCallback.FailReason.NOT_FOUND);
-                                    return;
-                                }
-
-                                if(found.getClass() != classType){
-                                    callback.onFail(SearchCallback.FailReason.CLASS_CAST);
-                                    return;
-                                }
-
-                                callback.onSuccess(classType.cast(found));
-                            }else{
-                                callback.onFail(SearchCallback.FailReason.NOT_FOUND);
-                            }
-                        }else{
-                            callback.onFail(SearchCallback.FailReason.NOT_FOUND);
-                        }
-                };
-
-                if(plugin.getServer().isPrimaryThread()){
-                    plugin.getServer().getScheduler().runTaskAsynchronously(plugin, call);
-                }else{
-                    call.run();
-                }
+            try {
+                callback.onSuccess(classType.cast(faction));
+            } catch (ClassCastException e) {
+                callback.onFail(SearchCallback.FailReason.CLASS_CAST);
             }
-        }else{
-            callback.onFail(SearchCallback.FailReason.NOT_FOUND);
+            return;
         }
 
+        // Paso 2: Si buscamos un PlayerFaction
+        if (!classType.isAssignableFrom(PlayerFaction.class)) {
+            callback.onFail(SearchCallback.FailReason.NOT_FOUND);
+            return;
+        }
+
+        // Paso 3: Buscar jugador online primero
+        Player player = PlayerUtil.getPlayerByNick(query, true);
+        if (player != null) {
+            handleFactionFromUUID(player.getUniqueId(), classType, callback);
+            return;
+        }
+
+        // Paso 4: Buscar jugador offline (Mojang API)
+        Runnable lookupTask = () -> {
+            try {
+                UUID uuid = UUIDHandler.getUUID(query);
+                if (uuid == null) {
+                    callback.onFail(SearchCallback.FailReason.NOT_FOUND);
+                    return;
+                }
+
+                handleFactionFromUUID(uuid, classType, callback);
+            } catch (Exception ex) {
+                callback.onFail(SearchCallback.FailReason.DATA_ERROR);
+            }
+        };
+
+        // Ejecutar según flags del callback
+        boolean async = callback.forceAsync() || (!plugin.getServer().isPrimaryThread() && callback.isAsync());
+
+        if (async) {
+            plugin.getServer().getScheduler().runTaskAsynchronously(plugin, lookupTask);
+        } else {
+            lookupTask.run();
+        }
+    }
+
+    /**
+     * Intenta encontrar una facción basada en un UUID de jugador y manejar la respuesta.
+     */
+    private <T extends Faction> void handleFactionFromUUID(UUID playerUUID, Class<T> classType, SearchCallback<T> callback) {
+        UUID factionUUID = factionPlayerUuidMap.get(playerUUID);
+        if (factionUUID == null) {
+            callback.onFail(SearchCallback.FailReason.NOT_FOUND);
+            return;
+        }
+
+        Faction faction = factionUUIDMap.get(factionUUID);
+        if (faction == null) {
+            callback.onFail(SearchCallback.FailReason.NOT_FOUND);
+            return;
+        }
+
+        try {
+            callback.onSuccess(classType.cast(faction));
+        } catch (ClassCastException e) {
+            callback.onFail(SearchCallback.FailReason.CLASS_CAST);
+        }
     }
 
 
