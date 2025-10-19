@@ -127,6 +127,7 @@ public class HCFactions extends SimplePlugin {
 		registerEvents(NameCacheListener.getNameCacheListener());
 		registerEvents(NameCacheListener.getNameCacheListener());
 		registerEvents(FactionChatListener.getChatListener());
+		registerEvents(DtrListener.getDtrListener());
 		if (Configuration.api) {
 			registerEvents(FactionListener.getFactionListener());
 			registerEvents(ChatListener.getChatListener());
