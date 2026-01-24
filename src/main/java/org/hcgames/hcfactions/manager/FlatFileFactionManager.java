@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -83,6 +84,13 @@ public class FlatFileFactionManager implements FactionManager, Listener{
     }
 
     void init(){}
+    
+    public Set<Claim> getAllClaims() {
+        return claimPositionMap.values()
+                .stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+    }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerJoinedFaction(PlayerJoinedFactionEvent event) {
