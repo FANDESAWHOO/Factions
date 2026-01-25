@@ -91,7 +91,7 @@ public class FlatFileFactionManager implements FactionManager, Listener{
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
     }
-
+    
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerJoinedFaction(PlayerJoinedFactionEvent event) {
         this.factionPlayerUuidMap.put(event.getPlayerUUID(), event.getFaction().getUniqueID());

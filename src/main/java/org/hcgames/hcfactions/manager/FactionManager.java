@@ -36,6 +36,7 @@ import org.hcgames.hcfactions.faction.system.SystemFaction;
 import org.hcgames.hcfactions.focus.FocusHandler;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -50,6 +51,8 @@ public interface FactionManager {
 		systemFactions.registerSystemFaction(clazz);
 	}
 
+	Set<Claim> getAllClaims();
+	
 	Map<String, ?> getFactionNameMap();
 
 	ImmutableList<Faction> getFactions();
