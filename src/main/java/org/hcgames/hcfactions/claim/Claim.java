@@ -16,7 +16,7 @@ import org.hcgames.hcfactions.util.cuboid.NamedCuboid;
 import java.util.Map;
 import java.util.SplittableRandom;
 import java.util.UUID;
-
+// xd
 public class Claim extends NamedCuboid implements Cloneable, ConfigurationSerializable, Mongoable {
 
     private static final SplittableRandom RANDOM = new SplittableRandom();
