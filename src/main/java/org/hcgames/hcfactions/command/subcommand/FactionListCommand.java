@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.command.FactionCommand;
 import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
@@ -12,9 +13,12 @@ import org.hcgames.hcfactions.util.JavaUtils;
 import org.hcgames.hcfactions.util.MapSorting;
 import org.mineacademy.fo.settings.Lang;
 
+import com.minnymin.command.Command;
+import com.minnymin.command.CommandArgs;
+
 import java.util.*;
 
-public final class FactionListCommand extends FactionSubCommand {
+public final class FactionListCommand extends FactionCommand {
 
 
 	private static final int MAX_FACTIONS_PER_PAGE = 10;
@@ -22,27 +26,22 @@ public final class FactionListCommand extends FactionSubCommand {
 	private final HCFactions plugin;
 
 	public FactionListCommand() {
-		super("list|l");
-		setDescription("See a list of all factions.");
 		plugin = HCFactions.getInstance();
 	}
 
 
-	@Override
-	public String getUsage() {
-		return '/' + label + ' ' + getName();
-	}
 
-	@Override
-	public void onCommand() {
+	@Command(name = "faction.list", description = "See a list of all factions.", aliases = { "f.list"}, usage = "/f list",  playerOnly = true, adminsOnly = false)
+	 public void onCommand(CommandArgs arg) {
+		Player player = arg.getPlayer();
 		Integer page;
-		if (args.length < 2) page = 1;
+		if (arg.length() < 1) page = 1;
 		else {
-			page = JavaUtils.tryParseInt(args[1]);
+			page = JavaUtils.tryParseInt(arg.getArgs(0));
 			if (page == null) {
-				tell(Lang.of("Commands-Invalid-Number")
-						.replace("{number}", args[1]));
-				//tell(ChatColor.RED + "'" + args[1] + "' is not a valid number.");
+				player.sendMessage(Lang.of("Commands-Invalid-Number")
+						.replace("{number}", arg.getArgs(0)));
+				//player.sendMessage(ChatColor.RED + "'" + args[1] + "' is not a valid number.");
 				return;
 			}
 		}
@@ -50,20 +49,20 @@ public final class FactionListCommand extends FactionSubCommand {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				showList(page, getLabel(), sender);
+				showList(page, arg.getLabel(), player);
 			}
 		}.runTaskAsynchronously(plugin);
 	}
 
-	private void showList(int pageNumber, String label, CommandSender sender) {
+	private void showList(int pageNumber, String label, Player player) {
 		if (pageNumber < 1) {
-			tell(Lang.of("Commands-Factions-List-PageLessThanOne"));
+			player.sendMessage(Lang.of("Commands-Factions-List-PageLessThanOne"));
 			return;
 		}
 
 		// Store a map of factions to their online player count.
 		Map<PlayerFaction, Integer> factionOnlineMap = new HashMap<>();
-		Player senderPlayer = sender instanceof Player ? (Player) sender : null;
+		Player senderPlayer = player;
 		for (Player target : Bukkit.getOnlinePlayers())
 			if (senderPlayer == null || senderPlayer.canSee(target)) try {
 				PlayerFaction playerFaction = plugin.getFactionManager().getPlayerFaction(target);
@@ -82,7 +81,7 @@ public final class FactionListCommand extends FactionSubCommand {
 				pages.put(++currentPage, results = new ArrayList<>(MAX_FACTIONS_PER_PAGE));
 
 			PlayerFaction playerFaction = entry.getKey();
-			String displayName = playerFaction.getFormattedName(sender);
+			String displayName = playerFaction.getFormattedName(player);
 
 			int index = results.size() + (currentPage > 1 ? (currentPage - 1) * MAX_FACTIONS_PER_PAGE : 0) + 1;
 			String message = Lang.of("Commands-Factions-List-Item")
@@ -113,22 +112,22 @@ public final class FactionListCommand extends FactionSubCommand {
 		int maxPages = pages.size();
 
 		if (pageNumber > maxPages) {
-			tell(Lang.of("Commands-Factions-List-NoMorePages")
+			player.sendMessage(Lang.of("Commands-Factions-List-NoMorePages")
 					.replace("{totalPageCount}", String.valueOf(maxPages)));
 			return;
 		}
 
-		tell(Lang.of("Commands-Factions-List-Header")
+		player.sendMessage(Lang.of("Commands-Factions-List-Header")
 				.replace("{currentPageNumber}", String.valueOf(pageNumber))
 				.replace("{totalPageCount}", String.valueOf(maxPages)));
 
 		Collection<String> components = pages.get(pageNumber);
 		for (String component : components) {
 			if (component == null) continue;
-			tell(component);
+			player.sendMessage(component);
 		}
 
-		tell(Lang.of("Commands-Factions-List-Footer")
+		player.sendMessage(Lang.of("Commands-Factions-List-Footer")
 				.replace("{currentPageNumber}", String.valueOf(pageNumber))
 				.replace("{totalPageCount}", String.valueOf(maxPages))
 				.replace("{commandLabel}", label));

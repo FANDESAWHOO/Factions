@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.claim.Claim;
+import org.hcgames.hcfactions.command.FactionCommand;
 import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.ClaimableFaction;
@@ -12,102 +13,82 @@ import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.manager.SearchCallback;
 import org.mineacademy.fo.settings.Lang;
 
+import com.minnymin.command.Command;
+import com.minnymin.command.CommandArgs;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public final class FactionClaimsCommand extends FactionSubCommand {
+public final class FactionClaimsCommand extends FactionCommand {
 
 	private final HCFactions plugin;
 
 	public FactionClaimsCommand() {
-		super("claims");
-		setDescription("View all claims for a faction.");
 		plugin = HCFactions.getInstance();
 	}
 
-	@Override
-	public String getUsage() {
-		return '/' + label + ' ' + getName() + " [factionName]";
-	}
+	 @Command(name = "faction.claims", description = "View all claims for a faction.", aliases = { "f.claims"}, usage = "/f claims [factionName]",  playerOnly = true, adminsOnly = false)
+	 public void onCommand(CommandArgs arg) {
+		 Player player = arg.getPlayer();
+		 PlayerFaction selfFaction = null;
+			try {
+				selfFaction = plugin.getFactionManager().getPlayerFaction(player);
+			} catch (NoFactionFoundException ignored) {
+			}
+			ClaimableFaction targetFaction;
 
-	@Override
-	public void onCommand() {
-		PlayerFaction selfFaction = null;
-		try {
-			selfFaction = sender instanceof Player ? plugin.getFactionManager().getPlayerFaction((Player) sender) : null;
-		} catch (NoFactionFoundException ignored) {
-		}
-		ClaimableFaction targetFaction;
+			if (arg.length() < 1) {
+				if (selfFaction == null) {
+					player.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
+					return;
+				}
 
-		if (args.length < 2) {
-			if (!(sender instanceof Player)) {
-				tell(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
+				targetFaction = selfFaction;
+			} else {
+				PlayerFaction finalSelfFaction = selfFaction;
+				plugin.getFactionManager().advancedSearch(arg.getArgs(0), ClaimableFaction.class, new SearchCallback<ClaimableFaction>() {
+					@Override
+					public void onSuccess(ClaimableFaction faction) {
+						handle(player, faction, finalSelfFaction);
+					}
+
+					@Override
+					public void onFail(FailReason reason) {
+						player.sendMessage(Lang.of("commands.error.faction_not_found", arg.getArgs(0)));
+					}
+				});
 				return;
 			}
 
-			if (selfFaction == null) {
-				tell(Lang.of("Commands-Factions-Global-NotInFaction"));
-				return;
-			}
+			handle(player, targetFaction, selfFaction);
+	 }
+	
 
-			targetFaction = selfFaction;
-		} else {
-			PlayerFaction finalSelfFaction = selfFaction;
-			plugin.getFactionManager().advancedSearch(args[1], ClaimableFaction.class, new SearchCallback<ClaimableFaction>() {
-				@Override
-				public void onSuccess(ClaimableFaction faction) {
-					handle(sender, faction, finalSelfFaction);
-				}
-
-				@Override
-				public void onFail(FailReason reason) {
-					tell(Lang.of("commands.error.faction_not_found", args[1]));
-				}
-			});
-			return;
-		}
-
-		handle(sender, targetFaction, selfFaction);
-	}
-
-	private void handle(CommandSender sender, ClaimableFaction targetFaction, PlayerFaction selfFaction) {
+	private void handle(Player player, ClaimableFaction targetFaction, PlayerFaction selfFaction) {
 		Collection<Claim> claims = targetFaction.getClaims();
 
 		if (claims.isEmpty()) {
-			tell(Lang.of("Commands-Factions-Claims-FactionClaimedNothing")
-					.replace("{factionName}", targetFaction.getFormattedName(sender)));
+			player.sendMessage(Lang.of("Commands-Factions-Claims-FactionClaimedNothing")
+					.replace("{factionName}", targetFaction.getFormattedName(player)));
 			return;
 		}
 
-		if (sender instanceof Player && !sender.isOp() && (targetFaction instanceof PlayerFaction && !((PlayerFaction) targetFaction).getHome().isPresent()))
+		if (!player.isOp() && (targetFaction instanceof PlayerFaction && !((PlayerFaction) targetFaction).getHome().isPresent()))
 			if (selfFaction != targetFaction) {
-				tell(Lang.of("Commands-Factions-Claims-CannotViewNoHome")
-						.replace("{factionName}", targetFaction.getFormattedName(sender)));
+				player.sendMessage(Lang.of("Commands-Factions-Claims-CannotViewNoHome")
+						.replace("{factionName}", targetFaction.getFormattedName(player)));
 				return;
 			}
 
-		tell(Lang.of("Commands-Factions-Claims-ClaimListHeader")
-				.replace("{factionName}", targetFaction.getFormattedName(sender))
+		player.sendMessage(Lang.of("Commands-Factions-Claims-ClaimListHeader")
+				.replace("{factionName}", targetFaction.getFormattedName(player))
 				.replace("{claimsAmount}", String.valueOf(claims.size())));
 
 		for (Claim claim : claims)
-			tell(Lang.of("Commands-Factions-Claims-ClaimListItem")
+			player.sendMessage(Lang.of("Commands-Factions-Claims-ClaimListItem")
 					.replace("{claimName}", claim.getFormattedName()));
 	}
 
-	@Override
-	protected List<String> tabComplete() {
-		if (args.length != 2 || !(sender instanceof Player)) return Collections.emptyList();
-		else if (args[1].isEmpty()) return null;
-		else {
-			Player player = ((Player) sender);
-			List<String> results = new ArrayList<>(plugin.getFactionManager().getFactionNameMap().keySet());
-			for (Player target : Bukkit.getOnlinePlayers())
-				if (player.canSee(target) && !results.contains(target.getName())) results.add(target.getName());
-
-			return results;
-		}
-	}
 }

@@ -4,64 +4,51 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.claim.Claim;
+import org.hcgames.hcfactions.command.FactionCommand;
 import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
+
+import com.minnymin.command.Command;
+import com.minnymin.command.CommandArgs;
 
 import java.util.Collections;
 import java.util.List;
 
-public final class FactionForceUnclaimHereCommand extends FactionSubCommand {
+public final class FactionForceUnclaimHereCommand extends FactionCommand {
 
 	private final HCFactions plugin;
 
 	public FactionForceUnclaimHereCommand() {
-		super("forceunclaimhere");
-		setDescription("Forces land unclaim where you are standing.");
 		plugin = HCFactions.getInstance();
 		//    this.permission = "hcf.command.faction.argument." + getName();
 	}
 
 
-	@Override
-	public String getUsage() {
-		return '/' + label + ' ' + getName();
-	}
-
-	@Override
-	public void onCommand() {
+	 @Command(name = "faction.forceunclaimhere", description = "Forces land unclaim where you are standing.",permission = "factions.command.forceunclaimhere", aliases = { "f.forceunclaimhere"}, usage = "/<command>  forceunclaimhere",  playerOnly = true, adminsOnly = false)
+	    public void onCommand(CommandArgs arg) {
+		 String[] args = arg.getArgs();
+			Player player = arg.getPlayer();
 		if (args.length < 1) {
-			tell(ChatColor.RED + "Usage: " + getUsage());
+			player.sendMessage(ChatColor.RED + "Usage: " +"/<command>  forceunclaimhere");
 			return;
 		}
-
-		if (!(sender instanceof Player)) {
-			tell(ChatColor.RED + "Only players can un-claim land from a faction.");
-			return;
-		}
-
-		Player player = (Player) sender;
 		Claim claimAt = plugin.getFactionManager().getClaimAt(player.getLocation());
 
 		if (claimAt == null) {
-			tell(ChatColor.RED + "There is not a claim at your current position.");
+			player.sendMessage(ChatColor.RED + "There is not a claim at your current position.");
 			return;
 		}
 
 		try {
-			if (claimAt.getFaction().removeClaim(claimAt, sender)) {
+			if (claimAt.getFaction().removeClaim(claimAt, player)) {
 				player.sendMessage(ChatColor.YELLOW + "Removed claim " + claimAt.getClaimUniqueID().toString() + " owned by " + claimAt.getFaction().getName() + ".");
 				return;
 			}
 		} catch (NoFactionFoundException e) {
-			tell(ChatColor.RED + "Failed to remove claim " + claimAt.getClaimUniqueID().toString());
+			player.sendMessage(ChatColor.RED + "Failed to remove claim " + claimAt.getClaimUniqueID().toString());
 		}
 
-		tell(ChatColor.RED + "Failed to remove claim " + claimAt.getClaimUniqueID().toString());
+		player.sendMessage(ChatColor.RED + "Failed to remove claim " + claimAt.getClaimUniqueID().toString());
 		return;
-	}
-
-	@Override
-	public List<String> tabComplete() {
-		return Collections.emptyList();
 	}
 }

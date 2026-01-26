@@ -2,16 +2,20 @@ package org.hcgames.hcfactions.command.subcommand.staff;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.command.FactionCommand;
 import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.manager.SearchCallback;
 import org.mineacademy.fo.settings.Lang;
+
+import com.minnymin.command.Command;
+import com.minnymin.command.CommandArgs;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,14 +24,12 @@ import java.util.List;
 /**
  * Faction argument used to forcefully remove {@link Faction}s.
  */
-public final class FactionRemoveCommand extends FactionSubCommand {
+public final class FactionRemoveCommand extends FactionCommand {
 
 	private final ConversationFactory factory;
 	private final HCFactions plugin;
 
 	public FactionRemoveCommand() {
-		super("remove|delete|forcedisband|forceremove");
-		setDescription("Remove a faction.");
 		plugin = HCFactions.getInstance();
 		// this.aliases = new String[]{"delete", "forcedisband", "forceremove"};
 		// this.permission = "hcf.command.faction.argument." + getName();
@@ -39,22 +41,18 @@ public final class FactionRemoveCommand extends FactionSubCommand {
 				withLocalEcho(true);
 	}
 
-
-	@Override
-	public String getUsage() {
-		return '/' + label + ' ' + getName() + " <all|factionName>";
-	}
-
-	@Override
-	public void onCommand() {
-		if (args.length < 2) {
-			tell(ChatColor.RED + "Usage: " + getUsage());
+	 @Command(name = "faction.remove", description = "Remove a faction.", permission = "factions.command.remove", aliases = { "f.remove","f.delete","f.forcedisband","faction.forcedisband","faction.delete"}, usage = "/<command> remove <name>",  playerOnly = false, adminsOnly = false)
+	 public void onCommand(CommandArgs arg) {
+		 String[] args = arg.getArgs();
+		 CommandSender sender = arg.getSender();
+		if (args.length < 1) {
+			sender.sendMessage(ChatColor.RED + "Usage: " + "/f remove <name>");
 			return;
 		}
 
 		if (args[1].equalsIgnoreCase("all")) {
 			if (!(sender instanceof ConsoleCommandSender)) {
-				tell(ChatColor.RED + "This command can be only executed from console.");
+				sender.sendMessage(ChatColor.RED + "This command can be only executed from console.");
 				return;
 			}
 
@@ -67,31 +65,18 @@ public final class FactionRemoveCommand extends FactionSubCommand {
 			@Override
 			public void onSuccess(Faction faction) {
 				if (plugin.getFactionManager().removeFaction(faction, sender))
-					Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Disbanded faction " + faction.getName() + ChatColor.YELLOW + '.');
+					org.bukkit.command.Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Disbanded faction " + faction.getName() + ChatColor.YELLOW + '.');
 			}
 
 			@Override
 			public void onFail(FailReason reason) {
-				tell(Lang.of("Commands.error.faction_not_found", args[1]));
+				sender.sendMessage(Lang.of("Commands.error.faction_not_found", args[1]));
 			}
 		});
 
 		return;
 	}
 
-	@Override
-	public List<String> tabComplete() {
-		if (args.length != 2 || !(sender instanceof Player)) return Collections.emptyList();
-		else if (args[1].isEmpty()) return null;
-		else {
-			Player player = (Player) sender;
-			List<String> results = new ArrayList<>(plugin.getFactionManager().getFactionNameMap().keySet());
-			for (Player target : Bukkit.getOnlinePlayers())
-				if (player.canSee(target) && !results.contains(target.getName())) results.add(target.getName());
-
-			return results;
-		}
-	}
 
 	private static class RemoveAllPrompt extends StringPrompt {
 

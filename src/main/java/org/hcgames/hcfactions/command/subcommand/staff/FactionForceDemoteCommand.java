@@ -1,7 +1,9 @@
 package org.hcgames.hcfactions.command.subcommand.staff;
 
 
+import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.command.FactionCommand;
 import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.manager.SearchCallback;
@@ -9,31 +11,24 @@ import org.hcgames.hcfactions.structure.FactionMember;
 import org.hcgames.hcfactions.structure.Role;
 import org.mineacademy.fo.settings.Lang;
 
-import java.util.Collections;
-import java.util.List;
+import com.minnymin.command.Command;
+import com.minnymin.command.CommandArgs;
 
-public final class FactionForceDemoteCommand extends FactionSubCommand {
+public final class FactionForceDemoteCommand extends FactionCommand {
 
 	private final HCFactions plugin;
 
 	public FactionForceDemoteCommand() {
-		super("forcedemote");
-		setDescription("Forces the demotion status of a player.");
 		plugin = HCFactions.getInstance();
 		//   this.permission = "hcf.command.faction.argument." + getName();
 	}
 
-
-	@Override
-	public String getUsage() {
-		return Lang.of("Commands.staff.forcedemote.usage", label, getName());
-	}
-
-	@Override
-	public void onCommand() {
-		checkPerm();
-		if (args.length < 2) {
-			Lang.of("Commands.error.usage", getUsage());
+	 @Command(name = "faction.forcedemote", description = "Forces the demotion status of a player." ,permission = "factions.command.forcedemote", aliases = { "f.forcedemote"}, usage = "/<command>  forcedemote <name>",  playerOnly = true, adminsOnly = false)
+	    public void onCommand(CommandArgs arg) {
+		 String[] args = arg.getArgs();
+		 Player player = arg.getPlayer();
+		if (args.length < 1) {
+			Lang.of("Commands.error.usage", "/f  forcedemote <name>");
 			return;
 		}
 		plugin.getFactionManager().advancedSearch(args[1], PlayerFaction.class, new SearchCallback<PlayerFaction>() {
@@ -48,17 +43,17 @@ public final class FactionForceDemoteCommand extends FactionSubCommand {
 					}
 
 				if (member == null) {
-					tell(Lang.of("Commands.error.member_not_found", args[1]));
+					player.sendMessage(Lang.of("Commands.error.member_not_found", args[1]));
 					return;
 				}
 
 				if (member.getRole() == Role.LEADER) {
-					tell(Lang.of("Command.staff.forcedemote.leader_demote", member.getCachedName()));
+					player.sendMessage(Lang.of("Command.staff.forcedemote.leader_demote", member.getCachedName()));
 					return;
 				}
 
 				if (member.getRole() == Role.LEADER) {
-					tell(Lang.of("Command.staff.forcedemote.user_demote", member.getCachedName()));
+					player.sendMessage(Lang.of("Command.staff.forcedemote.user_demote", member.getCachedName()));
 					return;
 				}
 
@@ -75,14 +70,10 @@ public final class FactionForceDemoteCommand extends FactionSubCommand {
 
 			@Override
 			public void onFail(FailReason reason) {
-				tell(Lang.of("Commands.error.faction_not_found", args[1]));
+				player.sendMessage(Lang.of("Commands.error.faction_not_found", args[1]));
 			}
 		});
 		return;
 	}
 
-	@Override
-	public List<String> tabComplete() {
-		return args.length == 2 ? null : Collections.emptyList();
-	}
 }

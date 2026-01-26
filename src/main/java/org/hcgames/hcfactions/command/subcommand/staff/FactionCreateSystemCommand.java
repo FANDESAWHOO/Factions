@@ -1,44 +1,42 @@
 package org.hcgames.hcfactions.command.subcommand.staff;
 
 
+import org.bukkit.command.CommandSender;
 import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.command.FactionCommand;
 import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.system.SystemTeam;
 import org.hcgames.hcfactions.util.JavaUtils;
 import org.mineacademy.fo.settings.Lang;
 
+import com.minnymin.command.Command;
+import com.minnymin.command.CommandArgs;
 
-public final class FactionCreateSystemCommand extends FactionSubCommand {
+
+public final class FactionCreateSystemCommand extends FactionCommand {
 
 	private final HCFactions plugin;
 
 	public FactionCreateSystemCommand() {
-		super("createsystem");
-		setDescription("Create a system faction.");
 		plugin = HCFactions.getInstance();
 		//  this.permission = "hcf.command.faction.argument." + getName();
 	}
 
-
-	@Override
-	public String getUsage() {
-		return "f createsystem name";
-	}
-
-	@Override
-	public void onCommand() {
-		checkPerm();
-		if (args.length < 2) {
-			tell(Lang.of("Command.error.usage", getUsage()));
+	 @Command(name = "faction.createsystem", description = "Create a system faction." ,permission = "factions.command.createsystem", aliases = { "f.createsystem"}, usage = "/<command>  createsystem <name>",  playerOnly = true, adminsOnly = false)
+	    public void onCommand(CommandArgs arg) {
+		 String[] args = arg.getArgs();
+		 CommandSender sender = arg.getSender();
+		if (args.length < 1) {
+			sender.sendMessage(Lang.of("Command.error.usage", "/f createsystem"));
 			return;
 		}
-		String name = args[1];
+		String name = args[0];
 		int value = Configuration.factionNameMinCharacters;
 
 		if (name.length() < value) {
-			tell(Lang.of("Commands-Factions-Create-MinimumChars")
+			sender.sendMessage(Lang.of("Commands-Factions-Create-MinimumChars")
 					.replace("{minChars}", String.valueOf(value)));
 			return;
 		}
@@ -46,19 +44,19 @@ public final class FactionCreateSystemCommand extends FactionSubCommand {
 		value = Configuration.factionNameMaxCharacters;
 
 		if (name.length() > value) {
-			tell(Lang.of("Commands-Factions-Create-MaximumChars")
+			sender.sendMessage(Lang.of("Commands-Factions-Create-MaximumChars")
 					.replace("{maxChars}", String.valueOf(value)));
 			return;
 		}
 
 		if (!JavaUtils.isAlphanumeric(name)) {
-			tell(Lang.of("Commands-Factions-Create-MustBeAlphanumeric"));
+			sender.sendMessage(Lang.of("Commands-Factions-Create-MustBeAlphanumeric"));
 			return;
 		}
 
 		try {
 			if (plugin.getFactionManager().getFaction(name) != null) {
-				tell(Lang.of("Commands-Factions-Create-NameAlreadyExists")
+				sender.sendMessage(Lang.of("Commands-Factions-Create-NameAlreadyExists")
 						.replace("{factionName}", name));
 				return;
 			}

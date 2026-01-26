@@ -2,6 +2,7 @@ package org.hcgames.hcfactions;
 
 
 import com.google.common.base.Joiner;
+import com.minnymin.command.CommandFramework;
 
 import io.github.thatkawaiisam.ostentus.Ostentus;
 import lombok.Getter;
@@ -56,7 +57,9 @@ public class HCFactions extends SimplePlugin {
 	private UserManager userManager;
 	private WandManager wandManager;
 	private NametagManager nametagManager;
-	 private BukkitAudiences adventure;
+	private BukkitAudiences adventure;
+	private CommandFramework commandFramework;
+	
 	public static HCFactions getInstance() {
 		return (HCFactions) SimplePlugin.getInstance();
 	}
@@ -92,6 +95,7 @@ public class HCFactions extends SimplePlugin {
 	@Override
 	public void onPluginLoad() {
 		register();
+		commandFramework = new CommandFramework(this);
 	}
 
 	@Override
@@ -129,7 +133,7 @@ public class HCFactions extends SimplePlugin {
 		registerEvents(FactionChatListener.getChatListener());
 		registerEvents(DtrListener.getDtrListener());
 		if (Configuration.api) {
-			registerEvents(FactionListener.getFactionListener());
+			registerEvents(new FactionListener());
 			registerEvents(ChatListener.getChatListener());
 			registerEvents(UserListener.getUserListener());
 			registerEvents(DeathListener.getInstance());

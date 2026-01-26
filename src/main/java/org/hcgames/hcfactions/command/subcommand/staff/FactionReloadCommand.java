@@ -1,39 +1,30 @@
 package org.hcgames.hcfactions.command.subcommand.staff;
 
 import org.bukkit.ChatColor;
-import org.hcgames.hcfactions.command.FactionSubCommand;
+import org.bukkit.entity.Player;
+import org.hcgames.hcfactions.command.FactionCommand;
 
-import java.util.Collections;
-import java.util.List;
+import com.minnymin.command.Command;
+import com.minnymin.command.CommandArgs;
+
 
 /**
  * Why SystemUpdate removed this?
  * Other thing i don't gonna know.
  */
-public final class FactionReloadCommand extends FactionSubCommand {
+public final class FactionReloadCommand extends FactionCommand {
 
 
 	public FactionReloadCommand() {
-		super("reload");
-		setDescription("Reloads the messages file from .");
 		//  this.permission = "hcf.command.faction.argument." + getName();
 	}
 
 
-	@Override
-	public String getUsage() {
-		return '/' + label + ' ' + getName();
-	}
-
-	@Override
-	public void onCommand() {
+	 @Command(name = "faction.reload", description = "Reloads the messages file from .",permission = "factions.command.mute", aliases = { "f.reload"}, usage = "/<command>  reload",  playerOnly = true, adminsOnly = false)
+	    public void onCommand(CommandArgs arg) {
+		 Player player = arg.getPlayer();
 		//plugin.getMessages().reload();
-		tell(ChatColor.RED + "Command disabled.");
+		player.sendMessage(ChatColor.RED + "Command disabled.");
 		return;
-	}
-
-	@Override
-	public List<String> tabComplete() {
-		return args.length == 2 ? null : Collections.emptyList();
 	}
 }

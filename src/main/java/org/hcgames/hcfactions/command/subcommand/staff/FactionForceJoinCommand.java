@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.command.FactionCommand;
 import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.Faction;
@@ -14,6 +15,9 @@ import org.hcgames.hcfactions.structure.FactionMember;
 import org.hcgames.hcfactions.structure.Role;
 import org.mineacademy.fo.settings.Lang;
 
+import com.minnymin.command.Command;
+import com.minnymin.command.CommandArgs;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,68 +25,46 @@ import java.util.List;
 /**
  * Faction argument used to forcefully join {@link Faction}s.
  */
-public final class FactionForceJoinCommand extends FactionSubCommand {
+public final class FactionForceJoinCommand extends FactionCommand {
 
 	private final HCFactions plugin;
 
 	public FactionForceJoinCommand() {
-		super("forcejoin");
-		setDescription("Forcefully join a faction.");
+
 		plugin = HCFactions.getInstance();
 		// this.permission = "hcf.command.faction.argument." + getName();
 	}
 
 
-	@Override
-	public String getUsage() {
-		return '/' + label + ' ' + getName() + " <factionName>";
-	}
-
-	@Override
-	public void onCommand() {
-		if (!(sender instanceof Player)) {
-			tell(ChatColor.RED + "Only players can join factions.");
-			return;
-		}
-		checkPerm();
-		if (args.length < 2) {
-			tell(ChatColor.RED + "Usage: " + getUsage());
+	 @Command(name = "faction.forcejoin", description = "Forcefully join a faction." ,permission = "factions.command.forcejoin", aliases = { "f.forcejoin"}, usage = "/<command>  forcejoin <name>",  playerOnly = true, adminsOnly = false)
+	    public void onCommand(CommandArgs arg) {
+		 String[] args = arg.getArgs();
+		 Player player = arg.getPlayer();
+		if (args.length < 1) {
+			player.sendMessage(ChatColor.RED + "Usage: " + "/f  forcejoin <name>");
 			return;
 		}
 
-		Player player = (Player) sender;
+
 
 		try {
 			plugin.getFactionManager().getPlayerFaction(player);
-			tell(ChatColor.RED + "You are already in a faction.");
+			player.sendMessage(ChatColor.RED + "You are already in a faction.");
 		} catch (NoFactionFoundException e) {
 			plugin.getFactionManager().advancedSearch(args[1], PlayerFaction.class, new SearchCallback<PlayerFaction>() {
 				@Override
 				public void onSuccess(PlayerFaction faction) {
 					if (faction.addMember(player, player, player.getUniqueId(), new FactionMember(player, ChatChannel.PUBLIC, Role.MEMBER), true))
-						faction.broadcast(ChatColor.GOLD.toString() + ChatColor.BOLD + sender.getName() + " has forcefully joined the faction.");
+						faction.broadcast(ChatColor.GOLD.toString() + ChatColor.BOLD + player.getName() + " has forcefully joined the faction.");
 				}
 
 				@Override
 				public void onFail(FailReason reason) {
-					tell(Lang.of("Commands.error.faction_not_found", args[1]));
+					player.sendMessage(Lang.of("Commands.error.faction_not_found", args[1]));
 				}
 			});
 		}
 		return;
 	}
 
-	@Override
-	public List<String> tabComplete() {
-		if (args.length != 2 || !(sender instanceof Player)) return Collections.emptyList();
-		else if (args[1].isEmpty()) return null;
-		else {
-			Player player = (Player) sender;
-			List<String> results = new ArrayList<>(plugin.getFactionManager().getFactionNameMap().keySet());
-			for (Player target : Bukkit.getOnlinePlayers())
-				if (player.canSee(target) && !results.contains(target.getName())) results.add(target.getName());
-
-			return results;
-		}
-	}
 }

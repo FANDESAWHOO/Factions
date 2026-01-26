@@ -30,7 +30,6 @@ public class NametagManager implements OstentusAdapter {
 	        try {
 	            targetFaction = HCFactions.getInstance().getFactionManager().getPlayerFaction(target);
 	        } catch (NoFactionFoundException e) {
-	            // targetFaction permanece null.
 	        }
 	        
 	        if (player.equals(target)) {

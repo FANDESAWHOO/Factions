@@ -3,72 +3,65 @@ package org.hcgames.hcfactions.command.subcommand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
 import org.hcgames.hcfactions.HCFactions;
-import org.hcgames.hcfactions.command.FactionSubCommand;
+import org.hcgames.hcfactions.command.FactionCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.mineacademy.fo.settings.Lang;
 
+import com.minnymin.command.Command;
+import com.minnymin.command.CommandArgs;
+
+
 import java.util.UUID;
 
-public final class FactionClaimCommand extends FactionSubCommand {
+public final class FactionClaimCommand extends FactionCommand {
 	private final HCFactions plugin;
-
 	public FactionClaimCommand() {
-		super("claim|claimland");
-		setDescription("Claim land in the Wilderness.");
 		plugin = HCFactions.getInstance();
+		
 
 	}
+	 @Command(name = "faction.claim", description = "Claim land in the Wilderness.", aliases = { "f.claim", "f.claimland"}, usage = "/f claim",  playerOnly = true, adminsOnly = false)
+		public void onCommand(CommandArgs arg) {
+		 Player player = arg.getPlayer();
+		 
+		 UUID uuid = player.getUniqueId();
 
-	@Override
-	public String getUsage() {
-		return '/' + label + ' ' + getName();
-	}
+			PlayerFaction playerFaction;
+			try {
+				playerFaction = plugin.getFactionManager().getPlayerFaction(uuid);
+			} catch (NoFactionFoundException e) {
+				player.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
+				return;
+			}
 
 
-	/**
-	 * Executed when the command is run. You can get the variables sender and args directly,
-	 * and use convenience checks in the simple command class.
-	 */
-	@Override
-	public void onCommand() {
-		Player player = (Player) sender;
-		UUID uuid = player.getUniqueId();
+			if (playerFaction.isRaidable()) {
+				player.sendMessage(Lang.of("Commands-Factions-Claim-NoClaimRaidable"));
+				return;
+			}
 
-		PlayerFaction playerFaction;
-		try {
-			playerFaction = plugin.getFactionManager().getPlayerFaction(uuid);
-		} catch (NoFactionFoundException e) {
-			tell(Lang.of("Commands-Factions-Global-NotInFaction"));
+			PlayerInventory inventory = player.getInventory();
+
+			if (inventory.contains(plugin.getClaimHandler().getClaimWand())) {
+				player.sendMessage(Lang.of("Commands-Factions-Claim-ClaimWandInvAlready"));
+				return;
+			}
+
+			if (inventory.contains(plugin.getClaimHandler().getClaimWand())) {
+				player.sendMessage(Lang.of("Commands-Factions-Claim-SubClaimInInvError"));
+				return;
+			}
+
+			if (!inventory.addItem(plugin.getClaimHandler().getClaimWand()).isEmpty()) {
+				player.sendMessage(Lang.of("Commands-Factions-Claim-InvFull"));
+				return;
+			}
+
+			player.sendMessage(Lang.of("Commands-Factions-Claim-Added")
+					.replace("{commandLabel}", arg.getLabel()));
+
 			return;
-		}
-
-
-		if (playerFaction.isRaidable()) {
-			tell(Lang.of("Commands-Factions-Claim-NoClaimRaidable"));
-			return;
-		}
-
-		PlayerInventory inventory = player.getInventory();
-
-		if (inventory.contains(plugin.getClaimHandler().getClaimWand())) {
-			tell(Lang.of("Commands-Factions-Claim-ClaimWandInvAlready"));
-			return;
-		}
-
-		if (inventory.contains(plugin.getClaimHandler().getClaimWand())) {
-			tell(Lang.of("Commands-Factions-Claim-SubClaimInInvError"));
-			return;
-		}
-
-		if (!inventory.addItem(plugin.getClaimHandler().getClaimWand()).isEmpty()) {
-			tell(Lang.of("Commands-Factions-Claim-InvFull"));
-			return;
-		}
-
-		tell(Lang.of("Commands-Factions-Claim-Added")
-				.replace("{commandLabel}", getLabel()));
-
-		return;
-	}
+		 
+	 }
 }

@@ -3,38 +3,37 @@ package org.hcgames.hcfactions.command.subcommand.staff;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.command.FactionCommand;
 import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.manager.SearchCallback;
 import org.mineacademy.fo.settings.Lang;
+
+import com.minnymin.command.Command;
+import com.minnymin.command.CommandArgs;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-public final class FactionMuteCommand extends FactionSubCommand {
+public final class FactionMuteCommand extends FactionCommand {
 
 	private final HCFactions plugin;
 
 	public FactionMuteCommand() {
-		super("mute");
-		setDescription("Mutes every member in this faction.");
 		plugin = HCFactions.getInstance();
 		//    this.permission = "hcf.command.faction.argument." + getName();
 	}
 
-
-	@Override
-	public String getUsage() {
-		return '/' + label + ' ' + getName() + " <factionName> <time:(e.g. 1h2s)> <reason>";
-	}
-
-	@Override
-	public void onCommand() {
-		if (args.length < 3) {
-			tell(ChatColor.RED + "Usage: " + getUsage());
+	 @Command(name = "faction.mute", description = "Mutes every member in this faction.",permission = "factions.command.mute", aliases = { "f.mute"}, usage = "/<command>  mute <factionName> <time:(e.g. 1h2s)> <reason>",  playerOnly = true, adminsOnly = false)
+	    public void onCommand(CommandArgs arg) {
+		 String[] args = arg.getArgs();
+		 Player player = arg.getPlayer();
+		if (args.length < 2) {
+			player.sendMessage(ChatColor.RED + "Usage: " + "/<command>  mute <factionName> <time:(e.g. 1h2s)> <reason>");
 			return;
 		}
 
@@ -46,24 +45,20 @@ public final class FactionMuteCommand extends FactionSubCommand {
 				ConsoleCommandSender console = Bukkit.getConsoleSender();
 				for (UUID uuid : faction.getMembers().keySet()) {
 					String commandLine = "mute " + uuid.toString() + " " + extraArgs;
-					tell(ChatColor.RED + ChatColor.BOLD.toString() + "Executing " + ChatColor.RED + commandLine);
-					console.getServer().dispatchCommand(sender, commandLine);
+					player.sendMessage(ChatColor.RED + ChatColor.BOLD.toString() + "Executing " + ChatColor.RED + commandLine);
+					console.getServer().dispatchCommand(player, commandLine);
 				}
 
-				tell(ChatColor.RED + ChatColor.BOLD.toString() + "Executed mute action on faction " + faction.getName() + ".");
+				player.sendMessage(ChatColor.RED + ChatColor.BOLD.toString() + "Executed mute action on faction " + faction.getName() + ".");
 			}
 
 			@Override
 			public void onFail(FailReason reason) {
-				tell(Lang.of("Commands.error.faction_not_found", args[1]));
+				player.sendMessage(Lang.of("Commands.error.faction_not_found", args[1]));
 			}
 		});
 
 		return;
 	}
 
-	@Override
-	public List<String> tabComplete() {
-		return args.length == 2 ? null : Collections.emptyList();
-	}
 }

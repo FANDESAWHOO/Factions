@@ -5,32 +5,22 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.api.FactionsAPI;
 import org.hcgames.hcfactions.api.TimerAPI;
+import org.hcgames.hcfactions.command.FactionCommand;
 import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.mineacademy.fo.settings.Lang;
+
+import com.minnymin.command.Command;
+import com.minnymin.command.CommandArgs;
 
 /**
  * Faction argument used to teleport to a nearby {@link org.bukkit.Location} safely if stuck.
  */
-public final class FactionStuckCommand extends FactionSubCommand {
+public final class FactionStuckCommand extends FactionCommand {
 
 
-	public FactionStuckCommand() {
-		super("stuck|trap|trapped");
-		setDescription("Teleport to a safe position.");
-
-	}
-
-
-	@Override
-	public String getUsage() {
-		return '/' + label + ' ' + getName();
-	}
-
-	@Override
-	public void onCommand() {
-		checkConsole();
-
-		Player player = (Player) sender;
+	@Command(name = "faction.stuck", description = "Teleport to a safe position.", aliases = {"f.stuck","faction.trap","f.trap","faction.trapped","f.trapped"}, usage = "/f stuck",  playerOnly = true, adminsOnly = false)
+	 public void onCommand(CommandArgs arg) {
+		Player player = arg.getPlayer();
         /*
         if(HCF.getPlugin().getSOTWManager().isPaused()){
             tell(HCF.getPlugin().getMessages().getString("Commands.Factions.Subcommand.Stuck.SOTW-Paused-Disabled"));
@@ -38,28 +28,10 @@ public final class FactionStuckCommand extends FactionSubCommand {
         }*/
 
 		if (player.getWorld().getEnvironment() != World.Environment.NORMAL) {
-			tell(Lang.of("Commands-Factions-Stuck-OverworldOnly"));
-			//tell(ChatColor.RED + "You can only use this command from the overworld.");
+			player.sendMessage(Lang.of("Commands-Factions-Stuck-OverworldOnly"));
 			return;
 		}
-		TimerAPI.callStuck(player, FactionsAPI.getPlayerFaction(player), getLabel());
-		/** MOVED TO TIMERS API.
-		 StuckTimer stuckTimer = HCFactions.getInstance().getTimerManager().getStuckTimer();
-
-		 if (!stuckTimer.setCooldown(player, player.getUniqueId())) {
-		 tell(Lang.of("Commands-Factions-Stuck-TimerRunning")
-		 .replace("{timerName}", stuckTimer.getDisplayName()));
-		 //tell(ChatColor.RED + "Your " + stuckTimer.getName() + ChatColor.RED + " timer is already active.");
-		 return;
-		 }
-
-		 tell(Lang.of("Commands-Factions-Stuck-Teleporting")
-		 .replace("{time}", DurationFormatter.getRemaining(stuckTimer.getRemaining(player), true, false))
-		 .replace("{maxBlocksDistance}", String.valueOf(StuckTimer.MAX_MOVE_DISTANCE)));*/
-		//tell(ChatColor.YELLOW + stuckTimer.getName() + ChatColor.YELLOW + " timer has started. " +
-		//        "Teleport will occur in " + ChatColor.AQUA + DurationFormatter.getRemaining(stuckTimer.getRemaining(player), true, false) + ChatColor.YELLOW + ". " +
-		//        "This will cancel if you move more than " + StuckTimer.MAX_MOVE_DISTANCE + " blocks.");
-
+		TimerAPI.callStuck(player, FactionsAPI.getPlayerFaction(player), arg.getLabel());
 		return;
 	}
 }

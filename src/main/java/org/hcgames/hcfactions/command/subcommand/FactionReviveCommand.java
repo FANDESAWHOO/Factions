@@ -2,41 +2,31 @@ package org.hcgames.hcfactions.command.subcommand;
 
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.command.FactionCommand;
 import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.Role;
 import org.mineacademy.fo.settings.Lang;
 
+import com.minnymin.command.Command;
+import com.minnymin.command.CommandArgs;
 
-public final class FactionReviveCommand extends FactionSubCommand {
+public final class FactionReviveCommand extends FactionCommand {
 
 	private final HCFactions plugin;
 
 	public FactionReviveCommand() {
-		super("revive");
-		setDescription("Revive a player with faction lives");
 		plugin = HCFactions.getInstance();
 
 	}
 
+	@Command(name = "faction.revive", description = "Revive a player with faction lives", aliases = {"f.revive"}, usage = "/f revive <player>",  playerOnly = true, adminsOnly = false)
+	 public void onCommand(CommandArgs arg) {
+		Player player = arg.getPlayer();
 
-	@Override
-	public String getUsage() {
-		return Lang.of("Commands.Factions.Revive.Usage");
-	}
-
-	@Override
-	public void onCommand() {
-		if (!(sender instanceof Player)) {
-			tell(Lang.of("Error-Messages.PlayerOnly"));
-			return;
-		}
-
-		Player player = (Player) sender;
-
-		if (args.length < 2) {
-			tell(getUsage());
+		if (arg.length() < 1) {
+			player.sendMessage("/f revive <player>");
 			return;
 		}
 
@@ -44,19 +34,19 @@ public final class FactionReviveCommand extends FactionSubCommand {
 		try {
 			faction = plugin.getFactionManager().getPlayerFaction(player.getUniqueId());
 		} catch (NoFactionFoundException e) {
-			tell(Lang.of("Error-Messages.NotInFaction"));
+			player.sendMessage(Lang.of("Error-Messages.NotInFaction"));
 			//invalid faction
 			return;
 		}
 
 		if (faction.getMember(player).getRole() == Role.MEMBER) {
-			tell(Lang.of("Commands.Factions.Revive.Officer-Required"));
+			player.sendMessage(Lang.of("Commands.Factions.Revive.Officer-Required"));
 			//officer required
 			return;
 		}
 
 		if (faction.getLives() <= 0) {
-			tell(Lang.of("Commands.Factions.Revive.Not-Enough").replace("{player}", args[1]));
+			player.sendMessage(Lang.of("Commands.Factions.Revive.Not-Enough").replace("{player}", arg.getArgs(0)));
 			//faction doesn't have enough lives
 			return;
 		}

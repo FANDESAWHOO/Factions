@@ -4,6 +4,7 @@ package org.hcgames.hcfactions.command.subcommand;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.command.FactionCommand;
 import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
@@ -11,75 +12,72 @@ import org.hcgames.hcfactions.lib.PlayerUtil;
 import org.hcgames.hcfactions.structure.Relation;
 import org.hcgames.hcfactions.structure.Role;
 import org.mineacademy.fo.settings.Lang;
+
+import com.minnymin.command.Command;
+import com.minnymin.command.CommandArgs;
+
 import org.mineacademy.fo.model.SimpleComponent;
 import java.util.Set;
 
-public final class FactionInviteCommand extends FactionSubCommand {
+public final class FactionInviteCommand extends FactionCommand {
 
 	private final HCFactions plugin;
 
 	public FactionInviteCommand() {
-		super("invite|inv|invitemember|inviteplayer");
-		setDescription("Invite a player to the faction.");
 		plugin = HCFactions.getInstance();
 
 	}
 
-	@Override
-	public String getUsage() {
-		return '/' + label + ' ' + getName() + " <playerName>";
-	}
-
-	@Override
-	public void onCommand() {
-		if (args.length < 2) {
-			tell(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
+	@Command(name = "faction.invite", description = "Invite a player to the faction.", aliases = { "f.invite","faction.inv", "f.inv"}, usage = "/f invite <playerName>",  playerOnly = true, adminsOnly = false)
+	 public void onCommand(CommandArgs arg) {
+		Player player = arg.getPlayer();
+		if (arg.length() < 1) {
+			player.sendMessage(Lang.of("Commands-Usage").replace("{usage}", "/f invite <playerName>"));
 			return;
 		}
 
-		if (args[1].length() > 17) {
-			tell(Lang.of("Commands-Factions-Invite-InvalidUsername")
-					.replace("{username}", args[1]));
+		if (arg.getArgs(0).length() > 17) {
+			player.sendMessage(Lang.of("Commands-Factions-Invite-InvalidUsername")
+					.replace("{username}", arg.getArgs(0)));
 			return;
 		}
 
-		Player invitee = PlayerUtil.getPlayerByNick(args[1], true);
+		Player invitee = PlayerUtil.getPlayerByNick(arg.getArgs(0), true);
 
 		if (invitee == null) {
-			tell(Lang.of("Commands-Pay-UnknownPlayer").replace("{player}", args[1]));
+			player.sendMessage(Lang.of("Commands-Pay-UnknownPlayer").replace("{player}", arg.getArgs(0)));
 			return;
 		}
 
-		Player player = (Player) sender;
 		PlayerFaction playerFaction;
 		try {
 			playerFaction = plugin.getFactionManager().getPlayerFaction(player);
 		} catch (NoFactionFoundException e) {
-			tell(Lang.of("Commands-Factions-Global-NotInFaction"));
+			player.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
 			return;
 		}
 
 		if (playerFaction.getMember(player.getUniqueId()).getRole() == Role.MEMBER) {
-			tell(Lang.of("Commands-Factions-Invite-OfficerRequired"));
+			player.sendMessage(Lang.of("Commands-Factions-Invite-OfficerRequired"));
 			return;
 		}
 
 		Set<String> invitedPlayerNames = playerFaction.getInvitedPlayerNames();
-		String name = args[1];
+		String name = arg.getArgs(0);
 
 		if (playerFaction.findMember(name) != null) {
-			tell(Lang.of("Commands-Factions-Invite-AlreadyInFaction")
+			player.sendMessage(Lang.of("Commands-Factions-Invite-AlreadyInFaction")
 					.replace("{player}", name));
 			return;
 		}
 
 		if (!Configuration.kitMap) { // && !HCF.getPlugin().getEotwHandler().isEndOfTheWorld() && playerFaction.isRaidable()
-			tell(Lang.of("Commands-Factions-Invite-NoInviteWhileRaidable"));
+			player.sendMessage(Lang.of("Commands-Factions-Invite-NoInviteWhileRaidable"));
 			return;
 		}
 
 		if (!invitedPlayerNames.add(name.toLowerCase())) {
-			tell(Lang.of("Commands-Factions-Invite-AlreadyInvited")
+			player.sendMessage(Lang.of("Commands-Factions-Invite-AlreadyInvited")
 					.replace("{player}", name));
 			return;
 		}
@@ -90,10 +88,10 @@ public final class FactionInviteCommand extends FactionSubCommand {
 			SimpleComponent component = SimpleComponent.of(
 			        Lang.of("Commands-Factions-Invite-InviteReceived")
 			            .replace("{relationColour}", Relation.ENEMY.toChatColour() + "")
-			            .replace("{sender}", sender.getName())
+			            .replace("{sender}", player.getName())
 			            .replace("{factionName}", playerFaction.getName())
 			    )
-			    .onClickRunCmd("/" + getLabel() + " accept " + playerFaction.getName());
+			    .onClickRunCmd("/" + arg.getLabel() + " accept " + playerFaction.getName());
             component.send(target);
 		
 		}

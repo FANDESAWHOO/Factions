@@ -1,135 +1,111 @@
 package org.hcgames.hcfactions.command;
 
-import lombok.Getter;
-import org.hcgames.hcfactions.command.subcommand.*;
-import org.hcgames.hcfactions.command.subcommand.staff.*;
-import org.mineacademy.fo.annotation.AutoRegister;
-import org.mineacademy.fo.command.SimpleCommand;
-import org.mineacademy.fo.settings.Lang;
-
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-/**
- * Class to handle the command and tab completion for the faction command.
- */
+import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.command.subcommand.*;
+import org.hcgames.hcfactions.command.subcommand.staff.FactionBanCommand;
+import org.hcgames.hcfactions.command.subcommand.staff.FactionClaimForCommand;
+import org.hcgames.hcfactions.command.subcommand.staff.FactionClearClaimsCommand;
+import org.hcgames.hcfactions.command.subcommand.staff.FactionForceDemoteCommand;
+import org.hcgames.hcfactions.command.subcommand.staff.FactionForceJoinCommand;
+import org.hcgames.hcfactions.command.subcommand.staff.FactionForceKickCommand;
+import org.hcgames.hcfactions.command.subcommand.staff.FactionForceLeaderCommand;
+import org.hcgames.hcfactions.command.subcommand.staff.FactionForcePromoteCommand;
+import org.hcgames.hcfactions.command.subcommand.staff.FactionForceRenameCommand;
+import org.hcgames.hcfactions.command.subcommand.staff.FactionForceUnclaimHereCommand;
+import org.hcgames.hcfactions.command.subcommand.staff.FactionMuteCommand;
+import org.hcgames.hcfactions.command.subcommand.staff.FactionReloadCommand;
+import org.hcgames.hcfactions.command.subcommand.staff.FactionRemoveCommand;
+import org.hcgames.hcfactions.command.subcommand.staff.FactionSaveCommand;
+import org.hcgames.hcfactions.command.subcommand.staff.FactionSetDeathbanMultiplierCommand;
+import org.hcgames.hcfactions.command.subcommand.staff.FactionSetDtrCommand;
+import org.hcgames.hcfactions.command.subcommand.staff.FactionSetDtrRegenCommand;
 
-@AutoRegister
-public final class FactionCommand extends SimpleCommand {
+import com.minnymin.command.Command;
+import com.minnymin.command.CommandArgs;
 
-	/**
-	 * The singleton of this class
-	 */
-	@Getter
-	private final static FactionCommand instance = new FactionCommand();
-	@Getter
-	private final List<FactionSubCommand> commands = new LinkedList<>();
+import lombok.Getter;
+
+public class FactionCommand {
+
 	private final FactionHelpCommand help;
-
-	private FactionCommand() {
-		super("faction|fac|f");
-		setAutoHandleHelp(false);
-		setMinArguments(0);
-		addArgument(new FactionAcceptCommand());
-		addArgument(new FactionAllyCommand());
-		addArgument(new FactionAnnouncementCommand());
-		addArgument(new FactionChatCommand());
-		//TODO addArgument(new FactionChatSpyArgument());
-		addArgument(new FactionClaimCommand());
-		addArgument(new FactionClaimChunkCommand());
-		addArgument(new FactionClaimForCommand());
-		addArgument(new FactionClearClaimsCommand());
-		addArgument(new FactionDepositCommand());
-		addArgument(new FactionDisbandCommand());
-		addArgument(new FactionSetDtrRegenCommand());
-		addArgument(new FactionForceDemoteCommand());
-		addArgument(new FactionForceJoinCommand());
-		addArgument(new FactionForceKickCommand());
-		addArgument(new FactionForceLeaderCommand());
-		addArgument(new FactionForcePromoteCommand());
-		addArgument(new FactionForceUnclaimHereCommand());
-		addArgument(new FactionSaveCommand());
-		addArgument(help = new FactionHelpCommand());
-		addArgument(new FactionHomeCommand());
-		addArgument(new FactionInvitesCommand());
-		addArgument(new FactionKickCommand());
-		addArgument(new FactionLeaveCommand());
-		addArgument(new FactionListCommand());
-		addArgument(new FactionMapCommand());
-		addArgument(new FactionMessageCommand());
-		addArgument(new FactionMuteCommand());
-		addArgument(new FactionBanCommand());
-		addArgument(new FactionOpenCommand());
-		addArgument(new FactionRemoveCommand());
-		addArgument(new FactionAcceptCommand());
-		addArgument(new FactionPromoteCommand());
-		addArgument(new FactionSetDtrCommand());
-		addArgument(new FactionSetDeathbanMultiplierCommand());
-		addArgument(new FactionSetHomeCommand());
-		addArgument(new FactionShowCommand());
-		addArgument(new FactionStuckCommand());
-		addArgument(new FactionUnclaimCommand());
-		addArgument(new FactionUnallyArgument());
-		addArgument(new FactionUninviteCommand());
-		addArgument(new FactionWithdrawCommand());
-		addArgument(new FactionInviteCommand());
-		addArgument(new FactionInvitesCommand());
-		addArgument(new FactionFriendlyFireCommand());
-		//addArgument(new FactionLivesCommand());
-		addArgument(new FactionFocusCommand());
-		addArgument(new FactionRemoveCooldownCommand());
-		addArgument(new FactionReloadCommand());
-		addArgument(new FactionForceRenameCommand());
-		addArgument(new FactionSnowCommand());
-		addArgument(new FactionCreateCommand());
-		addArgument(new FactionPastFactionsCommand());
-	}
-
-	public void addArgument(FactionSubCommand class1) {
+    @Getter private static FactionCommand instance = new FactionCommand();
+	@Getter
+	private final List<FactionCommand> commands = new LinkedList<>();
+    public FactionCommand() {
+		HCFactions.getInstance().getCommandFramework().registerCommands(this);
+		HCFactions.getInstance().getCommandFramework().registerHelp();
+		help = new FactionHelpCommand();
+		new FactionAcceptCommand();
+		new FactionAllyCommand();
+		new FactionAnnouncementCommand();
+		new FactionChatCommand();
+		//TODO new FactionChatSpyArgument());
+		new FactionClaimCommand();
+		new FactionClaimChunkCommand();
+		new FactionClaimForCommand();
+		new FactionClearClaimsCommand();
+		new FactionDepositCommand();
+		new FactionDisbandCommand();
+		new FactionSetDtrRegenCommand();
+		new FactionForceDemoteCommand();
+		new FactionForceJoinCommand();
+		new FactionForceKickCommand();
+		new FactionForceLeaderCommand();
+		new FactionForcePromoteCommand();
+		new FactionForceUnclaimHereCommand();
+		new FactionSaveCommand();
+		new FactionHomeCommand();
+		new FactionInvitesCommand();
+		new FactionKickCommand();
+		new FactionLeaveCommand();
+		new FactionListCommand();
+		new FactionMapCommand();
+		new FactionMessageCommand();
+		new FactionMuteCommand();
+		new FactionBanCommand();
+		new FactionOpenCommand();
+		new FactionRemoveCommand();
+		new FactionAcceptCommand();
+		new FactionPromoteCommand();
+		new FactionSetDtrCommand();
+		new FactionSetDeathbanMultiplierCommand();
+		new FactionSetHomeCommand();
+		new FactionShowCommand();
+		new FactionStuckCommand();
+		new FactionUnclaimCommand();
+		new FactionUnallyArgument();
+		new FactionUninviteCommand();
+		new FactionWithdrawCommand();
+		new FactionInviteCommand();
+		new FactionInvitesCommand();
+		new FactionFriendlyFireCommand();
+		//new FactionLivesCommand();
+		new FactionFocusCommand();
+		new FactionRemoveCooldownCommand();
+		new FactionReloadCommand();
+		new FactionForceRenameCommand();
+		new FactionSnowCommand();
+		new FactionCreateCommand();
+		new FactionPastFactionsCommand();
+    }
+    
+	
+	public void addArgument(FactionCommand class1) {
 		commands.add(class1);
 	}
 
-	public FactionSubCommand getSubCommand(String key) {
-		for (FactionSubCommand subCommand : commands) {
-			if (subCommand.getName().equalsIgnoreCase(key)) return subCommand;
-			if (subCommand.matches(key)) return subCommand;
-		}
+    
+    @Command(name = "faction", description = "The main command for Faction", aliases = { "f" ,"fac", "team", "t"}, usage = "/<command>",  playerOnly = false, adminsOnly = false)
+    public void onCommand(CommandArgs arg) {
+    	if (arg.getArgs().length == 0) {
+    //		help.execute(arg.getSender(), arg.getLabel(), arg.getArgs());
+    	}
+    }
 
-
-		return null;
-	}
-
-
-	/**
-	 * Executed when the command is run. You can get the variables sender and args directly,
-	 * and use convenience checks in the simple command class.
-	 */
-
-	@Override
-	protected void onCommand() {
-	//	checkPerm(getPermission());
-
-		if (args.length == 0) {
-			help.execute(sender, getLabel(), args);
-			return;
-		}
-
-		FactionSubCommand sub = getSubCommand(args[0]);
-		if (sub == null) {
-
-			tell(Lang.of("Commands-Unknown-Subcommand")
-					.replace("{subCommand}", args[0])
-					.replace("{commandLabel}", getLabel()));
-			return;
-		}
-		sub.execute(sender, getLabel(), args);
-	}
-
-	@Override
+/*	@Override
 	protected List<String> tabComplete() {
 		if (args.length == 1) return commands.stream()
 				.flatMap(sub -> Stream.concat(
@@ -146,5 +122,5 @@ public final class FactionCommand extends SimpleCommand {
 			}
 		}
 		return Collections.emptyList();
-	}
+	}*/
 }

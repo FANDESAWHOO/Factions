@@ -2,6 +2,7 @@ package org.hcgames.hcfactions.command.subcommand;
 
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.command.FactionCommand;
 import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
@@ -9,37 +10,33 @@ import org.hcgames.hcfactions.structure.FactionMember;
 import org.hcgames.hcfactions.structure.Role;
 import org.mineacademy.fo.settings.Lang;
 
+import com.minnymin.command.Command;
+import com.minnymin.command.CommandArgs;
+
 import java.util.UUID;
 
-public final class FactionLeaderCommand extends FactionSubCommand {
+public final class FactionLeaderCommand extends FactionCommand {
 
 	private final HCFactions plugin;
 
 	public FactionLeaderCommand() {
-		super("leader|setleader|newleader");
-		setDescription("Sets the new leader for your faction.");
 		plugin = HCFactions.getInstance();
-
 	}
 
-	@Override
-	public String getUsage() {
-		return '/' + label + ' ' + getName() + " <playerName>";
-	}
 
-	@Override
-	public void onCommand() {
-		if (args.length < 2) {
-			tell(Lang.of("Commands-Usage").replace("{usage}", getUsage()));
+	@Command(name = "faction.leader", description = "Sets the new leader for your faction.", aliases = { "f.leader"}, usage = "/f leader <memberName>",  playerOnly = true, adminsOnly = false)
+	 public void onCommand(CommandArgs arg) {
+		Player player = arg.getPlayer();
+		if (arg.length() < 1) {
+			player.sendMessage(Lang.of("Commands-Usage").replace("{usage}", "/f leader <memberName>"));
 			return;
 		}
 
-		Player player = (Player) sender;
 		PlayerFaction playerFaction;
 		try {
 			playerFaction = plugin.getFactionManager().getPlayerFaction(player);
 		} catch (NoFactionFoundException e) {
-			tell(Lang.of("Commands-Factions-Global-NotInFaction"));
+			player.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
 			return;
 		}
 
@@ -48,23 +45,23 @@ public final class FactionLeaderCommand extends FactionSubCommand {
 		Role selfRole = selfMember.getRole();
 
 		if (selfRole != Role.LEADER) {
-			tell(Lang.of("Commands-Factions-Leader-LeaderRequired"));
-			//tell(ChatColor.RED + "You must be the current faction leader to transfer the faction.");
+			player.sendMessage(Lang.of("Commands-Factions-Leader-LeaderRequired"));
+			//player.sendMessage(ChatColor.RED + "You must be the current faction leader to transfer the faction.");
 			return;
 		}
 
-		FactionMember targetMember = playerFaction.findMember(args[1]);
+		FactionMember targetMember = playerFaction.findMember(arg.getArgs(0));
 
 		if (targetMember == null) {
-			//tell(ChatColor.RED + "Player '" + args[1] + "' is not in your faction.");
-			tell(Lang.of("Commands-Factions-Leader-PlayerNotInFaction")
-					.replace("{name}", args[1]));
+			//player.sendMessage(ChatColor.RED + "Player '" + args[1] + "' is not in your faction.");
+			player.sendMessage(Lang.of("Commands-Factions-Leader-PlayerNotInFaction")
+					.replace("{name}", arg.getArgs(0)));
 			return;
 		}
 
 		if (targetMember.getUniqueId().equals(uuid)) {
-			//tell(ChatColor.RED + "You are already the faction leader.");
-			tell(Lang.of("Commands-Factions-Leader-AlreadyLeader"));
+			//player.sendMessage(ChatColor.RED + "You are already the faction leader.");
+			player.sendMessage(Lang.of("Commands-Factions-Leader-AlreadyLeader"));
 			return;
 		}
 

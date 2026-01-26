@@ -3,52 +3,44 @@ package org.hcgames.hcfactions.command.subcommand;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
-import org.hcgames.hcfactions.command.FactionSubCommand;
+import org.hcgames.hcfactions.command.FactionCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.Role;
 import org.mineacademy.fo.settings.Lang;
 
-public final class FactionDisbandCommand extends FactionSubCommand {
+import com.minnymin.command.Command;
+import com.minnymin.command.CommandArgs;
+
+public final class FactionDisbandCommand extends FactionCommand {
 	private final HCFactions plugin;
 
 	public FactionDisbandCommand() {
-		super("disband");
-		setDescription("Disband your faction.");
 		plugin = HCFactions.getInstance();
 
 	}
 
-	@Override
-	public String getUsage() {
-		return '/' + label + ' ' + getName();
-	}
-
-	/**
-	 * Executed when the command is run. You can get the variables sender and args directly,
-	 * and use convenience checks in the simple command class.
-	 */
-	@Override
-	public void onCommand() {
-		Player player = (Player) sender;
+	@Command(name = "faction.demote", description = "Disband your faction.", aliases = { "f.disband"}, usage = "/f disband",  playerOnly = true, adminsOnly = false)
+	 public void onCommand(CommandArgs arg) {
+		Player player = arg.getPlayer();
 		PlayerFaction playerFaction;
 		try {
 			playerFaction = plugin.getFactionManager().getPlayerFaction(player);
 		} catch (NoFactionFoundException e) {
-			tell(Lang.of("Commands-Factions-Global-NotInFaction"));
+			player.sendMessage(Lang.of("Commands-Factions-Global-NotInFaction"));
 			return;
 		}
 
 		if (playerFaction.isRaidable() && !Configuration.kitMap) { //  && !HCF.getPlugin().getEotwHandler().isEndOfTheWorld()
-			tell(Lang.of("Commands-Factions-Disband-Raidable"));
+			player.sendMessage(Lang.of("Commands-Factions-Disband-Raidable"));
 			return;
 		}
 
 		if (playerFaction.getMember(player.getUniqueId()).getRole() != Role.LEADER) {
-			tell(Lang.of("Commands-Factions-Disband-LeaderRequired"));
+			player.sendMessage(Lang.of("Commands-Factions-Disband-LeaderRequired"));
 			return;
 		}
-		plugin.getFactionManager().removeFaction(playerFaction, sender);
+		plugin.getFactionManager().removeFaction(playerFaction, player);
 
 	}
 }

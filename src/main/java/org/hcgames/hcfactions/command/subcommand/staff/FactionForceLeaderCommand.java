@@ -1,7 +1,9 @@
 package org.hcgames.hcfactions.command.subcommand.staff;
 
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.command.FactionCommand;
 import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.manager.SearchCallback;
@@ -9,32 +11,28 @@ import org.hcgames.hcfactions.structure.FactionMember;
 import org.hcgames.hcfactions.structure.Role;
 import org.mineacademy.fo.settings.Lang;
 
+import com.minnymin.command.Command;
+import com.minnymin.command.CommandArgs;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public final class FactionForceLeaderCommand extends FactionSubCommand {
+public final class FactionForceLeaderCommand extends FactionCommand {
 
 	private final HCFactions plugin;
 
 	public FactionForceLeaderCommand() {
-		super("forceleader");
-		setDescription("Forces the leader of a faction.");
 		plugin = HCFactions.getInstance();
 		//   this.permission = "hcf.command.faction.argument." + getName();
 	}
 
-
-	@Override
-	public String getUsage() {
-		return '/' + label + ' ' + getName() + " <playerName>";
-	}
-
-	@Override
-	public void onCommand() {
-		checkPerm();
-		if (args.length < 2) {
-			tell(ChatColor.RED + "Usage: " + getUsage());
+	 @Command(name = "faction.forceleader", description = "Forces the leader of a faction.",permission = "factions.command.forceleader", aliases = { "f.forceleader"}, usage = "/<command>  forceleader <name>",  playerOnly = true, adminsOnly = false)
+	    public void onCommand(CommandArgs arg) {
+		String[] args = arg.getArgs();
+		Player player = arg.getPlayer();
+		if (args.length < 1) {
+			player.sendMessage(ChatColor.RED + "Usage: " +"/<command>  forceleader <name>");
 			return;
 		}
 
@@ -51,12 +49,12 @@ public final class FactionForceLeaderCommand extends FactionSubCommand {
 					}
 
 				if (member == null) {
-					tell(ChatColor.RED + "Faction containing member with IGN or UUID " + args[1] + " not found.");
+					player.sendMessage(ChatColor.RED + "Faction containing member with IGN or UUID " + args[1] + " not found.");
 					return;
 				}
 
 				if (member.getRole() == Role.LEADER) {
-					tell(ChatColor.RED + member.getCachedName() + " is already the leader of " + faction.getFormattedName(sender) + ChatColor.RED + '.');
+					player.sendMessage(ChatColor.RED + member.getCachedName() + " is already the leader of " + faction.getFormattedName(player) + ChatColor.RED + '.');
 					return;
 				}
 
@@ -68,22 +66,18 @@ public final class FactionForceLeaderCommand extends FactionSubCommand {
 				if (leader.isPresent()) leader.get().setRole(Role.CAPTAIN);
 
 				member.setRole(Role.LEADER);
-				faction.broadcast(ChatColor.YELLOW + sender.getName() + " has forcefully set the leader to " + newLeaderName + '.');
+				faction.broadcast(ChatColor.YELLOW + player.getName() + " has forcefully set the leader to " + newLeaderName + '.');
 
-				tell(ChatColor.GOLD.toString() + ChatColor.BOLD + "Leader of " + faction.getName() + " was forcefully set from " + oldLeaderName + " to " + newLeaderName + '.');
+				player.sendMessage(ChatColor.GOLD.toString() + ChatColor.BOLD + "Leader of " + faction.getName() + " was forcefully set from " + oldLeaderName + " to " + newLeaderName + '.');
 			}
 
 			@Override
 			public void onFail(FailReason reason) {
-				tell(Lang.of("Commands.error.faction_not_found", args[1]));
+				player.sendMessage(Lang.of("Commands.error.faction_not_found", args[1]));
 			}
 		});
 
 		return;
 	}
 
-	@Override
-	public List<String> tabComplete() {
-		return args.length == 2 ? null : Collections.emptyList();
-	}
 }

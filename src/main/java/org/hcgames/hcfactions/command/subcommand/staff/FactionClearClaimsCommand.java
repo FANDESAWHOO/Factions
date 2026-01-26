@@ -6,12 +6,16 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.command.FactionCommand;
 import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.faction.ClaimableFaction;
 import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.manager.SearchCallback;
 import org.mineacademy.fo.settings.Lang;
+
+import com.minnymin.command.Command;
+import com.minnymin.command.CommandArgs;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,14 +24,12 @@ import java.util.List;
 /**
  * Faction argument used to set the DTR Regeneration cooldown of {@link Faction}s.
  */
-public final class FactionClearClaimsCommand extends FactionSubCommand {
+public final class FactionClearClaimsCommand extends FactionCommand {
 
 	private final ConversationFactory factory;
 	private final HCFactions plugin;
 
 	public FactionClearClaimsCommand() {
-		super("clearclaims");
-		setDescription("Clears the claims of a faction.");
 		plugin = HCFactions.getInstance();
 		//  this.permission = "hcf.command.faction.argument." + getName();
 
@@ -39,26 +41,21 @@ public final class FactionClearClaimsCommand extends FactionSubCommand {
 				withLocalEcho(true);
 	}
 
-
-	@Override
-	public String getUsage() {
-		return Lang.of("Commands.staff.clearclaims.usage", label, getName());
-	}
-
-	@Override
-	public void onCommand() {
-		checkPerm();
-		if (args.length < 2) {
-			tell(Lang.of("command.error.usage", getUsage()));
+	 @Command(name = "faction.clearclaims", description = "Clears the claims of a faction." ,permission = "factions.command.clearclaims", aliases = { "f.clearclaims"}, usage = "/<command>  clearclaims",  playerOnly = true, adminsOnly = false)
+	    public void onCommand(CommandArgs arg) {
+		 String[] args = arg.getArgs();
+		 CommandSender sender = arg.getSender();
+		if (arg.length() < 1) {
+			sender.sendMessage(Lang.of("command.error.usage", "f.clearclaims"));
 			return;
 		}
 		if (args[1].equalsIgnoreCase("all")) {
 			if (!(sender instanceof ConsoleCommandSender)) {
-				tell(Lang.of("Commands.error.console_only"));
+				sender.sendMessage(Lang.of("Commands.error.console_only"));
 				return;
 			}
 
-			Conversable conversable = (Conversable) sender;
+			Conversable conversable = (Conversable) arg.getSender();
 			conversable.beginConversation(factory.buildConversation(conversable));
 			return;
 		}
@@ -69,29 +66,15 @@ public final class FactionClearClaimsCommand extends FactionSubCommand {
 				claimableFaction.removeClaims(claimableFaction.getClaims(), sender);
 				if (claimableFaction instanceof PlayerFaction)
 					((PlayerFaction) claimableFaction).broadcast(Lang.of("Commands.staff.clearclaims.cleared_faction_broadcast", sender.getName()));
-				tell(Lang.of("Commands.staff.clearclaims.cleared", claimableFaction.getName()));
+				sender.sendMessage(Lang.of("Commands.staff.clearclaims.cleared", claimableFaction.getName()));
 			}
 
 			@Override
 			public void onFail(FailReason reason) {
-				tell(Lang.of("Commands.error.faction_not_found", args[1]));
+				sender.sendMessage(Lang.of("Commands.error.faction_not_found", args[1]));
 			}
 		});
 		return;
-	}
-
-	@Override
-	public List<String> tabComplete() {
-		if (args.length != 2 || !(sender instanceof Player)) return Collections.emptyList();
-		else if (args[1].isEmpty()) return null;
-		else {
-			Player player = (Player) sender;
-			List<String> results = new ArrayList<>(plugin.getFactionManager().getFactionNameMap().keySet());
-			for (Player target : Bukkit.getOnlinePlayers())
-				if (player.canSee(target) && !results.contains(target.getName())) results.add(target.getName());
-
-			return results;
-		}
 	}
 
 	private static class ClaimClearAllPrompt extends StringPrompt {
