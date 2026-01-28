@@ -12,7 +12,7 @@ import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.ClaimableFaction;
 import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.faction.PlayerFaction;
-import org.hcgames.hcfactions.faction.system.RoadFaction;
+
 import org.hcgames.hcfactions.faction.system.WildernessFaction;
 import org.hcgames.hcfactions.manager.FactionManager;
 import org.hcgames.hcfactions.structure.Role;
@@ -144,7 +144,7 @@ public class ClaimHandler {
 			for (int z = locZ - CLAIM_BUFFER_RADIUS; z < locZ + CLAIM_BUFFER_RADIUS; z++) {
 				Faction factionAtNew = factionManager.getFactionAt(world, x, z);
 				if (factionAtNew instanceof ClaimableFaction && playerFaction != factionAtNew) {
-					if (factionAtNew instanceof RoadFaction && flag) continue;
+					if (factionAtNew.getName().contains("Road") && flag) continue;
 
 					player.sendMessage(CC.translate(Lang.of("factions.claiming.enemy_claims_nearby")
 							.replace("{radius}", String.valueOf(CLAIM_BUFFER_RADIUS))));
@@ -234,7 +234,7 @@ public class ClaimHandler {
 			for (int z = minimumZ - CLAIM_BUFFER_RADIUS; z < maximumZ + CLAIM_BUFFER_RADIUS; z++) {
 				Faction factionAtNew = factionManager.getFactionAt(world, x, z);
 				if (factionAtNew instanceof ClaimableFaction && playerFaction != factionAtNew) {
-					if (factionAtNew instanceof RoadFaction && flag) continue;
+					if (factionAtNew.getName().contains("Road") && flag) continue;
 
 					player.sendMessage(CC.translate(Lang.of("factions.claiming.enemy_claims_nearby")
 							.replace("{radius}", String.valueOf(CLAIM_BUFFER_RADIUS))));

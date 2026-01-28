@@ -7,6 +7,7 @@ import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.Lang;
 import org.hcgames.hcfactions.command.FactionCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
+import org.hcgames.hcfactions.faction.system.FactionSystem;
 import org.hcgames.hcfactions.util.JavaUtils;
 
 import com.minnymin.command.Command;
@@ -60,7 +61,7 @@ public final class FactionCreateSystemCommand extends FactionCommand {
 			}
 		} catch (NoFactionFoundException e) {
 		}
-		//plugin.getFactionManager().createFaction(new SystemTeam(name), sender);
+		plugin.getFactionManager().createFaction(new FactionSystem(name), sender);
 		return;
 	}
 

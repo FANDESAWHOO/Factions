@@ -16,7 +16,6 @@ import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.claim.Claim;
 import org.hcgames.hcfactions.faction.ClaimableFaction;
 import org.hcgames.hcfactions.faction.Faction;
-import org.hcgames.hcfactions.faction.system.RoadFaction;
 
 import java.lang.ref.WeakReference;
 import java.util.Collection;
@@ -113,7 +112,7 @@ public class WallBorderListener implements Listener {
 					// Special case for these.
 					if (flag) {
 						if (!faction.isSafezone()) continue;
-					} else if (faction instanceof RoadFaction || faction.isSafezone()) continue;
+					} else if (faction.isSafezone()) continue;
 
 					Collection<Claim> claims = ((ClaimableFaction) faction).getClaims();
 					for (Claim claim : claims) if (toWorld.equals(claim.getWorld())) added.add(claim);

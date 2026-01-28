@@ -32,7 +32,6 @@ import org.hcgames.hcfactions.event.claim.FactionClaimChangedEvent;
 import org.hcgames.hcfactions.event.claim.PlayerClaimEnterEvent;
 import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.faction.PlayerFaction;
-import org.hcgames.hcfactions.faction.system.RoadFaction;
 import org.hcgames.hcfactions.faction.system.WarzoneFaction;
 import org.hcgames.hcfactions.faction.system.WildernessFaction;
 import org.hcgames.hcfactions.timer.PlayerTimer;
@@ -255,7 +254,7 @@ public class InvincibilityTimer extends PlayerTimer implements Listener {
 		Faction toFaction = event.getToFaction();
 		long remaining; // lazy load
 		if (toFaction != null && (remaining = getRemaining(player)) > 0L)
-			if (!toFaction.isSafezone() && !(toFaction instanceof RoadFaction) && !(toFaction instanceof WarzoneFaction) && !(toFaction instanceof WildernessFaction)) {
+			if (!toFaction.isSafezone() && !(toFaction instanceof WarzoneFaction) && !(toFaction instanceof WildernessFaction)) {
 				event.setCancelled(true);
 				player.sendMessage(CC.translate(Lang.of("Timer-Invincibility-CannotEnterFactionLand")
 						.replace("{timeLeft}", DurationFormatter.getRemaining(remaining, true, false))

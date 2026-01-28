@@ -59,6 +59,7 @@ import org.hcgames.hcfactions.command.subcommand.FactionWithdrawCommand;
 import org.hcgames.hcfactions.command.subcommand.staff.FactionBanCommand;
 import org.hcgames.hcfactions.command.subcommand.staff.FactionClaimForCommand;
 import org.hcgames.hcfactions.command.subcommand.staff.FactionClearClaimsCommand;
+import org.hcgames.hcfactions.command.subcommand.staff.FactionColorCommand;
 import org.hcgames.hcfactions.command.subcommand.staff.FactionForceDemoteCommand;
 import org.hcgames.hcfactions.command.subcommand.staff.FactionForceJoinCommand;
 import org.hcgames.hcfactions.command.subcommand.staff.FactionForceKickCommand;
@@ -132,24 +133,11 @@ public class HCFactions extends JavaPlugin {
 		ConfigurationSerialization.registerClass(NamedCuboid.class);
 		ConfigurationSerialization.registerClass(Claim.class);
 		ConfigurationSerialization.registerClass(ClaimableFaction.class);
-		ConfigurationSerialization.registerClass(EndPortalFaction.class);
 		ConfigurationSerialization.registerClass(Faction.class);
 		ConfigurationSerialization.registerClass(FactionMember.class);
 		ConfigurationSerialization.registerClass(PlayerFaction.class);
-		ConfigurationSerialization.registerClass(RoadFaction.class);
-		ConfigurationSerialization.registerClass(SpawnFaction.class);
-		ConfigurationSerialization.registerClass(RoadFaction.NorthRoadFaction.class);
-		ConfigurationSerialization.registerClass(RoadFaction.EastRoadFaction.class);
-		ConfigurationSerialization.registerClass(RoadFaction.SouthRoadFaction.class);
-		ConfigurationSerialization.registerClass(RoadFaction.WestRoadFaction.class);
-
-
-		FactionManager.registerSystemFaction(EndPortalFaction.class);
-		FactionManager.registerSystemFaction(RoadFaction.EastRoadFaction.class);
-		FactionManager.registerSystemFaction(RoadFaction.NorthRoadFaction.class);
-		FactionManager.registerSystemFaction(RoadFaction.SouthRoadFaction.class);
-		FactionManager.registerSystemFaction(RoadFaction.WestRoadFaction.class);
-		FactionManager.registerSystemFaction(SpawnFaction.class);
+		ConfigurationSerialization.registerClass(FactionSystem.class);
+		
 		FactionManager.registerSystemFaction(WarzoneFaction.class);
 		FactionManager.registerSystemFaction(WildernessFaction.class);
 	}
@@ -261,6 +249,7 @@ public class HCFactions extends JavaPlugin {
 		new FactionSnowCommand();
 		new FactionCreateCommand();
 		new FactionPastFactionsCommand();
+		new FactionColorCommand();
 		// Simples command.
 		new FocusCommand();
 		new LocationCommand();
