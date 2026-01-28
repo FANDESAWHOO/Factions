@@ -18,7 +18,6 @@ public final class RegenCommand { // TODO: check all permissions.
 
 	public RegenCommand() {
 		HCFactions.getInstance().getCommandFramework().registerCommands(this);
-		HCFactions.getInstance().getCommandFramework().registerHelp();
 		plugin = HCFactions.getInstance();
 	}
 

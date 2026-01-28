@@ -18,6 +18,7 @@ public final class LocationCommand {
 
 	public LocationCommand() {
 		plugin = HCFactions.getInstance();
+		HCFactions.getInstance().getCommandFramework().registerCommands(this);
 	}
 
     @Command(name = "location", description = "The main command for Location",aliases = {"loc","whereami"}, usage = "/location",  playerOnly = true, adminsOnly = false)

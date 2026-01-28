@@ -16,7 +16,6 @@ public final class ClaimWandCommand {
 
 	public ClaimWandCommand() {
 		HCFactions.getInstance().getCommandFramework().registerCommands(this);
-		HCFactions.getInstance().getCommandFramework().registerHelp();
 	}
 
     @Command(name = "claimwand", description = "The main command for Claimwand", aliases = {"cwand"},usage = "/claimwand",  playerOnly = true, adminsOnly = false)

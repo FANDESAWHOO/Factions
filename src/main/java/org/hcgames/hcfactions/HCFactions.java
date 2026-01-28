@@ -268,14 +268,14 @@ public class HCFactions extends JavaPlugin {
 		new RegenCommand();
 		new ClaimWandCommand();
 
-		if(Configuration.api) TimerExecutor.getInstance();
+		if(Configuration.api) new TimerExecutor();
 	}
 	private void registerManagers() {
 		itemDb = new SimpleItemDb(this);
 		visualiseHandler = new VisualiseHandler();
-		Configuration config = new Configuration();
 		lang = new Config(instance, "lang");
 		settings = new Config(instance, "settings");
+		Configuration config = new Configuration();
 		if (Configuration.mongo) {
 			mongoManager = new MongoManager();
 			mongoManager.connect();

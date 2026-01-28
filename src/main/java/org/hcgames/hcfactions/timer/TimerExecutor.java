@@ -1,8 +1,6 @@
 package org.hcgames.hcfactions.timer;
 
 
-import lombok.Getter;
-
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.Lang;
@@ -17,14 +15,10 @@ import java.util.ArrayList;
 
 public final class TimerExecutor {
 
-	/**
-	 * The singleton of this class
-	 */
-	@Getter
-	private final static TimerExecutor instance = new TimerExecutor();
 	private final ArrayList<TimerSubCommand> arguments;
 
 	public TimerExecutor() {
+		HCFactions.getInstance().getCommandFramework().registerCommands(this);
 		arguments = new ArrayList<>();
 		addArgument(new TimerCheckArgument(HCFactions.getInstance()));
 		addArgument(new TimerSetArgument(HCFactions.getInstance()));

@@ -9,7 +9,6 @@ public final class FocusCommand{
 
 	public FocusCommand() {
 		HCFactions.getInstance().getCommandFramework().registerCommands(this);
-		HCFactions.getInstance().getCommandFramework().registerHelp();
 	}
   
     @Command(name = "focus", description = "The main command for Focus", usage = "/focus <name>",  playerOnly = true, adminsOnly = false)

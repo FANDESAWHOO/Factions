@@ -9,12 +9,8 @@ import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.Lang;
 import org.hcgames.hcfactions.timer.type.InvincibilityTimer;
-import org.hcgames.hcfactions.util.BukkitUtils;
 import org.hcgames.hcfactions.util.DurationFormatter;
 
-
-import java.util.Collections;
-import java.util.List;
 
 public final class PvPCommand{
 
@@ -22,7 +18,6 @@ public final class PvPCommand{
 
 	public PvPCommand() {
 		HCFactions.getInstance().getCommandFramework().registerCommands(this);
-		HCFactions.getInstance().getCommandFramework().registerHelp();
 	}
 
     @Command(name = "pvp", description = "The main command for PvPTimer", usage = "/location",  playerOnly = true, adminsOnly = false)
