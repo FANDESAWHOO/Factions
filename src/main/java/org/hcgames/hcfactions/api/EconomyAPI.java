@@ -4,10 +4,11 @@ import lombok.Setter;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
-import org.hcgames.hcfactions.api.enums.EconomyTypes;
 import org.hcgames.hcfactions.api.events.EconomyEvent;
+import org.hcgames.hcfactions.api.interfaces.EconomyTypes;
 import org.hcgames.hcfactions.api.interfaces.IEconomy;
-import org.mineacademy.fo.Common;
+import org.hcgames.hcfactions.util.Common;
+
 
 /**
  * STABLE VERSION
@@ -25,7 +26,7 @@ public final class EconomyAPI { // TODO, WE CAN USE EVENTS AND IS MORE EASY.
 	public static void subtractBalance(Player id, int amount) {
 		if (!API) {
 			if (customEvents) {
-				Common.callEvent(new EconomyEvent(id,amount,  EconomyTypes.subtract, false));
+				Common.callEvent(new EconomyEvent(id,amount,  EconomyTypes.substract, false));
 				return;
 			}
 			if (economy != null) economy.subtractBalance(id.getUniqueId(), amount);

@@ -3,7 +3,6 @@ package org.hcgames.hcfactions.util;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
-import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -12,6 +11,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
+
+import org.apache.commons.lang.StringUtils;
 
 
 public class JavaUtils {
@@ -51,7 +52,7 @@ public class JavaUtils {
 
 	public static boolean containsIgnoreCase(Iterable<? extends String> elements, String string) {
 		for (String element : elements) {
-			if (StringUtils.containsIgnoreCase((CharSequence) element, (CharSequence) string)) {
+			if (StringUtils.containsIgnoreCase(element, string)) {
 				return true;
 			}
 		}

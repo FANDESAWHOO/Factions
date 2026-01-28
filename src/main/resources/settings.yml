@@ -1,31 +1,3 @@
-# The formats used in the {date}, {date_short}, {date_month} and {location}.
-#
-# See the link below to learn how to edit the date format:
-# https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
-# -------------------------------------------------------------------------------------------------
-Date_Format: "dd.MM.yyyy HH:mm:ss"
-Date_Format_Short: "dd.MM.yyyy HH:mm"
-Date_Format_Month: "dd.MM HH:mm"
-Location_Format: "{world} {x}, {y}, {z}"
-
-# -------------------------------------------------------------------------------------------------
-# What commands should trigger the main plugin command group?
-#
-# * THE FIRST ALIAS IS THE MAIN LABEL, YOU CAN CHANGE IT BUT DO NOT REMOVE IT. *
-# * EXAMPLE: [boss, b] will trigger your main command from "/boss" or "/b" * 
-# -------------------------------------------------------------------------------------------------
-Command_Aliases: [ plugintemplate, template, plt ]
-
-# -------------------------------------------------------------------------------------------------
-# What language should we use for messages? If it exists, the language file will be copied 
-# to your messages/ folder where you can edit it.
-# -------------------------------------------------------------------------------------------------
-Locale: en
-Prefix: "&8[&c${project.name}&8]&7"
-Log_Lag_Over_Milis: 100
-
-Debug: [ ]
-Version: 1
 factions:
   NameMinCharacters: 3
   NameMaxCharacters: 16
@@ -117,5 +89,5 @@ playerfaction-show:
   - "&6Members offline({members-of-count}): {members-offline}" 
 # SHOULD USE OUR SYSTEMS (LISTENERS & TIMERS & OTHERS)
 API:
-  our: false # FALSE MEANS USE EVENTS OR INTERFACES || AND FOR COMMANDS LIKE TIMER
-  events: false # TRUE MEANS INTERFACES | FALSE MEANS EVENTS
+  our: true # FALSE MEANS USE EVENTS OR INTERFACES || AND FOR COMMANDS LIKE TIMER
+  events: true # TRUE MEANS INTERFACES | FALSE MEANS EVENTS

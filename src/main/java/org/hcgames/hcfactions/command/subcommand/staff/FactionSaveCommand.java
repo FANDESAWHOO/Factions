@@ -3,7 +3,6 @@ package org.hcgames.hcfactions.command.subcommand.staff;
 import net.md_5.bungee.api.ChatColor;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.command.FactionCommand;
-import org.hcgames.hcfactions.command.FactionSubCommand;
 
 import com.minnymin.command.Command;
 import com.minnymin.command.CommandArgs;

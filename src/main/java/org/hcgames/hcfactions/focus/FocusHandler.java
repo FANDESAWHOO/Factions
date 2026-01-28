@@ -26,7 +26,9 @@ import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.event.playerfaction.PlayerFactionFocusEvent;
 import org.hcgames.hcfactions.event.playerfaction.PlayerFactionUnfocusEvent;
 import org.hcgames.hcfactions.faction.PlayerFaction;
-import org.mineacademy.fo.collection.expiringmap.ExpiringMap;
+
+import net.jodah.expiringmap.ExpirationListener;
+import net.jodah.expiringmap.ExpiringMap;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -60,7 +62,7 @@ public class FocusHandler {
 		}
 	}
 
-	private class Inner implements ExpiringMap.ExpirationListener<UUID, FocusTarget> {
+	private class Inner implements ExpirationListener<UUID, FocusTarget> {
 
 		@Override
 		public void expired(@Nullable UUID uuid, FocusTarget target) {

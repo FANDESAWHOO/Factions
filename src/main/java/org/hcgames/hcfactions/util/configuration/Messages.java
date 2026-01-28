@@ -2,7 +2,8 @@ package org.hcgames.hcfactions.util.configuration;
 
 import lombok.Getter;
 import lombok.SneakyThrows;
-import net.md_5.bungee.api.ChatColor;
+
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;

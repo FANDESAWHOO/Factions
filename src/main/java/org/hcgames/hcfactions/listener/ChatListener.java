@@ -2,6 +2,7 @@ package org.hcgames.hcfactions.listener;
 
 import lombok.Getter;
 import me.clip.placeholderapi.PlaceholderAPI;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;

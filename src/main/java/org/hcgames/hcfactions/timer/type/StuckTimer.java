@@ -14,6 +14,7 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.hcgames.hcfactions.Lang;
 import org.hcgames.hcfactions.api.FactionsAPI;
 import org.hcgames.hcfactions.claim.Claim;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
@@ -23,7 +24,6 @@ import org.hcgames.hcfactions.timer.TimerCooldown;
 import org.hcgames.hcfactions.util.BukkitUtils;
 import org.hcgames.hcfactions.util.DurationFormatter;
 import org.hcgames.hcfactions.util.text.CC;
-import org.mineacademy.fo.settings.Lang;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;

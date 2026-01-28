@@ -12,12 +12,12 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.Lang;
 import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.manager.FactionManager;
 import org.hcgames.hcfactions.timer.PlayerTimer;
 import org.hcgames.hcfactions.timer.TimerCooldown;
 import org.hcgames.hcfactions.util.text.CC;
-import org.mineacademy.fo.settings.Lang;
 
 import javax.annotation.Nullable;
 import java.util.Collection;

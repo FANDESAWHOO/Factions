@@ -7,26 +7,26 @@ import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.hcgames.hcfactions.lib.remain.Remain;
+import org.hcgames.hcfactions.util.ItemCreator;
 import org.hcgames.hcfactions.util.cuboid.Cuboid;
-import org.mineacademy.fo.menu.model.ItemCreator;
-import org.mineacademy.fo.menu.tool.Tool;
-import org.mineacademy.fo.remain.CompMaterial;
 
-
-import crossversion.worldeditx.CrossVersion;
+import com.cryptomorin.xseries.XMaterial;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 
-public final class WandManager extends Tool {
+public final class WandManager implements Listener {
 
 	/**
 	 * Singleton of the class
@@ -41,27 +41,22 @@ public final class WandManager extends Tool {
 	}
 
 
-	@Override
+
 	public ItemStack getItem() {
-		return ItemCreator.of(CompMaterial.STICK, "&aClaim Selection", "Right click block = First point", "Left click block = Second point", "Shift + Left click = Confirm region", "Right click air = Cancel selection").make();
+		return ItemCreator.of(XMaterial.STICK.parseMaterial(), "&aClaim Selection", "Right click block = First point", "Left click block = Second point", "Shift + Left click = Confirm region", "Right click air = Cancel selection").make();
 	}
 
     public Cuboid getSelection(Player player) {
     	Cuboid region = null;
-    	if (Bukkit.getPluginManager().isPluginEnabled("WorldEditX"))
-    		region = CrossVersion.getInstance().worldEditManager.getSelection(player);
-    	else 
+    	//if (Bukkit.getPluginManager().isPluginEnabled("WorldEditX"))
+    	//	region = CrossVersion.getInstance().worldEditManager.getSelection(player);
+    	//else 
     		region = claimCache.get(player.getUniqueId()).getCuboId();
     	return region;
     }
 
-	/**
-	 * With this event we gonna put
-	 * The selection players!
-	 *
-	 * @param event the event
-	 */
-	@Override
+
+	@EventHandler(priority = EventPriority.MONITOR)
 	protected void onBlockClick(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		if (!player.hasPermission("tools.use")) return;
@@ -71,7 +66,7 @@ public final class WandManager extends Tool {
 		ZoneClaim claim = claimCache.computeIfAbsent(uuid, u -> new ZoneClaim(null, null)); 
 		if (action == Action.RIGHT_CLICK_AIR) {
 			claimCache.remove(uuid);
-			Remain.takeHandItem(player);
+			player.setItemInHand(new ItemStack(Material.AIR));
 			player.sendMessage(ChatColor.RED + "Selection cancelled.");
 			event.setCancelled(true);
 			return;
@@ -84,7 +79,7 @@ public final class WandManager extends Tool {
 				player.sendMessage(ChatColor.GREEN + "Region selected: " + cuboid.toString());
 			}
 			claimCache.remove(uuid);
-			Remain.takeHandItem(player);
+			player.setItemInHand(new ItemStack(Material.AIR));
 			event.setCancelled(true);
 			return;
 		}

@@ -5,15 +5,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
-import org.hcgames.hcfactions.api.enums.TimerTypes;
+import org.hcgames.hcfactions.Lang;
 import org.hcgames.hcfactions.api.events.FactionTimerEvent;
 import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.timer.type.StuckTimer;
+import org.hcgames.hcfactions.util.Common;
 import org.hcgames.hcfactions.util.DurationFormatter;
 import org.hcgames.hcfactions.util.text.CC;
-import org.mineacademy.fo.Common;
-import org.mineacademy.fo.settings.Lang;
+
 
 import java.util.Optional;
 
@@ -35,7 +35,7 @@ public final class TimerAPI { // TODO, WE CAN USE EVENTS AND IS MORE EASY.
 
 	public static void callStuck(Player player, PlayerFaction faction, String label) {
 		if (useEvents)
-			Common.callEvent(new FactionTimerEvent(player,  faction, TimerTypes.STUCK, false));
+			Common.callEvent(new FactionTimerEvent(player,  faction, "Stuck", false));
 		else {
 			StuckTimer stuckTimer = HCFactions.getInstance().getTimerManager().getStuckTimer();
 
@@ -52,7 +52,7 @@ public final class TimerAPI { // TODO, WE CAN USE EVENTS AND IS MORE EASY.
 
 	public static void callHome(Player player, PlayerFaction faction, String label) {
 		if (useEvents)
-			Common.callEvent(new FactionTimerEvent( player, faction, TimerTypes.TELEPORT,false));
+			Common.callEvent(new FactionTimerEvent( player, faction, "home",false));
 		else {
 			Faction factionAt = plugin.getFactionManager().getFactionAt(player.getLocation());
 			Optional<Location> home = faction.getHome();

@@ -1,22 +1,26 @@
 package org.hcgames.hcfactions.listener;
 
 import lombok.Getter;
+import net.minecraft.server.v1_8_R3.EntityLightning;
+import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityWeather;
+import net.minecraft.server.v1_8_R3.WorldServer;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Sound;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.user.FactionUser;
-import org.mineacademy.fo.ItemUtil;
-import org.mineacademy.fo.remain.CompEntityType;
-import org.mineacademy.fo.remain.NmsEntity;
-import org.mineacademy.fo.remain.Remain;
+import org.hcgames.hcfactions.util.SpigotUtils;
 
 
 
@@ -33,12 +37,8 @@ public final class DeathListener implements Listener {
 	    ItemMeta meta = item.getItemMeta();
 	    if (meta != null && meta.hasDisplayName()) return meta.getDisplayName();
 
-	    try {
+	    return item.getItemMeta().getDisplayName();
 
-	        return item.getItemMeta().getLocalizedName();
-	    } catch (Exception e) {
-	        return ItemUtil.bountifyCapitalized(item.getType());
-	    }
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
@@ -67,16 +67,21 @@ public final class DeathListener implements Listener {
 		player.getInventory().setArmorContents(new ItemStack[4]);
 		player.getInventory().setContents(new ItemStack[36]);
 		player.saveData();
-		if (Remain.getTPS() > 15) { // Prevent unnecessary lag during prime times.
-			Location location = player.getLocation();
-			spawnLightning(location);
+		if (SpigotUtils.getTPS() > 15) { // Prevent unnecessary lag during prime times.
+		    Location loc = player.getLocation();
+
+		    loc.getWorld().strikeLightningEffect(loc);
+
+		    for (Player target : Bukkit.getOnlinePlayers()) {
+		        target.playSound(
+		            target.getLocation(),
+		            Sound.AMBIENCE_THUNDER,
+		            1.0F,
+		            1.0F
+		        );
+		    }
 		}
-	}
 
-
-	private void spawnLightning(Location location){
-		NmsEntity entity = new NmsEntity(location,CompEntityType.LIGHTNING_BOLT.getEntityClass());
-		entity.addEntity(CreatureSpawnEvent.SpawnReason.CUSTOM);
 	}
 
 

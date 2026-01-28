@@ -16,7 +16,6 @@ import org.hcgames.hcfactions.timer.PlayerTimer;
 import org.hcgames.hcfactions.timer.Timer;
 import org.hcgames.hcfactions.timer.TimerSubCommand;
 import org.hcgames.hcfactions.util.JavaUtils;
-import org.mineacademy.fo.PlayerUtil;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -78,7 +77,7 @@ public class TimerSetArgument extends TimerSubCommand {
 
 			sender.sendMessage(ChatColor.BLUE + "Set timer " + playerTimer.getName() + " for all to " + DurationFormatUtils.formatDurationWords(duration, true, true) + '.');
 		} else {
-			OfflinePlayer target = PlayerUtil.getPlayerByNick(args[2], true); //TODO: breaking
+			OfflinePlayer target = Bukkit.getOfflinePlayer(args[2]); //TODO: breaking
 			Player targetPlayer = null;
 
 			if (target == null || (sender instanceof Player && ((targetPlayer = target.getPlayer()) != null) && !((Player) sender).canSee(targetPlayer))) {

@@ -1,30 +1,20 @@
 package org.hcgames.hcfactions.command;
 
-import lombok.Getter;
 import org.hcgames.hcfactions.HCFactions;
-import org.mineacademy.fo.annotation.AutoRegister;
-import org.mineacademy.fo.command.SimpleCommand;
 
-@AutoRegister
-public final class FocusCommand extends SimpleCommand {
+import com.minnymin.command.Command;
+import com.minnymin.command.CommandArgs;
 
-	/**
-	 * The singleton of this class
-	 */
-	@Getter
-	private final static SimpleCommand instance = new FocusCommand();
+public final class FocusCommand{
 
-	private FocusCommand() {
-		super("focus");
+	public FocusCommand() {
+		HCFactions.getInstance().getCommandFramework().registerCommands(this);
+		HCFactions.getInstance().getCommandFramework().registerHelp();
 	}
-
-	/**
-	 * Executed when the command is run. You can get the variables sender and args directly,
-	 * and use convenience checks in the simple command class.
-	 */
-	@Override
-	protected void onCommand() {
-		checkConsole();
-		HCFactions.getInstance().getServer().dispatchCommand(sender, "f focus " + (args.length > 0 ? args[0] : ""));
+  
+    @Command(name = "focus", description = "The main command for Focus", usage = "/focus <name>",  playerOnly = true, adminsOnly = false)
+    public void onCommand(CommandArgs arg) {
+    	String[] args = arg.getArgs();
+    	HCFactions.getInstance().getServer().dispatchCommand(arg.getPlayer(), "f focus " + (args.length > 0 ? args[0] : ""));
 	}
 }

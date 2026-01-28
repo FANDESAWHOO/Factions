@@ -5,13 +5,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.Lang;
 import org.hcgames.hcfactions.command.FactionCommand;
-import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.util.JavaUtils;
 import org.hcgames.hcfactions.util.MapSorting;
-import org.mineacademy.fo.settings.Lang;
 
 import com.minnymin.command.Command;
 import com.minnymin.command.CommandArgs;

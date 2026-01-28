@@ -11,6 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.Lang;
 import org.hcgames.hcfactions.api.FactionsAPI;
 import org.hcgames.hcfactions.event.claim.PlayerClaimEnterEvent;
 import org.hcgames.hcfactions.event.playerfaction.PlayerJoinFactionEvent;
@@ -22,7 +23,6 @@ import org.hcgames.hcfactions.util.BukkitUtils;
 import org.hcgames.hcfactions.util.DurationFormatter;
 import org.hcgames.hcfactions.util.text.CC;
 import org.hcgames.hcfactions.visualise.VisualType;
-import org.mineacademy.fo.settings.Lang;
 
 import javax.annotation.Nullable;
 import java.util.Optional;

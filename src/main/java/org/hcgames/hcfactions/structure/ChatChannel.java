@@ -3,7 +3,7 @@ package org.hcgames.hcfactions.structure;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.Configuration;
-import org.mineacademy.fo.settings.Lang;
+import org.hcgames.hcfactions.Lang;
 
 import java.util.Locale;
 

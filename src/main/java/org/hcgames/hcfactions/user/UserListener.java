@@ -12,7 +12,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.hcgames.hcfactions.HCFactions;
-import org.mineacademy.fo.remain.Remain;
 
 
 public class UserListener implements Listener {
@@ -28,7 +27,7 @@ public class UserListener implements Listener {
 	public static String getDisplayName(@NonNull ItemStack item) {
 		if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) return item.getItemMeta().getDisplayName();
 
-		return ((ItemStack) Remain.asNMSCopy(item)).getItemMeta().getDisplayName();
+		return ((ItemStack)item.clone()).getItemMeta().getDisplayName();
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)

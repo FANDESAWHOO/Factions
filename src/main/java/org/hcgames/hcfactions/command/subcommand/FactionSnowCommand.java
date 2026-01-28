@@ -4,14 +4,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.Lang;
 import org.hcgames.hcfactions.command.FactionCommand;
-import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.ClaimableFaction;
 import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.Role;
-import org.mineacademy.fo.settings.Lang;
 
 import com.minnymin.command.Command;
 import com.minnymin.command.CommandArgs;

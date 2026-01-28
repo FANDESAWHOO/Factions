@@ -6,13 +6,13 @@ import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.Lang;
 import org.hcgames.hcfactions.timer.type.CombatTimer;
 import org.hcgames.hcfactions.timer.type.InvincibilityTimer;
 import org.hcgames.hcfactions.timer.type.StuckTimer;
 import org.hcgames.hcfactions.timer.type.TeleportTimer;
 import org.hcgames.hcfactions.util.DurationFormatter;
 import org.hcgames.hcfactions.util.configuration.Config;
-import org.mineacademy.fo.settings.Lang;
 
 import java.util.LinkedHashSet;
 import java.util.List;

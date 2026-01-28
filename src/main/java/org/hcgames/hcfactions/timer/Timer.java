@@ -2,8 +2,9 @@ package org.hcgames.hcfactions.timer;
 
 
 import lombok.Getter;
+
+import org.hcgames.hcfactions.Lang;
 import org.hcgames.hcfactions.util.configuration.Config;
-import org.mineacademy.fo.settings.Lang;
 
 /**
  * Represents a {@link Timer}, used to manage cooldowns.

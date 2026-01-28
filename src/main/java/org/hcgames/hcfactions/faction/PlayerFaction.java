@@ -38,6 +38,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.Lang;
 import org.hcgames.hcfactions.event.playerfaction.*;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.focus.FocusTarget;
@@ -49,7 +50,6 @@ import org.hcgames.hcfactions.util.JavaUtils;
 import org.hcgames.hcfactions.util.PersistableLocation;
 import org.hcgames.hcfactions.util.collect.ConcurrentSet;
 import org.hcgames.hcfactions.util.text.CC;
-import org.mineacademy.fo.settings.Lang;
 
 import javax.annotation.Nullable;
 import java.util.*;

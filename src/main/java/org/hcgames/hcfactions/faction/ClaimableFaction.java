@@ -32,6 +32,7 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.Lang;
 import org.hcgames.hcfactions.claim.Claim;
 import org.hcgames.hcfactions.event.claim.ClaimChangeEvent;
 import org.hcgames.hcfactions.event.claim.FactionClaimChangeEvent;
@@ -40,7 +41,6 @@ import org.hcgames.hcfactions.structure.FactionMember;
 import org.hcgames.hcfactions.util.BukkitUtils;
 import org.hcgames.hcfactions.util.GenericUtils;
 import org.hcgames.hcfactions.util.text.Names;
-import org.mineacademy.fo.settings.Lang;
 
 import java.util.*;
 import java.util.stream.Collectors;

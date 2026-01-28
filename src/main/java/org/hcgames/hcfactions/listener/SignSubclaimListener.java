@@ -21,6 +21,7 @@
 package org.hcgames.hcfactions.listener;
 
 
+import com.cryptomorin.xseries.XMaterial;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -46,13 +47,12 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.material.MaterialData;
 import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.Lang;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.Faction;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.FactionMember;
 import org.hcgames.hcfactions.structure.Role;
-import org.mineacademy.fo.remain.CompMaterial;
-import org.mineacademy.fo.settings.Lang;
 
 import java.util.*;
 
@@ -89,7 +89,7 @@ public class SignSubclaimListener implements Listener {
 
 	private boolean isSubclaimable(Block block) {
 		Material type = block.getType();
-		return type == CompMaterial.OAK_FENCE_GATE.getMaterial() || type == CompMaterial.ACACIA_TRAPDOOR.getMaterial() || block.getState() instanceof InventoryHolder;
+		return type == XMaterial.OAK_FENCE_GATE.parseMaterial() || type == XMaterial.ACACIA_TRAPDOOR.parseMaterial() || block.getState() instanceof InventoryHolder;
 	}
 
 	private SubclaimType getSubclaimType(Sign sign, boolean creating) {

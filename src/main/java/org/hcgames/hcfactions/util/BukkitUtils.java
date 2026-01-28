@@ -1,12 +1,12 @@
 package org.hcgames.hcfactions.util;
 
 
+import com.cryptomorin.xseries.XPotion;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
-import crossversion.worldeditx.worldeditx.lib.remain.CompPotionEffectType;
 
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -24,8 +24,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
-import org.mineacademy.fo.PlayerUtil;
-import org.mineacademy.fo.remain.Remain;
 
 import java.util.List;
 import java.util.UUID;
@@ -47,10 +45,10 @@ public class BukkitUtils {
 		CHAT_DYE_COLOUR_MAP = ImmutableMap.<ChatColor, DyeColor>builder().put(ChatColor.AQUA, DyeColor.LIGHT_BLUE).put(ChatColor.BLACK, DyeColor.BLACK).put(ChatColor.BLUE, DyeColor.LIGHT_BLUE).put(ChatColor.DARK_AQUA, DyeColor.CYAN).put(ChatColor.DARK_BLUE, DyeColor.BLUE).put(ChatColor.DARK_GRAY, DyeColor.GRAY).put(ChatColor.DARK_GREEN, DyeColor.GREEN).put(ChatColor.DARK_PURPLE, DyeColor.PURPLE).put(ChatColor.DARK_RED, DyeColor.RED).put(ChatColor.GOLD, DyeColor.ORANGE).put(ChatColor.GREEN, DyeColor.LIME).put(ChatColor.LIGHT_PURPLE, DyeColor.MAGENTA).put(ChatColor.RED, DyeColor.RED).put(ChatColor.WHITE, DyeColor.WHITE).put(ChatColor.YELLOW, DyeColor.YELLOW).build();
 
 		DEBUFF_TYPES = ImmutableSet.<PotionEffectType>builder()
-	            .add(CompPotionEffectType.POISON)
-	            .add(CompPotionEffectType.SLOW)
-	            .add(CompPotionEffectType.WEAKNESS)
-	            .add(CompPotionEffectType.BLINDNESS)
+	            .add(XPotion.POISON.getPotionEffectType())
+	            .add(XPotion.SLOWNESS.getPotionEffectType())
+	            .add(XPotion.WEAKNESS.getPotionEffectType())
+	            .add(XPotion.BLINDNESS.getPotionEffectType())
 	            .build();
 
 	}
@@ -129,7 +127,7 @@ public class BukkitUtils {
 		if (string == null) {
 			return null;
 		}
-		return JavaUtils.isUUID(string) ? Bukkit.getPlayer(UUID.fromString(string)) : PlayerUtil.getPlayerByNick(string, true);
+		return JavaUtils.isUUID(string) ? Bukkit.getPlayer(UUID.fromString(string)) : Bukkit.getPlayer(string);
 	}
 
 	@Deprecated
@@ -137,7 +135,7 @@ public class BukkitUtils {
 		if (string == null) {
 			return null;
 		}
-		return JavaUtils.isUUID(string) ? Remain.getOfflinePlayerByUUID(UUID.fromString(string)) : Bukkit.getOfflinePlayer(string);
+		return Bukkit.getOfflinePlayer(string);
 	}
 
 	public static boolean isWithinX(Location location, Location other, double distance) {

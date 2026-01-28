@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.hcgames.hcfactions.api.enums.EconomyTypes;
+import org.hcgames.hcfactions.api.interfaces.EconomyTypes;
 
 @AllArgsConstructor
 @Getter

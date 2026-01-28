@@ -1,23 +1,3 @@
-/*
- *   COPYRIGHT NOTICE
- *
- *   Copyright (C) 2016, SystemUpdate, <admin@systemupdate.io>.
- *
- *   All rights reserved.
- *
- *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF THIRD PARTY RIGHTS. IN
- *   NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- *   DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
- *   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
- *   OR OTHER DEALINGS IN THE SOFTWARE.
- *
- *   Except as contained in this notice, the name of a copyright holder shall not
- *   be used in advertising or otherwise to promote the sale, use or other dealings
- *   in this Software without prior written authorization of the copyright holder.
- */
-
 package org.hcgames.hcfactions.faction;
 
 
@@ -31,7 +11,8 @@ import org.hcgames.hcfactions.claim.Claim;
 import org.hcgames.hcfactions.util.BukkitUtils;
 import org.hcgames.hcfactions.visualise.VisualBlockData;
 import org.hcgames.hcfactions.visualise.VisualType;
-import org.mineacademy.fo.remain.CompMaterial;
+
+import com.cryptomorin.xseries.XMaterial;
 
 import java.util.*;
 
@@ -80,7 +61,7 @@ public class LandMap {
 			String materialName = ChatColor.RED + "Error!";
 			LOOP_1:
 			for (VisualBlockData visualBlockData : dataMap.values())
-				if (visualBlockData.getItemType() == CompMaterial.BLACK_STAINED_GLASS.getMaterial()) continue LOOP_1;
+				if (visualBlockData.getItemType() == XMaterial.BLACK_STAINED_GLASS.parseMaterial()) continue LOOP_1;
 				else {
 					materialName = HCFactions.getInstance().getItemDb().getName(new ItemStack(visualBlockData.getItemType()));
 					break LOOP_1;

@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.Lang;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.ClaimableFaction;
 import org.hcgames.hcfactions.faction.Faction;
@@ -15,12 +16,12 @@ import org.hcgames.hcfactions.faction.system.RoadFaction;
 import org.hcgames.hcfactions.faction.system.WildernessFaction;
 import org.hcgames.hcfactions.manager.FactionManager;
 import org.hcgames.hcfactions.structure.Role;
+import org.hcgames.hcfactions.util.ItemCreator;
 import org.hcgames.hcfactions.util.cuboid.Cuboid;
 import org.hcgames.hcfactions.util.cuboid.CuboidDirection;
 import org.hcgames.hcfactions.util.text.CC;
-import org.mineacademy.fo.menu.model.ItemCreator;
-import org.mineacademy.fo.remain.CompMaterial;
-import org.mineacademy.fo.settings.Lang;
+
+import com.cryptomorin.xseries.XMaterial;
 
 import java.util.*;
 
@@ -50,7 +51,7 @@ public class ClaimHandler {
 		this.plugin = plugin;
 		claimSelectionMap = new HashMap<>();
 
-		claimWand = ItemCreator.of(CompMaterial.DIAMOND_HOE).name(CC.translate(Lang.of("factions.claiming.wand.item.name")))
+		claimWand = ItemCreator.of(XMaterial.DIAMOND_HOE.parseMaterial()).name(CC.translate(Lang.of("factions.claiming.wand.item.name")))
 				.lore(Lang.of("factions.claiming.wand.item.lore")).make();
 	}
 

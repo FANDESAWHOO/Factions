@@ -1,29 +1,24 @@
 package org.hcgames.hcfactions.command;
 
-import lombok.Getter;
 import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.Lang;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.RegenStatus;
 import org.hcgames.hcfactions.util.DurationFormatter;
-import org.mineacademy.fo.annotation.AutoRegister;
-import org.mineacademy.fo.command.SimpleCommand;
-import org.mineacademy.fo.settings.Lang;
 
-@AutoRegister
-public final class RegenCommand extends SimpleCommand {
+import com.minnymin.command.Command;
+import com.minnymin.command.CommandArgs;
 
-	/**
-	 * The singleton of this class
-	 */
-	@Getter
-	private final static SimpleCommand instance = new RegenCommand();
+public final class RegenCommand { // TODO: check all permissions.
+
 	private final HCFactions plugin;
 
-	private RegenCommand() {
-		super("regen");
+	public RegenCommand() {
+		HCFactions.getInstance().getCommandFramework().registerCommands(this);
+		HCFactions.getInstance().getCommandFramework().registerHelp();
 		plugin = HCFactions.getInstance();
 	}
 
@@ -34,19 +29,14 @@ public final class RegenCommand extends SimpleCommand {
 		return (long) ((10 / 60) * dtrRequired) - millisPassedSinceLastUpdate;
 	}
 
-	/**
-	 * Executed when the command is run. You can get the variables sender and args directly,
-	 * and use convenience checks in the simple command class.
-	 */
-	@Override
-	protected void onCommand() {
-		checkConsole();
+    @Command(name = "regen", description = "The main command for Regenn", usage = "/location",  playerOnly = true, adminsOnly = false)
+    public void onCommand(CommandArgs arg) {
 
-		Player player = (Player) sender;
+		Player player = arg.getPlayer();
 		PlayerFaction playerFaction;
 
 		if (!plugin.getFactionManager().hasFaction(player)) {
-			tell(Lang.of("Error-Messages.NotInFaction"));
+			player.sendMessage(Lang.of("Error-Messages.NotInFaction"));
 			return;
 		}
 
@@ -55,14 +45,14 @@ public final class RegenCommand extends SimpleCommand {
 		RegenStatus regenStatus = playerFaction.getRegenStatus();
 		switch (regenStatus) {
 			case FULL:
-				tell(Lang.of("Commands.Regen.Full"));
+				player.sendMessage(Lang.of("Commands.Regen.Full"));
 				return;
 			case PAUSED:
-				tell(Lang.of("Commands.Regen.Paused")
+				player.sendMessage(Lang.of("Commands.Regen.Paused")
 						.replace("{dtrFreezeTimeLeft}", DurationFormatUtils.formatDurationWords(playerFaction.getRemainingRegenerationTime(), true, true)));
 				return;
 			case REGENERATING:
-				tell(Lang.of("Commands.Regen.Regenerating")
+				player.sendMessage(Lang.of("Commands.Regen.Regenerating")
 						.replace("{regenSymbol}", regenStatus.getSymbol())
 						.replace("{factionDeathsUntilRaidable}", String.valueOf(playerFaction.getDeathsUntilRaidable()))
 						.replace("{factionDTRIncrement}", String.valueOf(Configuration.factionDtrUpdateIncrement))
@@ -71,7 +61,7 @@ public final class RegenCommand extends SimpleCommand {
 				return;
 		}
 
-		tell(Lang.of("Commands.Regen.Unknown"));
+		player.sendMessage(Lang.of("Commands.Regen.Unknown"));
 
 	}
 }

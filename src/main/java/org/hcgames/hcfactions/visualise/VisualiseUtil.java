@@ -5,10 +5,11 @@ import com.google.common.collect.Table;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.material.MaterialData;
-import org.hcgames.hcfactions.util.NMSU;
-import org.mineacademy.fo.remain.Remain;
+
 
 import java.io.IOException;
 import java.util.Map;
@@ -58,7 +59,7 @@ public class VisualiseUtil {
 	public static void sendBulk(Player player, Chunk chunk, Map<Location, MaterialData> input) {
 		Objects.requireNonNull(chunk, "Chunk cannot be null");
 
-		Object connection = Remain.getPlayerConnection(player);
+		Object connection = ((CraftPlayer) player).getHandle().playerConnection;
 
 		int size = input.size();
 
@@ -76,7 +77,7 @@ public class VisualiseUtil {
 
 			Block block = location.getBlock();
 			block.setType(materialData.getItemType());
-			NMSU.sendBlockChange0(player, location, block);
+			player.sendBlockChange(location, block.getType(), block.getData());
 		}
 
       /*  PacketUtil

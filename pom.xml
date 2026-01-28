@@ -20,7 +20,7 @@
 
     <properties>
         <spigot-systemPath>C:\Users\Andreita\Documents\HCG\HCFactions/libs/1.7.10.jar</spigot-systemPath>
-        <spigot-api-systemPath>C:\Users\Andreita\Documents\HCG\HCFactions/libs/wspigot.jar</spigot-api-systemPath>
+        <spigot-api-systemPath>C:/Users/sezaz/OneDrive/Documentos/HCG/Core/lib/wspigot.jar</spigot-api-systemPath>
 
         <!-- Change to your name or the main project author. -->
         <author>doctordark</author>
@@ -37,13 +37,6 @@
              -->
         <java.version>1.8</java.version>
 
-        <!-- Change to the latest version from https://github.com/kangarko/Foundation/releases
-             or change to "LATEST" if you downloaded Foundation to your disk and compiled it. -->
-        <foundation.version>6.9.22</foundation.version>
-
-        <!-- Leave on "com.github.kangarko" if you use Foundation from GitHub like most people,
-             or change to "org.mineacademy" if you downloaded our library to your disk and compiled it. -->
-        <foundation.path>com.github.kangarko</foundation.path>
 
         <!-- DO NOT EDIT. -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -80,6 +73,10 @@
             <id>papermc</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>-->
+        <repository>
+            <id>placeholderapi</id>
+            <url>https://repo.helpch.at/releases</url>
+        </repository>       
     </repositories>
 
     <dependencies>
@@ -124,20 +121,31 @@
             <version>1.7.10-R0.1-SNAPSHOT</version>
             <scope>system</scope>
             <systemPath>${spigot-systemPath}</systemPath>
-        </dependency>
+        </dependency> -->
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
             <version>1.8.8-R0.1-SNAPSHOT</version>
             <scope>system</scope>
             <systemPath>${spigot-api-systemPath}</systemPath>
-        </dependency> -->
+        </dependency>
 	    <dependency>
 	       <groupId>com.github.ThatKawaiiSam</groupId>
 	       <artifactId>Ostentus</artifactId>
 	       <version>345453f354</version>
 	       <scope>compile</scope>
-	    </dependency>        
+	    </dependency> 
+	    <dependency>
+         <groupId>me.clip</groupId>
+          <artifactId>placeholderapi</artifactId>
+          <version>2.11.6</version>
+         <scope>provided</scope>
+        </dependency> 
+       <dependency>
+           <groupId>com.github.cryptomorin</groupId>
+           <artifactId>XSeries</artifactId>
+           <version>v13.6.0</version>
+       </dependency>       
         <dependency>
             <groupId>net.sf.trove4j</groupId>
             <artifactId>trove4j</artifactId>
@@ -170,21 +178,18 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-	        <groupId>com.github.FANDESAWHOO</groupId>
-	        <artifactId>WorldEditCrossVersion</artifactId>
-	        <version>v1.0.21</version>
-        </dependency>
-        <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
             <version>3.12.14</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>${foundation.path}</groupId>
-            <artifactId>Foundation</artifactId>
-            <version>${foundation.version}</version>
-        </dependency>
+                   <!-- Source: https://mvnrepository.com/artifact/net.jodah/expiringmap -->
+       <dependency>
+            <groupId>net.jodah</groupId>
+            <artifactId>expiringmap</artifactId>
+            <version>0.5.11</version>
+            <scope>compile</scope>
+       </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -259,21 +264,15 @@
                     <artifactSet>
                         <includes>
                             <include>io.netty:netty-all</include>
-                            <include>net.sf.trove4j:trove4j</include>
-                            <include>${foundation.path}:Foundation*</include>
+                            <include>net.sf.trove4j:trove4j</include>   
                             <include>org.apache.commons:commons-collections4</include>
                             <include>com.github.ThatKawaiiSam:Ostentus</include>
-                            <include>org.mongodb:mongo-java-driver</include>
+                       <!-- Esto es un comentario    <include>org.mongodb:mongo-java-driver</include>-->  
                         </includes>
                     </artifactSet>
                     <relocations>
                         <relocation>
                             <pattern>org.apache.commons.collections4</pattern>
-                            <shadedPattern>${project.groupId}.lib</shadedPattern>
-                        </relocation>
-                        <!-- This moves Foundation into your own package in "lib" subpackage to prevent interference. -->
-                        <relocation>
-                            <pattern>org.mineacademy.fo</pattern>
                             <shadedPattern>${project.groupId}.lib</shadedPattern>
                         </relocation>
                     </relocations>

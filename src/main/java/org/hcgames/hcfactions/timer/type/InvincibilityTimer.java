@@ -24,6 +24,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.Lang;
 import org.hcgames.hcfactions.api.FactionsAPI;
 import org.hcgames.hcfactions.claim.Claim;
 import org.hcgames.hcfactions.event.claim.ClaimChangeEvent;
@@ -41,7 +42,6 @@ import org.hcgames.hcfactions.util.BukkitUtils;
 import org.hcgames.hcfactions.util.DurationFormatter;
 import org.hcgames.hcfactions.util.text.CC;
 import org.hcgames.hcfactions.visualise.VisualType;
-import org.mineacademy.fo.settings.Lang;
 
 import javax.annotation.Nullable;
 import java.util.Collection;

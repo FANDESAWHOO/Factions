@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.hcgames.hcfactions.api.enums.TimerTypes;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 
 @AllArgsConstructor
@@ -18,7 +17,7 @@ public class FactionTimerEvent extends Event implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();
 	private final Player player;
 	private final PlayerFaction faction;
-	private final TimerTypes timer;
+	private final String timer;
 	private boolean cancelled;
 
 	public static HandlerList getHandlerList() {

@@ -1,5 +1,6 @@
 package org.hcgames.hcfactions.listener;
 
+import com.cryptomorin.xseries.XMaterial;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
@@ -24,6 +25,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 import org.hcgames.hcfactions.Configuration;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.Lang;
 import org.hcgames.hcfactions.event.claim.PlayerClaimEnterEvent;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.ClaimableFaction;
@@ -34,8 +36,6 @@ import org.hcgames.hcfactions.structure.Raidable;
 import org.hcgames.hcfactions.structure.Role;
 import org.hcgames.hcfactions.util.BukkitUtils;
 import org.hcgames.hcfactions.util.text.CC;
-import org.mineacademy.fo.remain.CompMaterial;
-import org.mineacademy.fo.settings.Lang;
 
 import javax.annotation.Nullable;
 
@@ -46,36 +46,36 @@ public class ProtectionListener implements Listener {
 
 	// List of materials a player can not right click in enemy territory. ~No such ImmutableEnumMultimap in current Guava build :/
 	private static final ImmutableMultimap<Material, Material> ITEM_ON_BLOCK_RIGHT_CLICK_DENY = ImmutableMultimap.<Material, Material>builder().
-			put(CompMaterial.DIAMOND_HOE.getMaterial(), CompMaterial.GRASS_BLOCK.getMaterial()).
-			put(CompMaterial.GOLDEN_HOE.getMaterial(), CompMaterial.GRASS_BLOCK.getMaterial()).
-			put(CompMaterial.IRON_HOE.getMaterial(), CompMaterial.GRASS_BLOCK.getMaterial()).
-			put(CompMaterial.STONE_HOE.getMaterial(), CompMaterial.GRASS_BLOCK.getMaterial()).
-			put(CompMaterial.WOODEN_HOE.getMaterial(), CompMaterial.GRASS_BLOCK.getMaterial()).
+			put(XMaterial.DIAMOND_HOE.parseMaterial(), XMaterial.GRASS_BLOCK.parseMaterial()).
+			put(XMaterial.GOLDEN_HOE.parseMaterial(), XMaterial.GRASS_BLOCK.parseMaterial()).
+			put(XMaterial.IRON_HOE.parseMaterial(), XMaterial.GRASS_BLOCK.parseMaterial()).
+			put(XMaterial.STONE_HOE.parseMaterial(), XMaterial.GRASS_BLOCK.parseMaterial()).
+			put(XMaterial.WOODEN_HOE.parseMaterial(), XMaterial.GRASS_BLOCK.parseMaterial()).
 			build();
 
 	// List of materials a player can not right click in enemy territory.
 	private static final ImmutableSet<Material> BLOCK_RIGHT_CLICK_DENY = Sets.immutableEnumSet(
-			CompMaterial.RED_BED.getMaterial(),
-			CompMaterial.BEACON.getMaterial(),
-			CompMaterial.OAK_FENCE_GATE.getMaterial(),
-			CompMaterial.IRON_DOOR.getMaterial(),
-			CompMaterial.OAK_TRAPDOOR.getMaterial(),
-			CompMaterial.OAK_DOOR.getMaterial(),
-			CompMaterial.DARK_OAK_DOOR.getMaterial(),
-			CompMaterial.CHEST.getMaterial(),
-			CompMaterial.TRAPPED_CHEST.getMaterial(),
-			CompMaterial.FURNACE.getMaterial(),
-			CompMaterial.BREWING_STAND.getMaterial(),
-			CompMaterial.HOPPER.getMaterial(),
-			CompMaterial.DROPPER.getMaterial(),
-			CompMaterial.DISPENSER.getMaterial(),
-			CompMaterial.STONE_BUTTON.getMaterial(),
-			CompMaterial.OAK_BUTTON.getMaterial(),
-			CompMaterial.ENCHANTING_TABLE.getMaterial(),
-			CompMaterial.CRAFTING_TABLE.getMaterial(),
-			CompMaterial.ANVIL.getMaterial(),
-			CompMaterial.LEVER.getMaterial(),
-			CompMaterial.FIRE.getMaterial());
+			XMaterial.RED_BED.parseMaterial(),
+			XMaterial.BEACON.parseMaterial(),
+			XMaterial.OAK_FENCE_GATE.parseMaterial(),
+			XMaterial.IRON_DOOR.parseMaterial(),
+			XMaterial.OAK_TRAPDOOR.parseMaterial(),
+			XMaterial.OAK_DOOR.parseMaterial(),
+			XMaterial.DARK_OAK_DOOR.parseMaterial(),
+			XMaterial.CHEST.parseMaterial(),
+			XMaterial.TRAPPED_CHEST.parseMaterial(),
+			XMaterial.FURNACE.parseMaterial(),
+			XMaterial.BREWING_STAND.parseMaterial(),
+			XMaterial.HOPPER.parseMaterial(),
+			XMaterial.DROPPER.parseMaterial(),
+			XMaterial.DISPENSER.parseMaterial(),
+			XMaterial.STONE_BUTTON.parseMaterial(),
+			XMaterial.OAK_BUTTON.parseMaterial(),
+			XMaterial.ENCHANTING_TABLE.parseMaterial(),
+			XMaterial.CRAFTING_TABLE.parseMaterial(),
+			XMaterial.ANVIL.parseMaterial(),
+			XMaterial.LEVER.parseMaterial(),
+			XMaterial.FIRE.parseMaterial());
 	@Getter
 	private static final ProtectionListener protectionListener = new ProtectionListener();
 	private final HCFactions plugin;
@@ -130,7 +130,7 @@ public class ProtectionListener implements Listener {
 
 		boolean result = false;
 		Faction factionAt = plugin.getFactionManager().getFactionAt(location);
-		if (factionAt.getName().equalsIgnoreCase("glowstone") && location.getBlock().getType() == CompMaterial.GLOWSTONE.getMaterial())
+		if (factionAt.getName().equalsIgnoreCase("glowstone") && location.getBlock().getType() == XMaterial.GLOWSTONE.parseMaterial())
 			return true;
 
 		if (!(factionAt instanceof ClaimableFaction)) result = true;
@@ -259,8 +259,8 @@ public class ProtectionListener implements Listener {
 		 * After 1.13+ this uses
 		 * <a href="https://hub.spigotmc.org/javadocs/spigot/org/bukkit/block/data/Levelled.html">Levelled</a> water flowing system.
 		 */
-		//  if (fromType == CompMaterial.WATER.getMaterial() || fromType == CompMaterial.STATIONARY_WATER || fromType == Material.LAVA || fromType == Material.STATIONARY_LAVA)
-		if (fromType == CompMaterial.WATER.getMaterial() || fromType == CompMaterial.LAVA.getMaterial())
+		//  if (fromType == XMaterial.WATER.parseMaterial() || fromType == XMaterial.STATIONARY_WATER || fromType == Material.LAVA || fromType == Material.STATIONARY_LAVA)
+		if (fromType == XMaterial.WATER.parseMaterial() || fromType == XMaterial.LAVA.parseMaterial())
 			if (!canBuildAt(fromBlock.getLocation(), event.getToBlock().getLocation())) event.setCancelled(true);
 	}
 
@@ -462,16 +462,16 @@ public class ProtectionListener implements Listener {
 				Material itemType = event.hasItem() ? event.getItem().getType() : null;
 
 				// If the player is right clicking an Ender Portal Frame with an Ender Portal Eye and it is empty.
-				if (CompMaterial.ENDER_EYE.getMaterial() == itemType && CompMaterial.END_PORTAL_FRAME.getMaterial() == blockType && block.getData() != 4)
+				if (XMaterial.ENDER_EYE.parseMaterial() == itemType && XMaterial.END_PORTAL_FRAME.parseMaterial() == blockType && block.getData() != 4)
 					canRightClick = false;
 				else // If the player is right clicking a Cauldron that contains liquid with a Glass Bottle.
-					if (CompMaterial.GLASS_BOTTLE.getMaterial() == itemType && (blockData = block.getState().getData()) instanceof Cauldron && !((Cauldron) blockData).isEmpty())
+					if (XMaterial.GLASS_BOTTLE.parseMaterial() == itemType && (blockData = block.getState().getData()) instanceof Cauldron && !((Cauldron) blockData).isEmpty())
 						canRightClick = false;
 					else // Finally, check if this block is not blacklisted with the item the player right clicked it with.
 						if (itemType != null && ITEM_ON_BLOCK_RIGHT_CLICK_DENY.get(itemType).contains(block.getType()))
 							canRightClick = false;
 			} else // Allow workbench use in safezones.
-				if (block.getType() == CompMaterial.CRAFTING_TABLE.getMaterial() && plugin.getFactionManager().getFactionAt(block.getLocation()).isSafezone())
+				if (block.getType() == XMaterial.CRAFTING_TABLE.parseMaterial() && plugin.getFactionManager().getFactionAt(block.getLocation()).isSafezone())
 					canRightClick = true;
 
 			if (!canRightClick && !attemptBuild(event.getPlayer(), block.getLocation(), Lang.of("factions.protection.cannot_interact"), true))

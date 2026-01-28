@@ -6,12 +6,12 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.material.MaterialData;
-import org.hcgames.hcfactions.util.NMSU;
 import org.hcgames.hcfactions.util.cuboid.Cuboid;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Predicate;
@@ -64,7 +64,7 @@ public class VisualiseHandler {
 			Block block = location.getBlock();
 			VisualBlockData visualBlockData = visualBlock.getBlockData();
 			if (visualBlockData.getBlockType() != block.getType() || visualBlockData.getData() != block.getData())
-				NMSU.sendBlockChange0(player, location, block);
+				player.sendBlockChange(location, block.getType(), block.getData());
 		}
 	}
 

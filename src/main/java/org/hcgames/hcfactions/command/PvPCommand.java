@@ -1,39 +1,39 @@
 package org.hcgames.hcfactions.command;
 
 import com.google.common.collect.ImmutableList;
+import com.minnymin.command.Command;
+import com.minnymin.command.CommandArgs;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.Lang;
 import org.hcgames.hcfactions.timer.type.InvincibilityTimer;
 import org.hcgames.hcfactions.util.BukkitUtils;
 import org.hcgames.hcfactions.util.DurationFormatter;
-import org.mineacademy.fo.annotation.AutoRegister;
-import org.mineacademy.fo.command.SimpleCommand;
-import org.mineacademy.fo.settings.Lang;
+
 
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Moved from Core to here.
- * Command used to manage the {@link InvincibilityTimer} of {@link Player}s.
- */
-@AutoRegister
-public final class PvPCommand extends SimpleCommand {
+public final class PvPCommand{
 
 	private static final ImmutableList<String> COMPLETIONS = ImmutableList.of("enable", "time");
 
 	public PvPCommand() {
-		super("pvp");
+		HCFactions.getInstance().getCommandFramework().registerCommands(this);
+		HCFactions.getInstance().getCommandFramework().registerHelp();
 	}
 
-	@Override
-	protected void onCommand() {
-		Player player = (Player) sender;
+    @Command(name = "pvp", description = "The main command for PvPTimer", usage = "/location",  playerOnly = true, adminsOnly = false)
+    public void onCommand(CommandArgs arg) {
+		Player player = (Player) arg.getSender();
+		CommandSender sender = arg.getSender();
+		String[] args = arg.getArgs();
 		InvincibilityTimer pvpTimer = HCFactions.getInstance().getTimerManager().getInvincibilityTimer();
 
 		if (args.length < 1) {
-			printUsage(sender, getLabel(), pvpTimer);
+			printUsage(sender, arg.getLabel(), pvpTimer);
 			return;
 		}
 
@@ -65,14 +65,9 @@ public final class PvPCommand extends SimpleCommand {
 			return;
 		}
 
-		printUsage(sender, getLabel(), pvpTimer);
+		printUsage(sender, arg.getLabel(), pvpTimer);
 	}
 
-
-	@Override
-	public List<String> tabComplete() {
-		return args.length == 1 ? BukkitUtils.getCompletions(args, COMPLETIONS) : Collections.emptyList();
-	}
 
 	/**
 	 * Prints the usage of this command to a sender.

@@ -3,13 +3,13 @@ package org.hcgames.hcfactions.command.subcommand;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.Lang;
 import org.hcgames.hcfactions.claim.Claim;
 import org.hcgames.hcfactions.claim.ClaimHandler;
 import org.hcgames.hcfactions.command.FactionCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.structure.Role;
-import org.mineacademy.fo.settings.Lang;
 
 import com.minnymin.command.Command;
 import com.minnymin.command.CommandArgs;

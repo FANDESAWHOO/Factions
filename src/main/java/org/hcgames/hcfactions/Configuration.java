@@ -3,13 +3,13 @@ package org.hcgames.hcfactions;
 
 import lombok.Getter;
 import org.bukkit.ChatColor;
-import org.mineacademy.fo.settings.SimpleSettings;
+
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Getter
-public final class Configuration extends SimpleSettings {
+public final class Configuration {
     // SYSTEM
 	public static Integer factionNameMinCharacters;
 	public static Integer factionNameMaxCharacters;
@@ -80,7 +80,11 @@ public final class Configuration extends SimpleSettings {
 
 	public static Boolean mongo;
 
-	private static void init() {
+	public Configuration() {
+		init();
+	}
+	
+	private void init() {
 
 		mongo = getBoolean("mongo.use");
 		host = getString("mongo.host");
@@ -98,9 +102,9 @@ public final class Configuration extends SimpleSettings {
 		factionDtrRegenFreezeMinutesPerMember = getInteger("factions.dtr.minutesPerMember");
 		factionDtrRegenFreezeMillisecondsPerMember = TimeUnit.MINUTES.toMillis(factionDtrRegenFreezeMinutesPerMember);
 		factionMinimumDtr = getInteger("factions.dtr.minimum");
-		factionMaximumDtr = (float) getDouble("factions.dtr.maximum");
+		factionMaximumDtr =   getDouble("factions.dtr.maximum").floatValue();
 		factionDtrUpdateMillis = getInteger("factions.dtr.millisecondsBetweenUpdates");
-		factionDtrUpdateIncrement = (float) getDouble("factions.dtr.incrementBetweenUpdates");
+		factionDtrUpdateIncrement = getDouble("factions.dtr.incrementBetweenUpdates").floatValue();
         factionShow = getStringList("playerfaction-show");
 
 		relationColourWarzone = ChatColor.valueOf(getString("factions.relationColours.warzone"));
@@ -149,9 +153,23 @@ public final class Configuration extends SimpleSettings {
 		api = getBoolean("API.our");
 		customEvents = getBoolean("API.events");
 	}
-
-	@Override
-	protected boolean saveComments() {
-		return false;
-	}
+	
+    public String getString(String path) {
+    	return HCFactions.getInstance().getSettings().getString(path);
+    }
+    
+    public Boolean getBoolean(String path) {
+    	return HCFactions.getInstance().getSettings().getBoolean(path);
+    }
+    
+    public Integer getInteger(String path) {
+    	return HCFactions.getInstance().getSettings().getInt(path);
+    }
+    public List<String> getStringList(String path) {
+    	return HCFactions.getInstance().getSettings().getStringList(path);
+    }
+    
+    public Double getDouble(String path) {
+    	return HCFactions.getInstance().getSettings().getDouble(path);
+    }
 }

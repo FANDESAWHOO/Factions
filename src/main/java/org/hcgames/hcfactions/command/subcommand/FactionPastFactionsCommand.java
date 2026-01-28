@@ -1,13 +1,11 @@
 package org.hcgames.hcfactions.command.subcommand;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.Lang;
 import org.hcgames.hcfactions.command.FactionCommand;
-import org.hcgames.hcfactions.command.FactionSubCommand;
+import org.hcgames.hcfactions.util.PlayerUtil;
 import org.hcgames.hcfactions.util.uuid.UUIDHandler;
-import org.mineacademy.fo.PlayerUtil;
-import org.mineacademy.fo.settings.Lang;
 
 import com.minnymin.command.Command;
 import com.minnymin.command.CommandArgs;

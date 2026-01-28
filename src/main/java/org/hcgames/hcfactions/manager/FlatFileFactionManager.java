@@ -4,6 +4,8 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Table;
+
+import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
@@ -32,8 +34,6 @@ import org.hcgames.hcfactions.faction.system.WarzoneFaction;
 import org.hcgames.hcfactions.faction.system.WildernessFaction;
 import org.hcgames.hcfactions.focus.FocusHandler;
 import org.hcgames.hcfactions.lib.LongHash;
-import org.hcgames.hcfactions.lib.PlayerUtil;
-import org.hcgames.hcfactions.lib.map.CaseInsensitiveMap;
 import org.hcgames.hcfactions.structure.ChatChannel;
 import org.hcgames.hcfactions.structure.FactionMember;
 import org.hcgames.hcfactions.structure.Relation;
@@ -304,7 +304,6 @@ public class FlatFileFactionManager implements FactionManager, Listener{
 
     @Override
     public <T extends Faction> void advancedSearch(String query, Class<T> classType, SearchCallback<T> callback, boolean forcePlayer) {
-        // Paso 1: Buscar por nombre de facción si no se fuerza búsqueda por jugador
         if (!forcePlayer && factionNameMap.containsKey(query)) {
             UUID factionUUID = factionNameMap.get(query);
             Faction faction = factionUUIDMap.get(factionUUID);
@@ -322,20 +321,18 @@ public class FlatFileFactionManager implements FactionManager, Listener{
             return;
         }
 
-        // Paso 2: Si buscamos un PlayerFaction
+
         if (!classType.isAssignableFrom(PlayerFaction.class)) {
             callback.onFail(SearchCallback.FailReason.NOT_FOUND);
             return;
         }
 
-        // Paso 3: Buscar jugador online primero
-        Player player = PlayerUtil.getPlayerByNick(query, true);
+        Player player = Bukkit.getPlayer(query);
         if (player != null) {
             handleFactionFromUUID(player.getUniqueId(), classType, callback);
             return;
         }
 
-        // Paso 4: Buscar jugador offline (Mojang API)
         Runnable lookupTask = () -> {
             try {
                 UUID uuid = UUIDHandler.getUUID(query);
@@ -350,7 +347,7 @@ public class FlatFileFactionManager implements FactionManager, Listener{
             }
         };
 
-        // Ejecutar según flags del callback
+
         boolean async = callback.forceAsync() || (!plugin.getServer().isPrimaryThread() && callback.isAsync());
 
         if (async) {

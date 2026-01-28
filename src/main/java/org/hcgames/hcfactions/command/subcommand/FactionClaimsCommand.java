@@ -1,26 +1,19 @@
 package org.hcgames.hcfactions.command.subcommand;
 
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.Lang;
 import org.hcgames.hcfactions.claim.Claim;
 import org.hcgames.hcfactions.command.FactionCommand;
-import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 import org.hcgames.hcfactions.faction.ClaimableFaction;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.manager.SearchCallback;
-import org.mineacademy.fo.settings.Lang;
 
 import com.minnymin.command.Command;
 import com.minnymin.command.CommandArgs;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
 public final class FactionClaimsCommand extends FactionCommand {
 
 	private final HCFactions plugin;

@@ -4,18 +4,15 @@ package org.hcgames.hcfactions.command.subcommand.staff;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.hcgames.hcfactions.HCFactions;
+import org.hcgames.hcfactions.Lang;
 import org.hcgames.hcfactions.command.FactionCommand;
-import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.faction.PlayerFaction;
 import org.hcgames.hcfactions.manager.SearchCallback;
-import org.mineacademy.fo.settings.Lang;
 
 import com.minnymin.command.Command;
 import com.minnymin.command.CommandArgs;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
 public final class FactionBanCommand extends FactionCommand {

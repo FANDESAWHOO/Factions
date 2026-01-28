@@ -5,14 +5,11 @@ import org.bukkit.entity.Player;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.claim.Claim;
 import org.hcgames.hcfactions.command.FactionCommand;
-import org.hcgames.hcfactions.command.FactionSubCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
 
 import com.minnymin.command.Command;
 import com.minnymin.command.CommandArgs;
 
-import java.util.Collections;
-import java.util.List;
 
 public final class FactionForceUnclaimHereCommand extends FactionCommand {
 
