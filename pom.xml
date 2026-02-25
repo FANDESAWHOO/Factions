@@ -123,12 +123,17 @@
             <systemPath>${spigot-systemPath}</systemPath>
         </dependency> -->
         <dependency>
+	        <groupId>com.github.Wind-Development</groupId>
+	        <artifactId>WindSpigot</artifactId>
+	        <version>v2.1.2-hotfix</version>
+	    </dependency>
+       <!-- <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
             <version>1.8.8-R0.1-SNAPSHOT</version>
             <scope>system</scope>
             <systemPath>${spigot-api-systemPath}</systemPath>
-        </dependency>
+        </dependency>  -->
 	    <dependency>
 	       <groupId>com.github.ThatKawaiiSam</groupId>
 	       <artifactId>Ostentus</artifactId>
