@@ -81,10 +81,9 @@ public final class Configuration {
 	public static Boolean mongo;
 
 	public Configuration() {
-		init();
 	}
 	
-	private void init() {
+	public void init() {
 
 		mongo = getBoolean("mongo.use");
 		host = getString("mongo.host");

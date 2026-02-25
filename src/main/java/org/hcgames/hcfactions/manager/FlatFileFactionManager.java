@@ -38,6 +38,7 @@ import org.hcgames.hcfactions.structure.ChatChannel;
 import org.hcgames.hcfactions.structure.FactionMember;
 import org.hcgames.hcfactions.structure.Relation;
 import org.hcgames.hcfactions.structure.Role;
+import org.hcgames.hcfactions.util.PlayerUtil;
 import org.hcgames.hcfactions.util.configuration.Config;
 import org.hcgames.hcfactions.util.uuid.UUIDHandler;
 
@@ -304,6 +305,7 @@ public class FlatFileFactionManager implements FactionManager, Listener{
 
     @Override
     public <T extends Faction> void advancedSearch(String query, Class<T> classType, SearchCallback<T> callback, boolean forcePlayer) {
+        // Paso 1: Buscar por nombre de facción si no se fuerza búsqueda por jugador
         if (!forcePlayer && factionNameMap.containsKey(query)) {
             UUID factionUUID = factionNameMap.get(query);
             Faction faction = factionUUIDMap.get(factionUUID);
@@ -321,18 +323,20 @@ public class FlatFileFactionManager implements FactionManager, Listener{
             return;
         }
 
-
+        // Paso 2: Si buscamos un PlayerFaction
         if (!classType.isAssignableFrom(PlayerFaction.class)) {
             callback.onFail(SearchCallback.FailReason.NOT_FOUND);
             return;
         }
 
-        Player player = Bukkit.getPlayer(query);
+        // Paso 3: Buscar jugador online primero
+        Player player = PlayerUtil.getPlayerByNick(query, true);
         if (player != null) {
             handleFactionFromUUID(player.getUniqueId(), classType, callback);
             return;
         }
 
+        // Paso 4: Buscar jugador offline (Mojang API)
         Runnable lookupTask = () -> {
             try {
                 UUID uuid = UUIDHandler.getUUID(query);
@@ -347,7 +351,7 @@ public class FlatFileFactionManager implements FactionManager, Listener{
             }
         };
 
-
+        // Ejecutar según flags del callback
         boolean async = callback.forceAsync() || (!plugin.getServer().isPrimaryThread() && callback.isAsync());
 
         if (async) {

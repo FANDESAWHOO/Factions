@@ -136,7 +136,6 @@ public class HCFactions extends JavaPlugin {
 		ConfigurationSerialization.registerClass(Faction.class);
 		ConfigurationSerialization.registerClass(FactionMember.class);
 		ConfigurationSerialization.registerClass(PlayerFaction.class);
-		ConfigurationSerialization.registerClass(FactionSystem.class);
 		
 		FactionManager.registerSystemFaction(WarzoneFaction.class);
 		FactionManager.registerSystemFaction(WildernessFaction.class);
@@ -185,6 +184,7 @@ public class HCFactions extends JavaPlugin {
 		registerEvents(NameCacheListener.getNameCacheListener());
 		registerEvents(FactionChatListener.getChatListener());
 		registerEvents(DtrListener.getDtrListener());
+		registerEvents(wandManager = new WandManager());
 		if (Configuration.api) {
 			registerEvents(new FactionListener());
 			registerEvents(ChatListener.getChatListener());
@@ -265,6 +265,7 @@ public class HCFactions extends JavaPlugin {
 		lang = new Config(instance, "lang");
 		settings = new Config(instance, "settings");
 		Configuration config = new Configuration();
+		config.init();
 		if (Configuration.mongo) {
 			mongoManager = new MongoManager();
 			mongoManager.connect();
@@ -276,7 +277,6 @@ public class HCFactions extends JavaPlugin {
 		getLogger().info("FactionManager initialized successfully.");
 		if (Configuration.api) timerManager = new TimerManager(this);
 		claimHandler = new ClaimHandler(this);
-		wandManager = WandManager.getWandManager();
 	}
 
 	private boolean setupEconomy() {

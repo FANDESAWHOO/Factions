@@ -49,7 +49,7 @@ public final class FactionRemoveCommand extends FactionCommand {
 			return;
 		}
 
-		if (args[1].equalsIgnoreCase("all")) {
+		if (args[0].equalsIgnoreCase("all")) {
 			if (!(sender instanceof ConsoleCommandSender)) {
 				sender.sendMessage(ChatColor.RED + "This command can be only executed from console.");
 				return;
@@ -60,7 +60,7 @@ public final class FactionRemoveCommand extends FactionCommand {
 			return;
 		}
 
-		plugin.getFactionManager().advancedSearch(args[1], Faction.class, new SearchCallback<Faction>() {
+		plugin.getFactionManager().advancedSearch(args[0], Faction.class, new SearchCallback<Faction>() {
 			@Override
 			public void onSuccess(Faction faction) {
 				if (plugin.getFactionManager().removeFaction(faction, sender))
@@ -69,7 +69,7 @@ public final class FactionRemoveCommand extends FactionCommand {
 
 			@Override
 			public void onFail(FailReason reason) {
-				sender.sendMessage(Lang.of("Commands.error.faction_not_found", args[1]));
+				sender.sendMessage(Lang.of("Commands.error.faction_not_found", args[0]));
 			}
 		});
 

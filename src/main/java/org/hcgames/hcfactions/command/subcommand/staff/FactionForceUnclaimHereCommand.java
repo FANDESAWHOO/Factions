@@ -25,7 +25,7 @@ public final class FactionForceUnclaimHereCommand extends FactionCommand {
 	    public void onCommand(CommandArgs arg) {
 		 String[] args = arg.getArgs();
 			Player player = arg.getPlayer();
-		if (args.length < 1) {
+		if (args.length == 0) {
 			player.sendMessage(ChatColor.RED + "Usage: " +"/<command>  forceunclaimhere");
 			return;
 		}

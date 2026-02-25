@@ -7,7 +7,6 @@ import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.Lang;
 import org.hcgames.hcfactions.command.FactionCommand;
 import org.hcgames.hcfactions.exception.NoFactionFoundException;
-import org.hcgames.hcfactions.faction.system.FactionSystem;
 import org.hcgames.hcfactions.util.JavaUtils;
 
 import com.minnymin.command.Command;

@@ -9,6 +9,8 @@ public final class Lang {
     private static final Config lang = HCFactions.getInstance().getLang();
     
 	public static String of(String path) {
+		if (lang.getString(path) == null)
+			return "Something is wrong on the specify path: " +path;
 		return ChatColor.translateAlternateColorCodes('&', lang.getString(path));
 	}
 	
@@ -31,18 +33,18 @@ public final class Lang {
 		return ChatColor.translateAlternateColorCodes('&', key);
 	}
 	
-	/**
-	 * Return a key from the localization file with {0} {1} etc. variables replaced.
-	 *
-	 * @param path
-	 * @param variables
-	 * @return
-	 */
-	public static String of(String path, Object... variables) {
+	public static String of(String path, String... args) {
+	    String message = of(path);
 
+	    if (message == null) {
+	        return ChatColor.RED + "Missing lang key: " + path;
+	    }
 
-		String key = getStringStrict(path);
+	    for (int i = 0; i < args.length; i++) {
+	        message = message.replace("%" + (i + 1) + "%", args[i]);
+	    }
 
-		return ChatColor.translateAlternateColorCodes('&', key);
+	    return ChatColor.translateAlternateColorCodes('&', message);
 	}
+
 }

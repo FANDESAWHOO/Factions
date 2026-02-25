@@ -8,6 +8,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.hcgames.hcfactions.HCFactions;
 import org.hcgames.hcfactions.faction.Faction;
+import org.hcgames.hcfactions.faction.system.EndPortalFaction;
+import org.hcgames.hcfactions.faction.system.RoadFaction;
+import org.hcgames.hcfactions.faction.system.SpawnFaction;
 import org.hcgames.hcfactions.faction.system.SystemFaction;
 import org.hcgames.hcfactions.util.configuration.Config;
 
@@ -78,7 +81,22 @@ public class MongoFactionManager extends FlatFileFactionManager implements Facti
             }
         }
         plugin.getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "Loaded " + factions[0] + " factions.");
-        Set<Faction> adding = new HashSet<>();	
+        Set<Faction> adding = new HashSet<>();
+		if (!factionNameMap.containsKey("NorthRoad")) { // TODO: more reliable
+			adding.add(new RoadFaction.NorthRoadFaction());
+			adding.add(new RoadFaction.EastRoadFaction());
+			adding.add(new RoadFaction.SouthRoadFaction());
+			adding.add(new RoadFaction.WestRoadFaction());
+		}
+
+		if (!factionNameMap.containsKey("Spawn")) { // TODO: more reliable
+			adding.add(new SpawnFaction());
+		}
+
+
+		if (!this.factionNameMap.containsKey("EndPortal")) { // TODO: more reliable
+			adding.add(new EndPortalFaction());
+		}
 		// Now load the Spawn, etc factions.
 				for (Faction added : adding) {
 					this.cacheFaction(added);

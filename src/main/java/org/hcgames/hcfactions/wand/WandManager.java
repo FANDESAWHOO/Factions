@@ -27,16 +27,11 @@ import java.util.UUID;
 
 
 public final class WandManager implements Listener {
-
-	/**
-	 * Singleton of the class
-	 */
-	@Getter
-	private final static WandManager wandManager = new WandManager();
+	
 	@Getter private final Map<UUID, ZoneClaim> claimCache = new HashMap<>();
 
 
-	private WandManager() {
+	public WandManager() {
 
 	}
 
@@ -59,6 +54,8 @@ public final class WandManager implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	protected void onBlockClick(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
+		if (!player.getItemInHand().isSimilar(getItem()))
+			return;
 		if (!player.hasPermission("tools.use")) return;
 		Action action = event.getAction();
 		Block block = event.getClickedBlock();
@@ -86,14 +83,14 @@ public final class WandManager implements Listener {
 		if (action == Action.RIGHT_CLICK_BLOCK && block != null) {
 			Location clicked = block.getLocation();
 			claim.setLocation1(clicked);
-			player.sendMessage(ChatColor.GREEN + "First point set at " + clicked.getBlockX() + ", " + clicked.getBlockY() + ", " + clicked.getBlockZ());
+			player.sendMessage(ChatColor.LIGHT_PURPLE + "First position set to " + clicked.getBlockX() + ", " + clicked.getBlockY() + ", " + clicked.getBlockZ());
 			event.setCancelled(true);
 			return;
 		} 
 		if (action == Action.LEFT_CLICK_BLOCK && block != null) {
 			Location clicked = block.getLocation();
 			claim.setLocation2(clicked);
-			player.sendMessage(ChatColor.GREEN + "Second point set at " + clicked.getBlockX() + ", " + clicked.getBlockY() + ", " + clicked.getBlockZ());
+			player.sendMessage(ChatColor.LIGHT_PURPLE + "Second position set to " + clicked.getBlockX() + ", " + clicked.getBlockY() + ", " + clicked.getBlockZ());
 			event.setCancelled(true);
 		}
 	}

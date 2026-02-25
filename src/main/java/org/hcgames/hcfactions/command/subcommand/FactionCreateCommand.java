@@ -25,7 +25,7 @@ public final class FactionCreateCommand extends FactionCommand {
 	 @Command(name = "faction.create", description = "Create a faction.", aliases = { "f.create","f.make","f.define","faction.make","faction.define"}, usage = "/f create [factionName]",  playerOnly = true, adminsOnly = false)
 	 public void onCommand(CommandArgs arg) {
 		 Player player = arg.getPlayer();
-		 if (arg.length() < 2) {
+		 if (arg.length() < 1) {
 				player.sendMessage(Lang.of("Commands-Usage").replace("{usage}", "/f create [factionName]"));
 				return;
 			}
