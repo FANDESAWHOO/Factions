@@ -44,6 +44,10 @@
 
     <repositories>
         <!-- DO NOT EDIT, used to download Foundation from GitHub using JitPack tool. -->
+       <repository>
+           <id>central</id>
+           <url>https://repo.maven.apache.org/maven2</url>
+       </repository>
         <repository>
             <id>jitpack</id>
             <url>https://jitpack.io</url>
@@ -146,11 +150,11 @@
           <version>2.11.6</version>
          <scope>provided</scope>
         </dependency> 
-       <dependency>
-           <groupId>com.github.cryptomorin</groupId>
-           <artifactId>XSeries</artifactId>
-           <version>v13.6.0</version>
-       </dependency>       
+        <dependency>
+            <groupId>com.github.cryptomorin</groupId>
+            <artifactId>XSeries</artifactId>
+            <version>13.6.0</version>
+       </dependency>
         <dependency>
             <groupId>net.sf.trove4j</groupId>
             <artifactId>trove4j</artifactId>
